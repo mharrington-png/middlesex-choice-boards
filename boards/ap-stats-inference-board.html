@@ -1,0 +1,1627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AP Statistics — Inference Choice Board | Middlesex School</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet" />
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+    startup: { typeset: false }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+  /* ============================================================
+     TOKENS & RESET
+  ============================================================ */
+  :root {
+    --crimson:     #cf003d;
+    --crimson-dim: #8a0028;
+    --crimson-glow:#ff1a55;
+    --black:       #0d0d0d;
+    --surface:     #151515;
+    --surface2:    #1e1e1e;
+    --surface3:    #252525;
+    --border:      #2e2e2e;
+    --border-light:#3a3a3a;
+    --text:        #f0ece6;
+    --text-muted:  #9e9e9e;
+    --text-dim:    #666666;
+
+    /* Column accent tones — all dark-theme legible */
+    --col1: #cf003d;   /* crimson */
+    --col2: #1a6b5a;   /* deep teal */
+    --col3: #4a5568;   /* slate */
+    --col4: #7c4a1e;   /* warm brown */
+
+    --col1-light: #ff4d75;
+    --col2-light: #2dd4bf;
+    --col3-light: #94a3b8;
+    --col4-light: #f59e0b;
+
+    --radius: 10px;
+    --radius-lg: 16px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.5);
+    --shadow-hover: 0 8px 40px rgba(0,0,0,0.7);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 16px;
+    line-height: 1.65;
+    min-height: 100vh;
+  }
+
+  /* ============================================================
+     HEADER
+  ============================================================ */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 28px 40px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--crimson), var(--crimson-glow), var(--crimson));
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(207,0,61,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .header-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .header-left {}
+
+  .school-tag {
+    font-family: 'Source Serif 4', serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--crimson-glow);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .school-tag::before {
+    content: '';
+    display: inline-block;
+    width: 18px; height: 1px;
+    background: var(--crimson-glow);
+  }
+
+  h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--crimson-glow);
+  }
+
+  .header-meta {
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--text-muted);
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .meta-pill {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 3px 12px;
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+  }
+
+  .header-right {
+    text-align: right;
+  }
+
+  .mx-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-dim);
+    letter-spacing: 0.06em;
+  }
+
+  /* ============================================================
+     INSTRUCTIONS BAR
+  ============================================================ */
+  .instructions {
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 40px;
+    font-size: 13px;
+    color: var(--text-muted);
+    text-align: center;
+    letter-spacing: 0.03em;
+  }
+
+  .instructions strong { color: var(--crimson-glow); font-weight: 600; }
+
+  /* ============================================================
+     BOARD GRID
+  ============================================================ */
+  .board-wrap {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 36px 24px 60px;
+  }
+
+  .board-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+
+  /* Column headers */
+  .col-header {
+    border-radius: var(--radius) var(--radius) 0 0;
+    padding: 16px 18px 14px;
+    margin-bottom: -4px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .col-header::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .col-1-header { background: color-mix(in srgb, var(--col1) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col1) 40%, transparent); }
+  .col-2-header { background: color-mix(in srgb, var(--col2) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col2) 40%, transparent); }
+  .col-3-header { background: color-mix(in srgb, var(--col3) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col3) 40%, transparent); }
+  .col-4-header { background: color-mix(in srgb, var(--col4) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col4) 40%, transparent); }
+
+  .col-header-num {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    opacity: 0.7;
+  }
+
+  .col-1-header .col-header-num { color: var(--col1-light); }
+  .col-2-header .col-header-num { color: var(--col2-light); }
+  .col-3-header .col-header-num { color: var(--col3-light); }
+  .col-4-header .col-header-num { color: var(--col4-light); }
+
+  .col-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.25;
+  }
+
+  /* Column groups */
+  .col-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  /* ============================================================
+     TILES
+  ============================================================ */
+  .tile {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 18px 16px;
+    cursor: pointer;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+    position: relative;
+    overflow: hidden;
+    user-select: none;
+  }
+
+  .tile::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+    border-radius: var(--radius) 0 0 var(--radius);
+    transition: opacity 0.2s;
+  }
+
+  .col-1 .tile::before { background: var(--col1-light); }
+  .col-2 .tile::before { background: var(--col2-light); }
+  .col-3 .tile::before { background: var(--col3-light); }
+  .col-4 .tile::before { background: var(--col4-light); }
+
+  .tile:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-hover);
+    background: var(--surface3);
+  }
+
+  .col-1 .tile:hover { border-color: color-mix(in srgb, var(--col1) 60%, transparent); }
+  .col-2 .tile:hover { border-color: color-mix(in srgb, var(--col2) 60%, transparent); }
+  .col-3 .tile:hover { border-color: color-mix(in srgb, var(--col3) 60%, transparent); }
+  .col-4 .tile:hover { border-color: color-mix(in srgb, var(--col4) 60%, transparent); }
+
+  .tile-icon {
+    font-size: 18px;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .tile-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+    margin-bottom: 6px;
+  }
+
+  .tile-sub {
+    font-size: 11.5px;
+    color: var(--text-muted);
+    line-height: 1.4;
+  }
+
+  .tile-arrow {
+    position: absolute;
+    bottom: 12px; right: 14px;
+    font-size: 14px;
+    opacity: 0.3;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+
+  .tile:hover .tile-arrow {
+    opacity: 0.8;
+    transform: translate(2px, -2px);
+  }
+
+  .col-1 .tile:hover .tile-arrow { color: var(--col1-light); }
+  .col-2 .tile:hover .tile-arrow { color: var(--col2-light); }
+  .col-3 .tile:hover .tile-arrow { color: var(--col3-light); }
+  .col-4 .tile:hover .tile-arrow { color: var(--col4-light); }
+
+  /* ============================================================
+     MODAL
+  ============================================================ */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.82);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    backdrop-filter: blur(4px);
+  }
+
+  .modal-overlay.open {
+    display: flex;
+    animation: fadeIn 0.2s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    width: 100%;
+    max-width: 760px;
+    max-height: 88vh;
+    overflow-y: auto;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.8);
+    animation: slideUp 0.22s ease;
+    position: relative;
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .modal-header {
+    padding: 24px 28px 20px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    sticky: top 0;
+  }
+
+  .modal-header-accent {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  }
+
+  .modal-col-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+  }
+
+  .modal-close {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.15s, color 0.15s;
+  }
+
+  .modal-close:hover { background: var(--crimson); color: white; border-color: var(--crimson); }
+
+  .modal-body {
+    padding: 24px 28px 32px;
+  }
+
+  /* Problems */
+  .problem-block {
+    margin-bottom: 28px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .problem-block:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .problem-num {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+  }
+
+  .problem-context {
+    font-size: 14px;
+    font-style: italic;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    padding-left: 12px;
+    border-left: 2px solid var(--border-light);
+  }
+
+  .problem-text {
+    font-size: 14.5px;
+    color: var(--text);
+    line-height: 1.7;
+    margin-bottom: 14px;
+  }
+
+  .problem-parts {
+    margin-left: 0;
+    list-style: none;
+  }
+
+  .problem-parts li {
+    font-size: 14px;
+    color: var(--text);
+    margin-bottom: 8px;
+    padding-left: 24px;
+    position: relative;
+    line-height: 1.6;
+  }
+
+  .problem-parts li::before {
+    content: attr(data-part);
+    position: absolute;
+    left: 0;
+    font-weight: 700;
+    color: var(--text-muted);
+  }
+
+  /* Show answer */
+  .answer-toggle {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 9px 16px;
+    color: var(--text-muted);
+    font-family: 'Source Serif 4', serif;
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.15s;
+    margin-top: 4px;
+  }
+
+  .answer-toggle:hover {
+    background: var(--surface3);
+    border-color: var(--border-light);
+    color: var(--text);
+  }
+
+  .answer-toggle .toggle-icon {
+    font-size: 10px;
+    transition: transform 0.2s;
+  }
+
+  .answer-toggle.open .toggle-icon {
+    transform: rotate(180deg);
+  }
+
+  .answer-panel {
+    display: none;
+    margin-top: 14px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-size: 13.5px;
+    line-height: 1.75;
+    color: var(--text);
+    animation: expandIn 0.18s ease;
+  }
+
+  @keyframes expandIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .answer-panel.open { display: block; }
+
+  .answer-part {
+    margin-bottom: 10px;
+    padding-left: 20px;
+    position: relative;
+  }
+
+  .answer-part:last-child { margin-bottom: 0; }
+
+  .answer-part-label {
+    position: absolute;
+    left: 0;
+    font-weight: 700;
+    color: var(--text-muted);
+  }
+
+  /* ============================================================
+     RESPONSIVE
+  ============================================================ */
+  @media (max-width: 1000px) {
+    .board-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 600px) {
+    .board-grid { grid-template-columns: 1fr; }
+    header { padding: 20px; }
+    .board-wrap { padding: 20px 12px 40px; }
+    .modal { border-radius: var(--radius); }
+    .modal-header, .modal-body { padding: 18px; }
+  }
+
+  /* Scrollbar */
+  .modal::-webkit-scrollbar { width: 6px; }
+  .modal::-webkit-scrollbar-track { background: var(--surface); }
+  .modal::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     HEADER
+============================================================ -->
+<header>
+  <div class="header-inner">
+    <div class="header-left">
+      <div class="school-tag">Middlesex School · mxschool.edu</div>
+      <h1>AP Statistics — <em>Inference</em> Choice Board</h1>
+      <div class="header-meta">
+        <span class="meta-pill">📊 Proportions & Means</span>
+        <span class="meta-pill">🔬 1-Sample & 2-Sample</span>
+        <span class="meta-pill">📝 AP Free-Response Style</span>
+        <span class="meta-pill">Mid-Unit Review</span>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="mx-logo">MX · AP STATS</div>
+    </div>
+  </div>
+</header>
+
+<div class="instructions">
+  Click any tile to open practice problems. Use <strong>Show Answer</strong> to check your work after attempting each part.
+</div>
+
+<!-- ============================================================
+     BOARD
+============================================================ -->
+<div class="board-wrap">
+  <div class="board-grid" id="board-grid">
+    <!-- Rendered by JS -->
+  </div>
+</div>
+
+<!-- ============================================================
+     MODAL
+============================================================ -->
+<div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div class="modal-header-accent" id="modal-accent"></div>
+      <div>
+        <div class="modal-col-label" id="modal-col-label"></div>
+        <div class="modal-title" id="modal-title"></div>
+      </div>
+      <button class="modal-close" id="modal-close" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   DATA — Edit problems here without touching layout code.
+   Structure:
+     columns[i].tiles[j].problems[k] = {
+       context: string,   // italic setup sentence (optional)
+       stem: string,      // paragraph before parts
+       parts: [{label, text}],
+       answers: [{label, text}]
+     }
+============================================================ */
+
+const columns = [
+  // ─────────────────────────────────────────────────────────
+  // COLUMN 1 — Inference for Proportions (1-sample)
+  // ─────────────────────────────────────────────────────────
+  {
+    id: "col-1",
+    accentVar: "var(--col1-light)",
+    headerClass: "col-1-header",
+    tileClass: "col-1",
+    label: "Column I",
+    title: "Inference for Proportions",
+    tiles: [
+      {
+        icon: "📐",
+        title: "Constructing a 1-Prop Confidence Interval",
+        sub: "Build & interpret one-sample CIs for a proportion",
+        problems: [
+          {
+            context: "Context: Social media & adolescent behavior",
+            stem: "A researcher surveyed a random sample of 200 high school students and found that 124 reported using social media for more than 3 hours per day.",
+            parts: [
+              { label: "(a)", text: "Identify the population of interest and define the parameter $p$ in context." },
+              { label: "(b)", text: "Check all conditions necessary for inference." },
+              { label: "(c)", text: "Construct and interpret a 95% confidence interval for $p$." }
+            ],
+            answers: [
+              { label: "(a)", text: "The population is all high school students. $p$ = the true proportion of all high school students who use social media more than 3 hours per day." },
+              { label: "(b)", text: "<strong>Random:</strong> Random sample ✓ &nbsp; <strong>Large Counts:</strong> $n\\hat{p} = 124 \\geq 10$ and $n(1-\\hat{p}) = 76 \\geq 10$ ✓ &nbsp; <strong>Independence:</strong> 200 students is less than 10% of all high school students ✓" },
+              { label: "(c)", text: "$\\hat{p} = 124/200 = 0.62$. &nbsp; $\\text{SE} = \\sqrt{(0.62)(0.38)/200} \\approx 0.0343$. &nbsp; $z^* = 1.96$ for 95%. &nbsp; Interval: $0.62 \\pm 1.96(0.0343) = (0.553, 0.687)$. <br><em>Interpretation:</em> We are 95% confident that the true proportion of high school students who use social media more than 3 hours per day is between 55.3% and 68.7%." }
+            ]
+          },
+          {
+            context: "Context: Consumer products",
+            stem: "A quality control manager at a bottling plant randomly selects 350 bottles and finds that 21 are underfilled. Construct a 90% confidence interval for the true proportion of underfilled bottles.",
+            parts: [
+              { label: "(a)", text: "Check the conditions for inference." },
+              { label: "(b)", text: "Calculate the interval and show all work." },
+              { label: "(c)", text: "The plant manager claims fewer than 5% of bottles are underfilled. Does your interval support this claim? Explain." }
+            ],
+            answers: [
+              { label: "(a)", text: "Random ✓ (random selection stated). Large Counts: $n\\hat{p} = 21 \\geq 10$ ✓ and $n(1-\\hat{p}) = 329 \\geq 10$ ✓. Independence: 350 < 10% of all bottles produced ✓." },
+              { label: "(b)", text: "$\\hat{p} = 21/350 = 0.06$. &nbsp; $z^* = 1.645$ for 90%. &nbsp; $\\text{SE} = \\sqrt{(0.06)(0.94)/350} \\approx 0.01271$. &nbsp; Interval: $0.06 \\pm 1.645(0.01271) = (0.039, 0.081)$." },
+              { label: "(c)", text: "The interval $(0.039, 0.081)$ includes values both below and above 5%, so we cannot confirm or refute the claim with 90% confidence. There is plausible evidence the true proportion could be below 5%, but we cannot rule out rates above 5% either." }
+            ]
+          },
+          {
+            context: "Context: Public health",
+            stem: "In a random sample of 500 adults in a large city, 310 reported receiving the flu vaccine last season. A public health official wants to estimate the true vaccination rate with a margin of error of no more than 3 percentage points at 95% confidence.",
+            parts: [
+              { label: "(a)", text: "Construct a 95% confidence interval for the true proportion of vaccinated adults." },
+              { label: "(b)", text: "Interpret the interval in context." },
+              { label: "(c)", text: "What minimum sample size would be needed to achieve the desired margin of error? Use $\\hat{p} = 0.62$ as a planning estimate." }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\hat{p} = 310/500 = 0.62$. $\\text{SE} = \\sqrt{(0.62)(0.38)/500} \\approx 0.02170$. Interval: $0.62 \\pm 1.96(0.02170) = (0.577, 0.663)$." },
+              { label: "(b)", text: "We are 95% confident that the true proportion of adults in this city who received the flu vaccine last season is between 57.7% and 66.3%." },
+              { label: "(c)", text: "$n \\geq \\left(\\dfrac{z^*}{ME}\\right)^2 \\hat{p}(1-\\hat{p}) = \\left(\\dfrac{1.96}{0.03}\\right)^2(0.62)(0.38) \\approx 1006.0$. Round up: $n = 1007$." }
+            ]
+          }
+        ]
+      },
+      {
+        icon: "🧪",
+        title: "Significance Test for 1 Proportion",
+        sub: "Hypotheses, test statistic, p-value, and conclusion",
+        problems: [
+          {
+            context: "Context: Environmental science",
+            stem: "An environmental agency claims that more than 30% of urban rivers contain detectable levels of microplastics. A researcher tests water samples from 180 randomly selected river sites and finds microplastics in 63 of them.",
+            parts: [
+              { label: "(a)", text: "State appropriate null and alternative hypotheses. Define any parameters used." },
+              { label: "(b)", text: "Check the conditions for the significance test." },
+              { label: "(c)", text: "Calculate the test statistic and p-value." },
+              { label: "(d)", text: "At $\\alpha = 0.05$, state your conclusion in context." }
+            ],
+            answers: [
+              { label: "(a)", text: "$H_0: p = 0.30$ vs. $H_a: p > 0.30$, where $p$ is the true proportion of urban river sites with detectable microplastic levels." },
+              { label: "(b)", text: "Random ✓ (random sample). Large Counts: $np_0 = 54 \\geq 10$ and $n(1-p_0) = 126 \\geq 10$ ✓. Independence: 180 < 10% of all urban river sites ✓." },
+              { label: "(c)", text: "$\\hat{p} = 63/180 = 0.35$. $z = \\dfrac{0.35 - 0.30}{\\sqrt{(0.30)(0.70)/180}} = \\dfrac{0.05}{0.03416} \\approx 1.46$. p-value $= P(Z > 1.46) \\approx 0.072$." },
+              { label: "(d)", text: "Since p-value $0.072 > \\alpha = 0.05$, we fail to reject $H_0$. We do not have sufficient evidence at the 5% level to conclude that more than 30% of urban river sites contain detectable microplastics." }
+            ]
+          },
+          {
+            context: "Context: Education",
+            stem: "A school district reports that historically 72% of students pass the state math proficiency exam on the first attempt. After implementing a new tutoring program, 198 of 250 randomly selected students passed on the first attempt. Does this provide convincing evidence that the pass rate has increased?",
+            parts: [
+              { label: "(a)", text: "Write appropriate hypotheses." },
+              { label: "(b)", text: "Calculate the test statistic and p-value." },
+              { label: "(c)", text: "Write a conclusion in context. Use $\\alpha = 0.05$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$H_0: p = 0.72$ vs. $H_a: p > 0.72$, where $p$ is the true proportion of students who pass on the first attempt after the tutoring program." },
+              { label: "(b)", text: "$\\hat{p} = 198/250 = 0.792$. $z = \\dfrac{0.792 - 0.72}{\\sqrt{(0.72)(0.28)/250}} \\approx \\dfrac{0.072}{0.02839} \\approx 2.54$. p-value $= P(Z > 2.54) \\approx 0.006$." },
+              { label: "(c)", text: "Since p-value $0.006 < \\alpha = 0.05$, we reject $H_0$. We have convincing evidence that the tutoring program increased the proportion of students passing the math proficiency exam on the first attempt." }
+            ]
+          },
+          {
+            context: "Context: Sports analytics",
+            stem: "A basketball player historically makes 78% of free throws. In a recent stretch of games, he made 91 of 125 free throw attempts. A coach suspects the player's performance has declined.",
+            parts: [
+              { label: "(a)", text: "State the hypotheses the coach should use." },
+              { label: "(b)", text: "Verify conditions and compute the test statistic and p-value." },
+              { label: "(c)", text: "State a conclusion at $\\alpha = 0.01$. Would your conclusion change at $\\alpha = 0.05$?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$H_0: p = 0.78$ vs. $H_a: p < 0.78$, where $p$ is the player's true free throw percentage during this period." },
+              { label: "(b)", text: "Random: reasonable to treat these as representative attempts ✓. Large Counts: $np_0 = 97.5 \\geq 10$, $n(1-p_0) = 27.5 \\geq 10$ ✓. Independence: shots are independent ✓. $\\hat{p} = 91/125 = 0.728$. $z = \\dfrac{0.728 - 0.78}{\\sqrt{(0.78)(0.22)/125}} \\approx \\dfrac{-0.052}{0.03708} \\approx -1.40$. p-value $= P(Z < -1.40) \\approx 0.081$." },
+              { label: "(c)", text: "At $\\alpha = 0.01$: p-value $0.081 > 0.01$ — fail to reject $H_0$. At $\\alpha = 0.05$: p-value $0.081 > 0.05$ — still fail to reject. In both cases, we do not have sufficient evidence that the player's free throw percentage has declined." }
+            ]
+          }
+        ]
+      },
+      {
+        icon: "📏",
+        title: "Checking Conditions for Proportions",
+        sub: "When and why conditions apply",
+        problems: [
+          {
+            context: "Context: Political polling",
+            stem: "A polling agency wants to estimate the proportion of registered voters in a county who support a ballot measure. They plan to survey 400 randomly selected voters from a county with 85,000 registered voters. They find 216 supporters.",
+            parts: [
+              { label: "(a)", text: "Check all three conditions for constructing a confidence interval for a proportion. Be specific for each." },
+              { label: "(b)", text: "Suppose only 8 voters in the sample opposed the measure. Which condition would be violated and why?" },
+              { label: "(c)", text: "Explain what 'independence' means in this context and why it matters." }
+            ],
+            answers: [
+              { label: "(a)", text: "<strong>Random:</strong> Voters were randomly selected ✓. <strong>Large Counts:</strong> $n\\hat{p} = 216 \\geq 10$ and $n(1-\\hat{p}) = 184 \\geq 10$ ✓. <strong>Independence (10% condition):</strong> $400 < 10\\%(85{,}000) = 8{,}500$ ✓." },
+              { label: "(b)", text: "The Large Counts condition would be violated. If only 8 opposed, then $n(1-\\hat{p}) = 8 < 10$, meaning there are not enough non-supporters in the sample to safely assume the sampling distribution of $\\hat{p}$ is approximately Normal." },
+              { label: "(c)", text: "Independence means each voter's response doesn't influence another's. In practice, since we are sampling without replacement, responses aren't truly independent — but if the sample is less than 10% of the population, the dependence is negligible and the Normal approximation still works well." }
+            ]
+          },
+          {
+            context: "Context: Medical research",
+            stem: "A researcher wants to test whether less than 20% of patients in a hospital experience a certain side effect from a medication. She reviews records for 40 randomly selected patients and finds 6 experienced the side effect.",
+            parts: [
+              { label: "(a)", text: "State the hypotheses for this test." },
+              { label: "(b)", text: "Check whether the Large Counts condition is met using $H_0$. Show your work." },
+              { label: "(c)", text: "Is it appropriate to proceed with a one-proportion $z$-test? Explain." }
+            ],
+            answers: [
+              { label: "(a)", text: "$H_0: p = 0.20$ vs. $H_a: p < 0.20$, where $p$ is the true proportion of patients who experience the side effect." },
+              { label: "(b)", text: "For significance tests, check using $p_0$: $np_0 = 40(0.20) = 8 < 10$. The Large Counts condition is NOT met." },
+              { label: "(c)", text: "It is not appropriate to proceed. Because $np_0 = 8 < 10$, the sampling distribution of $\\hat{p}$ may not be approximately Normal, so the $z$-test is not valid here. The researcher should consider using a different method or collecting a larger sample." }
+            ]
+          },
+          {
+            context: "Context: Consumer behavior",
+            stem: "A marketing firm conducts an online survey of 600 customers by sending emails to a list of past buyers. Of the 600 who responded, 420 said they would purchase the product again.",
+            parts: [
+              { label: "(a)", text: "Identify any condition that is likely violated. Explain why." },
+              { label: "(b)", text: "What is the consequence of this violation for inference?" },
+              { label: "(c)", text: "How could the firm redesign the study to make inference valid?" }
+            ],
+            answers: [
+              { label: "(a)", text: "The <strong>Random condition</strong> is likely violated. The firm emailed a list of past buyers who chose to respond — this is a voluntary response sample, not a random sample. Past buyers who respond are likely more satisfied than average customers." },
+              { label: "(b)", text: "Without a random sample, the results may be biased. The confidence interval or test result cannot be generalized to the broader customer population — the estimate of 70% repurchase intent is likely inflated." },
+              { label: "(c)", text: "The firm should randomly select customers from their full database (not just past buyers) and contact them directly — ideally using follow-up to reduce non-response. This would produce results that can be generalized to the population." }
+            ]
+          }
+        ]
+      },
+      {
+        icon: "📉",
+        title: "Margin of Error & Sample Size",
+        sub: "Planning studies and interpreting precision",
+        problems: [
+          {
+            context: "Context: Tech industry",
+            stem: "A technology company wants to estimate the proportion of users who experience a bug in their app. They want the margin of error to be at most 4 percentage points with 95% confidence. They have no prior estimate of the proportion.",
+            parts: [
+              { label: "(a)", text: "What sample size should they use? Use $\\hat{p} = 0.5$ as a conservative estimate." },
+              { label: "(b)", text: "If a prior study found the bug rate to be about 15%, what sample size would be needed?" },
+              { label: "(c)", text: "Explain in plain language why using $\\hat{p} = 0.5$ gives a larger sample size than $\\hat{p} = 0.15$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$n \\geq \\left(\\dfrac{1.96}{0.04}\\right)^2(0.5)(0.5) = (49)^2(0.25) = 600.25$. Round up: $n = 601$." },
+              { label: "(b)", text: "$n \\geq (49)^2(0.15)(0.85) = 2401(0.1275) \\approx 306.1$. Round up: $n = 307$." },
+              { label: "(c)", text: "$p(1-p)$ is maximized at $p = 0.5$, giving the highest possible variance in $\\hat{p}$. Using 0.5 ensures we don't underestimate the sample size regardless of the true proportion — it's the most conservative (safe) planning estimate." }
+            ]
+          },
+          {
+            context: "Context: Wildlife biology",
+            stem: "A wildlife biologist constructs a 95% confidence interval for the proportion of deer in a forest that carry a tick-borne illness. Based on a sample of 300 deer, the interval is $(0.112, 0.188)$.",
+            parts: [
+              { label: "(a)", text: "What is the point estimate $\\hat{p}$? What is the margin of error?" },
+              { label: "(b)", text: "Interpret the confidence interval in context." },
+              { label: "(c)", text: "A conservationist wants a margin of error of no more than 2%. Using $\\hat{p} = 0.15$, how many deer must be sampled?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\hat{p} = \\dfrac{0.112 + 0.188}{2} = 0.15$. Margin of error $= \\dfrac{0.188 - 0.112}{2} = 0.038$." },
+              { label: "(b)", text: "We are 95% confident that the true proportion of deer in this forest carrying a tick-borne illness is between 11.2% and 18.8%." },
+              { label: "(c)", text: "$n \\geq \\left(\\dfrac{1.96}{0.02}\\right)^2(0.15)(0.85) = (98)^2(0.1275) \\approx 1223.0$. Round up: $n = 1224$." }
+            ]
+          },
+          {
+            context: "Context: Agriculture",
+            stem: "A seed company claims that 90% of their seeds germinate. A skeptical farmer surveys a random sample of 150 seeds and finds 126 germinate. She constructs a 95% confidence interval.",
+            parts: [
+              { label: "(a)", text: "Construct the 95% confidence interval." },
+              { label: "(b)", text: "Does the interval provide evidence against the company's claim? Explain." },
+              { label: "(c)", text: "If the farmer wants the margin of error to be at most 2.5%, what sample size should she use?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\hat{p} = 126/150 = 0.84$. $\\text{SE} = \\sqrt{(0.84)(0.16)/150} \\approx 0.02988$. Interval: $0.84 \\pm 1.96(0.02988) = (0.781, 0.899)$." },
+              { label: "(b)", text: "Yes. The claimed germination rate of 0.90 falls outside the confidence interval $(0.781, 0.899)$, providing evidence that the true germination rate is lower than 90% for this company's seeds." },
+              { label: "(c)", text: "Using $\\hat{p} = 0.84$: $n \\geq \\left(\\dfrac{1.96}{0.025}\\right)^2(0.84)(0.16) = (78.4)^2(0.1344) \\approx 826.1$. Round up: $n = 827$." }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  // ─────────────────────────────────────────────────────────
+  // COLUMN 2 — Comparing Two Proportions
+  // ─────────────────────────────────────────────────────────
+  {
+    id: "col-2",
+    accentVar: "var(--col2-light)",
+    headerClass: "col-2-header",
+    tileClass: "col-2",
+    label: "Column II",
+    title: "Comparing Two Proportions",
+    tiles: [
+      {
+        icon: "🔁",
+        title: "Constructing a 2-Prop CI",
+        sub: "Estimating the difference between two proportions",
+        problems: [
+          {
+            context: "Context: Medicine / public health",
+            stem: "A study examined whether a new drug reduces the proportion of patients who experience post-surgery complications. Of 180 patients who received the drug, 27 had complications. Of 200 patients in the control group, 46 had complications. Estimate the difference in complication rates.",
+            parts: [
+              { label: "(a)", text: "Define the parameters $p_1$ and $p_2$ in context." },
+              { label: "(b)", text: "Check conditions for constructing a confidence interval for $p_1 - p_2$." },
+              { label: "(c)", text: "Construct and interpret a 95% confidence interval for $p_1 - p_2$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$p_1$ = true proportion of patients receiving the drug who experience complications. $p_2$ = true proportion of control patients who experience complications." },
+              { label: "(b)", text: "Random ✓ (implied by study design). Large Counts: $180(0.15)=27 \\geq 10$, $180(0.85)=153 \\geq 10$, $200(0.23)=46 \\geq 10$, $200(0.77)=154 \\geq 10$ ✓. Independence: both samples < 10% of populations ✓." },
+              { label: "(c)", text: "$\\hat{p}_1 = 27/180 = 0.150$, $\\hat{p}_2 = 46/200 = 0.230$. Difference: $-0.080$. $\\text{SE} = \\sqrt{\\dfrac{0.15(0.85)}{180} + \\dfrac{0.23(0.77)}{200}} \\approx 0.03726$. Interval: $-0.080 \\pm 1.96(0.03726) = (-0.153, -0.007)$. We are 95% confident the drug group has a complication rate that is between 0.7 and 15.3 percentage points lower than the control group." }
+            ]
+          },
+          {
+            context: "Context: Education",
+            stem: "Researchers want to compare the proportion of students who score proficient on a standardized test in two different schools. At School A (random sample of 120 students), 78 scored proficient. At School B (random sample of 95 students), 52 scored proficient.",
+            parts: [
+              { label: "(a)", text: "Construct a 90% confidence interval for $p_A - p_B$." },
+              { label: "(b)", text: "Interpret the interval in context." },
+              { label: "(c)", text: "Based on your interval, is there convincing evidence that the proficiency rates differ? Explain." }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\hat{p}_A = 78/120 = 0.65$, $\\hat{p}_B = 52/95 \\approx 0.547$. Difference: $0.103$. $\\text{SE} = \\sqrt{\\dfrac{0.65(0.35)}{120} + \\dfrac{0.547(0.453)}{95}} \\approx 0.06374$. $z^* = 1.645$. Interval: $0.103 \\pm 1.645(0.06374) = (-0.002, 0.208)$." },
+              { label: "(b)", text: "We are 90% confident that the difference in proficiency rates (School A minus School B) is between −0.2 and 20.8 percentage points." },
+              { label: "(c)", text: "No — the interval includes 0, which means a difference of zero is plausible. We do not have convincing evidence at the 90% level that the proficiency rates differ between the two schools." }
+            ]
+          },
+          {
+            context: "Context: Consumer behavior",
+            stem: "A retailer tests two versions of a webpage. Version A was shown to 400 randomly selected visitors, 112 of whom made a purchase. Version B was shown to 350 randomly selected visitors, 84 of whom made a purchase.",
+            parts: [
+              { label: "(a)", text: "Construct a 99% confidence interval for $p_A - p_B$." },
+              { label: "(b)", text: "Interpret the interval." },
+              { label: "(c)", text: "Should the retailer adopt Version A? Justify using your interval." }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\hat{p}_A = 112/400 = 0.28$, $\\hat{p}_B = 84/350 = 0.24$. Difference: $0.04$. $\\text{SE} = \\sqrt{\\dfrac{0.28(0.72)}{400} + \\dfrac{0.24(0.76)}{350}} \\approx 0.03202$. $z^* = 2.576$. Interval: $0.04 \\pm 2.576(0.03202) = (-0.042, 0.122)$." },
+              { label: "(b)", text: "We are 99% confident that the difference in purchase rates (Version A minus Version B) is between −4.2 and 12.2 percentage points." },
+              { label: "(c)", text: "The interval includes 0, so we cannot conclude Version A has a higher purchase rate at the 99% level. The retailer does not yet have sufficient statistical evidence to adopt Version A over Version B." }
+            ]
+          }
+        ]
+      },
+      {
+        icon: "⚖️",
+        title: "Significance Test for 2 Proportions",
+        sub: "Pooled z-test for difference in proportions",
+        problems: [
+          {
+            context: "Context: Medicine / vaccine trials",
+            stem: "A pharmaceutical company tested a new flu vaccine. Of 240 volunteers who received the vaccine, 18 contracted the flu. Of 210 volunteers who received a placebo, 31 contracted the flu. Researchers want to know if the vaccine reduces the proportion of people who get the flu.",
+            parts: [
+              { label: "(a)", text: "State appropriate hypotheses. Define all parameters." },
+              { label: "(b)", text: "Check the conditions for inference." },
+              { label: "(c)", text: "Calculate the pooled proportion, test statistic, and p-value." },
+              { label: "(d)", text: "At $\\alpha = 0.05$, state your conclusion in context." }
+            ],
+            answers: [
+              { label: "(a)", text: "$H_0: p_1 - p_2 = 0$ vs. $H_a: p_1 - p_2 < 0$, where $p_1$ = true proportion who get flu (vaccine group), $p_2$ = true proportion who get flu (placebo group)." },
+              { label: "(b)", text: "Random ✓ (volunteers randomly assigned). Large Counts: $240(0.075)=18 \\geq 10$, $240(0.925)=222 \\geq 10$, $210(0.148)=31 \\geq 10$, $210(0.852)=179 \\geq 10$ ✓. Independence ✓." },
+              { label: "(c)", text: "$\\hat{p}_c = \\dfrac{18+31}{240+210} = \\dfrac{49}{450} \\approx 0.1089$. $z = \\dfrac{(0.075 - 0.1476)}{\\sqrt{0.1089(0.8911)\\left(\\frac{1}{240}+\\frac{1}{210}\\right)}} \\approx \\dfrac{-0.0726}{0.02999} \\approx -2.42$. p-value $= P(Z < -2.42) \\approx 0.008$." },
+              { label: "(d)", text: "Since p-value $0.008 < \\alpha = 0.05$, we reject $H_0$. We have convincing evidence that the vaccine reduces the true proportion of people who contract the flu compared to the placebo." }
+            ]
+          },
+          {
+            context: "Context: Sports analytics",
+            stem: "In the first half of the season, a baseball team's pitcher struck out 42% of batters faced (from 200 at-bats). In the second half, he struck out 51 batters out of 140 faced. Has the strikeout rate significantly changed?",
+            parts: [
+              { label: "(a)", text: "State hypotheses for a two-sided test." },
+              { label: "(b)", text: "Calculate the pooled proportion and test statistic." },
+              { label: "(c)", text: "Find the p-value and state your conclusion at $\\alpha = 0.05$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$H_0: p_1 - p_2 = 0$ vs. $H_a: p_1 - p_2 \\neq 0$, where $p_1$ = true strikeout rate in first half, $p_2$ = true strikeout rate in second half." },
+              { label: "(b)", text: "$\\hat{p}_1 = 84/200 = 0.42$, $\\hat{p}_2 = 51/140 \\approx 0.364$. $\\hat{p}_c = 135/340 \\approx 0.397$. $z = \\dfrac{0.42 - 0.364}{\\sqrt{0.397(0.603)\\left(\\frac{1}{200}+\\frac{1}{140}\\right)}} \\approx \\dfrac{0.056}{0.05283} \\approx 1.06$." },
+              { label: "(c)", text: "p-value $= 2 \\cdot P(Z > 1.06) \\approx 2(0.145) = 0.290$. Since $0.290 > 0.05$, we fail to reject $H_0$. We do not have convincing evidence that the pitcher's strikeout rate changed between the first and second halves of the season." }
+            ]
+          },
+          {
+            context: "Context: Social science",
+            stem: "A sociologist studies smartphone use among teenagers versus adults. Of 320 randomly sampled teens, 278 report checking their phone within 5 minutes of waking up. Of 280 randomly sampled adults, 196 report the same behavior.",
+            parts: [
+              { label: "(a)", text: "State the hypotheses to test whether teens check their phones at a higher rate than adults." },
+              { label: "(b)", text: "Check conditions, then compute the test statistic and p-value." },
+              { label: "(c)", text: "State a conclusion in context at $\\alpha = 0.01$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$H_0: p_T - p_A = 0$ vs. $H_a: p_T - p_A > 0$, where $p_T$ = true proportion of teens and $p_A$ = true proportion of adults who check their phone within 5 minutes of waking." },
+              { label: "(b)", text: "Large Counts: all four counts ($278, 42, 196, 84$) $\\geq 10$ ✓. Random ✓. Independence ✓. $\\hat{p}_T = 278/320 = 0.869$, $\\hat{p}_A = 196/280 = 0.700$. $\\hat{p}_c = 474/600 = 0.790$. $z = \\dfrac{0.169}{\\sqrt{0.790(0.210)\\left(\\frac{1}{320}+\\frac{1}{280}\\right)}} \\approx \\dfrac{0.169}{0.03289} \\approx 5.14$. p-value $\\approx 0.000$." },
+              { label: "(c)", text: "Since p-value $< 0.01$, we reject $H_0$. We have very convincing evidence that teens check their phones within 5 minutes of waking at a higher rate than adults." }
+            ]
+          }
+        ]
+      },
+      {
+        icon: "🔍",
+        title: "Interpreting & Concluding (2 Props)",
+        sub: "Making sense of intervals and test results",
+        problems: [
+          {
+            context: "Context: Public health",
+            stem: "A researcher conducts a two-proportion z-test to compare the proportion of smokers in two age groups who develop lung disease. The test produces $z = 2.31$ and p-value $= 0.021$.",
+            parts: [
+              { label: "(a)", text: "Interpret the p-value in context." },
+              { label: "(b)", text: "At $\\alpha = 0.05$, state the conclusion. At $\\alpha = 0.01$, does the conclusion change?" },
+              { label: "(c)", text: "Explain the difference between statistical significance and practical significance in this context." }
+            ],
+            answers: [
+              { label: "(a)", text: "If there were truly no difference in the proportion of smokers who develop lung disease between the two age groups, the probability of observing a test statistic as extreme as $z = 2.31$ or more extreme by chance alone is approximately 0.021." },
+              { label: "(b)", text: "At $\\alpha = 0.05$: p-value $0.021 < 0.05$ — reject $H_0$; convincing evidence of a difference. At $\\alpha = 0.01$: p-value $0.021 > 0.01$ — fail to reject $H_0$; not sufficient evidence at this stricter standard." },
+              { label: "(c)", text: "Statistical significance means we have evidence the difference isn't zero. Practical significance asks whether the difference is large enough to matter in the real world — a small age-group difference in disease rates might be statistically significant with a large sample, but too small to change clinical recommendations." }
+            ]
+          },
+          {
+            context: "Context: Criminal justice",
+            stem: "A 95% confidence interval for $p_1 - p_2$ (recidivism rate, Program A minus Program B) is $(-0.14, 0.03)$.",
+            parts: [
+              { label: "(a)", text: "Interpret this interval in context." },
+              { label: "(b)", text: "Can we conclude that Program B has a lower recidivism rate? Explain." },
+              { label: "(c)", text: "If the interval had been $(-0.14, -0.03)$, how would your answer change?" }
+            ],
+            answers: [
+              { label: "(a)", text: "We are 95% confident that the difference in recidivism rates (Program A minus Program B) is between $-14$ and $+3$ percentage points." },
+              { label: "(b)", text: "No. Because the interval contains 0 and positive values, it is plausible that there is no difference or that Program A actually has a lower rate. We cannot conclude Program B is better." },
+              { label: "(c)", text: "If the interval were $(-0.14, -0.03)$, all values would be negative, indicating Program A's recidivism rate is lower than Program B's by somewhere between 3 and 14 percentage points. This would provide convincing evidence that Program A is more effective." }
+            ]
+          },
+          {
+            context: "Context: Environmental science",
+            stem: "A study compares the proportion of trees showing drought stress in two forest regions. A two-sided test yields $z = -1.78$ and p-value $= 0.075$. A 95% CI for $p_1 - p_2$ is $(-0.18, 0.01)$.",
+            parts: [
+              { label: "(a)", text: "What does the sign of $z = -1.78$ tell you about the direction of the difference?" },
+              { label: "(b)", text: "Is there a statistically significant difference at $\\alpha = 0.05$? Explain." },
+              { label: "(c)", text: "How is the conclusion from the CI consistent with the p-value result?" }
+            ],
+            answers: [
+              { label: "(a)", text: "The negative $z$-value indicates that $\\hat{p}_1 < \\hat{p}_2$ — Region 1 had a lower observed proportion of drought-stressed trees than Region 2." },
+              { label: "(b)", text: "No. p-value $0.075 > \\alpha = 0.05$, so we fail to reject $H_0$. We do not have convincing evidence at the 5% level of a significant difference in drought stress rates." },
+              { label: "(c)", text: "The CI $(-0.18, 0.01)$ includes 0, which is consistent with failing to reject $H_0$. A CI for a difference that captures 0 corresponds directly to a two-sided test that does not reject $H_0$ at the same significance level. Both lead to the same conclusion." }
+            ]
+          }
+        ]
+      },
+      {
+        icon: "🎯",
+        title: "Mixed Practice — Proportions",
+        sub: "Full AP-style multi-part problems",
+        problems: [
+          {
+            context: "Context: Agriculture & genetics",
+            stem: "A geneticist believes a new strain of corn should produce yellow kernels 75% of the time. She plants 400 seeds and observes 288 yellow kernels. She also compares two fields: Field A (n=200, 156 yellow) and Field B (n=180, 126 yellow).",
+            parts: [
+              { label: "(a)", text: "Test whether the proportion of yellow kernels differs from 75%. Use $\\alpha = 0.05$ and show all steps." },
+              { label: "(b)", text: "Construct a 95% CI for the difference in yellow kernel proportions between Field A and Field B." },
+              { label: "(c)", text: "Based on your CI, is there convincing evidence of a difference between the two fields?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$H_0: p=0.75$, $H_a: p \\neq 0.75$. $\\hat{p}=288/400=0.72$. Large Counts: $400(0.75)=300 \\geq 10$, $400(0.25)=100 \\geq 10$ ✓. $z = \\dfrac{0.72-0.75}{\\sqrt{(0.75)(0.25)/400}} = \\dfrac{-0.03}{0.02165} \\approx -1.39$. p-value $= 2P(Z < -1.39) \\approx 0.165$. Since $0.165 > 0.05$, fail to reject $H_0$. No convincing evidence the proportion differs from 75%." },
+              { label: "(b)", text: "$\\hat{p}_A = 156/200 = 0.78$, $\\hat{p}_B = 126/180 = 0.700$. Difference: $0.08$. $\\text{SE} = \\sqrt{\\dfrac{0.78(0.22)}{200}+\\dfrac{0.70(0.30)}{180}} \\approx 0.04370$. Interval: $0.08 \\pm 1.96(0.04370) = (-0.006, 0.166)$." },
+              { label: "(c)", text: "The interval $(-0.006, 0.166)$ just barely includes 0, so we cannot conclude at the 95% level that the two fields have different yellow kernel proportions. The result is inconclusive." }
+            ]
+          },
+          {
+            context: "Context: Online learning",
+            stem: "An education researcher compares completion rates for an online course between students who receive weekly coaching check-ins and those who do not. Of 150 coached students, 108 completed the course. Of 170 uncoached students, 102 completed.",
+            parts: [
+              { label: "(a)", text: "Conduct a two-proportion significance test. Use $\\alpha = 0.05$. Show all steps." },
+              { label: "(b)", text: "Also construct a 95% CI for the difference in completion rates." },
+              { label: "(c)", text: "Are your conclusions from (a) and (b) consistent? Explain." }
+            ],
+            answers: [
+              { label: "(a)", text: "$H_0: p_C - p_U = 0$ vs. $H_a: p_C - p_U > 0$. $\\hat{p}_C = 0.72$, $\\hat{p}_U = 0.60$. $\\hat{p}_c = 210/320 = 0.65625$. $z = \\dfrac{0.12}{\\sqrt{0.656(0.344)(\\frac{1}{150}+\\frac{1}{170})}} \\approx \\dfrac{0.12}{0.05285} \\approx 2.27$. p-value $\\approx 0.012$. Since $0.012 < 0.05$, reject $H_0$. Convincing evidence coaching increases completion rate." },
+              { label: "(b)", text: "$\\text{SE} = \\sqrt{\\dfrac{0.72(0.28)}{150}+\\dfrac{0.60(0.40)}{170}} \\approx 0.05275$. Interval: $0.12 \\pm 1.96(0.05275) = (0.017, 0.223)$." },
+              { label: "(c)", text: "Yes, consistent. The test rejected $H_0$ (one-sided at $\\alpha=0.05$), and the CI lies entirely above 0 (since the one-sided rejection corresponds to the lower bound being above 0 at a comparable level). Both indicate the coached group has a higher completion rate." }
+            ]
+          },
+          {
+            context: "Context: Political science",
+            stem: "A pollster surveys voters in two states about support for a proposed federal tax policy. In State 1, 340 of 600 surveyed support it. In State 2, 280 of 500 surveyed support it.",
+            parts: [
+              { label: "(a)", text: "Construct a 99% CI for $p_1 - p_2$." },
+              { label: "(b)", text: "Interpret the interval." },
+              { label: "(c)", text: "A news headline reads: 'Support for policy significantly higher in State 1.' Is this headline justified? Explain." }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\hat{p}_1 = 340/600 \\approx 0.567$, $\\hat{p}_2 = 280/500 = 0.560$. Difference: $0.007$. $\\text{SE} = \\sqrt{\\dfrac{0.567(0.433)}{600}+\\dfrac{0.560(0.440)}{500}} \\approx 0.03085$. $z^*=2.576$. Interval: $0.007 \\pm 2.576(0.03085) = (-0.072, 0.086)$." },
+              { label: "(b)", text: "We are 99% confident the difference in support rates (State 1 minus State 2) is between −7.2 and 8.6 percentage points." },
+              { label: "(c)", text: "No, the headline is not justified. The CI includes 0, indicating no statistically significant difference at the 99% level. The observed difference of 0.7 percentage points is well within what could be due to sampling variability alone." }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  // ─────────────────────────────────────────────────────────
+  // COLUMN 3 — Inference for Means (1-sample)
+  // ─────────────────────────────────────────────────────────
+  {
+    id: "col-3",
+    accentVar: "var(--col3-light)",
+    headerClass: "col-3-header",
+    tileClass: "col-3",
+    label: "Column III",
+    title: "Inference for Means",
+    tiles: [
+      {
+        icon: "📊",
+        title: "Constructing a 1-Sample t-CI",
+        sub: "t-intervals for unknown population means",
+        problems: [
+          {
+            context: "Context: Nutrition & fitness",
+            stem: "A nutritionist wants to estimate the average daily caloric intake of adult male athletes. She collects data from a random sample of 22 athletes and finds $\\bar{x} = 3{,}240$ calories with $s = 420$ calories. Assume the population distribution is approximately Normal.",
+            parts: [
+              { label: "(a)", text: "Identify the parameter of interest." },
+              { label: "(b)", text: "Check conditions and identify the appropriate distribution." },
+              { label: "(c)", text: "Construct and interpret a 95% confidence interval for the mean caloric intake." }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\mu$ = the true mean daily caloric intake of all adult male athletes." },
+              { label: "(b)", text: "Random ✓. Normal/Large Sample: $n = 22 < 30$, but population distribution is stated to be approximately Normal ✓. Independence: 22 < 10% of all adult male athletes ✓. Use $t$-distribution with $df = 21$." },
+              { label: "(c)", text: "$t^* = 2.080$ (df=21, 95%). $\\text{SE} = 420/\\sqrt{22} \\approx 89.55$. Interval: $3240 \\pm 2.080(89.55) = (3054, 3426)$. We are 95% confident the true mean daily caloric intake of adult male athletes is between 3,054 and 3,426 calories." }
+            ]
+          },
+          {
+            context: "Context: Environmental science",
+            stem: "An environmental scientist measures the pH of 30 randomly selected water samples from a lake. She records $\\bar{x} = 6.82$ and $s = 0.31$.",
+            parts: [
+              { label: "(a)", text: "Construct a 90% confidence interval for the true mean pH of the lake." },
+              { label: "(b)", text: "Interpret the interval." },
+              { label: "(c)", text: "A chemist claims the mean pH is below 7.0. Is your interval consistent with this claim? Explain." }
+            ],
+            answers: [
+              { label: "(a)", text: "$n = 30 \\geq 30$ (CLT) ✓. $t^* \\approx 1.699$ (df=29, 90%). $\\text{SE} = 0.31/\\sqrt{30} \\approx 0.05660$. Interval: $6.82 \\pm 1.699(0.05660) = (6.724, 6.916)$." },
+              { label: "(b)", text: "We are 90% confident the true mean pH of the lake is between 6.724 and 6.916." },
+              { label: "(c)", text: "Yes, consistent. The entire interval lies below 7.0, which supports the chemist's claim that the mean pH is below 7.0." }
+            ]
+          },
+          {
+            context: "Context: Consumer products",
+            stem: "A company claims their batteries last an average of 50 hours. An independent testing lab measures the lifetimes of 18 randomly selected batteries and records $\\bar{x} = 47.3$ hours and $s = 5.8$ hours. Assume battery lifetimes are approximately Normally distributed.",
+            parts: [
+              { label: "(a)", text: "Construct a 99% confidence interval for the true mean battery lifetime." },
+              { label: "(b)", text: "Does the interval cast doubt on the company's claim? Explain." },
+              { label: "(c)", text: "What would happen to the width of the interval if the sample size increased to 50? Explain without computing." }
+            ],
+            answers: [
+              { label: "(a)", text: "$t^* = 2.898$ (df=17, 99%). $\\text{SE} = 5.8/\\sqrt{18} \\approx 1.3674$. Interval: $47.3 \\pm 2.898(1.3674) = (43.34, 51.26)$." },
+              { label: "(b)", text: "The interval $(43.34, 51.26)$ contains 50 hours, so we cannot rule out the company's claim at the 99% level. The claimed value of 50 is plausible." },
+              { label: "(c)", text: "The interval would be narrower. A larger sample reduces the standard error ($s/\\sqrt{n}$) and uses a smaller $t^*$ value (more degrees of freedom moves $t^*$ closer to $z^*$), both of which decrease the margin of error." }
+            ]
+          }
+        ]
+      },
+      {
+        icon: "⚗️",
+        title: "Significance Test for 1 Mean",
+        sub: "One-sample t-test: hypotheses to conclusion",
+        problems: [
+          {
+            context: "Context: Sleep science",
+            stem: "The CDC recommends that teenagers get at least 8 hours of sleep per night. A health researcher believes the average sleep time for teenagers at a large high school is less than 8 hours. A random sample of 25 students reports a mean of $\\bar{x} = 7.2$ hours with $s = 1.1$ hours. Assume sleep times are approximately Normal.",
+            parts: [
+              { label: "(a)", text: "State appropriate hypotheses." },
+              { label: "(b)", text: "Check conditions and calculate the test statistic." },
+              { label: "(c)", text: "Find the p-value and state your conclusion at $\\alpha = 0.05$ in context." }
+            ],
+            answers: [
+              { label: "(a)", text: "$H_0: \\mu = 8$ vs. $H_a: \\mu < 8$, where $\\mu$ = true mean nightly sleep hours for students at this school." },
+              { label: "(b)", text: "Random ✓. Normal: $n=25 < 30$, but population stated approximately Normal ✓. Independence ✓. $t = \\dfrac{7.2 - 8}{1.1/\\sqrt{25}} = \\dfrac{-0.8}{0.22} \\approx -3.636$." },
+              { label: "(c)", text: "df = 24. p-value $= P(t_{24} < -3.636) \\approx 0.001$. Since $0.001 < 0.05$, we reject $H_0$. We have convincing evidence that the true mean sleep time for students at this school is less than 8 hours per night." }
+            ]
+          },
+          {
+            context: "Context: Manufacturing",
+            stem: "A factory produces metal rods with a target mean diameter of 5.00 cm. A quality control inspector samples 40 rods and records $\\bar{x} = 5.04$ cm with $s = 0.12$ cm.",
+            parts: [
+              { label: "(a)", text: "Write hypotheses for a two-sided test." },
+              { label: "(b)", text: "Compute the test statistic. Using a $t$-table, estimate the p-value." },
+              { label: "(c)", text: "State your conclusion at $\\alpha = 0.01$ in context." }
+            ],
+            answers: [
+              { label: "(a)", text: "$H_0: \\mu = 5.00$ vs. $H_a: \\mu \\neq 5.00$, where $\\mu$ = true mean diameter of rods produced by the factory." },
+              { label: "(b)", text: "$t = \\dfrac{5.04 - 5.00}{0.12/\\sqrt{40}} = \\dfrac{0.04}{0.01897} \\approx 2.108$ with df = 39. For a two-sided test, p-value is between $2(0.02) = 0.04$ and $2(0.025) = 0.05$ — approximately $0.042$." },
+              { label: "(c)", text: "Since p-value $\\approx 0.042 > \\alpha = 0.01$, we fail to reject $H_0$. We do not have sufficient evidence at the 1% level to conclude the mean rod diameter differs from 5.00 cm." }
+            ]
+          },
+          {
+            context: "Context: Psychology",
+            stem: "A cognitive psychologist wants to test whether a new memory training program improves recall. Before training, participants remembered a mean of 12 words from a list. After training, a random sample of 20 participants recalled a mean of $\\bar{x} = 14.3$ words with $s = 3.6$ words. Assume scores are approximately Normal.",
+            parts: [
+              { label: "(a)", text: "State hypotheses. Define the parameter." },
+              { label: "(b)", text: "Compute $t$ and estimate the p-value." },
+              { label: "(c)", text: "At $\\alpha = 0.05$, state your conclusion. What type of error could you be making?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$H_0: \\mu = 12$ vs. $H_a: \\mu > 12$, where $\\mu$ = true mean number of words recalled by participants after the training program." },
+              { label: "(b)", text: "$t = \\dfrac{14.3 - 12}{3.6/\\sqrt{20}} = \\dfrac{2.3}{0.8050} \\approx 2.857$. df = 19. p-value $= P(t_{19} > 2.857) \\approx 0.005$." },
+              { label: "(c)", text: "Since p-value $0.005 < 0.05$, we reject $H_0$. We have convincing evidence that the true mean recall improved after training. We could be making a <strong>Type I error</strong> — concluding the program works when in fact it doesn't." }
+            ]
+          }
+        ]
+      },
+      {
+        icon: "✅",
+        title: "Checking Conditions for Means",
+        sub: "Normal condition, CLT, and independence",
+        problems: [
+          {
+            context: "Context: Economics",
+            stem: "A researcher wants to estimate the mean household income in a rural county. She takes a random sample of 12 households. The distribution of incomes in the county is known to be strongly right-skewed.",
+            parts: [
+              { label: "(a)", text: "Is the Normal/Large Sample condition met? Explain carefully." },
+              { label: "(b)", text: "What would you recommend the researcher do to proceed with inference?" },
+              { label: "(c)", text: "Suppose instead $n = 45$ and the distribution is still skewed. Is inference now appropriate? Explain." }
+            ],
+            answers: [
+              { label: "(a)", text: "No. $n = 12 < 30$, and the population distribution is strongly right-skewed. The sampling distribution of $\\bar{x}$ may not be approximately Normal, so the $t$-interval is not reliable here." },
+              { label: "(b)", text: "The researcher should increase the sample size to at least 30–40 (more if skew is severe). With a larger sample, the CLT justifies approximate Normality of $\\bar{x}$ even when the population is skewed." },
+              { label: "(c)", text: "With $n = 45 \\geq 30$, the CLT applies. Even with skewness, the sampling distribution of $\\bar{x}$ is approximately Normal for large samples, so a $t$-interval would be appropriate." }
+            ]
+          },
+          {
+            context: "Context: Ecology",
+            stem: "A biologist measures the lengths (in cm) of 15 randomly selected fish from a lake. The data are: 14.2, 15.0, 13.8, 16.1, 14.5, 15.3, 14.9, 13.5, 15.7, 14.1, 16.3, 15.0, 14.8, 13.9, 15.2.",
+            parts: [
+              { label: "(a)", text: "Describe how you would check the Normal condition with this sample size." },
+              { label: "(b)", text: "Can she proceed with a $t$-test if the dotplot shows a roughly symmetric, single-peaked distribution with no outliers? Explain." },
+              { label: "(c)", text: "What feature of the data would most concern you when checking conditions for $n = 15$?" }
+            ],
+            answers: [
+              { label: "(a)", text: "With $n = 15 < 30$, we must examine the data for strong skewness or outliers. Make a dotplot, boxplot, or Normal probability plot and check for symmetry. We cannot use the CLT with this sample size — we rely on the population being approximately Normal." },
+              { label: "(b)", text: "Yes. If the dotplot shows a roughly symmetric, single-peaked distribution with no outliers, there is no strong evidence against approximate Normality. It is reasonable to proceed with a one-sample $t$-test." },
+              { label: "(c)", text: "The most concerning features would be <strong>outliers</strong> (which strongly influence $\\bar{x}$ and $s$) or <strong>strong skewness</strong> (which means the population may not be Normal). Either would compromise the validity of the $t$-interval or test." }
+            ]
+          },
+          {
+            context: "Context: Urban planning",
+            stem: "A city planner randomly selects 50 residents from a list of all 40,000 registered residents and asks how many minutes they spend commuting each day. She finds $\\bar{x} = 38.4$ min and $s = 11.7$ min.",
+            parts: [
+              { label: "(a)", text: "Check all three conditions for a one-sample $t$-interval." },
+              { label: "(b)", text: "Is the 10% condition necessary here? Why or why not?" },
+              { label: "(c)", text: "Construct a 95% CI and interpret it in context." }
+            ],
+            answers: [
+              { label: "(a)", text: "<strong>Random:</strong> Random sample from registered residents ✓. <strong>Normal/Large Sample:</strong> $n = 50 \\geq 30$, CLT applies ✓. <strong>Independence:</strong> $50 < 10\\%(40{,}000) = 4{,}000$ ✓." },
+              { label: "(b)", text: "Yes — since sampling is without replacement, we need the sample to be less than 10% of the population to treat observations as approximately independent. Here $50 \\ll 4{,}000$ so the condition is satisfied." },
+              { label: "(c)", text: "$t^* \\approx 2.010$ (df=49, 95%). $\\text{SE} = 11.7/\\sqrt{50} \\approx 1.655$. Interval: $38.4 \\pm 2.010(1.655) = (35.1, 41.7)$. We are 95% confident the true mean daily commute time for all registered residents of this city is between 35.1 and 41.7 minutes." }
+            ]
+          }
+        ]
+      },
+      {
+        icon: "📐",
+        title: "Margin of Error & t*",
+        sub: "Precision, degrees of freedom, and planning",
+        problems: [
+          {
+            context: "Context: Sports science",
+            stem: "A sports scientist wants to estimate the mean recovery time (in hours) after a marathon for elite runners. She plans to use a 90% confidence interval with a margin of error of at most 2 hours. From a pilot study, $s \\approx 8$ hours.",
+            parts: [
+              { label: "(a)", text: "Using $z^* = 1.645$ as an approximation, find the minimum sample size." },
+              { label: "(b)", text: "Explain why using $z^*$ instead of $t^*$ is reasonable for planning purposes." },
+              { label: "(c)", text: "If she collects $n = 45$ runners and finds $\\bar{x} = 54.3$ hours, $s = 7.6$ hours, construct the 90% CI." }
+            ],
+            answers: [
+              { label: "(a)", text: "$n \\geq \\left(\\dfrac{z^* \\cdot s}{ME}\\right)^2 = \\left(\\dfrac{1.645 \\times 8}{2}\\right)^2 = (6.58)^2 \\approx 43.3$. Round up: $n = 44$." },
+              { label: "(b)", text: "When planning a study, we don't know $n$ yet, so we can't determine the degrees of freedom for $t^*$. Using $z^*$ gives a conservative (slightly underestimated) required sample size — once $n$ is large enough, $t^*$ and $z^*$ are nearly equal anyway." },
+              { label: "(c)", text: "$t^* \\approx 1.680$ (df=44, 90%). $\\text{SE} = 7.6/\\sqrt{45} \\approx 1.133$. Interval: $54.3 \\pm 1.680(1.133) = (52.4, 56.2)$. We are 90% confident the true mean recovery time for elite marathon runners is between 52.4 and 56.2 hours." }
+            ]
+          },
+          {
+            context: "Context: Climatology",
+            stem: "A climate researcher constructs a 95% $t$-interval for the mean annual rainfall (in mm) in a region using data from 16 years: $(487, 621)$.",
+            parts: [
+              { label: "(a)", text: "What is the point estimate $\\bar{x}$ and the margin of error?" },
+              { label: "(b)", text: "What is the value of $t^*$ used? What does this tell you about the degrees of freedom?" },
+              { label: "(c)", text: "If a second researcher uses 36 years of data and gets the same $\\bar{x}$ and $s$, would her interval be wider or narrower? Explain." }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\bar{x} = (487 + 621)/2 = 554$ mm. Margin of error $= (621 - 487)/2 = 67$ mm." },
+              { label: "(b)", text: "ME $= t^* \\cdot (s/\\sqrt{n})$. The researcher used $n = 16$, so df $= 15$. For 95% and df=15, $t^* = 2.131$." },
+              { label: "(c)", text: "The interval would be narrower. With $n = 36$, the standard error $s/\\sqrt{n}$ is smaller, and $t^*$ is smaller (df=35 gives $t^* \\approx 2.030 < 2.131$). Both effects reduce the margin of error." }
+            ]
+          },
+          {
+            context: "Context: Pharmacology",
+            stem: "A pharmacologist measures the time (in minutes) for a drug to reach peak concentration in 20 randomly selected patients: $\\bar{x} = 42.6$ min, $s = 8.9$ min. She wants to test whether the mean differs from the manufacturer's claim of 45 minutes, then construct a CI.",
+            parts: [
+              { label: "(a)", text: "Conduct a two-sided $t$-test at $\\alpha = 0.05$." },
+              { label: "(b)", text: "Construct a 95% confidence interval." },
+              { label: "(c)", text: "Show that the conclusion from the CI is consistent with the conclusion from the test." }
+            ],
+            answers: [
+              { label: "(a)", text: "$H_0: \\mu = 45$ vs. $H_a: \\mu \\neq 45$. $t = \\dfrac{42.6 - 45}{8.9/\\sqrt{20}} = \\dfrac{-2.4}{1.9905} \\approx -1.206$. df=19. p-value $= 2P(t_{19} < -1.206) \\approx 0.243$. Since $0.243 > 0.05$, fail to reject $H_0$." },
+              { label: "(b)", text: "$t^* = 2.093$ (df=19, 95%). Interval: $42.6 \\pm 2.093(1.9905) = (38.43, 46.77)$." },
+              { label: "(c)", text: "The CI $(38.43, 46.77)$ contains 45, which means the manufacturer's claimed value is plausible — consistent with failing to reject $H_0$ in the test. Whenever a two-sided test fails to reject $H_0$ at $\\alpha$, the corresponding $(1-\\alpha)$ CI will contain the null value." }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  // ─────────────────────────────────────────────────────────
+  // COLUMN 4 — Comparing Two Means
+  // ─────────────────────────────────────────────────────────
+  {
+    id: "col-4",
+    accentVar: "var(--col4-light)",
+    headerClass: "col-4-header",
+    tileClass: "col-4",
+    label: "Column IV",
+    title: "Comparing Two Means",
+    tiles: [
+      {
+        icon: "🔬",
+        title: "Constructing a 2-Sample t-CI",
+        sub: "Estimating the difference between two means",
+        problems: [
+          {
+            context: "Context: Exercise physiology",
+            stem: "Researchers compare the mean resting heart rate of cyclists and swimmers. A random sample of 18 cyclists has $\\bar{x}_1 = 58.4$ bpm, $s_1 = 6.2$ bpm. A random sample of 22 swimmers has $\\bar{x}_2 = 54.1$ bpm, $s_2 = 5.7$ bpm. Assume both populations are approximately Normal.",
+            parts: [
+              { label: "(a)", text: "Define the parameters $\\mu_1$ and $\\mu_2$ in context." },
+              { label: "(b)", text: "Check conditions for a two-sample $t$-interval." },
+              { label: "(c)", text: "Construct a 95% CI for $\\mu_1 - \\mu_2$ using $df = 35$ (conservative). Interpret your result." }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\mu_1$ = true mean resting heart rate of all cyclists. $\\mu_2$ = true mean resting heart rate of all swimmers." },
+              { label: "(b)", text: "Random: both groups randomly sampled ✓. Normal: both $n < 30$ but populations stated approximately Normal ✓. Independence: samples independent of each other ✓, and each < 10% of population ✓." },
+              { label: "(c)", text: "Difference: $58.4 - 54.1 = 4.3$ bpm. $\\text{SE} = \\sqrt{\\dfrac{6.2^2}{18} + \\dfrac{5.7^2}{22}} = \\sqrt{2.136 + 1.477} \\approx 1.901$. $t^* \\approx 2.030$ (df=35). Interval: $4.3 \\pm 2.030(1.901) = (0.44, 8.16)$. We are 95% confident the true mean resting heart rate of cyclists exceeds that of swimmers by between 0.44 and 8.16 bpm." }
+            ]
+          },
+          {
+            context: "Context: Agronomy",
+            stem: "An agronomist wants to compare the mean yield (bushels/acre) of two corn varieties. Variety A: $n_A = 30$, $\\bar{x}_A = 182.4$, $s_A = 14.3$. Variety B: $n_B = 28$, $\\bar{x}_B = 175.6$, $s_B = 17.1$.",
+            parts: [
+              { label: "(a)", text: "Construct a 90% CI for $\\mu_A - \\mu_B$ using $df = 53$ (conservative)." },
+              { label: "(b)", text: "Interpret the interval in context." },
+              { label: "(c)", text: "Based on the interval, can we conclude Variety A is more productive? Explain." }
+            ],
+            answers: [
+              { label: "(a)", text: "Difference: $6.8$. $\\text{SE} = \\sqrt{\\dfrac{14.3^2}{30} + \\dfrac{17.1^2}{28}} = \\sqrt{6.820 + 10.436} \\approx 4.154$. $t^* \\approx 1.674$ (df=53, 90%). Interval: $6.8 \\pm 1.674(4.154) = (-0.15, 13.75)$." },
+              { label: "(b)", text: "We are 90% confident that the true mean yield difference (Variety A minus Variety B) is between $-0.15$ and $13.75$ bushels per acre." },
+              { label: "(c)", text: "We cannot conclude with 90% confidence that Variety A is more productive — the interval just barely includes 0. There is plausible evidence A yields more, but the result is not statistically significant at the 10% level." }
+            ]
+          },
+          {
+            context: "Context: Neuroscience",
+            stem: "Researchers compare reaction times (ms) between two groups: those who slept 8 hours ($n_1 = 25$, $\\bar{x}_1 = 312$, $s_1 = 42$) and those who slept 5 hours ($n_2 = 25$, $\\bar{x}_2 = 368$, $s_2 = 55$). Both populations are approximately Normal.",
+            parts: [
+              { label: "(a)", text: "Construct a 99% CI for $\\mu_1 - \\mu_2$ (use df = 44)." },
+              { label: "(b)", text: "Interpret the interval." },
+              { label: "(c)", text: "What does the interval suggest about the effect of sleep deprivation on reaction time?" }
+            ],
+            answers: [
+              { label: "(a)", text: "Difference: $312 - 368 = -56$ ms. $\\text{SE} = \\sqrt{\\dfrac{42^2}{25}+\\dfrac{55^2}{25}} = \\sqrt{70.56 + 121} \\approx 13.842$. $t^* \\approx 2.690$ (df=44, 99%). Interval: $-56 \\pm 2.690(13.842) = (-93.2, -18.8)$." },
+              { label: "(b)", text: "We are 99% confident that those who slept 8 hours have a true mean reaction time that is between 18.8 and 93.2 ms lower than those who slept 5 hours." },
+              { label: "(c)", text: "The interval lies entirely below 0, providing strong evidence that adequate sleep is associated with meaningfully faster reaction times. Even at the 99% confidence level, the difference is significant — sleep deprivation appears to substantially impair reaction speed." }
+            ]
+          }
+        ]
+      },
+      {
+        icon: "📌",
+        title: "Significance Test for 2 Means",
+        sub: "Two-sample t-test from hypotheses to conclusion",
+        problems: [
+          {
+            context: "Context: Education",
+            stem: "A school district piloted a new math curriculum in one school (School A) while School B used the traditional curriculum. At year's end, random samples were drawn. School A: $n = 35$, $\\bar{x} = 84.2$, $s = 9.8$. School B: $n = 40$, $\\bar{x} = 80.7$, $s = 11.3$. Do these data provide convincing evidence that School A students scored higher on average?",
+            parts: [
+              { label: "(a)", text: "State hypotheses and define parameters." },
+              { label: "(b)", text: "Check conditions and compute the test statistic." },
+              { label: "(c)", text: "Estimate the p-value using df = 60 and state your conclusion at $\\alpha = 0.05$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$H_0: \\mu_A - \\mu_B = 0$ vs. $H_a: \\mu_A - \\mu_B > 0$, where $\\mu_A$ and $\\mu_B$ are the true mean test scores for students using the new and traditional curricula, respectively." },
+              { label: "(b)", text: "Random ✓. Large Sample: $n_A = 35 \\geq 30$, $n_B = 40 \\geq 30$ ✓. Independence ✓. $t = \\dfrac{(84.2-80.7) - 0}{\\sqrt{\\dfrac{9.8^2}{35}+\\dfrac{11.3^2}{40}}} = \\dfrac{3.5}{\\sqrt{2.742+3.192}} \\approx \\dfrac{3.5}{2.436} \\approx 1.437$." },
+              { label: "(c)", text: "df = 60. p-value $= P(t_{60} > 1.437) \\approx 0.078$. Since $0.078 > 0.05$, fail to reject $H_0$. We do not have convincing evidence at the 5% level that the new curriculum produces higher mean scores." }
+            ]
+          },
+          {
+            context: "Context: Pharmacology",
+            stem: "Two pain medications are compared in a clinical trial. For Drug A (n=20), the mean pain reduction was $\\bar{x}_A = 6.8$ points with $s_A = 2.1$. For Drug B (n=20), $\\bar{x}_B = 5.4$ points with $s_B = 2.8$. Pain reduction scores are approximately Normal in both groups.",
+            parts: [
+              { label: "(a)", text: "Conduct a two-sided two-sample $t$-test at $\\alpha = 0.05$ (use df = 36)." },
+              { label: "(b)", text: "State your conclusion in context." },
+              { label: "(c)", text: "What type of error might you be making? What would it mean in this medical context?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$H_0: \\mu_A = \\mu_B$ vs. $H_a: \\mu_A \\neq \\mu_B$. $\\text{SE} = \\sqrt{\\dfrac{2.1^2}{20}+\\dfrac{2.8^2}{20}} = \\sqrt{0.2205+0.392} \\approx 0.7744$. $t = \\dfrac{1.4}{0.7744} \\approx 1.808$. df=36. p-value $= 2P(t_{36}>1.808) \\approx 2(0.039) = 0.078$. Since $0.078 > 0.05$, fail to reject $H_0$." },
+              { label: "(b)", text: "We do not have convincing evidence at the 5% level that the two drugs differ in mean pain reduction." },
+              { label: "(c)", text: "We may be making a <strong>Type II error</strong> — failing to detect a real difference between the drugs. Medically, this could mean patients continue using a less effective drug when a better alternative exists." }
+            ]
+          },
+          {
+            context: "Context: Ecology",
+            stem: "A wildlife biologist measures the wingspans (cm) of two bird species. Species 1: $n=15$, $\\bar{x}=47.3$, $s=5.4$ (approximately Normal). Species 2: $n=18$, $\\bar{x}=44.1$, $s=4.8$ (approximately Normal).",
+            parts: [
+              { label: "(a)", text: "Test whether Species 1 has a larger mean wingspan. Use $\\alpha = 0.01$ and df = 28." },
+              { label: "(b)", text: "Compute the test statistic and p-value." },
+              { label: "(c)", text: "State your conclusion in context." }
+            ],
+            answers: [
+              { label: "(a)", text: "$H_0: \\mu_1 - \\mu_2 = 0$ vs. $H_a: \\mu_1 - \\mu_2 > 0$, where $\\mu_1, \\mu_2$ are true mean wingspans of Species 1 and 2." },
+              { label: "(b)", text: "$\\text{SE} = \\sqrt{\\dfrac{5.4^2}{15}+\\dfrac{4.8^2}{18}} = \\sqrt{1.944+1.280} \\approx 1.795$. $t = \\dfrac{47.3-44.1}{1.795} \\approx 1.783$. p-value $= P(t_{28} > 1.783) \\approx 0.043$." },
+              { label: "(c)", text: "Since p-value $0.043 > \\alpha = 0.01$, we fail to reject $H_0$. At the 1% significance level, we do not have sufficient evidence that Species 1 has a greater mean wingspan than Species 2." }
+            ]
+          }
+        ]
+      },
+      {
+        icon: "🧩",
+        title: "Interpreting & Concluding (2 Means)",
+        sub: "Making sense of two-sample results",
+        problems: [
+          {
+            context: "Context: Business",
+            stem: "A 95% confidence interval for the difference in mean weekly sales (Store A minus Store B) is $(-\\$420, \\$1{,}280)$.",
+            parts: [
+              { label: "(a)", text: "Interpret the interval in context." },
+              { label: "(b)", text: "Is there convincing evidence that Store A has higher mean sales? Explain." },
+              { label: "(c)", text: "If the interval were $(\\$200, \\$1{,}280)$, how would the conclusion change?" }
+            ],
+            answers: [
+              { label: "(a)", text: "We are 95% confident that the true difference in mean weekly sales (Store A minus Store B) is between $-\\$420$ and $\\$1{,}280$." },
+              { label: "(b)", text: "No. The interval includes 0 and negative values, meaning it is plausible that Store B has equal or higher mean sales. We cannot conclude Store A is more profitable." },
+              { label: "(c)", text: "If the interval were $(\\$200, \\$1{,}280)$, all values would be positive. This would provide convincing evidence that Store A has higher mean weekly sales — by somewhere between $\\$200$ and $\\$1{,}280$ — at the 95% confidence level." }
+            ]
+          },
+          {
+            context: "Context: Public health",
+            stem: "A two-sample $t$-test comparing mean blood pressure reduction (mmHg) between a treatment and control group yields $t = 3.42$, df = 48, and p-value = 0.001.",
+            parts: [
+              { label: "(a)", text: "Interpret the p-value in the context of this study." },
+              { label: "(b)", text: "State the conclusion at $\\alpha = 0.01$." },
+              { label: "(c)", text: "A researcher says 'the treatment is proven to reduce blood pressure.' Is this statement accurate? Explain." }
+            ],
+            answers: [
+              { label: "(a)", text: "If there were truly no difference in mean blood pressure reduction between the treatment and control groups, the probability of observing a $t$-statistic as extreme as $3.42$ or more extreme by chance alone is approximately 0.001." },
+              { label: "(b)", text: "Since p-value $0.001 < \\alpha = 0.01$, we reject $H_0$. We have convincing evidence that the treatment produces a different (greater) mean blood pressure reduction than the control." },
+              { label: "(c)", text: "Not quite. A significance test cannot 'prove' anything — it provides evidence against $H_0$. We can say we have strong statistical evidence the treatment reduces blood pressure more than the control, but we can never rule out the possibility of a Type I error. Also, this alone does not establish causation without proper randomization." }
+            ]
+          },
+          {
+            context: "Context: Cognitive science",
+            stem: "A study compares memory recall scores between participants who meditate daily and those who don't. The two-sample $t$-test gives $t = 1.92$, p-value $= 0.060$, df $= 55$. The 95% CI for $\\mu_{med} - \\mu_{non}$ is $(-0.3, 8.9)$.",
+            parts: [
+              { label: "(a)", text: "Are the test and interval conclusions consistent? Explain." },
+              { label: "(b)", text: "A journalist writes: 'Meditation has no effect on memory.' Is this accurate?" },
+              { label: "(c)", text: "Would increasing $\\alpha$ to 0.10 change the conclusion of the test? What does this say about the role of $\\alpha$?" }
+            ],
+            answers: [
+              { label: "(a)", text: "Yes, consistent. The CI includes 0, consistent with failing to reject $H_0$ at $\\alpha = 0.05$ (two-sided). Both suggest the difference is not statistically significant at the 5% level." },
+              { label: "(b)", text: "No, this is not accurate. Failing to reject $H_0$ does not prove $H_0$ is true. We simply lack sufficient evidence at the 5% level. The CI shows plausible differences up to 8.9 points, which could be practically meaningful." },
+              { label: "(c)", text: "Yes — at $\\alpha = 0.10$, p-value $0.060 < 0.10$, so we would reject $H_0$. This illustrates that the significance level $\\alpha$ is a judgment call set before the study. Changing $\\alpha$ after seeing the p-value is not acceptable practice — it must be set in advance." }
+            ]
+          }
+        ]
+      },
+      {
+        icon: "🏆",
+        title: "Mixed Practice — Means",
+        sub: "Full AP-style multi-part problems",
+        problems: [
+          {
+            context: "Context: Medicine",
+            stem: "A hospital researcher wants to determine whether a new physical therapy protocol reduces recovery time after knee surgery compared to the standard protocol. Patients were randomly assigned: New protocol ($n=25$, $\\bar{x}=18.4$ days, $s=4.2$ days) vs. Standard ($n=28$, $\\bar{x}=21.7$ days, $s=5.1$ days). Both distributions are approximately Normal.",
+            parts: [
+              { label: "(a)", text: "State hypotheses and define parameters." },
+              { label: "(b)", text: "Conduct the test at $\\alpha = 0.05$ using df = 47. Show all work." },
+              { label: "(c)", text: "Also construct a 95% CI for $\\mu_{new} - \\mu_{std}$ and interpret it." },
+              { label: "(d)", text: "Is this an experiment or an observational study? Why does it matter for your conclusion?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$H_0: \\mu_N - \\mu_S = 0$ vs. $H_a: \\mu_N - \\mu_S < 0$, where $\\mu_N$ and $\\mu_S$ are the true mean recovery days under the new and standard protocols." },
+              { label: "(b)", text: "$\\text{SE} = \\sqrt{\\dfrac{4.2^2}{25}+\\dfrac{5.1^2}{28}} = \\sqrt{0.7056+0.9289} \\approx 1.2784$. $t = \\dfrac{-3.3}{1.2784} \\approx -2.582$. p-value $= P(t_{47} < -2.582) \\approx 0.006$. Since $0.006 < 0.05$, reject $H_0$. Convincing evidence the new protocol reduces recovery time." },
+              { label: "(c)", text: "$t^* \\approx 2.012$ (df=47, 95%). Interval: $-3.3 \\pm 2.012(1.2784) = (-5.87, -0.73)$. We are 95% confident the new protocol reduces true mean recovery time by between 0.73 and 5.87 days compared to the standard protocol." },
+              { label: "(d)", text: "This is a <strong>randomized experiment</strong> (patients were randomly assigned). This matters because randomization controls for confounding variables, allowing us to conclude that the new protocol <em>caused</em> the reduction in recovery time — not just that it is associated with it." }
+            ]
+          },
+          {
+            context: "Context: Urban vs. rural economics",
+            stem: "A sociologist randomly samples 40 urban households and 35 rural households to compare mean monthly food expenditure. Urban: $\\bar{x}_u = \\$612$, $s_u = \\$88$. Rural: $\\bar{x}_r = \\$541$, $s_r = \\$74$.",
+            parts: [
+              { label: "(a)", text: "Conduct a two-sided test at $\\alpha = 0.01$ (df = 68)." },
+              { label: "(b)", text: "Construct a 99% CI for $\\mu_u - \\mu_r$ and interpret it." },
+              { label: "(c)", text: "Verify that the test and interval conclusions are consistent." }
+            ],
+            answers: [
+              { label: "(a)", text: "$H_0: \\mu_u - \\mu_r = 0$ vs. $H_a: \\mu_u - \\mu_r \\neq 0$. $\\text{SE} = \\sqrt{\\dfrac{88^2}{40}+\\dfrac{74^2}{35}} = \\sqrt{193.6+156.5} \\approx 18.716$. $t = \\dfrac{71}{18.716} \\approx 3.794$. p-value $\\approx 2(0.0002) = 0.0004$. Since $0.0004 < 0.01$, reject $H_0$." },
+              { label: "(b)", text: "$t^* \\approx 2.650$ (df=68, 99%). Interval: $71 \\pm 2.650(18.716) = (21.4, 120.6)$. We are 99% confident the true mean monthly food expenditure is between $\\$21.40$ and $\\$120.60$ higher for urban households than rural households." },
+              { label: "(c)", text: "Consistent. The test rejected $H_0$ at $\\alpha = 0.01$, and the CI does not contain 0 (both bounds positive), indicating a statistically significant difference at the 99% level. Both lead to the same conclusion: urban households spend significantly more on food." }
+            ]
+          },
+          {
+            context: "Context: Cognitive training",
+            stem: "Forty volunteers are randomly split into two groups of 20. Group 1 uses a brain-training app for 6 weeks. Group 2 does not. Pre- and post-test scores exist for both groups; researchers compare the mean score gain. Group 1: $\\bar{x}_1 = 14.6$, $s_1 = 6.3$. Group 2: $\\bar{x}_2 = 9.8$, $s_2 = 5.7$.",
+            parts: [
+              { label: "(a)", text: "Should researchers use a one-sample or two-sample procedure? Explain." },
+              { label: "(b)", text: "Conduct a test at $\\alpha = 0.05$ (df = 37)." },
+              { label: "(c)", text: "Can we conclude the app caused the improvement? Explain." }
+            ],
+            answers: [
+              { label: "(a)", text: "Two-sample $t$-test. The two groups are separate and independent — Group 1 and Group 2 each have their own score gains, and we're comparing means across two distinct groups. A paired $t$-test would be appropriate if the same individuals were measured twice without comparison to a separate control group." },
+              { label: "(b)", text: "$\\text{SE} = \\sqrt{\\dfrac{6.3^2}{20}+\\dfrac{5.7^2}{20}} = \\sqrt{1.9845+1.6245} \\approx 1.8997$. $t = \\dfrac{4.8}{1.8997} \\approx 2.527$. p-value $= P(t_{37} > 2.527) \\approx 0.008$. Since $0.008 < 0.05$, reject $H_0$. Convincing evidence the app group showed greater mean improvement." },
+              { label: "(c)", text: "Yes — because this was a <strong>randomized experiment</strong> (volunteers randomly assigned), we can conclude the app likely <em>caused</em> the greater improvement, not just that it is associated with it. Random assignment balances confounding variables between the two groups." }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+];
+
+/* ============================================================
+   RENDER BOARD
+============================================================ */
+function renderBoard() {
+  const grid = document.getElementById('board-grid');
+  grid.innerHTML = '';
+
+  columns.forEach((col, ci) => {
+    const colDiv = document.createElement('div');
+    colDiv.className = 'col-group';
+
+    // Header
+    const header = document.createElement('div');
+    header.className = `col-header ${col.headerClass}`;
+    header.innerHTML = `
+      <div class="col-header-num">${col.label}</div>
+      <h2>${col.title}</h2>
+    `;
+    colDiv.appendChild(header);
+
+    // Tiles
+    col.tiles.forEach((tile, ti) => {
+      const tileEl = document.createElement('div');
+      tileEl.className = `tile ${col.tileClass}`;
+      tileEl.setAttribute('role', 'button');
+      tileEl.setAttribute('tabindex', '0');
+      tileEl.setAttribute('aria-label', tile.title);
+      tileEl.innerHTML = `
+        <span class="tile-icon">${tile.icon}</span>
+        <div class="tile-title">${tile.title}</div>
+        <div class="tile-sub">${tile.sub}</div>
+        <span class="tile-arrow">↗</span>
+      `;
+      tileEl.addEventListener('click', () => openModal(ci, ti));
+      tileEl.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') openModal(ci, ti); });
+      colDiv.appendChild(tileEl);
+    });
+
+    grid.appendChild(colDiv);
+  });
+}
+
+/* ============================================================
+   MODAL
+============================================================ */
+function openModal(colIdx, tileIdx) {
+  const col  = columns[colIdx];
+  const tile = col.tiles[tileIdx];
+
+  document.getElementById('modal-accent').style.background = col.accentVar;
+  document.getElementById('modal-col-label').style.color = col.accentVar;
+  document.getElementById('modal-col-label').textContent = col.label + ' · ' + col.title;
+  document.getElementById('modal-title').textContent = tile.title;
+
+  const body = document.getElementById('modal-body');
+  body.innerHTML = '';
+
+  tile.problems.forEach((prob, pi) => {
+    const block = document.createElement('div');
+    block.className = 'problem-block';
+
+    let partsHTML = '';
+    if (prob.parts && prob.parts.length) {
+      partsHTML = `<ul class="problem-parts">` +
+        prob.parts.map(p => `<li data-part="${p.label}">${p.text}</li>`).join('') +
+        `</ul>`;
+    }
+
+    let answersHTML = '';
+    if (prob.answers && prob.answers.length) {
+      answersHTML = prob.answers.map(a =>
+        `<div class="answer-part"><span class="answer-part-label">${a.label}</span>${a.text}</div>`
+      ).join('');
+    }
+
+    const answerId = `ans-${colIdx}-${tileIdx}-${pi}`;
+    const toggleId = `tog-${colIdx}-${tileIdx}-${pi}`;
+
+    block.innerHTML = `
+      <div class="problem-num">Problem ${pi + 1} of ${tile.problems.length}</div>
+      ${prob.context ? `<div class="problem-context">${prob.context}</div>` : ''}
+      <div class="problem-text">${prob.stem}</div>
+      ${partsHTML}
+      <button class="answer-toggle" id="${toggleId}" onclick="toggleAnswer('${answerId}','${toggleId}')">
+        <span class="toggle-icon">▼</span> Show Answer
+      </button>
+      <div class="answer-panel" id="${answerId}">
+        ${answersHTML}
+      </div>
+    `;
+
+    body.appendChild(block);
+  });
+
+  const overlay = document.getElementById('modal-overlay');
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  // Typeset MathJax if loaded
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([body]).catch(err => console.log(err));
+  }
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function toggleAnswer(panelId, toggleId) {
+  const panel  = document.getElementById(panelId);
+  const toggle = document.getElementById(toggleId);
+  const isOpen = panel.classList.contains('open');
+  panel.classList.toggle('open');
+  toggle.classList.toggle('open');
+  toggle.innerHTML = isOpen
+    ? '<span class="toggle-icon">▼</span> Show Answer'
+    : '<span class="toggle-icon">▼</span> Hide Answer';
+}
+
+/* ============================================================
+   EVENT LISTENERS
+============================================================ */
+document.getElementById('modal-close').addEventListener('click', closeModal);
+document.getElementById('modal-overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+});
+
+/* ============================================================
+   INIT
+============================================================ */
+renderBoard();
+</script>
+</body>
+</html>

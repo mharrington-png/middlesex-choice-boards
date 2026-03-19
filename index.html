@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Choice Boards — Middlesex School</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&display=swap" rel="stylesheet" />
+<style>
+/* ============================================================
+   TOKENS
+============================================================ */
+:root {
+  --crimson:      #cf003d;
+  --crimson-dim:  #8a0028;
+  --crimson-glow: #ff1a55;
+  --black:        #0c0c0c;
+  --surface:      #141414;
+  --surface2:     #1c1c1c;
+  --surface3:     #242424;
+  --surface4:     #2e2e2e;
+  --border:       #272727;
+  --border-light: #363636;
+  --text:         #f0ece6;
+  --text-muted:   #8a8a8a;
+  --text-dim:     #484848;
+
+  /* Course accents */
+  --accent-stats:   #cf003d;
+  --accent-calc:    #1a5c8a;
+  --accent-bio:     #1a6b4a;
+  --accent-hist:    #7c4a1e;
+  --accent-phys:    #4a3a7c;
+  --accent-chem:    #5a6b1a;
+
+  --card-w: 380px;
+  --card-h: 480px;
+  --card-gap: 24px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--black);
+  color: var(--text);
+  font-family: 'Source Serif 4', Georgia, serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+/* ============================================================
+   HEADER
+============================================================ */
+header {
+  padding: 32px 40px 28px;
+  text-align: center;
+  position: relative;
+  flex-shrink: 0;
+}
+
+header::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    var(--crimson) 20%,
+    var(--crimson-glow) 50%,
+    var(--crimson) 80%,
+    transparent 100%
+  );
+}
+
+header::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(207,0,61,0.06) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+.school-tag {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--crimson-glow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 10px;
+  position: relative;
+  z-index: 1;
+}
+
+.school-tag::before,
+.school-tag::after {
+  content: '';
+  display: block;
+  width: 32px;
+  height: 1px;
+  background: var(--crimson-glow);
+  opacity: 0.5;
+}
+
+.header-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+  position: relative;
+  z-index: 1;
+}
+
+.header-title em {
+  font-style: italic;
+  color: var(--crimson-glow);
+}
+
+.header-sub {
+  font-size: 13px;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  position: relative;
+  z-index: 1;
+}
+
+/* ============================================================
+   FILTER BAR
+============================================================ */
+.filter-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 16px 40px 0;
+  flex-wrap: wrap;
+}
+
+.filter-tab {
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 20px;
+  padding: 5px 16px;
+  font-family: 'Source Serif 4', serif;
+  font-size: 12px;
+  color: var(--text-muted);
+  cursor: pointer;
+  letter-spacing: 0.05em;
+  transition: all 0.16s ease;
+  white-space: nowrap;
+}
+
+.filter-tab:hover {
+  color: var(--text);
+  border-color: var(--border-light);
+  background: var(--surface2);
+}
+
+.filter-tab.active {
+  color: var(--text);
+  background: var(--surface2);
+  border-color: var(--border-light);
+  position: relative;
+}
+
+.filter-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 18px;
+  height: 2px;
+  background: var(--crimson-glow);
+  border-radius: 1px;
+}
+
+/* ============================================================
+   CAROUSEL STAGE
+============================================================ */
+.carousel-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 0 20px;
+  position: relative;
+  min-height: 0;
+}
+
+/* Fade edges */
+.carousel-wrap::before,
+.carousel-wrap::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 120px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.carousel-wrap::before {
+  left: 0;
+  background: linear-gradient(90deg, var(--black) 0%, transparent 100%);
+}
+
+.carousel-wrap::after {
+  right: 0;
+  background: linear-gradient(270deg, var(--black) 0%, transparent 100%);
+}
+
+/* The scrollable track */
+.carousel-track-outer {
+  width: 100%;
+  overflow: hidden;
+  cursor: grab;
+  user-select: none;
+}
+
+.carousel-track-outer.grabbing {
+  cursor: grabbing;
+}
+
+.carousel-track {
+  display: flex;
+  gap: var(--card-gap);
+  padding: 16px 0 32px;
+  transition: transform 0.42s cubic-bezier(0.25, 0.8, 0.25, 1);
+  will-change: transform;
+}
+
+/* ============================================================
+   CARDS
+============================================================ */
+.board-card {
+  width: var(--card-w);
+  min-width: var(--card-w);
+  height: var(--card-h);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px 28px 24px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  transition:
+    transform 0.42s cubic-bezier(0.25, 0.8, 0.25, 1),
+    opacity   0.42s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+/* Inactive cards: shrunk + dimmed */
+.board-card:not(.active) {
+  transform: scale(0.9);
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+/* Active card */
+.board-card.active {
+  transform: scale(1);
+  opacity: 1;
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--card-accent, var(--crimson)) 30%, transparent),
+    0 24px 60px rgba(0,0,0,0.6),
+    0 0 80px color-mix(in srgb, var(--card-accent, var(--crimson)) 8%, transparent);
+  border-color: color-mix(in srgb, var(--card-accent, var(--crimson)) 35%, var(--border));
+  pointer-events: all;
+}
+
+/* Top accent stripe */
+.board-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--card-accent, var(--crimson));
+  border-radius: 16px 16px 0 0;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.board-card.active::before { opacity: 1; }
+
+/* Subtle texture overlay */
+.board-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.025) 0%, transparent 50%);
+  pointer-events: none;
+  border-radius: 16px;
+}
+
+/* Card anatomy */
+.card-eyebrow {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--card-accent, var(--crimson));
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.card-eyebrow::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: color-mix(in srgb, var(--card-accent, var(--crimson)) 25%, transparent);
+}
+
+.card-unit {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.2;
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+
+.card-subtitle {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: 24px;
+  flex-shrink: 0;
+}
+
+/* Column topics */
+.card-columns-label {
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+}
+
+.card-columns {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow: hidden;
+}
+
+.card-col-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 8px 12px;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.board-card.active .card-col-row:hover {
+  background: var(--surface3);
+  border-color: var(--border-light);
+}
+
+.col-roman {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  width: 18px;
+  flex-shrink: 0;
+}
+
+.col-name {
+  font-size: 12.5px;
+  color: var(--text);
+  font-family: 'Playfair Display', serif;
+  line-height: 1.2;
+}
+
+/* Card footer */
+.card-footer {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.open-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 20px;
+  background: var(--card-accent, var(--crimson));
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Playfair Display', serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: filter 0.18s, transform 0.18s, box-shadow 0.18s;
+  letter-spacing: 0.01em;
+}
+
+.open-btn:hover {
+  filter: brightness(1.15);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px color-mix(in srgb, var(--card-accent, var(--crimson)) 40%, transparent);
+}
+
+.open-btn .btn-arrow {
+  font-size: 13px;
+  transition: transform 0.18s;
+}
+
+.open-btn:hover .btn-arrow {
+  transform: translateX(3px);
+}
+
+.card-date {
+  font-size: 10.5px;
+  color: var(--text-dim);
+  letter-spacing: 0.04em;
+}
+
+.copy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: var(--surface2);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  font-family: 'Source Serif 4', serif;
+  font-size: 12px;
+  color: var(--text-muted);
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+
+.copy-btn:hover {
+  background: var(--surface3);
+  color: var(--text);
+  border-color: var(--border-light);
+}
+
+.copy-btn.copied {
+  color: #2dd4bf;
+  border-color: rgba(45,212,191,0.35);
+  background: rgba(45,212,191,0.08);
+}
+
+.footer-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ============================================================
+   CAROUSEL CONTROLS
+============================================================ */
+.carousel-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 4px;
+  position: relative;
+  z-index: 11;
+}
+
+.arrow-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--surface2);
+  border: 1px solid var(--border-light);
+  color: var(--text-muted);
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, color 0.15s, border-color 0.15s, transform 0.15s;
+  flex-shrink: 0;
+}
+
+.arrow-btn:hover:not(:disabled) {
+  background: var(--surface3);
+  color: var(--text);
+  border-color: var(--border-light);
+  transform: scale(1.08);
+}
+
+.arrow-btn:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+}
+
+/* Dot pagination */
+.dot-track {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--border-light);
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s, width 0.2s;
+  border: none;
+}
+
+.dot.active {
+  background: var(--crimson-glow);
+  transform: scale(1.2);
+  width: 18px;
+  border-radius: 3px;
+}
+
+/* Keyboard hint */
+.kb-hint {
+  text-align: center;
+  font-size: 10.5px;
+  color: var(--text-dim);
+  letter-spacing: 0.05em;
+  padding-bottom: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+kbd {
+  background: var(--surface2);
+  border: 1px solid var(--border-light);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 10px;
+  font-family: inherit;
+  color: var(--text-muted);
+}
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+@media (max-width: 500px) {
+  :root {
+    --card-w: calc(100vw - 48px);
+    --card-h: 520px;
+  }
+
+  header { padding: 24px 20px 20px; }
+  .filter-bar { padding: 12px 16px 0; }
+  .carousel-wrap::before,
+  .carousel-wrap::after { width: 24px; }
+  .kb-hint { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     HEADER
+============================================================ -->
+<header>
+  <div class="school-tag">Middlesex School</div>
+  <div class="header-title">Interactive <em>Choice Boards</em></div>
+  <div class="header-sub">mxschool.edu · AP & Elective Courses</div>
+</header>
+
+<!-- ============================================================
+     FILTER BAR
+============================================================ -->
+<div class="filter-bar" id="filter-bar">
+  <!-- Rendered by JS -->
+</div>
+
+<!-- ============================================================
+     CAROUSEL
+============================================================ -->
+<div class="carousel-wrap">
+  <div class="carousel-track-outer" id="track-outer">
+    <div class="carousel-track" id="carousel-track">
+      <!-- Rendered by JS -->
+    </div>
+  </div>
+
+  <div class="carousel-controls">
+    <button class="arrow-btn" id="btn-prev" aria-label="Previous board">←</button>
+    <div class="dot-track" id="dot-track"></div>
+    <button class="arrow-btn" id="btn-next" aria-label="Next board">→</button>
+  </div>
+</div>
+
+<div class="kb-hint">
+  <kbd>←</kbd><kbd>→</kbd> navigate &nbsp;·&nbsp; <kbd>Enter</kbd> open board
+</div>
+
+<!-- ============================================================
+     DATA — Edit boards here
+     Fields:
+       course:    display course name
+       courseKey: filter key (must match a key in COURSES)
+       unit:      unit / topic title shown on card
+       subtitle:  one-line description
+       columns:   array of exactly 4 column topic strings
+       href:      relative path to the board HTML file
+       date:      "Month YYYY" — shown in card footer
+============================================================ -->
+<script>
+const COURSES = {
+  all:     { label: "All" },
+  stats:   { label: "AP Statistics",  accent: "#cf003d" },
+  calc:    { label: "BC Calculus",    accent: "#1a5c8a" },
+  bio:     { label: "AP Biology",     accent: "#1a6b4a" },
+  hist:    { label: "AP History",     accent: "#7c4a1e" },
+  phys:    { label: "AP Physics",     accent: "#4a3a7c" },
+  chem:    { label: "AP Chemistry",   accent: "#5a6b1a" },
+};
+
+/* ── ADD NEW BOARDS HERE ───────────────────────────────────── */
+const ALL_BOARDS = [
+  {
+    course:    "AP Statistics",
+    courseKey: "stats",
+    unit:      "Inference for Proportions & Means",
+    subtitle:  "1-sample & 2-sample inference, confidence intervals, and significance tests",
+    columns: [
+      "Inference for Proportions",
+      "Comparing Two Proportions",
+      "Inference for Means",
+      "Comparing Two Means"
+    ],
+    href: "boards/ap-stats-inference.html",
+    date: "June 2025"
+  }
+  /* Paste additional board objects here, separated by commas */
+];
+/* ─────────────────────────────────────────────────────────── */
+
+/* ============================================================
+   STATE
+============================================================ */
+let activeFilter = "all";
+let current = 0;
+let filtered = [];
+let isDragging = false;
+let dragStartX = 0;
+let dragDelta = 0;
+
+/* ============================================================
+   FILTER TABS
+============================================================ */
+function buildFilterTabs() {
+  const bar = document.getElementById('filter-bar');
+  bar.innerHTML = '';
+
+  // Only show courses that appear in ALL_BOARDS
+  const usedKeys = new Set(ALL_BOARDS.map(b => b.courseKey));
+  const keys = ['all', ...Object.keys(COURSES).filter(k => k !== 'all' && usedKeys.has(k))];
+
+  keys.forEach(key => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-tab' + (key === activeFilter ? ' active' : '');
+    btn.textContent = COURSES[key].label;
+    btn.addEventListener('click', () => {
+      activeFilter = key;
+      current = 0;
+      render();
+    });
+    bar.appendChild(btn);
+  });
+}
+
+/* ============================================================
+   CAROUSEL RENDER
+============================================================ */
+function getFiltered() {
+  return ALL_BOARDS.filter(b => activeFilter === 'all' || b.courseKey === activeFilter);
+}
+
+function getTrackOffset(idx) {
+  // Center the active card in the viewport
+  const outerW = document.getElementById('track-outer').offsetWidth;
+  const cardTotalW = parseInt(getComputedStyle(document.documentElement)
+    .getPropertyValue('--card-w')) + parseInt(getComputedStyle(document.documentElement)
+    .getPropertyValue('--card-gap'));
+  // Offset so active card is centered
+  const centerOffset = (outerW - parseInt(getComputedStyle(document.documentElement)
+    .getPropertyValue('--card-w'))) / 2;
+  return centerOffset - idx * cardTotalW;
+}
+
+const ROMAN = ['I', 'II', 'III', 'IV'];
+
+function buildCards() {
+  const track = document.getElementById('carousel-track');
+  track.innerHTML = '';
+
+  if (filtered.length === 0) {
+    const empty = document.createElement('div');
+    empty.style.cssText = `
+      width: 340px; height: 200px; display: flex; align-items: center;
+      justify-content: center; color: var(--text-dim); font-size: 13px;
+      letter-spacing: 0.06em;
+    `;
+    empty.textContent = 'No boards in this course yet.';
+    track.appendChild(empty);
+    return;
+  }
+
+  filtered.forEach((board, i) => {
+    const accent = COURSES[board.courseKey]?.accent || '#cf003d';
+    const card = document.createElement('div');
+    card.className = 'board-card' + (i === current ? ' active' : '');
+    card.style.setProperty('--card-accent', accent);
+    card.dataset.idx = i;
+
+    const colsHTML = board.columns.map((col, ci) => `
+      <div class="card-col-row">
+        <div class="col-roman">${ROMAN[ci]}</div>
+        <div class="col-name">${col}</div>
+      </div>
+    `).join('');
+
+    const copyId = `copy-btn-${i}`;
+    card.innerHTML = `
+      <div class="card-eyebrow">${board.course}</div>
+      <div class="card-unit">${board.unit}</div>
+      <div class="card-subtitle">${board.subtitle}</div>
+      <div class="card-columns-label">Topic Columns</div>
+      <div class="card-columns">${colsHTML}</div>
+      <div class="card-footer">
+        <div class="footer-actions">
+          <a class="open-btn" href="${board.href}" target="_blank">
+            Open Board <span class="btn-arrow">→</span>
+          </a>
+          <button class="copy-btn" id="${copyId}" onclick="copyLink('${board.href}', '${copyId}')">
+            Copy Link
+          </button>
+        </div>
+        ${board.date ? `<span class="card-date">${board.date}</span>` : ''}
+      </div>
+    `;
+
+    // Click on inactive card to navigate to it
+    card.addEventListener('click', e => {
+      if (i !== current && !isDragging) {
+        goTo(i);
+      }
+    });
+
+    track.appendChild(card);
+  });
+}
+
+function buildDots() {
+  const dotTrack = document.getElementById('dot-track');
+  dotTrack.innerHTML = '';
+  filtered.forEach((_, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'dot' + (i === current ? ' active' : '');
+    dot.setAttribute('aria-label', `Board ${i + 1}`);
+    dot.addEventListener('click', () => goTo(i));
+    dotTrack.appendChild(dot);
+  });
+}
+
+function applyPosition(animated = true) {
+  const track = document.getElementById('carousel-track');
+  const offset = getTrackOffset(current);
+  track.style.transition = animated
+    ? 'transform 0.42s cubic-bezier(0.25, 0.8, 0.25, 1)'
+    : 'none';
+  track.style.transform = `translateX(${offset + dragDelta}px)`;
+
+  // Update active states
+  document.querySelectorAll('.board-card').forEach((c, i) => {
+    c.classList.toggle('active', i === current);
+  });
+  document.querySelectorAll('.dot').forEach((d, i) => {
+    d.classList.toggle('active', i === current);
+  });
+
+  // Arrow buttons
+  document.getElementById('btn-prev').disabled = current === 0;
+  document.getElementById('btn-next').disabled = current === filtered.length - 1;
+}
+
+function goTo(idx) {
+  if (idx < 0 || idx >= filtered.length) return;
+  current = idx;
+  applyPosition(true);
+}
+
+/* ============================================================
+   DRAG / SWIPE
+============================================================ */
+function initDrag() {
+  const outer = document.getElementById('track-outer');
+
+  function onStart(x) {
+    isDragging = false;
+    dragStartX = x;
+    dragDelta = 0;
+    outer.classList.add('grabbing');
+  }
+
+  function onMove(x) {
+    const dx = x - dragStartX;
+    if (Math.abs(dx) > 4) isDragging = true;
+    if (!isDragging) return;
+    dragDelta = dx;
+    applyPosition(false);
+  }
+
+  function onEnd(x) {
+    outer.classList.remove('grabbing');
+    const dx = x - dragStartX;
+    dragDelta = 0;
+
+    if (Math.abs(dx) > 60) {
+      if (dx < 0 && current < filtered.length - 1) goTo(current + 1);
+      else if (dx > 0 && current > 0) goTo(current - 1);
+      else applyPosition(true);
+    } else {
+      applyPosition(true);
+    }
+
+    // Prevent click after drag
+    setTimeout(() => { isDragging = false; }, 50);
+  }
+
+  // Mouse
+  outer.addEventListener('mousedown',  e => onStart(e.clientX));
+  window.addEventListener('mousemove', e => { if (dragStartX) onMove(e.clientX); });
+  window.addEventListener('mouseup',   e => { if (dragStartX) { onEnd(e.clientX); dragStartX = 0; } });
+
+  // Touch
+  outer.addEventListener('touchstart', e => onStart(e.touches[0].clientX), { passive: true });
+  outer.addEventListener('touchmove',  e => onMove(e.touches[0].clientX),  { passive: true });
+  outer.addEventListener('touchend',   e => { onEnd(e.changedTouches[0].clientX); dragStartX = 0; });
+}
+
+/* ============================================================
+   CONTROLS & KEYBOARD
+============================================================ */
+document.getElementById('btn-prev').addEventListener('click', () => goTo(current - 1));
+document.getElementById('btn-next').addEventListener('click', () => goTo(current + 1));
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')  { e.preventDefault(); goTo(current - 1); }
+  if (e.key === 'ArrowRight') { e.preventDefault(); goTo(current + 1); }
+  if (e.key === 'Enter') {
+    if (filtered[current]) window.open(filtered[current].href, '_blank');
+  }
+});
+
+// Recalculate position on resize
+window.addEventListener('resize', () => applyPosition(false));
+
+/* ============================================================
+   COPY LINK
+============================================================ */
+function copyLink(href, btnId) {
+  const url = new URL(href, window.location.href).href;
+  navigator.clipboard.writeText(url).then(() => {
+    const btn = document.getElementById(btnId);
+    if (!btn) return;
+    btn.textContent = 'Copied ✓';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = 'Copy Link';
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+
+/* ============================================================
+   MAIN RENDER
+============================================================ */
+function render() {
+  filtered = getFiltered();
+  if (current >= filtered.length) current = Math.max(0, filtered.length - 1);
+  buildFilterTabs();
+  buildCards();
+  buildDots();
+  applyPosition(false);
+}
+
+/* ============================================================
+   INIT
+============================================================ */
+initDrag();
+render();
+</script>
+</body>
+</html>
