@@ -628,7 +628,7 @@ kbd {
        courseKey: filter key (must match a key in COURSES)
        unit:      unit / topic title shown on card
        subtitle:  one-line description
-       columns:   array of exactly 4 column topic strings
+       columns:   array of column topic strings (up to 5)
        href:      relative path to the board HTML file
        date:      "Month YYYY" — shown in card footer
 ============================================================ -->
@@ -637,7 +637,7 @@ const COURSES = {
   all:     { label: "All" },
   stats:   { label: "AP Statistics",  accent: "#cf003d" },
   calc:    { label: "BC Calculus",    accent: "#1a5c8a" },
-  bio:     { label: "AP Biology",     accent: "#1a6b4a" },
+  prob:    { label: "Problem Solving",     accent: "#1a6b4a" },
   hist:    { label: "AP History",     accent: "#7c4a1e" },
   phys:    { label: "AP Physics",     accent: "#4a3a7c" },
   chem:    { label: "AP Chemistry",   accent: "#5a6b1a" },
@@ -687,6 +687,17 @@ const ALL_BOARDS = [
     ],
     href: "boards/bc-calc-sequences-series.html",
     date: "March 2026"
+  },
+  {
+    course:    "Problem Solving",
+    courseKey: "prob",
+    unit:      "Counting",
+    subtitle:  "Student-created Counting Problems",
+    columns: [
+      "Creative Examples of Counting Applications"
+    ],
+    href: "boards/student-problems.html",
+    date: "Coming Soon"
   }
   /* Paste additional board objects here, separated by commas */
 ];
