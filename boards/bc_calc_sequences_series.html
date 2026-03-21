@@ -1,0 +1,1906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BC Calculus — Sequences & Series Choice Board | Middlesex School</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet" />
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+    startup: { typeset: false }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+  /* ============================================================
+     TOKENS & RESET
+  ============================================================ */
+  :root {
+    --crimson:     #cf003d;
+    --crimson-dim: #8a0028;
+    --crimson-glow:#ff1a55;
+    --black:       #0d0d0d;
+    --surface:     #151515;
+    --surface2:    #1e1e1e;
+    --surface3:    #252525;
+    --border:      #2e2e2e;
+    --border-light:#3a3a3a;
+    --text:        #f0ece6;
+    --text-muted:  #9e9e9e;
+    --text-dim:    #666666;
+
+    /* Column accent tones */
+    --col1-light: #ff4d75;   /* crimson-pink */
+    --col2-light: #2dd4bf;   /* deep teal */
+    --col3-light: #a78bfa;   /* violet */
+    --col4-light: #f59e0b;   /* amber */
+
+    --radius: 10px;
+    --radius-lg: 16px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.5);
+    --shadow-hover: 0 8px 40px rgba(0,0,0,0.7);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 16px;
+    line-height: 1.65;
+    min-height: 100vh;
+  }
+
+  /* ============================================================
+     HEADER — centered layout per spec
+  ============================================================ */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 32px 40px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--crimson), var(--crimson-glow), var(--crimson));
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 240px; height: 240px;
+    background: radial-gradient(circle, rgba(207,0,61,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .header-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 14px;
+  }
+
+  /* Symmetric ornament: — MIDDLESEX SCHOOL — */
+  .school-tag {
+    font-family: 'Source Serif 4', serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--crimson-glow);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .school-tag::before,
+  .school-tag::after {
+    content: '';
+    display: inline-block;
+    width: 22px;
+    height: 1px;
+    background: var(--crimson-glow);
+    flex-shrink: 0;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    margin-bottom: 4px;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--crimson-glow);
+  }
+
+  .header-meta {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .meta-pill {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 3px 12px;
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+  }
+
+  /* ============================================================
+     INSTRUCTIONS BAR
+  ============================================================ */
+  .instructions {
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 40px;
+    font-size: 13px;
+    color: var(--text-muted);
+    text-align: center;
+    letter-spacing: 0.03em;
+  }
+
+  .instructions strong { color: var(--crimson-glow); font-weight: 600; }
+
+  /* ============================================================
+     BOARD GRID
+  ============================================================ */
+  .board-wrap {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 36px 24px 60px;
+  }
+
+  /* Column headers */
+  .col-header {
+    border-radius: var(--radius) var(--radius) 0 0;
+    padding: 16px 18px 14px;
+    margin-bottom: -4px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .col-header::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .col-1-header { background: color-mix(in srgb, #cf003d 25%, var(--surface2)); border: 1px solid color-mix(in srgb, #cf003d 35%, transparent); }
+  .col-2-header { background: color-mix(in srgb, #1a6b5a 25%, var(--surface2)); border: 1px solid color-mix(in srgb, #1a6b5a 35%, transparent); }
+  .col-3-header { background: color-mix(in srgb, #5b21b6 25%, var(--surface2)); border: 1px solid color-mix(in srgb, #5b21b6 35%, transparent); }
+  .col-4-header { background: color-mix(in srgb, #92400e 25%, var(--surface2)); border: 1px solid color-mix(in srgb, #92400e 35%, transparent); }
+
+  .col-header-num {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    opacity: 0.75;
+  }
+
+  .col-1-header .col-header-num { color: var(--col1-light); }
+  .col-2-header .col-header-num { color: var(--col2-light); }
+  .col-3-header .col-header-num { color: var(--col3-light); }
+  .col-4-header .col-header-num { color: var(--col4-light); }
+
+  .col-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.25;
+  }
+
+  /* display:contents lifts col-group children directly into the parent grid,
+     so the browser can align tiles in the same logical row across all columns */
+  .col-group {
+    display: contents;
+  }
+
+  /* 4-column grid. Headers land in row 1 (auto height).
+     Tiles fill rows 2-5 at equal height via 1fr each. */
+  .board-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto repeat(4, 1fr);
+    gap: 20px;
+    align-items: stretch;
+  }
+
+  /* Force all column headers into row 1 — set via JS inline style;
+     this rule just ensures stretch alignment */
+  .col-header {
+    align-self: stretch;
+  }
+
+  /* ============================================================
+     TILES
+  ============================================================ */
+  .tile {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 18px 38px 18px;
+    cursor: pointer;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+    position: relative;
+    overflow: hidden;
+    user-select: none;
+    /* Fill row height equally across columns */
+    display: flex;
+    flex-direction: column;
+    align-self: stretch;
+  }
+
+  .tile::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+    border-radius: var(--radius) 0 0 var(--radius);
+  }
+
+  .col-1 .tile::before { background: var(--col1-light); }
+  .col-2 .tile::before { background: var(--col2-light); }
+  .col-3 .tile::before { background: var(--col3-light); }
+  .col-4 .tile::before { background: var(--col4-light); }
+
+  .tile:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-hover);
+    background: var(--surface3);
+  }
+
+  .col-1 .tile:hover { border-color: color-mix(in srgb, #cf003d 55%, transparent); }
+  .col-2 .tile:hover { border-color: color-mix(in srgb, #1a6b5a 55%, transparent); }
+  .col-3 .tile:hover { border-color: color-mix(in srgb, #5b21b6 55%, transparent); }
+  .col-4 .tile:hover { border-color: color-mix(in srgb, #92400e 55%, transparent); }
+
+  .tile-icon { font-size: 18px; margin-bottom: 8px; display: block; }
+
+  .tile-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+    margin-bottom: 6px;
+  }
+
+  .tile-sub { font-size: 11.5px; color: var(--text-muted); line-height: 1.4; }
+
+  .tile-arrow {
+    position: absolute;
+    bottom: 12px; right: 14px;
+    font-size: 14px;
+    opacity: 0.3;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+
+  .tile:hover .tile-arrow { opacity: 0.8; transform: translate(2px, -2px); }
+
+  .col-1 .tile:hover .tile-arrow { color: var(--col1-light); }
+  .col-2 .tile:hover .tile-arrow { color: var(--col2-light); }
+  .col-3 .tile:hover .tile-arrow { color: var(--col3-light); }
+  .col-4 .tile:hover .tile-arrow { color: var(--col4-light); }
+
+  /* ============================================================
+     VIDEO SECTION
+  ============================================================ */
+  .video-section {
+    background: var(--surface3);
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 24px;
+  }
+
+  .video-label {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 7px;
+  }
+
+  .video-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    text-decoration: none;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-family: 'Source Serif 4', serif;
+    transition: color 0.15s;
+  }
+
+  .video-link:hover { color: var(--crimson-glow); }
+
+  .video-icon {
+    flex-shrink: 0;
+    width: 26px; height: 26px;
+    background: var(--crimson);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    color: white;
+    transition: background 0.15s, transform 0.15s;
+  }
+
+  .video-link:hover .video-icon { background: var(--crimson-glow); transform: scale(1.1); }
+
+  /* ============================================================
+     MODAL
+  ============================================================ */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.82);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    backdrop-filter: blur(4px);
+  }
+
+  .modal-overlay.open { display: flex; animation: fadeIn 0.2s ease; }
+
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    width: 100%;
+    max-width: 780px;
+    max-height: 88vh;
+    overflow-y: auto;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.8);
+    animation: slideUp 0.22s ease;
+    position: relative;
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .modal-header {
+    padding: 24px 28px 20px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .modal-header-accent {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  }
+
+  .modal-col-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+  }
+
+  .modal-close {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.15s, color 0.15s;
+  }
+
+  .modal-close:hover { background: var(--crimson); color: white; border-color: var(--crimson); }
+
+  .modal-body { padding: 24px 28px 32px; }
+
+  /* Problems */
+  .problem-block {
+    margin-bottom: 28px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .problem-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+  .problem-num {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+  }
+
+  .problem-context {
+    font-size: 14px;
+    font-style: italic;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    padding-left: 12px;
+    border-left: 2px solid var(--border-light);
+  }
+
+  .problem-text { font-size: 14.5px; color: var(--text); line-height: 1.7; margin-bottom: 14px; }
+
+  .problem-parts { margin-left: 0; list-style: none; }
+
+  .problem-parts li {
+    font-size: 14px;
+    color: var(--text);
+    margin-bottom: 8px;
+    padding-left: 24px;
+    position: relative;
+    line-height: 1.6;
+  }
+
+  .problem-parts li::before {
+    content: attr(data-part);
+    position: absolute;
+    left: 0;
+    font-weight: 700;
+    color: var(--text-muted);
+  }
+
+  .answer-toggle {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 9px 16px;
+    color: var(--text-muted);
+    font-family: 'Source Serif 4', serif;
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.15s;
+    margin-top: 4px;
+  }
+
+  .answer-toggle:hover { background: var(--surface3); border-color: var(--border-light); color: var(--text); }
+
+  .answer-toggle .toggle-icon { font-size: 10px; transition: transform 0.2s; }
+  .answer-toggle.open .toggle-icon { transform: rotate(180deg); }
+
+  .answer-panel {
+    display: none;
+    margin-top: 14px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-size: 13.5px;
+    line-height: 1.75;
+    color: var(--text);
+    animation: expandIn 0.18s ease;
+  }
+
+  @keyframes expandIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .answer-panel.open { display: block; }
+
+  .answer-part { margin-bottom: 10px; padding-left: 20px; position: relative; }
+  .answer-part:last-child { margin-bottom: 0; }
+  .answer-part-label { position: absolute; left: 0; font-weight: 700; color: var(--text-muted); }
+
+  /* ============================================================
+     RANDOM PRACTICE BAR
+  ============================================================ */
+  .random-wrap {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 24px 48px;
+  }
+
+  .random-btn {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border-light);
+    border-radius: 14px;
+    padding: 0 36px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.2s ease, background 0.2s ease;
+    font-family: 'Source Serif 4', serif;
+  }
+
+  .random-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(207,0,61,0.06) 30%, rgba(207,0,61,0.10) 50%, rgba(207,0,61,0.06) 70%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .random-btn:hover::before { opacity: 1; }
+
+  .random-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(207,0,61,0.18), 0 2px 8px rgba(0,0,0,0.4);
+    border-color: color-mix(in srgb, var(--crimson) 55%, transparent);
+    background: var(--surface3);
+  }
+
+  .random-btn:active { transform: translateY(0px) scale(0.995); box-shadow: 0 2px 8px rgba(0,0,0,0.4); }
+
+  .random-btn-left-notch,
+  .random-btn-right-notch {
+    position: absolute;
+    bottom: 0;
+    width: 28px; height: 5px;
+    background: var(--border);
+    border-radius: 3px 3px 0 0;
+    transition: background 0.2s;
+  }
+
+  .random-btn-left-notch  { left: 60px; }
+  .random-btn-right-notch { right: 60px; }
+
+  .random-btn:hover .random-btn-left-notch,
+  .random-btn:hover .random-btn-right-notch {
+    background: color-mix(in srgb, var(--crimson) 40%, var(--border));
+  }
+
+  .random-btn-icon { font-size: 22px; flex-shrink: 0; transition: transform 0.3s ease; }
+  .random-btn:hover .random-btn-icon { transform: rotate(20deg) scale(1.15); }
+
+  .random-btn-label { display: flex; flex-direction: column; align-items: center; gap: 1px; }
+
+  .random-btn-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.01em;
+    line-height: 1.2;
+  }
+
+  .random-btn-sub { font-size: 11.5px; color: var(--text-muted); letter-spacing: 0.07em; text-transform: uppercase; }
+
+  .random-btn-badge {
+    position: absolute;
+    right: 28px;
+    background: var(--surface3);
+    border: 1px solid var(--border-light);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-family: 'Source Serif 4', serif;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+
+  .random-btn:hover .random-btn-badge {
+    background: color-mix(in srgb, var(--crimson) 15%, var(--surface3));
+    color: var(--crimson-glow);
+    border-color: color-mix(in srgb, var(--crimson) 40%, transparent);
+  }
+
+  /* Random modal cycling gradient */
+  .random-accent {
+    background: linear-gradient(90deg, var(--col1-light), var(--col2-light), var(--col3-light), var(--col4-light));
+    background-size: 300% 100%;
+    animation: accentShift 4s ease infinite;
+  }
+
+  @keyframes accentShift {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  /* ============================================================
+     RESPONSIVE
+  ============================================================ */
+  @media (max-width: 1000px) {
+    /* Switch to 2-column layout — need to reflow into separate column stacks */
+    .board-grid {
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: none;
+      grid-auto-rows: auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+    .col-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex: 0 0 calc(50% - 12px);
+    }
+    /* Override JS-set inline grid placement at this breakpoint */
+    .col-header, .tile {
+      grid-column: unset !important;
+      grid-row: unset !important;
+      align-self: unset;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .col-group { flex: 0 0 100%; }
+    header { padding: 20px; }
+    .board-wrap { padding: 20px 12px 40px; }
+    .modal { border-radius: var(--radius); }
+    .modal-header, .modal-body { padding: 18px; }
+    .random-wrap { padding: 0 12px 36px; }
+    .random-btn { height: 64px; border-radius: 10px; }
+    .random-btn-badge, .random-btn-left-notch, .random-btn-right-notch { display: none; }
+  }
+
+  .modal::-webkit-scrollbar { width: 6px; }
+  .modal::-webkit-scrollbar-track { background: var(--surface); }
+  .modal::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     HEADER
+============================================================ -->
+<header>
+  <div class="header-inner">
+    <div class="school-tag">Middlesex School · mxschool.edu</div>
+    <h1>BC Calculus — <em>Sequences &amp; Series</em> Choice Board</h1>
+    <div class="header-meta">
+      <span class="meta-pill">∑ Convergence Tests</span>
+      <span class="meta-pill">📐 Power &amp; Taylor Series</span>
+      <span class="meta-pill">🎯 Error Bounds</span>
+      <span class="meta-pill">AP Unit 10 Review</span>
+    </div>
+  </div>
+</header>
+
+<div class="instructions">
+  Click any tile to open practice problems. Use <strong>📹 Watch First</strong> for a video overview, then work through the problems and check with <strong>Show Answer</strong>.
+</div>
+
+<!-- ============================================================
+     BOARD
+============================================================ -->
+<div class="board-wrap">
+  <div class="board-grid" id="board-grid"></div>
+</div>
+
+<!-- ============================================================
+     RANDOM PRACTICE BAR
+============================================================ -->
+<div class="random-wrap">
+  <button class="random-btn" id="random-btn" aria-label="Random Practice">
+    <div class="random-btn-left-notch"></div>
+    <div class="random-btn-right-notch"></div>
+    <span class="random-btn-icon">🎲</span>
+    <div class="random-btn-label">
+      <span class="random-btn-title">Random Practice</span>
+      <span class="random-btn-sub">Any topic · Any tile · Any problem</span>
+    </div>
+    <span class="random-btn-badge">48 problems</span>
+  </button>
+</div>
+
+<!-- ============================================================
+     MODAL
+============================================================ -->
+<div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div class="modal-header-accent" id="modal-accent"></div>
+      <div>
+        <div class="modal-col-label" id="modal-col-label"></div>
+        <div class="modal-title" id="modal-title"></div>
+      </div>
+      <button class="modal-close" id="modal-close" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   DATA
+   Edit problems, video links, and tile content here.
+   Structure: columns[i].tiles[j] = {
+     icon, title, sub,
+     video: { title, url },   // optional
+     problems: [{
+       context, stem,
+       parts: [{label, text}],
+       answers: [{label, text}]
+     }]
+   }
+============================================================ */
+
+const columns = [
+
+  // ─────────────────────────────────────────────────────────
+  // COLUMN 1 — Sequences & Basic Series
+  // ─────────────────────────────────────────────────────────
+  {
+    id: "col-1",
+    accentVar: "var(--col1-light)",
+    headerClass: "col-1-header",
+    tileClass: "col-1",
+    label: "Column I",
+    title: "Sequences & Basic Series",
+    tiles: [
+      {
+        icon: "🔢",
+        title: "Convergence of Sequences",
+        sub: "Limits, L'Hôpital's Rule, and bounded monotone sequences",
+        video: {
+          title: "Sequences: Determine if a Sequence Converges or Diverges (Ex 1)",
+          url: "https://youtu.be/DkDMqD1u2G4"
+        },
+        problems: [
+          {
+            context: "Limits of sequences",
+            stem: "Determine whether each sequence converges or diverges. If it converges, find the limit.",
+            parts: [
+              { label: "(a)", text: "$a_n = \\dfrac{3n^2 - 2n + 1}{5n^2 + 4}$" },
+              { label: "(b)", text: "$a_n = \\dfrac{\\ln n}{n}$" },
+              { label: "(c)", text: "$a_n = n\\sin\\!\\left(\\dfrac{1}{n}\\right)$" }
+            ],
+            answers: [
+              { label: "(a)", text: "Divide numerator and denominator by $n^2$: $\\lim_{n\\to\\infty}\\dfrac{3-2/n+1/n^2}{5+4/n^2} = \\dfrac{3}{5}$. The sequence <strong>converges</strong> to $\\dfrac{3}{5}$." },
+              { label: "(b)", text: "Apply L'Hôpital's Rule treating $n$ as a continuous variable: $\\lim_{x\\to\\infty}\\dfrac{\\ln x}{x} = \\lim_{x\\to\\infty}\\dfrac{1/x}{1} = 0$. The sequence <strong>converges</strong> to $0$." },
+              { label: "(c)", text: "Let $u = 1/n \\to 0^+$: $\\lim_{n\\to\\infty}n\\sin(1/n) = \\lim_{u\\to 0^+}\\dfrac{\\sin u}{u} = 1$. The sequence <strong>converges</strong> to $1$." }
+            ]
+          },
+          {
+            context: "Factorial and exponential sequences",
+            stem: "Determine whether each sequence converges or diverges.",
+            parts: [
+              { label: "(a)", text: "$a_n = \\dfrac{2^n}{n!}$" },
+              { label: "(b)", text: "$a_n = \\left(1 + \\dfrac{3}{n}\\right)^n$" },
+              { label: "(c)", text: "$a_n = (-1)^n \\cdot \\dfrac{n}{n+1}$" }
+            ],
+            answers: [
+              { label: "(a)", text: "Using the Squeeze Theorem: $0 < a_n \\leq \\dfrac{4}{n}$ for $n \\geq 4$ (since most factors shrink below 1). As $n\\to\\infty$, $a_n \\to 0$. <strong>Converges</strong> to $0$." },
+              { label: "(b)", text: "This is a standard limit: $\\lim_{n\\to\\infty}\\left(1+\\dfrac{3}{n}\\right)^n = e^3$. <strong>Converges</strong> to $e^3$." },
+              { label: "(c)", text: "The odd terms approach $-1$ and even terms approach $+1$. Since the limit does not exist, the sequence <strong>diverges</strong>." }
+            ]
+          },
+          {
+            context: "Monotone Convergence Theorem",
+            stem: "Consider the sequence defined by $a_1 = 1$ and $a_{n+1} = \\sqrt{2 + a_n}$ for $n \\geq 1$.",
+            parts: [
+              { label: "(a)", text: "Show that the sequence is bounded above by 2. (Hint: use induction.)" },
+              { label: "(b)", text: "Show the sequence is increasing. (Hint: show $a_{n+1} > a_n$.)" },
+              { label: "(c)", text: "By the Monotone Convergence Theorem, the sequence converges. Find its limit." }
+            ],
+            answers: [
+              { label: "(a)", text: "Base case: $a_1 = 1 \\leq 2$. Inductive step: if $a_n \\leq 2$, then $a_{n+1} = \\sqrt{2+a_n} \\leq \\sqrt{2+2} = 2$. By induction, $a_n \\leq 2$ for all $n$." },
+              { label: "(b)", text: "Need $a_{n+1} > a_n$, i.e., $\\sqrt{2+a_n} > a_n$. Squaring: $2+a_n > a_n^2 \\Leftrightarrow a_n^2 - a_n - 2 < 0 \\Leftrightarrow (a_n-2)(a_n+1) < 0$. Since $0 < a_n \\leq 2$, this holds. So the sequence is increasing." },
+              { label: "(c)", text: "Let $L = \\lim a_n$. Taking limits: $L = \\sqrt{2+L}$. Squaring: $L^2 = 2+L \\Rightarrow L^2-L-2=0 \\Rightarrow (L-2)(L+1)=0$. Since $L > 0$, $L = 2$." }
+            ]
+          }
+        ]
+      },
+      {
+        icon: "⚡",
+        title: "Geometric & Telescoping Series",
+        sub: "Exact sums, partial fractions, and convergence criteria",
+        video: {
+          title: "Infinite Series: Geometric Series and Telescoping Series",
+          url: "https://youtu.be/Ifnnuk6UeNE"
+        },
+        problems: [
+          {
+            context: "Geometric series",
+            stem: "For each geometric series, state whether it converges or diverges. If it converges, find its exact sum.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\sum_{n=0}^{\\infty} \\frac{3}{4^n}$" },
+              { label: "(b)", text: "$\\displaystyle\\sum_{n=1}^{\\infty} \\left(-\\frac{2}{3}\\right)^n$" },
+              { label: "(c)", text: "$\\displaystyle\\sum_{n=0}^{\\infty} \\frac{5^n}{3^{2n}}$" }
+            ],
+            answers: [
+              { label: "(a)", text: "$a = 3$, $r = 1/4$. Since $|r| < 1$, converges. Sum $= \\dfrac{3}{1 - 1/4} = \\dfrac{3}{3/4} = 4$." },
+              { label: "(b)", text: "$a = -2/3$, $r = -2/3$. Since $|r| < 1$, converges. Sum $= \\dfrac{-2/3}{1 - (-2/3)} = \\dfrac{-2/3}{5/3} = -\\dfrac{2}{5}$." },
+              { label: "(c)", text: "$\\dfrac{5^n}{3^{2n}} = \\dfrac{5^n}{9^n} = \\left(\\dfrac{5}{9}\\right)^n$. $a = 1$, $r = 5/9$. Sum $= \\dfrac{1}{1-5/9} = \\dfrac{9}{4}$." }
+            ]
+          },
+          {
+            context: "Telescoping series",
+            stem: "Evaluate each telescoping series exactly.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\sum_{n=1}^{\\infty} \\frac{1}{n(n+1)}$&nbsp;&nbsp; (use partial fractions)" },
+              { label: "(b)", text: "$\\displaystyle\\sum_{n=1}^{\\infty} \\left(\\arctan(n+1) - \\arctan(n)\\right)$" },
+              { label: "(c)", text: "$\\displaystyle\\sum_{n=1}^{\\infty} \\ln\\!\\left(\\frac{n+1}{n}\\right)$" }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\dfrac{1}{n(n+1)} = \\dfrac{1}{n} - \\dfrac{1}{n+1}$. Partial sums: $S_N = 1 - \\dfrac{1}{N+1} \\to 1$. Sum $= 1$." },
+              { label: "(b)", text: "$S_N = \\arctan(N+1) - \\arctan(1)$. As $N\\to\\infty$: $\\arctan(N+1) \\to \\pi/2$. Sum $= \\dfrac{\\pi}{2} - \\dfrac{\\pi}{4} = \\dfrac{\\pi}{4}$." },
+              { label: "(c)", text: "$\\ln\\!\\left(\\dfrac{n+1}{n}\\right) = \\ln(n+1) - \\ln(n)$. $S_N = \\ln(N+1) - \\ln(1) = \\ln(N+1) \\to \\infty$. The series <strong>diverges</strong>." }
+            ]
+          },
+          {
+            context: "Repeating decimals via geometric series",
+            stem: "Express each repeating decimal as a fraction using a geometric series.",
+            parts: [
+              { label: "(a)", text: "$0.\\overline{7}$" },
+              { label: "(b)", text: "$0.\\overline{27}$" },
+              { label: "(c)", text: "$1.2\\overline{45}$" }
+            ],
+            answers: [
+              { label: "(a)", text: "$0.\\overline{7} = \\sum_{n=1}^\\infty \\dfrac{7}{10^n} = \\dfrac{7/10}{1 - 1/10} = \\dfrac{7}{9}$." },
+              { label: "(b)", text: "$0.\\overline{27} = \\dfrac{27}{100} + \\dfrac{27}{100^2} + \\cdots = \\dfrac{27/100}{1-1/100} = \\dfrac{27}{99} = \\dfrac{3}{11}$." },
+              { label: "(c)", text: "$1.2\\overline{45} = \\dfrac{12}{10} + \\sum_{n=1}^\\infty \\dfrac{45}{10^3 \\cdot 100^{n-1}} \\cdot \\dfrac{1}{1} = \\dfrac{12}{10} + \\dfrac{45/1000}{1-1/100} = \\dfrac{6}{5} + \\dfrac{45}{990} = \\dfrac{6}{5} + \\dfrac{1}{22} = \\dfrac{137}{110}$." }
+            ]
+          }
+        ]
+      },
+      {
+        icon: "🚫",
+        title: "Divergence Test & Integral Test",
+        sub: "nth-Term Test, p-series, and improper integral comparison",
+        video: {
+          title: "Infinite Series: The p-Series Test",
+          url: "https://youtu.be/L3eqCqzBH1I"
+        },
+        problems: [
+          {
+            context: "nth-Term Divergence Test",
+            stem: "For each series, either use the Divergence Test to show it diverges, or explain why the test is inconclusive.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\sum_{n=1}^{\\infty} \\frac{n^2}{n^2 + 1}$" },
+              { label: "(b)", text: "$\\displaystyle\\sum_{n=1}^{\\infty} \\frac{1}{n}$" },
+              { label: "(c)", text: "$\\displaystyle\\sum_{n=1}^{\\infty} \\frac{(-1)^n n}{n+1}$" }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\lim_{n\\to\\infty}\\dfrac{n^2}{n^2+1} = 1 \\neq 0$. By the Divergence Test, the series <strong>diverges</strong>." },
+              { label: "(b)", text: "$\\lim_{n\\to\\infty}\\dfrac{1}{n} = 0$. The Divergence Test is <strong>inconclusive</strong> — we cannot conclude the series converges from this test alone. (In fact, the harmonic series diverges, but we need a different test to show this.)" },
+              { label: "(c)", text: "The terms oscillate: odd terms approach $-1$, even terms approach $+1$. The limit does not exist, so it is certainly not 0. By the Divergence Test, the series <strong>diverges</strong>." }
+            ]
+          },
+          {
+            context: "p-series",
+            stem: "Classify each $p$-series as convergent or divergent and state why.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\sum_{n=1}^{\\infty} \\frac{1}{n^3}$" },
+              { label: "(b)", text: "$\\displaystyle\\sum_{n=1}^{\\infty} \\frac{1}{\\sqrt{n}}$" },
+              { label: "(c)", text: "$\\displaystyle\\sum_{n=1}^{\\infty} \\frac{1}{n^{1.001}}$" }
+            ],
+            answers: [
+              { label: "(a)", text: "$p = 3 > 1$. <strong>Converges</strong> (this is in fact $\\zeta(3)$, Apéry's constant)." },
+              { label: "(b)", text: "$p = 1/2 < 1$. <strong>Diverges</strong>." },
+              { label: "(c)", text: "$p = 1.001 > 1$. <strong>Converges</strong> — even a tiny margin above 1 guarantees convergence for a $p$-series." }
+            ]
+          },
+          {
+            context: "Integral Test",
+            stem: "Use the Integral Test to determine convergence or divergence of each series (verify conditions first).",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\sum_{n=1}^{\\infty} \\frac{1}{n^2 + 1}$" },
+              { label: "(b)", text: "$\\displaystyle\\sum_{n=2}^{\\infty} \\frac{1}{n\\ln n}$" }
+            ],
+            answers: [
+              { label: "(a)", text: "$f(x) = \\dfrac{1}{x^2+1}$ is positive, continuous, decreasing on $[1,\\infty)$ ✓. $\\int_1^\\infty \\dfrac{dx}{x^2+1} = \\left[\\arctan x\\right]_1^\\infty = \\dfrac{\\pi}{2} - \\dfrac{\\pi}{4} = \\dfrac{\\pi}{4} < \\infty$. Integral converges $\\Rightarrow$ series <strong>converges</strong>." },
+              { label: "(b)", text: "$f(x) = \\dfrac{1}{x\\ln x}$ is positive, continuous, decreasing on $[2,\\infty)$ ✓. $\\int_2^\\infty \\dfrac{dx}{x\\ln x} = \\left[\\ln(\\ln x)\\right]_2^\\infty = \\infty$. Integral diverges $\\Rightarrow$ series <strong>diverges</strong>." }
+            ]
+          }
+        ]
+      },
+      {
+        icon: "⚖️",
+        title: "Comparison & Limit Comparison Tests",
+        sub: "Bounding series and asymptotic comparison",
+        video: {
+          title: "Direct Comparison Test / Limit Comparison Test — Basic Info",
+          url: "https://youtu.be/LAHKu3B-1zE"
+        },
+        problems: [
+          {
+            context: "Direct Comparison Test",
+            stem: "Use the Direct Comparison Test to determine convergence or divergence.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\sum_{n=1}^{\\infty} \\frac{1}{n^2 + n}$ &nbsp; (compare to $\\displaystyle\\sum \\frac{1}{n^2}$)" },
+              { label: "(b)", text: "$\\displaystyle\\sum_{n=1}^{\\infty} \\frac{\\sin^2 n}{n^2}$" },
+              { label: "(c)", text: "$\\displaystyle\\sum_{n=1}^{\\infty} \\frac{1}{\\sqrt{n} - 1/2}$ for $n \\geq 2$" }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\dfrac{1}{n^2+n} < \\dfrac{1}{n^2}$ for all $n \\geq 1$. Since $\\sum \\dfrac{1}{n^2}$ converges ($p=2$) and our series is smaller and positive, it <strong>converges</strong> by DCT." },
+              { label: "(b)", text: "$0 \\leq \\dfrac{\\sin^2 n}{n^2} \\leq \\dfrac{1}{n^2}$ for all $n$. Since $\\sum \\dfrac{1}{n^2}$ converges and our terms are smaller, the series <strong>converges</strong> by DCT." },
+              { label: "(c)", text: "For $n \\geq 2$: $\\sqrt{n} - 1/2 < \\sqrt{n}$, so $\\dfrac{1}{\\sqrt{n}-1/2} > \\dfrac{1}{\\sqrt{n}}$. Since $\\sum \\dfrac{1}{\\sqrt{n}}$ diverges ($p=1/2$), our series is larger and positive, so it <strong>diverges</strong> by DCT." }
+            ]
+          },
+          {
+            context: "Limit Comparison Test",
+            stem: "Use the Limit Comparison Test to determine convergence or divergence.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\sum_{n=1}^{\\infty} \\frac{2n+3}{n^3 - n + 1}$" },
+              { label: "(b)", text: "$\\displaystyle\\sum_{n=1}^{\\infty} \\frac{1}{\\sqrt{n^2 + 4}}$" },
+              { label: "(c)", text: "$\\displaystyle\\sum_{n=1}^{\\infty} \\sin\\!\\left(\\frac{1}{n}\\right)$" }
+            ],
+            answers: [
+              { label: "(a)", text: "Dominant term: $\\dfrac{2n}{n^3} = \\dfrac{2}{n^2}$. Compare to $b_n = \\dfrac{1}{n^2}$. LCT: $\\lim \\dfrac{a_n}{b_n} = \\lim \\dfrac{(2n+3)n^2}{n^3-n+1} = 2$ (finite and positive). Since $\\sum \\dfrac{1}{n^2}$ converges, the series <strong>converges</strong>." },
+              { label: "(b)", text: "For large $n$: $\\sqrt{n^2+4} \\approx n$, so compare to $b_n = 1/n$. LCT: $\\lim \\dfrac{n}{\\sqrt{n^2+4}} = 1$. Since $\\sum 1/n$ diverges, the series <strong>diverges</strong>." },
+              { label: "(c)", text: "Since $\\lim_{x\\to 0}\\dfrac{\\sin x}{x} = 1$, compare to $b_n = 1/n$: $\\lim \\dfrac{\\sin(1/n)}{1/n} = 1$. Since $\\sum 1/n$ diverges, the series <strong>diverges</strong>." }
+            ]
+          },
+          {
+            context: "Choosing the right test",
+            stem: "Determine convergence or divergence. Choose and justify your test selection.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\sum_{n=1}^{\\infty} \\frac{n^2 + 3n}{n^4 + 2}$" },
+              { label: "(b)", text: "$\\displaystyle\\sum_{n=1}^{\\infty} \\frac{2^n}{n^{10}}$" },
+              { label: "(c)", text: "$\\displaystyle\\sum_{n=1}^{\\infty} \\frac{n!}{n^n}$" }
+            ],
+            answers: [
+              { label: "(a)", text: "Dominant terms: $n^2/n^4 = 1/n^2$. LCT with $1/n^2$ gives limit $1$. Since $p$-series with $p=2$ converges, this series <strong>converges</strong>." },
+              { label: "(b)", text: "Exponential grows faster than polynomial: $\\lim_{n\\to\\infty} \\dfrac{2^n}{n^{10}} = \\infty \\neq 0$. Divergence Test: series <strong>diverges</strong>." },
+              { label: "(c)", text: "Use the Ratio Test: $\\dfrac{a_{n+1}}{a_n} = \\dfrac{(n+1)!}{(n+1)^{n+1}} \\cdot \\dfrac{n^n}{n!} = \\dfrac{n^n}{(n+1)^n} = \\left(\\dfrac{n}{n+1}\\right)^n \\to e^{-1} < 1$. <strong>Converges</strong> by Ratio Test." }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  // ─────────────────────────────────────────────────────────
+  // COLUMN 2 — Advanced Convergence Tests
+  // ─────────────────────────────────────────────────────────
+  {
+    id: "col-2",
+    accentVar: "var(--col2-light)",
+    headerClass: "col-2-header",
+    tileClass: "col-2",
+    label: "Column II",
+    title: "Advanced Convergence Tests",
+    tiles: [
+      {
+        icon: "🔄",
+        title: "Alternating Series Test",
+        sub: "AST conditions, convergence, and the error bound",
+        video: {
+          title: "Infinite Series: The Alternating Series Test",
+          url: "https://youtu.be/9zndB3a9rEo"
+        },
+        problems: [
+          {
+            context: "Alternating Series Test",
+            stem: "Determine whether each alternating series converges or diverges using the AST (or Divergence Test if needed).",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\sum_{n=1}^{\\infty} \\frac{(-1)^{n+1}}{n}$ &nbsp; (alternating harmonic series)" },
+              { label: "(b)", text: "$\\displaystyle\\sum_{n=1}^{\\infty} \\frac{(-1)^n \\cdot n}{n^2 + 1}$" },
+              { label: "(c)", text: "$\\displaystyle\\sum_{n=1}^{\\infty} \\frac{(-1)^n \\cdot n}{n + 1}$" }
+            ],
+            answers: [
+              { label: "(a)", text: "$b_n = 1/n$: (1) $b_n > 0$ ✓, (2) $b_n$ is decreasing ✓, (3) $b_n \\to 0$ ✓. AST conditions met — series <strong>converges</strong>." },
+              { label: "(b)", text: "$b_n = n/(n^2+1)$: Decreasing for $n \\geq 1$ (check: $f'(x) < 0$) ✓; $b_n \\to 0$ ✓. AST conditions met — series <strong>converges</strong>." },
+              { label: "(c)", text: "$b_n = n/(n+1) \\to 1 \\neq 0$. AST condition (3) fails. By the Divergence Test, the terms do not approach 0, so the series <strong>diverges</strong>." }
+            ]
+          },
+          {
+            context: "Alternating Series Error Bound",
+            stem: "The alternating series $\\displaystyle\\sum_{n=1}^{\\infty} \\frac{(-1)^{n+1}}{n^2}$ converges.",
+            parts: [
+              { label: "(a)", text: "Use the first 4 terms to estimate the sum. That is, compute $S_4$." },
+              { label: "(b)", text: "Give an upper bound on the error $|S - S_4|$." },
+              { label: "(c)", text: "How many terms are needed to guarantee the approximation is within $0.01$ of the true sum?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$S_4 = 1 - \\dfrac{1}{4} + \\dfrac{1}{9} - \\dfrac{1}{16} = \\dfrac{144 - 36 + 16 - 9}{144} = \\dfrac{115}{144} \\approx 0.7986$." },
+              { label: "(b)", text: "By the AST Error Bound, $|S - S_4| \\leq b_5 = \\dfrac{1}{25} = 0.04$." },
+              { label: "(c)", text: "Need $b_{n+1} = \\dfrac{1}{(n+1)^2} \\leq 0.01$, i.e., $(n+1)^2 \\geq 100$, so $n+1 \\geq 10$, meaning $n \\geq 9$. At least $\\mathbf{9}$ terms are needed." }
+            ]
+          },
+          {
+            context: "Absolute vs. Conditional Convergence",
+            stem: "Classify each series as <strong>absolutely convergent</strong>, <strong>conditionally convergent</strong>, or <strong>divergent</strong>.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\sum_{n=1}^{\\infty} \\frac{(-1)^n}{n^2}$" },
+              { label: "(b)", text: "$\\displaystyle\\sum_{n=1}^{\\infty} \\frac{(-1)^{n+1}}{n}$" },
+              { label: "(c)", text: "$\\displaystyle\\sum_{n=1}^{\\infty} \\frac{(-1)^n \\sqrt{n}}{n+1}$" }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\sum |a_n| = \\sum 1/n^2$ converges ($p=2$). The series is <strong>absolutely convergent</strong>." },
+              { label: "(b)", text: "$\\sum |a_n| = \\sum 1/n$ diverges (harmonic). But the alternating harmonic series converges by AST. The series is <strong>conditionally convergent</strong>." },
+              { label: "(c)", text: "$b_n = \\sqrt{n}/(n+1) \\sim 1/\\sqrt{n} \\to 0$, decreasing ✓ — converges by AST. But $\\sum \\sqrt{n}/(n+1)$: LCT with $1/\\sqrt{n}$ gives limit 1, and $\\sum 1/\\sqrt{n}$ diverges. So the series is <strong>conditionally convergent</strong>." }
+            ]
+          }
+        ]
+      },
+      {
+        icon: "📐",
+        title: "Ratio & Root Tests",
+        sub: "Series with factorials, exponentials, and the nth root",
+        video: {
+          title: "Infinite Series: The Ratio Test",
+          url: "https://youtu.be/SH0dNW1YMws"
+        },
+        problems: [
+          {
+            context: "Ratio Test",
+            stem: "Apply the Ratio Test to determine convergence or divergence.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\sum_{n=0}^{\\infty} \\frac{n!}{5^n}$" },
+              { label: "(b)", text: "$\\displaystyle\\sum_{n=1}^{\\infty} \\frac{n^2 \\cdot 2^n}{n!}$" },
+              { label: "(c)", text: "$\\displaystyle\\sum_{n=1}^{\\infty} \\frac{3^n}{n^3}$" }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\dfrac{a_{n+1}}{a_n} = \\dfrac{(n+1)!}{5^{n+1}} \\cdot \\dfrac{5^n}{n!} = \\dfrac{n+1}{5} \\to \\infty > 1$. <strong>Diverges</strong> by Ratio Test." },
+              { label: "(b)", text: "$\\dfrac{a_{n+1}}{a_n} = \\dfrac{(n+1)^2 \\cdot 2^{n+1}}{(n+1)!} \\cdot \\dfrac{n!}{n^2 \\cdot 2^n} = \\dfrac{2(n+1)^2}{(n+1)n^2} = \\dfrac{2(n+1)}{n^2} \\to 0 < 1$. <strong>Converges</strong> by Ratio Test." },
+              { label: "(c)", text: "$\\dfrac{a_{n+1}}{a_n} = \\dfrac{3^{n+1}}{(n+1)^3} \\cdot \\dfrac{n^3}{3^n} = 3 \\cdot \\left(\\dfrac{n}{n+1}\\right)^3 \\to 3 > 1$. <strong>Diverges</strong> by Ratio Test." }
+            ]
+          },
+          {
+            context: "Root Test",
+            stem: "Apply the Root Test to determine convergence or divergence.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\sum_{n=1}^{\\infty} \\left(\\frac{n}{2n+1}\\right)^n$" },
+              { label: "(b)", text: "$\\displaystyle\\sum_{n=1}^{\\infty} \\left(\\frac{2}{n}\\right)^n$" },
+              { label: "(c)", text: "$\\displaystyle\\sum_{n=1}^{\\infty} \\frac{1}{(\\ln n)^n}$ &nbsp; for $n \\geq 2$" }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\sqrt[n]{a_n} = \\dfrac{n}{2n+1} \\to \\dfrac{1}{2} < 1$. <strong>Converges</strong> by Root Test." },
+              { label: "(b)", text: "$\\sqrt[n]{a_n} = \\dfrac{2}{n} \\to 0 < 1$. <strong>Converges</strong> by Root Test." },
+              { label: "(c)", text: "$\\sqrt[n]{a_n} = \\dfrac{1}{\\ln n} \\to 0 < 1$. <strong>Converges</strong> by Root Test." }
+            ]
+          },
+          {
+            context: "Ratio Test — inconclusive case",
+            stem: "Show that the Ratio Test is inconclusive for $\\displaystyle\\sum_{n=1}^{\\infty} \\frac{1}{n^p}$ for any $p > 0$, and explain what this means about test selection.",
+            parts: [
+              { label: "(a)", text: "Compute $\\lim_{n\\to\\infty} \\dfrac{a_{n+1}}{a_n}$ for $a_n = 1/n^p$." },
+              { label: "(b)", text: "What does the result say about using the Ratio Test on $p$-series?" },
+              { label: "(c)", text: "Which test should you use instead to determine convergence of $\\sum 1/n^p$? What does it tell you?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\dfrac{a_{n+1}}{a_n} = \\left(\\dfrac{n}{n+1}\\right)^p \\to 1$. The Ratio Test limit equals 1 — <strong>inconclusive</strong>." },
+              { label: "(b)", text: "The Ratio Test never works on $p$-series — it always yields $L = 1$ regardless of $p$, so it gives no information about convergence." },
+              { label: "(c)", text: "Use the <strong>$p$-series test</strong> (which is itself derived from the Integral Test): $\\sum 1/n^p$ converges if and only if $p > 1$. This is a direct and definitive result that the Ratio Test cannot replicate." }
+            ]
+          }
+        ]
+      },
+      {
+        icon: "🗺️",
+        title: "Choosing the Right Test",
+        sub: "Strategic test selection and mixed convergence problems",
+        video: {
+          title: "Infinite Series: The Ratio Test I",
+          url: "https://youtu.be/SH0dNW1YMws"
+        },
+        problems: [
+          {
+            context: "Mixed convergence — choose your test",
+            stem: "For each series, name the test you would use, state your reasoning briefly, and determine convergence or divergence.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\sum_{n=1}^{\\infty} \\frac{(-1)^n}{\\sqrt{n+1}}$" },
+              { label: "(b)", text: "$\\displaystyle\\sum_{n=2}^{\\infty} \\frac{1}{n(\\ln n)^2}$" },
+              { label: "(c)", text: "$\\displaystyle\\sum_{n=0}^{\\infty} \\frac{e^n}{n! + 1}$" }
+            ],
+            answers: [
+              { label: "(a)", text: "<strong>AST</strong>: $b_n = 1/\\sqrt{n+1}$, decreasing and $\\to 0$. AST conditions met — <strong>converges</strong> (conditionally)." },
+              { label: "(b)", text: "<strong>Integral Test</strong>: $\\int_2^\\infty \\dfrac{dx}{x(\\ln x)^2} = \\left[-\\dfrac{1}{\\ln x}\\right]_2^\\infty = \\dfrac{1}{\\ln 2} < \\infty$. Integral converges — series <strong>converges</strong>." },
+              { label: "(c)", text: "<strong>Ratio Test</strong>: $\\dfrac{a_{n+1}}{a_n} \\approx \\dfrac{e^{n+1}}{(n+1)!} \\cdot \\dfrac{n!}{e^n} = \\dfrac{e}{n+1} \\to 0 < 1$. <strong>Converges</strong>." }
+            ]
+          },
+          {
+            context: "More mixed practice",
+            stem: "Determine convergence or divergence for each series. State your test.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\sum_{n=1}^{\\infty} \\frac{n+5}{2n^2 - 3}$" },
+              { label: "(b)", text: "$\\displaystyle\\sum_{n=1}^{\\infty} \\cos\\!\\left(\\dfrac{1}{n^2}\\right)$" },
+              { label: "(c)", text: "$\\displaystyle\\sum_{n=1}^{\\infty} \\left(\\frac{n}{n+1}\\right)^{n^2}$" }
+            ],
+            answers: [
+              { label: "(a)", text: "<strong>LCT</strong> with $b_n = 1/n$: $\\lim \\dfrac{(n+5)n}{2n^2-3} = \\dfrac{1}{2}$. Since $\\sum 1/n$ diverges, this series <strong>diverges</strong>." },
+              { label: "(b)", text: "<strong>Divergence Test</strong>: $\\cos(1/n^2) \\to \\cos(0) = 1 \\neq 0$. <strong>Diverges</strong>." },
+              { label: "(c)", text: "<strong>Root Test</strong>: $\\sqrt[n]{a_n} = \\left(\\dfrac{n}{n+1}\\right)^n \\to e^{-1} < 1$. <strong>Converges</strong>." }
+            ]
+          },
+          {
+            context: "Absolute convergence and rearrangements",
+            stem: "Consider the series $\\displaystyle S = \\sum_{n=1}^{\\infty} \\frac{(-1)^{n+1}}{n}$.",
+            parts: [
+              { label: "(a)", text: "Does $S$ converge absolutely, conditionally, or diverge? Justify fully." },
+              { label: "(b)", text: "The actual sum is $S = \\ln 2$. If you rearrange the terms to alternate two negatives for every positive (e.g., $1 - 1/2 - 1/4 + 1/3 - 1/6 - 1/8 + \\cdots$), what can you say about the sum of the rearranged series?" },
+              { label: "(c)", text: "What theorem justifies the behavior in part (b), and what does it tell us about conditional convergence?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\sum |a_n| = \\sum 1/n$ diverges. But by AST (decreasing terms $\\to 0$), the alternating series converges. Therefore $S$ is <strong>conditionally convergent</strong>." },
+              { label: "(b)", text: "The rearranged series converges to $\\dfrac{1}{2}\\ln 2$, not $\\ln 2$. Rearranging a conditionally convergent series can change its sum." },
+              { label: "(c)", text: "The <strong>Riemann Rearrangement Theorem</strong> states that a conditionally convergent series can be rearranged to converge to any desired real number (or diverge to $\\pm\\infty$). This is possible precisely because the positive and negative parts both diverge separately — their balance is destroyed by rearrangement." }
+            ]
+          }
+        ]
+      },
+      {
+        icon: "📊",
+        title: "Error Bounds for Series",
+        sub: "AST error bound, Integral Test remainder, and estimation",
+        video: {
+          title: "Infinite Series: The Alternating Series Test",
+          url: "https://youtu.be/9zndB3a9rEo"
+        },
+        problems: [
+          {
+            context: "Integral Test Remainder",
+            stem: "The series $\\displaystyle S = \\sum_{n=1}^{\\infty} \\frac{1}{n^2}$ converges (its exact sum is $\\pi^2/6$).",
+            parts: [
+              { label: "(a)", text: "Compute $S_5 = \\displaystyle\\sum_{n=1}^{5} \\frac{1}{n^2}$." },
+              { label: "(b)", text: "Use the Integral Test Remainder to bound the error: $R_N \\leq \\displaystyle\\int_N^\\infty \\frac{dx}{x^2}$. Apply this with $N=5$." },
+              { label: "(c)", text: "What is the minimum $N$ such that the partial sum $S_N$ is within $0.005$ of $\\pi^2/6$?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$S_5 = 1 + \\dfrac{1}{4} + \\dfrac{1}{9} + \\dfrac{1}{16} + \\dfrac{1}{25} = \\dfrac{3600+900+400+225+144}{3600} = \\dfrac{5269}{3600} \\approx 1.4636$." },
+              { label: "(b)", text: "$R_5 \\leq \\displaystyle\\int_5^\\infty \\dfrac{dx}{x^2} = \\left[-\\dfrac{1}{x}\\right]_5^\\infty = \\dfrac{1}{5} = 0.2$. The actual error $\\approx |\\pi^2/6 - 1.4636| \\approx 0.181 < 0.2$ ✓." },
+              { label: "(c)", text: "Need $\\dfrac{1}{N} \\leq 0.005$, i.e., $N \\geq 200$. At least $N = 200$ terms are needed. This shows why series convergence can be very slow — even $\\pi^2/6$ requires 200 terms for 2-decimal accuracy." }
+            ]
+          },
+          {
+            context: "AST error bound applied",
+            stem: "The series $\\displaystyle\\sum_{n=1}^{\\infty} \\frac{(-1)^{n+1}}{n^3}$ converges.",
+            parts: [
+              { label: "(a)", text: "Compute $S_3$." },
+              { label: "(b)", text: "Use the AST Error Bound to give a bound on $|S - S_3|$." },
+              { label: "(c)", text: "Determine a partial sum $S_N$ that guarantees approximation within $0.001$ of the true value." }
+            ],
+            answers: [
+              { label: "(a)", text: "$S_3 = 1 - \\dfrac{1}{8} + \\dfrac{1}{27} = 1 - 0.125 + 0.03704 \\approx 0.9120$." },
+              { label: "(b)", text: "$|S - S_3| \\leq b_4 = \\dfrac{1}{64} = 0.015625$." },
+              { label: "(c)", text: "Need $b_{N+1} = \\dfrac{1}{(N+1)^3} \\leq 0.001$, i.e., $(N+1)^3 \\geq 1000$, so $N+1 \\geq 10$, meaning $N \\geq 9$. Use $S_9$." }
+            ]
+          },
+          {
+            context: "Comparing error bounds",
+            stem: "A positive series $\\sum a_n$ converges. The $N$th partial sum $S_N$ satisfies $|S - S_N| \\leq \\int_N^\\infty f(x)\\,dx$ where $f$ is the associated continuous decreasing function.",
+            parts: [
+              { label: "(a)", text: "For $\\sum_{n=1}^\\infty \\dfrac{1}{n^4}$, find an $N$ so that the error is less than $0.0001$." },
+              { label: "(b)", text: "Why can't you use the AST Error Bound here?" },
+              { label: "(c)", text: "If a series converges absolutely, explain why knowing the error bound for $\\sum |a_n|$ also bounds the error for $\\sum a_n$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$R_N \\leq \\int_N^\\infty x^{-4}\\,dx = \\dfrac{1}{3N^3}$. Need $\\dfrac{1}{3N^3} \\leq 0.0001$, i.e., $N^3 \\geq \\dfrac{10000}{3} \\approx 3333$, so $N \\geq \\lceil 14.94\\rceil = 15$." },
+              { label: "(b)", text: "The AST Error Bound only applies to <em>alternating</em> series satisfying the conditions of the Alternating Series Test. $\\sum 1/n^4$ is a positive series — there is no alternation to exploit." },
+              { label: "(c)", text: "If $\\sum |a_n|$ has partial sum error $\\leq \\varepsilon$, then by the triangle inequality: $|S - S_N| = \\left|\\sum_{n=N+1}^\\infty a_n\\right| \\leq \\sum_{n=N+1}^\\infty |a_n| \\leq \\varepsilon$. Absolute convergence provides an upper bound that works regardless of signs." }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  // ─────────────────────────────────────────────────────────
+  // COLUMN 3 — Power Series & Radius of Convergence
+  // ─────────────────────────────────────────────────────────
+  {
+    id: "col-3",
+    accentVar: "var(--col3-light)",
+    headerClass: "col-3-header",
+    tileClass: "col-3",
+    label: "Column III",
+    title: "Power Series",
+    tiles: [
+      {
+        icon: "🌐",
+        title: "Radius & Interval of Convergence",
+        sub: "Ratio Test applied to power series; endpoint analysis",
+        video: {
+          title: "Introduction to Power Series and Interval of Convergence",
+          url: "https://youtu.be/80zBXUH7dkI"
+        },
+        problems: [
+          {
+            context: "Radius of convergence via Ratio Test",
+            stem: "Find the radius of convergence $R$ and interval of convergence for each power series.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\sum_{n=0}^{\\infty} \\frac{x^n}{n+1}$" },
+              { label: "(b)", text: "$\\displaystyle\\sum_{n=1}^{\\infty} \\frac{(-1)^n x^n}{n \\cdot 3^n}$" },
+              { label: "(c)", text: "$\\displaystyle\\sum_{n=0}^{\\infty} n! \\cdot x^n$" }
+            ],
+            answers: [
+              { label: "(a)", text: "Ratio Test: $\\left|\\dfrac{x^{n+1}}{n+2} \\cdot \\dfrac{n+1}{x^n}\\right| = |x| \\cdot \\dfrac{n+1}{n+2} \\to |x|$. Converges if $|x| < 1$, so $R = 1$. Check endpoints: $x=1$: $\\sum 1/(n+1)$ diverges. $x=-1$: $\\sum (-1)^n/(n+1)$ converges (AST). IOC: $[-1, 1)$." },
+              { label: "(b)", text: "Ratio: $|x|/3 \\cdot \\dfrac{n}{n+1} \\to |x|/3$. Converges if $|x|/3 < 1$, so $R = 3$. Endpoints: $x=3$: $\\sum (-1)^n/n$ converges (AST). $x=-3$: $\\sum 1/n$ diverges. IOC: $(-3, 3]$." },
+              { label: "(c)", text: "Ratio: $(n+1)!|x|^{n+1}/(n!|x|^n) = (n+1)|x| \\to \\infty$ for any $x \\neq 0$. The series converges only at $x=0$. $R = 0$." }
+            ]
+          },
+          {
+            context: "Series centered at $c \\neq 0$",
+            stem: "Find the radius and interval of convergence.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\sum_{n=1}^{\\infty} \\frac{(x-2)^n}{n \\cdot 4^n}$" },
+              { label: "(b)", text: "$\\displaystyle\\sum_{n=0}^{\\infty} \\frac{(-1)^n (x+3)^n}{2^n}$" },
+              { label: "(c)", text: "$\\displaystyle\\sum_{n=0}^{\\infty} \\frac{n^2 (x-1)^n}{5^n}$" }
+            ],
+            answers: [
+              { label: "(a)", text: "Ratio: $|x-2|/4 \\to |x-2|/4 < 1 \\Rightarrow |x-2| < 4$, $R = 4$, centered at $x=2$. Endpoints: $x=6$: $\\sum 1/n$ diverges. $x=-2$: $\\sum (-1)^n/n$ converges (AST). IOC: $[-2, 6)$." },
+              { label: "(b)", text: "Ratio: $|x+3|/2 < 1 \\Rightarrow |x+3| < 2$, $R = 2$. Endpoints: $x=−1$: $\\sum(-1)^n$ — terms don't $\\to 0$, diverges. $x=−5$: $\\sum 1$ — diverges. IOC: $(-5, -1)$." },
+              { label: "(c)", text: "Ratio: $|x-1| \\cdot (n+1)^2/(5n^2) \\to |x-1|/5 < 1 \\Rightarrow R = 5$. Endpoints: at $x-1 = \\pm5$, $\\sum n^2$ diverges. IOC: $(-4, 6)$." }
+            ]
+          },
+          {
+            context: "Power series for known functions",
+            stem: "Starting from $\\dfrac{1}{1-x} = \\displaystyle\\sum_{n=0}^{\\infty} x^n$ for $|x|<1$, find power series for the following and state the interval of convergence.",
+            parts: [
+              { label: "(a)", text: "$\\dfrac{1}{1+x}$" },
+              { label: "(b)", text: "$\\dfrac{1}{1-x^2}$" },
+              { label: "(c)", text: "$\\dfrac{x^2}{1+x^3}$" }
+            ],
+            answers: [
+              { label: "(a)", text: "Replace $x$ with $-x$: $\\dfrac{1}{1+x} = \\displaystyle\\sum_{n=0}^{\\infty}(-1)^n x^n$, for $|x|<1$." },
+              { label: "(b)", text: "Replace $x$ with $x^2$: $\\dfrac{1}{1-x^2} = \\displaystyle\\sum_{n=0}^{\\infty} x^{2n}$, for $|x^2|<1$, i.e., $|x|<1$." },
+              { label: "(c)", text: "Replace $x$ with $-x^3$: $\\dfrac{1}{1+x^3} = \\displaystyle\\sum_{n=0}^{\\infty}(-1)^n x^{3n}$. Multiply by $x^2$: $\\dfrac{x^2}{1+x^3} = \\displaystyle\\sum_{n=0}^{\\infty}(-1)^n x^{3n+2}$, for $|x|<1$." }
+            ]
+          }
+        ]
+      },
+      {
+        icon: "✏️",
+        title: "Differentiating & Integrating Power Series",
+        sub: "Term-by-term calculus within the interval of convergence",
+        video: {
+          title: "Power Series: Finding the Interval of Convergence",
+          url: "https://youtu.be/01LzAU__J-0"
+        },
+        problems: [
+          {
+            context: "Differentiation of power series",
+            stem: "Start from $\\dfrac{1}{1-x} = \\displaystyle\\sum_{n=0}^{\\infty} x^n$ for $|x|<1$.",
+            parts: [
+              { label: "(a)", text: "Differentiate term-by-term to find a power series for $\\dfrac{1}{(1-x)^2}$." },
+              { label: "(b)", text: "Differentiate once more to find a power series for $\\dfrac{2}{(1-x)^3}$." },
+              { label: "(c)", text: "Use your result in (a) to evaluate $\\displaystyle\\sum_{n=1}^{\\infty} \\dfrac{n}{2^n}$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\dfrac{d}{dx}\\left[\\dfrac{1}{1-x}\\right] = \\dfrac{1}{(1-x)^2} = \\displaystyle\\sum_{n=1}^{\\infty} n x^{n-1}$, valid for $|x|<1$." },
+              { label: "(b)", text: "$\\dfrac{d}{dx}\\left[\\dfrac{1}{(1-x)^2}\\right] = \\dfrac{2}{(1-x)^3} = \\displaystyle\\sum_{n=2}^{\\infty} n(n-1) x^{n-2}$, valid for $|x|<1$." },
+              { label: "(c)", text: "From (a): $\\displaystyle\\sum_{n=1}^{\\infty} n x^{n-1} = \\dfrac{1}{(1-x)^2}$. Multiply by $x$: $\\displaystyle\\sum_{n=1}^{\\infty} n x^n = \\dfrac{x}{(1-x)^2}$. Set $x=1/2$: $\\displaystyle\\sum_{n=1}^{\\infty} \\dfrac{n}{2^n} = \\dfrac{1/2}{(1/2)^2} = \\dfrac{1/2}{1/4} = 2$." }
+            ]
+          },
+          {
+            context: "Integration of power series",
+            stem: "Use term-by-term integration of power series.",
+            parts: [
+              { label: "(a)", text: "Starting from $\\dfrac{1}{1+x} = \\displaystyle\\sum_{n=0}^{\\infty}(-1)^n x^n$, integrate to find the power series for $\\ln(1+x)$." },
+              { label: "(b)", text: "Use your series to estimate $\\ln(1.2)$ to 4 decimal places, and bound the error." },
+              { label: "(c)", text: "Find a power series for $\\displaystyle\\int_0^x \\frac{1-e^{-t}}{t}\\,dt$ (a useful function in probability)." }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\displaystyle\\int_0^x \\dfrac{dt}{1+t} = \\sum_{n=0}^{\\infty}(-1)^n \\dfrac{x^{n+1}}{n+1}$. So $\\ln(1+x) = x - \\dfrac{x^2}{2} + \\dfrac{x^3}{3} - \\dfrac{x^4}{4} + \\cdots$, valid for $-1 < x \\leq 1$." },
+              { label: "(b)", text: "Set $x = 0.2$: $\\ln(1.2) \\approx 0.2 - 0.02 + \\dfrac{0.008}{3} - \\dfrac{0.0016}{4} \\approx 0.2 - 0.02 + 0.00267 - 0.0004 \\approx 0.1823$. By AST, error $\\leq b_5 = 0.2^5/5 = 0.000064$." },
+              { label: "(c)", text: "$1 - e^{-t} = t - \\dfrac{t^2}{2!} + \\dfrac{t^3}{3!} - \\cdots$, so $\\dfrac{1-e^{-t}}{t} = 1 - \\dfrac{t}{2!} + \\dfrac{t^2}{3!} - \\cdots$. Integrating: $\\displaystyle\\int_0^x \\dfrac{1-e^{-t}}{t}\\,dt = x - \\dfrac{x^2}{2\\cdot 2!} + \\dfrac{x^3}{3\\cdot 3!} - \\cdots = \\sum_{n=1}^{\\infty}\\dfrac{(-1)^{n+1}x^n}{n\\cdot n!}$." }
+            ]
+          },
+          {
+            context: "Using power series to evaluate series",
+            stem: "Use known power series to evaluate exact sums.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\sum_{n=0}^{\\infty} \\frac{(-1)^n}{2^n(n+1)}$" },
+              { label: "(b)", text: "$\\displaystyle\\sum_{n=0}^{\\infty} \\frac{\\pi^{2n}}{(2n)!}$" },
+              { label: "(c)", text: "$\\displaystyle\\sum_{n=1}^{\\infty} \\frac{(-1)^{n+1}}{n \\cdot 2^n}$" }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\dfrac{1}{n+1}x^n$ integrates to $\\dfrac{x^{n+1}}{n+1}$. We have $\\displaystyle\\sum \\dfrac{(-1)^n}{2^n(n+1)} = \\displaystyle\\sum \\dfrac{1}{n+1}\\left(-\\dfrac{1}{2}\\right)^n = \\dfrac{1}{-1/2}\\ln\\left(1-\\dfrac{1}{2}\\right) \\cdot (-1)$... Use $\\ln(1+x) = \\sum(-1)^n x^{n+1}/(n+1)$ at $x=1/2$: $= \\dfrac{\\ln(3/2)}{1/2} \\cdot \\dfrac{1}{1} = 2\\ln(3/2)$." },
+              { label: "(b)", text: "Recall $\\cos(x) = \\displaystyle\\sum_{n=0}^{\\infty}\\dfrac{(-1)^n x^{2n}}{(2n)!}$. Here all terms are positive: compare to $\\cosh(x) = \\displaystyle\\sum_{n=0}^{\\infty}\\dfrac{x^{2n}}{(2n)!} = \\dfrac{e^x+e^{-x}}{2}$. At $x = \\pi$: $\\displaystyle\\sum_{n=0}^{\\infty}\\dfrac{\\pi^{2n}}{(2n)!} = \\cosh(\\pi) = \\dfrac{e^\\pi + e^{-\\pi}}{2}$." },
+              { label: "(c)", text: "Using $\\ln(1+x) = \\displaystyle\\sum_{n=1}^{\\infty}\\dfrac{(-1)^{n+1}x^n}{n}$ at $x = 1/2$: $\\ln(3/2) = \\displaystyle\\sum_{n=1}^{\\infty}\\dfrac{(-1)^{n+1}}{n \\cdot 2^n}$." }
+            ]
+          }
+        ]
+      },
+      {
+        icon: "📡",
+        title: "Taylor & Maclaurin Polynomials",
+        sub: "Building polynomial approximations and understanding remainder",
+        video: {
+          title: "Find the Sum of an Infinite Series Using a Known Power Series",
+          url: "https://youtu.be/Ifnnuk6UeNE"
+        },
+        problems: [
+          {
+            context: "Constructing Taylor polynomials",
+            stem: "Find the degree-$n$ Taylor polynomial $T_n(x)$ centered at the given point.",
+            parts: [
+              { label: "(a)", text: "$f(x) = e^x$ centered at $a = 0$; find $T_4(x)$." },
+              { label: "(b)", text: "$f(x) = \\sin x$ centered at $a = 0$; find $T_5(x)$." },
+              { label: "(c)", text: "$f(x) = \\ln x$ centered at $a = 1$; find $T_3(x)$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$T_4(x) = 1 + x + \\dfrac{x^2}{2!} + \\dfrac{x^3}{3!} + \\dfrac{x^4}{4!} = 1 + x + \\dfrac{x^2}{2} + \\dfrac{x^3}{6} + \\dfrac{x^4}{24}$." },
+              { label: "(b)", text: "$T_5(x) = x - \\dfrac{x^3}{3!} + \\dfrac{x^5}{5!} = x - \\dfrac{x^3}{6} + \\dfrac{x^5}{120}$." },
+              { label: "(c)", text: "$f'(x)=1/x$, $f''(x)=-1/x^2$, $f'''(x)=2/x^3$. At $a=1$: $f=0,f'=1,f''=-1,f'''=2$. $T_3(x) = (x-1) - \\dfrac{(x-1)^2}{2} + \\dfrac{(x-1)^3}{3}$." }
+            ]
+          },
+          {
+            context: "Using Taylor polynomials for approximation",
+            stem: "Use a Taylor polynomial to approximate the given value.",
+            parts: [
+              { label: "(a)", text: "Use $T_4(x)$ for $e^x$ at $a=0$ to estimate $e^{0.5}$. Compare to the true value." },
+              { label: "(b)", text: "Use $T_5(x)$ for $\\sin x$ at $a=0$ to estimate $\\sin(0.3)$." },
+              { label: "(c)", text: "Use a degree-3 Taylor polynomial for $\\sqrt{x}$ centered at $a=4$ to estimate $\\sqrt{4.2}$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$T_4(0.5) = 1 + 0.5 + 0.125 + 0.02083 + 0.002604 = 1.6484$. True value $e^{0.5} \\approx 1.6487$. Error $\\approx 0.0003$." },
+              { label: "(b)", text: "$T_5(0.3) = 0.3 - \\dfrac{0.027}{6} + \\dfrac{0.00243}{120} = 0.3 - 0.0045 + 0.00002 = 0.29552$. (True: $\\sin(0.3) \\approx 0.29552$.)" },
+              { label: "(c)", text: "$f(x)=x^{1/2}$; at $a=4$: $f=2$, $f'=1/4$, $f''=-1/64$, $f'''=3/512$. $T_3(x) = 2 + \\dfrac{1}{4}(x-4) - \\dfrac{1}{128}(x-4)^2 + \\dfrac{1}{1024}(x-4)^3$. At $x=4.2$: $\\approx 2 + 0.05 - 0.0003125 + \\cdots \\approx 2.0494$. (True: $\\sqrt{4.2} \\approx 2.04939$.) ✓" }
+            ]
+          },
+          {
+            context: "Taylor polynomial structure",
+            stem: "Answer conceptual questions about Taylor polynomials.",
+            parts: [
+              { label: "(a)", text: "What condition must a function $f$ satisfy to have a Taylor series centered at $a$? Why can't all functions be represented this way?" },
+              { label: "(b)", text: "Explain why the odd-degree Maclaurin polynomial for $\\cos x$ is the same as the even-degree one of one degree lower (e.g., $T_5 = T_4$)." },
+              { label: "(c)", text: "If $f^{(n+1)}$ exists and is bounded by $M$ on an interval containing $a$ and $x$, what does the Lagrange Error Bound say?" }
+            ],
+            answers: [
+              { label: "(a)", text: "The function must be infinitely differentiable (smooth) at $a$ — all derivatives $f^{(n)}(a)$ must exist. Additionally, the Taylor series must converge to $f(x)$, not just converge to some other function. (e.g., $e^{-1/x^2}$ at $a=0$ has all derivatives 0, but $f(0^+) > 0$, so its Taylor series equals 0 everywhere but doesn't equal $f$)." },
+              { label: "(b)", text: "For $\\cos x$, all odd-order derivatives evaluated at $x=0$ equal 0 (since $\\cos$ is an even function). So the coefficient of the $x^5$ term in the Maclaurin series is 0, making $T_5 = T_4$ (no new term is added)." },
+              { label: "(c)", text: "The Lagrange Error Bound: $|R_n(x)| = |f(x) - T_n(x)| \\leq \\dfrac{M}{(n+1)!}|x-a|^{n+1}$, where $M \\geq |f^{(n+1)}(c)|$ for all $c$ between $a$ and $x$." }
+            ]
+          }
+        ]
+      },
+      {
+        icon: "📏",
+        title: "Lagrange Error Bound",
+        sub: "Bounding the remainder for Taylor polynomial approximations",
+        video: {
+          title: "Introduction to Power Series and Interval of Convergence",
+          url: "https://youtu.be/80zBXUH7dkI"
+        },
+        problems: [
+          {
+            context: "Applying the Lagrange Error Bound",
+            stem: "Apply the Lagrange Error Bound to control approximation error.",
+            parts: [
+              { label: "(a)", text: "Use the degree-4 Maclaurin polynomial for $e^x$ to approximate $e^{0.2}$. Find an upper bound for the error. (Note: $e^{0.2} < 2$.)" },
+              { label: "(b)", text: "How many terms of the Maclaurin series for $\\cos x$ are needed so that $|\\cos(0.5) - T_n(0.5)| < 0.0001$?" },
+              { label: "(c)", text: "Use the degree-3 Taylor polynomial for $\\ln x$ at $a=1$ to approximate $\\ln(1.5)$. Bound the error using the Lagrange bound." }
+            ],
+            answers: [
+              { label: "(a)", text: "$R_4 \\leq \\dfrac{M}{5!}|x|^5$ where $M \\geq |e^c|$ for $c \\in [0, 0.2]$. Since $e^{0.2} < 2$, use $M = 2$. $|R_4| \\leq \\dfrac{2}{120}(0.2)^5 = \\dfrac{2 \\cdot 0.00032}{120} \\approx 5.33 \\times 10^{-6}$." },
+              { label: "(b)", text: "For $\\cos x$, $|f^{(n+1)}(c)| \\leq 1$ always. Need $\\dfrac{1}{(n+1)!}(0.5)^{n+1} < 0.0001$. Test: $n=6$: $\\dfrac{(0.5)^7}{7!} = \\dfrac{0.0078125}{5040} \\approx 1.55 \\times 10^{-6} < 0.0001$ ✓. But $T_6 = T_7$ for $\\cos$ — so use $T_6$ (i.e., include up to the $x^6$ term). The degree-6 polynomial works." },
+              { label: "(c)", text: "$T_3(x) = (x-1) - \\dfrac{(x-1)^2}{2} + \\dfrac{(x-1)^3}{3}$ at $x=1.5$: $= 0.5 - 0.125 + 0.04167 \\approx 0.4167$. (True: $\\ln(1.5) \\approx 0.4055$.) Error bound: $f^{(4)}(x) = -6/x^4$; max on $[1,1.5]$ is at $x=1$: $|f^{(4)}| \\leq 6$. $|R_3| \\leq \\dfrac{6}{4!}(0.5)^4 = \\dfrac{6}{24}(0.0625) = 0.015625$. Actual error $\\approx 0.011$ ✓." }
+            ]
+          },
+          {
+            context: "Finding the degree needed",
+            stem: "Determine the minimum polynomial degree for a given accuracy.",
+            parts: [
+              { label: "(a)", text: "How many terms of the Maclaurin series for $\\sin x$ are needed to approximate $\\sin(1)$ to within $0.001$?" },
+              { label: "(b)", text: "How many terms of the Maclaurin series for $e^x$ are needed to compute $e$ to 6 decimal places? (Use $e < 3$.)" },
+              { label: "(c)", text: "Find the minimum $n$ such that the $n$th-degree Taylor polynomial for $\\sqrt{x}$ centered at $a = 1$ approximates $\\sqrt{1.1}$ within $0.0001$." }
+            ],
+            answers: [
+              { label: "(a)", text: "For $\\sin x$: $|f^{(n+1)}| \\leq 1$. Need $\\dfrac{1}{(2k+1)!}(1)^{2k+1} < 0.001$. $k=2$: $\\dfrac{1}{5!} = 0.00833 > 0.001$. $k=3$: $\\dfrac{1}{7!} = 0.000198 < 0.001$ ✓. Need the $x^7$ term — use $T_7$ (odd terms only: $k=3$ means 4 terms: $x, x^3/6, x^5/120, x^7/5040$)." },
+              { label: "(b)", text: "At $x=1$: $|R_n| \\leq \\dfrac{e}{(n+1)!} < \\dfrac{3}{(n+1)!} < 0.0000005$. Need $(n+1)! > 6\\,000\,000$. $10! = 3628800 < 6\\times10^6$; $11! = 39916800 > 6\\times10^6$. So $n+1=11$, meaning $n=10$ terms suffice." },
+              { label: "(c)", text: "$f(x) = x^{1/2}$; $f^{(n+1)}$ on $[1, 1.1]$ is bounded. $f^{(1)} = \\frac12 x^{-1/2}$, $f^{(2)} = -\\frac14 x^{-3/2}$, $f^{(3)} = \\frac38 x^{-5/2}$. At $x=1$: $|f^{(3)}| = 3/8$. $|R_2| \\leq \\dfrac{3/8}{3!}(0.1)^3 = \\dfrac{3/8}{6}(0.001) = 0.0000625 < 0.0001$ ✓. Degree $n = 2$ suffices." }
+            ]
+          },
+          {
+            context: "AP-style error bound problem",
+            stem: "The function $f$ has derivatives of all orders, and the Maclaurin series for $f$ is $\\displaystyle\\sum_{n=0}^{\\infty} \\dfrac{(-1)^n x^{2n+1}}{(2n+1)!}$.",
+            parts: [
+              { label: "(a)", text: "Identify the function $f$." },
+              { label: "(b)", text: "Write the degree-5 Taylor polynomial $T_5(x)$ for $f$ centered at 0." },
+              { label: "(c)", text: "Use the Lagrange Error Bound to show that $|f(0.4) - T_5(0.4)| < 0.0001$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$f(x) = \\sin x$." },
+              { label: "(b)", text: "$T_5(x) = x - \\dfrac{x^3}{3!} + \\dfrac{x^5}{5!} = x - \\dfrac{x^3}{6} + \\dfrac{x^5}{120}$." },
+              { label: "(c)", text: "The next term is $\\dfrac{x^7}{7!}$. For $\\sin x$, all derivatives are bounded by 1 in absolute value. So $|R_5(0.4)| \\leq \\dfrac{1}{7!}(0.4)^7 = \\dfrac{(0.4)^7}{5040} = \\dfrac{0.0016384}{5040} \\approx 3.25 \\times 10^{-7} < 0.0001$. ✓" }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  // ─────────────────────────────────────────────────────────
+  // COLUMN 4 — Taylor Series & Applications
+  // ─────────────────────────────────────────────────────────
+  {
+    id: "col-4",
+    accentVar: "var(--col4-light)",
+    headerClass: "col-4-header",
+    tileClass: "col-4",
+    label: "Column IV",
+    title: "Taylor Series & Applications",
+    tiles: [
+      {
+        icon: "🧮",
+        title: "Common Taylor Series",
+        sub: "Memorizing, deriving, and recognizing the key series",
+        video: {
+          title: "Power Series: Finding the Interval of Convergence",
+          url: "https://youtu.be/01LzAU__J-0"
+        },
+        problems: [
+          {
+            context: "The five essential Maclaurin series",
+            stem: "Write the Maclaurin series and state the interval of convergence for each function.",
+            parts: [
+              { label: "(a)", text: "$e^x$" },
+              { label: "(b)", text: "$\\sin x$ and $\\cos x$" },
+              { label: "(c)", text: "$\\dfrac{1}{1-x}$ and $\\ln(1+x)$" }
+            ],
+            answers: [
+              { label: "(a)", text: "$e^x = \\displaystyle\\sum_{n=0}^{\\infty} \\dfrac{x^n}{n!} = 1 + x + \\dfrac{x^2}{2!} + \\dfrac{x^3}{3!} + \\cdots$, for all $x \\in (-\\infty, \\infty)$." },
+              { label: "(b)", text: "$\\sin x = \\displaystyle\\sum_{n=0}^{\\infty} \\dfrac{(-1)^n x^{2n+1}}{(2n+1)!}$, all $x$. &nbsp;&nbsp; $\\cos x = \\displaystyle\\sum_{n=0}^{\\infty} \\dfrac{(-1)^n x^{2n}}{(2n)!}$, all $x$." },
+              { label: "(c)", text: "$\\dfrac{1}{1-x} = \\displaystyle\\sum_{n=0}^{\\infty} x^n$, $|x|<1$. &nbsp;&nbsp; $\\ln(1+x) = \\displaystyle\\sum_{n=1}^{\\infty} \\dfrac{(-1)^{n+1}x^n}{n}$, $-1 < x \\leq 1$." }
+            ]
+          },
+          {
+            context: "Manipulating known series",
+            stem: "Use substitution into a known Maclaurin series to find the following. State the interval of convergence.",
+            parts: [
+              { label: "(a)", text: "$e^{-x^2}$" },
+              { label: "(b)", text: "$\\cos(3x)$" },
+              { label: "(c)", text: "$x\\sin(x^2)$" }
+            ],
+            answers: [
+              { label: "(a)", text: "Replace $x$ with $-x^2$ in the $e^x$ series: $e^{-x^2} = \\displaystyle\\sum_{n=0}^{\\infty} \\dfrac{(-x^2)^n}{n!} = \\sum_{n=0}^{\\infty} \\dfrac{(-1)^n x^{2n}}{n!}$, for all $x$." },
+              { label: "(b)", text: "Replace $x$ with $3x$ in $\\cos x$: $\\cos(3x) = \\displaystyle\\sum_{n=0}^{\\infty}\\dfrac{(-1)^n (3x)^{2n}}{(2n)!} = \\sum_{n=0}^{\\infty}\\dfrac{(-1)^n 9^n x^{2n}}{(2n)!}$, for all $x$." },
+              { label: "(c)", text: "Replace $x$ with $x^2$ in $\\sin x$: $\\sin(x^2) = \\sum_{n=0}^{\\infty}\\dfrac{(-1)^n x^{4n+2}}{(2n+1)!}$. Multiply by $x$: $x\\sin(x^2) = \\displaystyle\\sum_{n=0}^{\\infty}\\dfrac{(-1)^n x^{4n+3}}{(2n+1)!}$, for all $x$." }
+            ]
+          },
+          {
+            context: "Identifying series",
+            stem: "Identify each series as a known function by recognizing it as a Maclaurin series.",
+            parts: [
+              { label: "(a)", text: "$1 - \\dfrac{x^2}{2!} + \\dfrac{x^4}{4!} - \\dfrac{x^6}{6!} + \\cdots$" },
+              { label: "(b)", text: "$x - \\dfrac{x^3}{3} + \\dfrac{x^5}{5} - \\dfrac{x^7}{7} + \\cdots$" },
+              { label: "(c)", text: "$1 + x + \\dfrac{x^2}{2!} + \\dfrac{x^3}{3!} + \\dfrac{x^4}{4!} + \\cdots$ evaluated at $x = 2$" }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\cos x$. The general term is $\\dfrac{(-1)^n x^{2n}}{(2n)!}$." },
+              { label: "(b)", text: "$\\arctan x$. This is the Maclaurin series for $\\arctan x = \\displaystyle\\sum_{n=0}^{\\infty}\\dfrac{(-1)^n x^{2n+1}}{2n+1}$, valid for $|x| \\leq 1$." },
+              { label: "(c)", text: "This is $e^x$ at $x = 2$, which equals $e^2 \\approx 7.389$." }
+            ]
+          }
+        ]
+      },
+      {
+        icon: "🔬",
+        title: "Series for Calculus Computations",
+        sub: "Limits, definite integrals, and ODEs via power series",
+        video: {
+          title: "Find the Sum of an Infinite Series Using a Known Power Series",
+          url: "https://youtu.be/Ifnnuk6UeNE"
+        },
+        problems: [
+          {
+            context: "Limits using series",
+            stem: "Evaluate each limit using Taylor/Maclaurin series expansions.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\lim_{x \\to 0} \\frac{\\sin x - x}{x^3}$" },
+              { label: "(b)", text: "$\\displaystyle\\lim_{x \\to 0} \\frac{1 - \\cos x}{x^2}$" },
+              { label: "(c)", text: "$\\displaystyle\\lim_{x \\to 0} \\frac{e^x - 1 - x - x^2/2}{x^3}$" }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\sin x = x - \\dfrac{x^3}{6} + O(x^5)$. So $\\sin x - x = -\\dfrac{x^3}{6} + O(x^5)$. Then $\\dfrac{\\sin x - x}{x^3} \\to -\\dfrac{1}{6}$." },
+              { label: "(b)", text: "$1 - \\cos x = \\dfrac{x^2}{2} - \\dfrac{x^4}{24} + \\cdots$. So $\\dfrac{1-\\cos x}{x^2} \\to \\dfrac{1}{2}$." },
+              { label: "(c)", text: "$e^x = 1 + x + \\dfrac{x^2}{2} + \\dfrac{x^3}{6} + O(x^4)$. So $e^x - 1 - x - x^2/2 = \\dfrac{x^3}{6} + O(x^4)$. Divided by $x^3$: limit $= \\dfrac{1}{6}$." }
+            ]
+          },
+          {
+            context: "Definite integrals via series",
+            stem: "Use power series to compute each definite integral to the indicated accuracy.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\int_0^1 e^{-x^2}\\,dx$ &nbsp; accurate to $0.001$" },
+              { label: "(b)", text: "$\\displaystyle\\int_0^{0.5} \\frac{\\sin x}{x}\\,dx$ &nbsp; accurate to $0.001$" },
+              { label: "(c)", text: "$\\displaystyle\\int_0^{0.2} \\cos(x^2)\\,dx$ &nbsp; accurate to $0.0001$" }
+            ],
+            answers: [
+              { label: "(a)", text: "$e^{-x^2} = \\sum_{n=0}^{\\infty}\\dfrac{(-1)^n x^{2n}}{n!}$. Integrate term-by-term: $\\displaystyle\\int_0^1 e^{-x^2}\\,dx = \\sum_{n=0}^{\\infty}\\dfrac{(-1)^n}{n!(2n+1)}$. This is alternating, so use AST error bound. Sum through $n=4$: $1 - \\tfrac13 + \\tfrac{1}{10} - \\tfrac{1}{42} + \\tfrac{1}{216} \\approx 0.7475$. Error $\\leq 1/(5! \\cdot 11) \\approx 0.00076 < 0.001$ ✓." },
+              { label: "(b)", text: "$\\dfrac{\\sin x}{x} = 1 - \\dfrac{x^2}{3!} + \\dfrac{x^4}{5!} - \\cdots$. Integrate: $\\left[x - \\dfrac{x^3}{18} + \\dfrac{x^5}{600}\\right]_0^{0.5} = 0.5 - \\dfrac{0.125}{18} + \\dfrac{0.03125}{600} \\approx 0.5 - 0.00694 + 0.000052 \\approx 0.4931$. Error $\\leq \\dfrac{(0.5)^7}{7 \\cdot 7!} < 0.0001 < 0.001$ ✓." },
+              { label: "(c)", text: "$\\cos(x^2) = \\sum_{n=0}^{\\infty}\\dfrac{(-1)^n x^{4n}}{(2n)!}$. Integrate: $\\sum_{n=0}^{\\infty}\\dfrac{(-1)^n (0.2)^{4n+1}}{(2n)!(4n+1)}$. First term: $0.2$. Second: $-\\dfrac{(0.2)^5}{2 \\cdot 5} = -\\dfrac{0.00032}{10} = -0.000032$. Third term $< 10^{-8}$. So $\\approx 0.2 - 0.000032 = 0.19997$; error $< 0.0001$ ✓." }
+            ]
+          },
+          {
+            context: "Euler's formula and connections",
+            stem: "Explore the deep connection between the series for $e^x$, $\\sin x$, and $\\cos x$.",
+            parts: [
+              { label: "(a)", text: "Write the Maclaurin series for $e^{ix}$ (treating $i^2 = -1$, $i^3 = -i$, $i^4 = 1$, etc.) and group real and imaginary parts." },
+              { label: "(b)", text: "What famous identity results from setting $x = \\pi$ in Euler's formula $e^{ix} = \\cos x + i \\sin x$?" },
+              { label: "(c)", text: "Use the series to verify that $\\dfrac{d}{dx}[\\sin x] = \\cos x$ by differentiating the Maclaurin series for $\\sin x$ term-by-term." }
+            ],
+            answers: [
+              { label: "(a)", text: "$e^{ix} = \\sum_{n=0}^\\infty \\dfrac{(ix)^n}{n!} = 1 + ix - \\dfrac{x^2}{2!} - \\dfrac{ix^3}{3!} + \\dfrac{x^4}{4!} + \\cdots$. Grouping: Real part $= 1 - \\dfrac{x^2}{2!} + \\dfrac{x^4}{4!} - \\cdots = \\cos x$. Imaginary part $= x - \\dfrac{x^3}{3!} + \\cdots = \\sin x$. So $e^{ix} = \\cos x + i\\sin x$ (Euler's formula)." },
+              { label: "(b)", text: "At $x = \\pi$: $e^{i\\pi} = \\cos\\pi + i\\sin\\pi = -1 + 0 = -1$. Therefore $e^{i\\pi} + 1 = 0$ — <strong>Euler's identity</strong>, often called the most beautiful equation in mathematics, connecting $e$, $i$, $\\pi$, 1, and 0." },
+              { label: "(c)", text: "$\\sin x = x - \\dfrac{x^3}{6} + \\dfrac{x^5}{120} - \\cdots = \\displaystyle\\sum_{n=0}^\\infty \\dfrac{(-1)^n x^{2n+1}}{(2n+1)!}$. Term-by-term derivative: $\\displaystyle\\sum_{n=0}^\\infty \\dfrac{(-1)^n (2n+1)x^{2n}}{(2n+1)!} = \\sum_{n=0}^\\infty \\dfrac{(-1)^n x^{2n}}{(2n)!} = \\cos x$ ✓." }
+            ]
+          }
+        ]
+      },
+      {
+        icon: "🏆",
+        title: "Mixed AP-Style Practice",
+        sub: "Full multi-part problems in AP exam format",
+        video: {
+          title: "Direct Comparison Test / Limit Comparison Test — Basic Info",
+          url: "https://youtu.be/LAHKu3B-1zE"
+        },
+        problems: [
+          {
+            context: "AP Free-Response style — Series with error bound",
+            stem: "The function $g$ satisfies $g(0) = 0$ and $g'(x) = \\dfrac{1}{1+x^3}$ for all $x$.",
+            parts: [
+              { label: "(a)", text: "Find the first four nonzero terms and the general term of the Maclaurin series for $g'(x)$. Justify using a known series." },
+              { label: "(b)", text: "Find the first four nonzero terms of the Maclaurin series for $g(x)$." },
+              { label: "(c)", text: "Use the first two nonzero terms of your series from (b) to estimate $g(0.5)$. Use the alternating series error bound to show this estimate has error less than $0.01$." }
+            ],
+            answers: [
+              { label: "(a)", text: "Use $\\dfrac{1}{1-u} = \\sum u^n$: replace $u$ with $-x^3$: $g'(x) = \\dfrac{1}{1+x^3} = \\sum_{n=0}^\\infty (-1)^n x^{3n} = 1 - x^3 + x^6 - x^9 + \\cdots$, valid for $|x|<1$." },
+              { label: "(b)", text: "Integrate term-by-term with $g(0) = 0$: $g(x) = x - \\dfrac{x^4}{4} + \\dfrac{x^7}{7} - \\dfrac{x^{10}}{10} + \\cdots$." },
+              { label: "(c)", text: "$g(0.5) \\approx 0.5 - \\dfrac{(0.5)^4}{4} = 0.5 - 0.015625 = 0.484375$. The series is alternating with decreasing terms. Error $\\leq b_3 = \\dfrac{(0.5)^7}{7} = \\dfrac{0.0078125}{7} \\approx 0.00112 < 0.01$ ✓." }
+            ]
+          },
+          {
+            context: "AP Free-Response style — Power series and convergence",
+            stem: "Let $f(x) = \\displaystyle\\sum_{n=1}^{\\infty} \\frac{(-1)^{n+1}(x-1)^n}{n \\cdot 2^n}$.",
+            parts: [
+              { label: "(a)", text: "Find the radius of convergence of this power series." },
+              { label: "(b)", text: "Determine the interval of convergence, checking both endpoints." },
+              { label: "(c)", text: "Show that the function $f$ defined by this series satisfies $f'(x) = \\dfrac{1}{x+1}$ on the interior of the interval of convergence." }
+            ],
+            answers: [
+              { label: "(a)", text: "Ratio Test: $\\left|\\dfrac{(x-1)^{n+1}}{(n+1)2^{n+1}} \\cdot \\dfrac{n \\cdot 2^n}{(x-1)^n}\\right| = \\dfrac{|x-1|}{2} \\cdot \\dfrac{n}{n+1} \\to \\dfrac{|x-1|}{2}$. Converges if $|x-1| < 2$. Radius $R = 2$." },
+              { label: "(b)", text: "Center $c=1$, $R=2$: open interval $(-1, 3)$. At $x=3$: $\\sum \\dfrac{1}{n}$ diverges. At $x=-1$: $\\sum \\dfrac{(-1)^{n+1}(-2)^n}{n \\cdot 2^n} = \\sum \\dfrac{(-1)^{n+1}(-1)^n}{n} = \\sum \\dfrac{-1}{n}$ — diverges. IOC: $(-1, 3)$." },
+              { label: "(c)", text: "Differentiate term-by-term: $f'(x) = \\displaystyle\\sum_{n=1}^\\infty \\dfrac{(-1)^{n+1}(x-1)^{n-1}}{2^n} = \\dfrac{1}{2}\\sum_{n=0}^\\infty \\dfrac{(-1)^n(x-1)^n}{2^n} = \\dfrac{1}{2} \\cdot \\dfrac{1}{1+(x-1)/2} = \\dfrac{1}{2} \\cdot \\dfrac{2}{2+(x-1)} = \\dfrac{1}{x+1}$ ✓." }
+            ]
+          },
+          {
+            context: "AP Free-Response style — Taylor series and limits",
+            stem: "Let $h(x) = \\dfrac{\\cos x - 1 + x^2/2}{x^4}$ for $x \\neq 0$.",
+            parts: [
+              { label: "(a)", text: "Find $\\displaystyle\\lim_{x\\to 0} h(x)$ using the Maclaurin series for $\\cos x$." },
+              { label: "(b)", text: "Let $H(x) = \\displaystyle\\int_0^x h(t)\\,dt$ for $x \\neq 0$. Write the first three nonzero terms of the Maclaurin series for $H(x)$." },
+              { label: "(c)", text: "Does the Maclaurin series for $H$ converge for all real $x$? Justify your answer." }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\cos x = 1 - \\dfrac{x^2}{2!} + \\dfrac{x^4}{4!} - \\dfrac{x^6}{6!} + \\cdots$. So $\\cos x - 1 + \\dfrac{x^2}{2} = \\dfrac{x^4}{4!} - \\dfrac{x^6}{6!} + \\cdots$. Then $h(x) = \\dfrac{1}{4!} - \\dfrac{x^2}{6!} + \\cdots \\to \\dfrac{1}{24}$ as $x \\to 0$." },
+              { label: "(b)", text: "From (a): $h(x) = \\dfrac{1}{24} - \\dfrac{x^2}{720} + \\dfrac{x^4}{40320} - \\cdots$. Integrating: $H(x) = \\dfrac{x}{24} - \\dfrac{x^3}{2160} + \\dfrac{x^5}{201600} - \\cdots$." },
+              { label: "(c)", text: "Yes. Since $\\cos x$ has a Maclaurin series valid for all $x \\in (-\\infty, \\infty)$ and all operations performed (subtracting, dividing by $x^4$, integrating) preserve this, the resulting series for $H$ also converges for all real $x$. One can also apply the Ratio Test to the series found in (b) — consecutive term ratios approach 0." }
+            ]
+          }
+        ]
+      },
+      {
+        icon: "∞",
+        title: "Series Convergence — Big Picture",
+        sub: "Proofs, logic, and conceptual understanding",
+        video: {
+          title: "Infinite Series: The Alternating Series Test",
+          url: "https://youtu.be/9zndB3a9rEo"
+        },
+        problems: [
+          {
+            context: "Conceptual convergence questions",
+            stem: "Answer each question with a complete explanation.",
+            parts: [
+              { label: "(a)", text: "Give an example of a series $\\sum a_n$ where $a_n \\to 0$ but the series diverges. Explain why." },
+              { label: "(b)", text: "If $\\sum a_n$ converges and $\\sum b_n$ diverges, can $\\sum(a_n + b_n)$ converge? Prove your answer." },
+              { label: "(c)", text: "Explain why the Ratio Test gives $L=1$ for $p$-series but still gives definitive answers for factorials and exponentials." }
+            ],
+            answers: [
+              { label: "(a)", text: "The harmonic series $\\sum 1/n$: $a_n = 1/n \\to 0$, but by the Integral Test (or grouping argument), the series diverges. The Divergence Test's converse is false — $a_n \\to 0$ is necessary but not sufficient for convergence." },
+              { label: "(b)", text: "No. Suppose $\\sum(a_n+b_n) = S$ converged. Then $\\sum b_n = \\sum(a_n+b_n) - \\sum a_n = S - A$ (where $A = \\sum a_n$) would converge — contradicting the assumption that $\\sum b_n$ diverges. So $\\sum(a_n+b_n)$ must diverge." },
+              { label: "(c)", text: "For $\\sum 1/n^p$, $a_{n+1}/a_n = (n/(n+1))^p \\to 1$ because polynomial growth is \"slow\" — adjacent terms approach the same rate. For factorials, $(n+1)!/n! = n+1 \\to \\infty$, giving $L = \\infty$. For exponentials, $r^{n+1}/r^n = r$, giving $L = r \\neq 1$ in general. The Ratio Test's power lies where growth rates between consecutive terms are genuinely different, which happens with super-polynomial growth (factorials) or geometric rates." }
+            ]
+          },
+          {
+            context: "Convergence and function representation",
+            stem: "These questions connect series to the functions they define.",
+            parts: [
+              { label: "(a)", text: "For $|x| < 1$, $\\dfrac{1}{1-x} = \\displaystyle\\sum_{n=0}^\\infty x^n$. Explain why this <em>fails</em> at $x = 1$ — both computationally and graphically." },
+              { label: "(b)", text: "The Maclaurin series for $e^x$ converges for all $x$ to $e^x$. Give an argument (not a formal proof) for why this seems geometrically reasonable." },
+              { label: "(c)", text: "If $f(x) = \\displaystyle\\sum_{n=0}^\\infty c_n x^n$ on $(-R, R)$, what is $c_n$ in terms of $f$? Derive the formula by differentiating the series $n$ times and evaluating at $x=0$." }
+            ],
+            answers: [
+              { label: "(a)", text: "Computationally: $\\sum_{n=0}^N 1^n = N+1 \\to \\infty$. The partial sums diverge. Graphically: $\\dfrac{1}{1-x}$ has a vertical asymptote at $x=1$. The polynomial approximations can't converge to an infinite value from a bounded partial sum." },
+              { label: "(b)", text: "$e^x$ grows faster than any polynomial but also has derivatives of all orders. The Maclaurin terms $x^n/n!$ are eventually much smaller than $x^n$ because factorials grow so fast — each additional term adds a correction that is smaller than the previous by a factor of $|x|/(n+1) \\to 0$. Intuitively, the polynomial captures ever-finer detail of the exponential's rapid growth." },
+              { label: "(c)", text: "Differentiate $k$ times: $f^{(k)}(x) = \\displaystyle\\sum_{n=k}^\\infty n(n-1)\\cdots(n-k+1)c_n x^{n-k}$. At $x=0$: all terms vanish except $n=k$: $f^{(k)}(0) = k! \\cdot c_k$. Therefore $c_n = \\dfrac{f^{(n)}(0)}{n!}$ — these are precisely the Taylor coefficients." }
+            ]
+          },
+          {
+            context: "AP-style comprehensive",
+            stem: "Let $p(x) = 3 - 4(x-2)^2 + 5(x-2)^4 - \\dfrac{2(x-2)^5}{3}$ be the fifth-degree Taylor polynomial for $f$ centered at $x = 2$.",
+            parts: [
+              { label: "(a)", text: "Find $f(2)$, $f'(2)$, $f''(2)$, $f^{(4)}(2)$, and $f^{(5)}(2)$." },
+              { label: "(b)", text: "What is $f^{(3)}(2)$? Explain." },
+              { label: "(c)", text: "If $|f^{(6)}(x)| \\leq 10$ for all $x \\in [2, 2.5]$, bound the error $|f(2.4) - p(2.4)|$." }
+            ],
+            answers: [
+              { label: "(a)", text: "Matching to Taylor form $\\sum \\dfrac{f^{(n)}(2)}{n!}(x-2)^n$: Constant: $f(2) = 3$. $(x-2)^1$ coefficient: 0, so $f'(2) = 0$. $(x-2)^2$ coefficient: $-4 = \\dfrac{f''(2)}{2!}$, so $f''(2) = -8$. $(x-2)^4$ coefficient: $5 = \\dfrac{f^{(4)}(2)}{4!}$, so $f^{(4)}(2) = 120$. $(x-2)^5$ coefficient: $-2/3 = \\dfrac{f^{(5)}(2)}{5!}$, so $f^{(5)}(2) = -80$." },
+              { label: "(b)", text: "The polynomial has no $(x-2)^3$ term (coefficient is 0), so $\\dfrac{f^{(3)}(2)}{3!} = 0$, meaning $f^{(3)}(2) = 0$." },
+              { label: "(c)", text: "Lagrange Error Bound: $|f(2.4)-p(2.4)| \\leq \\dfrac{10}{6!}|2.4-2|^6 = \\dfrac{10}{720}(0.4)^6 = \\dfrac{10 \\cdot 0.004096}{720} \\approx 5.69 \\times 10^{-5}$." }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+];
+
+/* ============================================================
+   RENDER BOARD
+============================================================ */
+function renderBoard() {
+  const grid = document.getElementById('board-grid');
+  grid.innerHTML = '';
+
+  columns.forEach((col, ci) => {
+    const colDiv = document.createElement('div');
+    colDiv.className = 'col-group';
+
+    // Column header — place in grid column ci+1, row 1
+    const header = document.createElement('div');
+    header.className = `col-header ${col.headerClass}`;
+    header.style.gridColumn = ci + 1;
+    header.style.gridRow = 1;
+    header.innerHTML = `
+      <div class="col-header-num">${col.label}</div>
+      <h2>${col.title}</h2>
+    `;
+    colDiv.appendChild(header);
+
+    // Tiles — place in grid column ci+1, rows 2..n+1
+    col.tiles.forEach((tile, ti) => {
+      const tileEl = document.createElement('div');
+      tileEl.className = `tile ${col.tileClass}`;
+      tileEl.style.gridColumn = ci + 1;
+      tileEl.style.gridRow = ti + 2;
+      tileEl.setAttribute('role', 'button');
+      tileEl.setAttribute('tabindex', '0');
+      tileEl.setAttribute('aria-label', tile.title);
+      tileEl.innerHTML = `
+        <span class="tile-icon">${tile.icon}</span>
+        <div class="tile-title">${tile.title}</div>
+        <div class="tile-sub">${tile.sub}</div>
+        <span class="tile-arrow">↗</span>
+      `;
+      tileEl.addEventListener('click', () => openModal(ci, ti));
+      tileEl.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') openModal(ci, ti); });
+      colDiv.appendChild(tileEl);
+    });
+
+    grid.appendChild(colDiv);
+  });
+}
+
+/* ============================================================
+   OPEN MODAL
+============================================================ */
+function openModal(colIdx, tileIdx) {
+  const col  = columns[colIdx];
+  const tile = col.tiles[tileIdx];
+
+  const accentEl = document.getElementById('modal-accent');
+  accentEl.className = 'modal-header-accent';
+  accentEl.style.background = col.accentVar;
+
+  const labelEl = document.getElementById('modal-col-label');
+  labelEl.style.color = col.accentVar;
+  labelEl.textContent = col.label + ' · ' + col.title;
+
+  document.getElementById('modal-title').textContent = tile.title;
+
+  const body = document.getElementById('modal-body');
+  body.innerHTML = '';
+
+  // Video section
+  if (tile.video) {
+    const vs = document.createElement('div');
+    vs.className = 'video-section';
+    vs.innerHTML = `
+      <div class="video-label">📹 Watch First</div>
+      <a href="${tile.video.url}" target="_blank" rel="noopener" class="video-link">
+        <span>${tile.video.title} — mathispower4u</span>
+        <span class="video-icon">▶</span>
+      </a>
+    `;
+    body.appendChild(vs);
+  }
+
+  // Problems
+  tile.problems.forEach((prob, pi) => {
+    const block = document.createElement('div');
+    block.className = 'problem-block';
+
+    let partsHTML = '';
+    if (prob.parts && prob.parts.length) {
+      partsHTML = `<ul class="problem-parts">` +
+        prob.parts.map(p => `<li data-part="${p.label}">${p.text}</li>`).join('') +
+        `</ul>`;
+    }
+
+    let answersHTML = '';
+    if (prob.answers && prob.answers.length) {
+      answersHTML = prob.answers.map(a =>
+        `<div class="answer-part"><span class="answer-part-label">${a.label}</span>${a.text}</div>`
+      ).join('');
+    }
+
+    const answerId = `ans-${colIdx}-${tileIdx}-${pi}`;
+    const toggleId = `tog-${colIdx}-${tileIdx}-${pi}`;
+
+    block.innerHTML = `
+      <div class="problem-num">Problem ${pi + 1} of ${tile.problems.length}</div>
+      ${prob.context ? `<div class="problem-context">${prob.context}</div>` : ''}
+      <div class="problem-text">${prob.stem}</div>
+      ${partsHTML}
+      <button class="answer-toggle" id="${toggleId}" onclick="toggleAnswer('${answerId}','${toggleId}')">
+        <span class="toggle-icon">▼</span> Show Answer
+      </button>
+      <div class="answer-panel" id="${answerId}">${answersHTML}</div>
+    `;
+
+    body.appendChild(block);
+  });
+
+  const overlay = document.getElementById('modal-overlay');
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([body]).catch(err => console.log(err));
+  }
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function toggleAnswer(panelId, toggleId) {
+  const panel  = document.getElementById(panelId);
+  const toggle = document.getElementById(toggleId);
+  const isOpen = panel.classList.contains('open');
+  panel.classList.toggle('open');
+  toggle.classList.toggle('open');
+  toggle.innerHTML = isOpen
+    ? '<span class="toggle-icon">▼</span> Show Answer'
+    : '<span class="toggle-icon">▼</span> Hide Answer';
+}
+
+/* ============================================================
+   RANDOM PRACTICE
+============================================================ */
+function openRandomProblem() {
+  const colIdx  = Math.floor(Math.random() * columns.length);
+  const col     = columns[colIdx];
+  const tileIdx = Math.floor(Math.random() * col.tiles.length);
+  const tile    = col.tiles[tileIdx];
+  const probIdx = Math.floor(Math.random() * tile.problems.length);
+  const prob    = tile.problems[probIdx];
+
+  const accentEl = document.getElementById('modal-accent');
+  accentEl.className = 'modal-header-accent random-accent';
+  accentEl.style.background = '';
+
+  const labelEl = document.getElementById('modal-col-label');
+  labelEl.style.color = 'var(--text-muted)';
+  labelEl.textContent = 'BC Calculus · Sequences & Series';
+
+  document.getElementById('modal-title').textContent = 'General Practice';
+
+  const body = document.getElementById('modal-body');
+  body.innerHTML = '';
+
+  const block = document.createElement('div');
+  block.className = 'problem-block';
+  block.style.cssText = 'border-bottom:none;margin-bottom:0;padding-bottom:0;';
+
+  let partsHTML = '';
+  if (prob.parts && prob.parts.length) {
+    partsHTML = `<ul class="problem-parts">` +
+      prob.parts.map(p => `<li data-part="${p.label}">${p.text}</li>`).join('') +
+      `</ul>`;
+  }
+
+  let answersHTML = '';
+  if (prob.answers && prob.answers.length) {
+    answersHTML = prob.answers.map(a =>
+      `<div class="answer-part"><span class="answer-part-label">${a.label}</span>${a.text}</div>`
+    ).join('');
+  }
+
+  block.innerHTML = `
+    <div class="problem-num">🎲 General Practice</div>
+    ${prob.context ? `<div class="problem-context">${prob.context}</div>` : ''}
+    <div class="problem-text">${prob.stem}</div>
+    ${partsHTML}
+    <button class="answer-toggle" id="rand-tog" onclick="toggleAnswer('rand-ans','rand-tog')">
+      <span class="toggle-icon">▼</span> Show Answer
+    </button>
+    <div class="answer-panel" id="rand-ans">${answersHTML}</div>
+  `;
+
+  body.appendChild(block);
+
+  const overlay = document.getElementById('modal-overlay');
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([body]).catch(err => console.log(err));
+  }
+}
+
+/* ============================================================
+   EVENT LISTENERS
+============================================================ */
+document.getElementById('random-btn').addEventListener('click', openRandomProblem);
+document.getElementById('modal-close').addEventListener('click', closeModal);
+document.getElementById('modal-overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+/* ============================================================
+   INIT
+============================================================ */
+renderBoard();
+</script>
+</body>
+</html>
