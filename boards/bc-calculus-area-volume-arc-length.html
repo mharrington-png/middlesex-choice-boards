@@ -1,0 +1,1281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BC Calculus — Unit 8: Area, Volume & Arc Length | Middlesex School</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet" />
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+    startup: { typeset: false }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+  /* ============================================================
+     TOKENS & RESET
+  ============================================================ */
+  :root {
+    --crimson:     #cf003d;
+    --crimson-dim: #8a0028;
+    --crimson-glow:#ff1a55;
+    --black:       #0d0d0d;
+    --surface:     #151515;
+    --surface2:    #1e1e1e;
+    --surface3:    #252525;
+    --border:      #2e2e2e;
+    --border-light:#3a3a3a;
+    --text:        #f0ece6;
+    --text-muted:  #9e9e9e;
+    --text-dim:    #666666;
+
+    --col1: #cf003d;
+    --col2: #1a6b5a;
+    --col3: #4a5568;
+    --col4: #7c4a1e;
+
+    --col1-light: #ff4d75;
+    --col2-light: #2dd4bf;
+    --col3-light: #94a3b8;
+    --col4-light: #f59e0b;
+
+    --radius: 10px;
+    --radius-lg: 16px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.5);
+    --shadow-hover: 0 8px 40px rgba(0,0,0,0.7);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 16px;
+    line-height: 1.65;
+    min-height: 100vh;
+  }
+
+  /* ============================================================
+     HEADER — centered layout
+  ============================================================ */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 32px 40px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--crimson), var(--crimson-glow), var(--crimson));
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(207,0,61,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .header-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+  }
+
+  .school-tag {
+    font-family: 'Source Serif 4', serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--crimson-glow);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .school-tag::before,
+  .school-tag::after {
+    content: '';
+    display: inline-block;
+    width: 28px;
+    height: 1px;
+    background: var(--crimson-glow);
+  }
+
+  h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    margin-top: 4px;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--crimson-glow);
+  }
+
+  .header-meta {
+    margin-top: 4px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .meta-pill {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 3px 12px;
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+  }
+
+  /* ============================================================
+     INSTRUCTIONS BAR
+  ============================================================ */
+  .instructions {
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 40px;
+    font-size: 13px;
+    color: var(--text-muted);
+    text-align: center;
+    letter-spacing: 0.03em;
+  }
+
+  .instructions strong { color: var(--crimson-glow); font-weight: 600; }
+
+  /* ============================================================
+     BOARD GRID
+  ============================================================ */
+  .board-wrap {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 36px 24px 60px;
+  }
+
+  .board-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .col-group { display: contents; }
+
+  .col-header {
+    border-radius: var(--radius) var(--radius) 0 0;
+    padding: 16px 18px 14px;
+    position: relative;
+    overflow: hidden;
+    align-self: start;
+  }
+
+  .col-header::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .col-1-header { background: color-mix(in srgb, var(--col1) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col1) 40%, transparent); }
+  .col-2-header { background: color-mix(in srgb, var(--col2) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col2) 40%, transparent); }
+  .col-3-header { background: color-mix(in srgb, var(--col3) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col3) 40%, transparent); }
+  .col-4-header { background: color-mix(in srgb, var(--col4) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col4) 40%, transparent); }
+
+  .col-header-num {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    opacity: 0.7;
+  }
+
+  .col-1-header .col-header-num { color: var(--col1-light); }
+  .col-2-header .col-header-num { color: var(--col2-light); }
+  .col-3-header .col-header-num { color: var(--col3-light); }
+  .col-4-header .col-header-num { color: var(--col4-light); }
+
+  .col-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.25;
+  }
+
+  .col-header .col-topics {
+    margin-top: 6px;
+    font-size: 10.5px;
+    color: var(--text-dim);
+    letter-spacing: 0.04em;
+  }
+
+  /* ============================================================
+     TILES
+  ============================================================ */
+  .tile {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 18px 28px;
+    cursor: pointer;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+    position: relative;
+    overflow: hidden;
+    user-select: none;
+  }
+
+  .tile::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+    border-radius: var(--radius) 0 0 var(--radius);
+    transition: opacity 0.2s;
+  }
+
+  .col-1 .tile::before { background: var(--col1-light); }
+  .col-2 .tile::before { background: var(--col2-light); }
+  .col-3 .tile::before { background: var(--col3-light); }
+  .col-4 .tile::before { background: var(--col4-light); }
+
+  .tile:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-hover);
+    background: var(--surface3);
+  }
+
+  .col-1 .tile:hover { border-color: color-mix(in srgb, var(--col1) 60%, transparent); }
+  .col-2 .tile:hover { border-color: color-mix(in srgb, var(--col2) 60%, transparent); }
+  .col-3 .tile:hover { border-color: color-mix(in srgb, var(--col3) 60%, transparent); }
+  .col-4 .tile:hover { border-color: color-mix(in srgb, var(--col4) 60%, transparent); }
+
+  .tile-icon { font-size: 18px; margin-bottom: 8px; display: block; }
+
+  .tile-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+    margin-bottom: 5px;
+  }
+
+  .tile-sub {
+    font-size: 11.5px;
+    color: var(--text-muted);
+    line-height: 1.4;
+  }
+
+  .tile-topics {
+    position: absolute;
+    bottom: 10px;
+    left: 18px;
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.06em;
+  }
+
+  .tile-arrow {
+    position: absolute;
+    bottom: 12px; right: 14px;
+    font-size: 14px;
+    opacity: 0.3;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+
+  .tile:hover .tile-arrow { opacity: 0.8; transform: translate(2px, -2px); }
+  .col-1 .tile:hover .tile-arrow { color: var(--col1-light); }
+  .col-2 .tile:hover .tile-arrow { color: var(--col2-light); }
+  .col-3 .tile:hover .tile-arrow { color: var(--col3-light); }
+  .col-4 .tile:hover .tile-arrow { color: var(--col4-light); }
+
+  /* ============================================================
+     MODAL
+  ============================================================ */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.82);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    backdrop-filter: blur(4px);
+  }
+
+  .modal-overlay.open { display: flex; animation: fadeIn 0.2s ease; }
+
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    width: 100%;
+    max-width: 760px;
+    max-height: 88vh;
+    overflow-y: auto;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.8);
+    animation: slideUp 0.22s ease;
+    position: relative;
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .modal-header {
+    padding: 24px 28px 20px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .modal-header-accent {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  }
+
+  .modal-col-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+  }
+
+  .modal-close {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.15s, color 0.15s;
+  }
+
+  .modal-close:hover { background: var(--crimson); color: white; border-color: var(--crimson); }
+
+  .modal-body { padding: 24px 28px 32px; }
+
+  /* Problems */
+  .problem-block {
+    margin-bottom: 28px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .problem-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+  .problem-num {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+  }
+
+  .problem-context {
+    font-size: 14px;
+    font-style: italic;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    padding-left: 12px;
+    border-left: 2px solid var(--border-light);
+  }
+
+  .problem-text {
+    font-size: 14.5px;
+    color: var(--text);
+    line-height: 1.7;
+    margin-bottom: 14px;
+  }
+
+  .answer-toggle {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 9px 16px;
+    color: var(--text-muted);
+    font-family: 'Source Serif 4', serif;
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.15s;
+    margin-top: 4px;
+  }
+
+  .answer-toggle:hover { background: var(--surface3); border-color: var(--border-light); color: var(--text); }
+  .answer-toggle .toggle-icon { font-size: 10px; transition: transform 0.2s; }
+  .answer-toggle.open .toggle-icon { transform: rotate(180deg); }
+
+  .answer-panel {
+    display: none;
+    margin-top: 14px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-size: 13.5px;
+    line-height: 1.75;
+    color: var(--text);
+    animation: expandIn 0.18s ease;
+  }
+
+  @keyframes expandIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .answer-panel.open { display: block; }
+
+  /* ============================================================
+     RESPONSIVE
+  ============================================================ */
+  @media (max-width: 1000px) {
+    .board-grid { display: flex; flex-wrap: wrap; gap: 20px; }
+    .col-group { display: flex; flex-direction: column; gap: 10px; width: calc(50% - 10px); }
+    .col-header { border-radius: var(--radius); }
+    .tile { grid-column: unset !important; grid-row: unset !important; }
+  }
+
+  @media (max-width: 600px) {
+    .board-grid { flex-direction: column; }
+    .col-group { width: 100%; }
+    header { padding: 20px; }
+    .board-wrap { padding: 20px 12px 40px; }
+    .modal { border-radius: var(--radius); }
+    .modal-header, .modal-body { padding: 18px; }
+  }
+
+  .modal::-webkit-scrollbar { width: 6px; }
+  .modal::-webkit-scrollbar-track { background: var(--surface); }
+  .modal::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
+
+  /* ============================================================
+     RANDOM PRACTICE BAR
+  ============================================================ */
+  .random-wrap {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 24px 48px;
+  }
+
+  .random-btn {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border-light);
+    border-radius: 14px;
+    padding: 0 36px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.2s ease, background 0.2s ease;
+    font-family: 'Source Serif 4', serif;
+  }
+
+  .random-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(207,0,61,0.06) 30%, rgba(207,0,61,0.10) 50%, rgba(207,0,61,0.06) 70%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .random-btn:hover::before { opacity: 1; }
+
+  .random-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(207,0,61,0.18), 0 2px 8px rgba(0,0,0,0.4);
+    border-color: color-mix(in srgb, var(--crimson) 55%, transparent);
+    background: var(--surface3);
+  }
+
+  .random-btn:active { transform: translateY(0) scale(0.995); box-shadow: 0 2px 8px rgba(0,0,0,0.4); }
+
+  .random-btn-left-notch, .random-btn-right-notch {
+    position: absolute;
+    bottom: 0;
+    width: 28px; height: 5px;
+    background: var(--border);
+    border-radius: 3px 3px 0 0;
+    transition: background 0.2s;
+  }
+  .random-btn-left-notch  { left: 60px; }
+  .random-btn-right-notch { right: 60px; }
+  .random-btn:hover .random-btn-left-notch,
+  .random-btn:hover .random-btn-right-notch { background: color-mix(in srgb, var(--crimson) 40%, var(--border)); }
+
+  .random-btn-icon { font-size: 22px; flex-shrink: 0; transition: transform 0.3s ease; }
+  .random-btn:hover .random-btn-icon { transform: rotate(20deg) scale(1.15); }
+
+  .random-btn-label { display: flex; flex-direction: column; align-items: center; gap: 1px; }
+  .random-btn-title { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; color: var(--text); letter-spacing: 0.01em; line-height: 1.2; }
+  .random-btn-sub { font-size: 11.5px; color: var(--text-muted); letter-spacing: 0.07em; text-transform: uppercase; }
+
+  .random-btn-badge {
+    position: absolute;
+    right: 28px;
+    background: var(--surface3);
+    border: 1px solid var(--border-light);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-family: 'Source Serif 4', serif;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+
+  .random-btn:hover .random-btn-badge {
+    background: color-mix(in srgb, var(--crimson) 15%, var(--surface3));
+    color: var(--crimson-glow);
+    border-color: color-mix(in srgb, var(--crimson) 40%, transparent);
+  }
+
+  .random-accent {
+    background: linear-gradient(90deg, var(--col1-light), var(--col2-light), var(--col3-light), var(--col4-light));
+    background-size: 300% 100%;
+    animation: accentShift 4s ease infinite;
+  }
+
+  @keyframes accentShift {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  @media (max-width: 600px) {
+    .random-wrap { padding: 0 12px 36px; }
+    .random-btn { height: 64px; border-radius: 10px; }
+    .random-btn-badge, .random-btn-left-notch, .random-btn-right-notch { display: none; }
+  }
+
+  /* ============================================================
+     DESMOS FLOATING BUTTON
+  ============================================================ */
+  .desmos-fab {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    z-index: 1050;
+    background: var(--surface2);
+    border: 1px solid var(--border-light);
+    border-radius: 50px;
+    padding: 0 20px 0 14px;
+    height: 52px;
+    display: none;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    font-family: 'Source Serif 4', serif;
+  }
+
+  .desmos-fab.visible { display: flex; animation: fadeIn 0.18s ease; }
+
+  .desmos-fab:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(207,0,61,0.25), 0 2px 8px rgba(0,0,0,0.5);
+    border-color: color-mix(in srgb, var(--crimson) 60%, transparent);
+    background: var(--surface3);
+  }
+
+  .desmos-fab:active { transform: translateY(0) scale(0.97); }
+
+  .desmos-fab-icon { font-size: 20px; line-height: 1; flex-shrink: 0; transition: transform 0.2s ease; }
+  .desmos-fab:hover .desmos-fab-icon { transform: rotate(-8deg) scale(1.1); }
+
+  .desmos-fab-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    display: block;
+    line-height: 1.25;
+  }
+
+  .desmos-fab-sub {
+    font-size: 9.5px;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    display: block;
+  }
+
+  @media (max-width: 600px) {
+    .desmos-fab { bottom: 20px; right: 16px; padding: 0 14px; }
+    .desmos-fab-sub { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="school-tag">Middlesex School · mxschool.edu</div>
+    <h1>BC Calculus — Unit 8: <em>Area, Volume &amp; Arc Length</em></h1>
+    <div class="header-meta">
+      <span class="meta-pill">∫ Area Between Curves</span>
+      <span class="meta-pill">🔄 Solids of Revolution</span>
+      <span class="meta-pill">📐 Known Cross-Sections</span>
+      <span class="meta-pill">📏 Arc Length</span>
+    </div>
+  </div>
+</header>
+
+<div class="instructions">
+  Click any tile to open practice problems. Use <strong>Show Answer</strong> to check your work. Use Desmos for numerical integration.
+</div>
+
+<div class="board-wrap">
+  <div class="board-grid" id="board-grid"></div>
+</div>
+
+<div class="random-wrap">
+  <button class="random-btn" id="random-btn" aria-label="Random Practice">
+    <div class="random-btn-left-notch"></div>
+    <div class="random-btn-right-notch"></div>
+    <span class="random-btn-icon">🎲</span>
+    <div class="random-btn-label">
+      <span class="random-btn-title">Random Practice</span>
+      <span class="random-btn-sub">Any topic · Any tile · Any problem</span>
+    </div>
+    <span class="random-btn-badge">36 problems</span>
+  </button>
+</div>
+
+<button class="desmos-fab" id="desmos-fab" aria-label="Open Desmos Graphing Calculator">
+  <span class="desmos-fab-icon">📈</span>
+  <span>
+    <span class="desmos-fab-title">Graphing Calculator</span>
+    <span class="desmos-fab-sub">Opens Desmos in a new tab</span>
+  </span>
+</button>
+
+<div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div class="modal-header-accent" id="modal-accent"></div>
+      <div>
+        <div class="modal-col-label" id="modal-col-label"></div>
+        <div class="modal-title" id="modal-title"></div>
+      </div>
+      <button class="modal-close" id="modal-close" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   DATA — BC Calculus Unit 8
+   Each problem has: context, stem, answer.
+   No sub-parts — one complete question, one complete answer.
+============================================================ */
+
+const columns = [
+
+  // ═══════════════════════════════════════════════════════════
+  // COLUMN 1 — Area Between Curves  (8.1 – 8.3)
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: "col-1",
+    accentVar: "var(--col1-light)",
+    headerClass: "col-1-header",
+    tileClass: "col-1",
+    label: "Column I",
+    title: "Area Between Curves",
+    topics: "8.1 – 8.3",
+    tiles: [
+
+      // ── TILE 1-A ─────────────────────────────────────────
+      {
+        icon: "↕️",
+        title: "Slicing Vertically (dx)",
+        sub: "Setting up integrals with vertical strips",
+        topics: "8.1",
+        problems: [
+          {
+            context: "Two polynomial curves",
+            stem: "Find the area of the region bounded by $y = x^2$ and $y = 2x$ in the first quadrant. Set up and evaluate the integral.",
+            answer: "The curves intersect where $x^2 = 2x$, giving $x = 0$ and $x = 2$. On $[0,2]$, $y=2x$ is on top. $A = \\int_0^2 (2x - x^2)\\,dx = \\left[x^2 - \\dfrac{x^3}{3}\\right]_0^2 = 4 - \\dfrac{8}{3} = \\dfrac{4}{3}$ square units."
+          },
+          {
+            context: "Sine curve above the x-axis",
+            stem: "Find the area of the region bounded by $y = \\sin x$, $y = 0$, $x = 0$, and $x = \\pi$. Set up and evaluate the integral.",
+            answer: "Since $\\sin x \\geq 0$ on $[0,\\pi]$, a single integral suffices. $A = \\int_0^{\\pi} \\sin x\\,dx = [-\\cos x]_0^{\\pi} = -\\cos\\pi + \\cos 0 = 1 + 1 = 2$ square units."
+          },
+          {
+            context: "Two curves that switch position",
+            stem: "Find the area of the region bounded by $y = x - 1$ and $y = \\sqrt{x}$ from $x = 1$ to $x = 4$.",
+            answer: "Find crossing point: $\\sqrt{x} = x-1 \\Rightarrow x = 4$ (only valid crossing on $[1,4]$; at $x=1$, $\\sqrt{x}=1>0=x-1$). So $\\sqrt{x}$ is on top on $[1,4]$... actually verify: at $x=2$, $\\sqrt{2}\\approx1.41 > 1=x-1$ ✓; crossing at $x=4$. So $A = \\int_1^4 (\\sqrt{x}-(x-1))\\,dx = \\left[\\dfrac{2}{3}x^{3/2} - \\dfrac{x^2}{2} + x\\right]_1^4 = \\left(\\dfrac{16}{3}-8+4\\right)-\\left(\\dfrac{2}{3}-\\dfrac{1}{2}+1\\right) = \\dfrac{4}{3} - \\dfrac{7}{6} = \\dfrac{1}{6}$ square units."
+          }
+        ]
+      },
+
+      // ── TILE 1-B ─────────────────────────────────────────
+      {
+        icon: "↔️",
+        title: "Slicing Horizontally (dy)",
+        sub: "Setting up integrals with horizontal strips",
+        topics: "8.2",
+        problems: [
+          {
+            context: "Parabola and line expressed in y",
+            stem: "Find the area of the region bounded by $x = y^2$ and $x = 2y$. Integrate with respect to $y$.",
+            answer: "Intersection: $y^2 = 2y \\Rightarrow y = 0$ and $y = 2$. On $[0,2]$, $x=2y$ is to the right. $A = \\int_0^2 (2y - y^2)\\,dy = \\left[y^2 - \\dfrac{y^3}{3}\\right]_0^2 = 4 - \\dfrac{8}{3} = \\dfrac{4}{3}$ square units."
+          },
+          {
+            context: "Logarithmic boundary",
+            stem: "Find the area of the region bounded by $y = \\ln x$, $y = 0$, and $x = e^2$. Explain why integrating with respect to $y$ is advantageous, then evaluate.",
+            answer: "Integrating in $x$ would require integrating $\\ln x$, which involves integration by parts. In $y$: the left boundary is $x = e^y$ and the right boundary is $x = e^2$, with $y$ ranging from $0$ to $2$. $A = \\int_0^2(e^2 - e^y)\\,dy = \\left[e^2 y - e^y\\right]_0^2 = (2e^2 - e^2)-(0-1) = e^2 + 1$ square units."
+          },
+          {
+            context: "Region to the right of the y-axis",
+            stem: "Find the area of the region bounded by $x = 0$, $y = 1$, $y = 3$, and $x = \\sqrt{y}$. Integrate with respect to $y$.",
+            answer: "$A = \\int_1^3 \\sqrt{y}\\,dy = \\left[\\dfrac{2}{3}y^{3/2}\\right]_1^3 = \\dfrac{2}{3}(3^{3/2} - 1) = \\dfrac{2}{3}(3\\sqrt{3}-1) = 2\\sqrt{3} - \\dfrac{2}{3}$ square units."
+          }
+        ]
+      },
+
+      // ── TILE 1-C ─────────────────────────────────────────
+      {
+        icon: "🎯",
+        title: "Mixed Practice & Choosing Methods",
+        sub: "When to use dx vs. dy",
+        topics: "8.1 – 8.3",
+        problems: [
+          {
+            context: "Sideways parabola and line",
+            stem: "Find the area of the region bounded by $x = y^2 - 2$ and $x = y$. Choose the most efficient method and evaluate.",
+            answer: "Integrating in $y$ is natural since both boundaries are $x$ as a function of $y$. Intersections: $y^2-2=y \\Rightarrow y^2-y-2=0 \\Rightarrow (y-2)(y+1)=0$, so $y=-1$ and $y=2$. On $[-1,2]$, $x=y$ is to the right. $A = \\int_{-1}^2 (y-(y^2-2))\\,dy = \\int_{-1}^2(y-y^2+2)\\,dy = \\left[\\dfrac{y^2}{2}-\\dfrac{y^3}{3}+2y\\right]_{-1}^2 = \\dfrac{9}{2}$ square units."
+          },
+          {
+            context: "Three boundary curves",
+            stem: "Find the area of the region bounded by $y = x$, $y = x^3$, and $x = 2$.",
+            answer: "The curves $y=x$ and $y=x^3$ intersect at $x=0$ and $x=1$. On $[0,1]$: $y=x$ is on top. On $[1,2]$: $y=x^3$ is on top. $A = \\int_0^1(x-x^3)\\,dx + \\int_1^2(x^3-x)\\,dx = \\left[\\dfrac{x^2}{2}-\\dfrac{x^4}{4}\\right]_0^1 + \\left[\\dfrac{x^4}{4}-\\dfrac{x^2}{2}\\right]_1^2 = \\dfrac{1}{4} + \\left(4-2-\\dfrac{1}{4}+\\dfrac{1}{2}\\right) = \\dfrac{1}{4}+\\dfrac{9}{4} = \\dfrac{10}{4} = \\dfrac{5}{2}$ square units."
+          },
+          {
+            context: "Abstract area setup",
+            stem: "Two functions intersect at $x=1$. On $[0,1]$, $\\int_0^1(f-g)\\,dx=4$. On $[1,3]$, $\\int_1^3(g-f)\\,dx=6$. Find the total area of the region bounded by these two curves on $[0,3]$.",
+            answer: "Total area $= \\int_0^3 |f(x)-g(x)|\\,dx$. Since $f>g$ on $[0,1]$ and $g>f$ on $[1,3]$, each integrand is already the positive difference: Total area $= 4 + 6 = 10$ square units. This works because area is always computed as the integral of the top function minus the bottom function — absolute value ensures we never subtract rather than add regions."
+          }
+        ]
+      }
+    ]
+  },
+
+  // ═══════════════════════════════════════════════════════════
+  // COLUMN 2 — Solids of Revolution  (8.4 – 8.6)
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: "col-2",
+    accentVar: "var(--col2-light)",
+    headerClass: "col-2-header",
+    tileClass: "col-2",
+    label: "Column II",
+    title: "Solids of Revolution",
+    topics: "8.4 – 8.6",
+    tiles: [
+
+      // ── TILE 2-A ─────────────────────────────────────────
+      {
+        icon: "💿",
+        title: "Disk Method",
+        sub: "Rotating a region around an axis",
+        topics: "8.4",
+        problems: [
+          {
+            context: "Region under a square root, rotated about x-axis",
+            stem: "A solid is generated by revolving the region bounded by $y = \\sqrt{x}$, $x = 0$, $x = 4$, and the $x$-axis about the $x$-axis. Find the volume.",
+            answer: "Using the disk method: $R(x) = \\sqrt{x}$, so $V = \\int_0^4 \\pi (\\sqrt{x})^2\\,dx = \\pi\\int_0^4 x\\,dx = \\pi\\left[\\dfrac{x^2}{2}\\right]_0^4 = 8\\pi$ cubic units."
+          },
+          {
+            context: "Sine arch rotated about x-axis",
+            stem: "A solid is generated by revolving the region bounded by $y = \\sin x$, $y = 0$, $x = 0$, and $x = \\pi$ about the $x$-axis. Find the volume.",
+            answer: "$V = \\int_0^{\\pi} \\pi\\sin^2 x\\,dx$. Using the identity $\\sin^2 x = \\dfrac{1-\\cos 2x}{2}$: $V = \\pi\\int_0^{\\pi}\\dfrac{1-\\cos 2x}{2}\\,dx = \\dfrac{\\pi}{2}\\left[x - \\dfrac{\\sin 2x}{2}\\right]_0^{\\pi} = \\dfrac{\\pi}{2}(\\pi) = \\dfrac{\\pi^2}{2}$ cubic units."
+          },
+          {
+            context: "Parabola rotated about y-axis",
+            stem: "A solid is generated by revolving the region bounded by $x = y^2$, $x = 0$, $y = 0$, and $y = 2$ about the $y$-axis. Find the volume.",
+            answer: "Integrating with respect to $y$: $R(y) = y^2$, so $V = \\int_0^2 \\pi(y^2)^2\\,dy = \\pi\\int_0^2 y^4\\,dy = \\pi\\left[\\dfrac{y^5}{5}\\right]_0^2 = \\dfrac{32\\pi}{5}$ cubic units."
+          }
+        ]
+      },
+
+      // ── TILE 2-B ─────────────────────────────────────────
+      {
+        icon: "⭕",
+        title: "Washer Method",
+        sub: "Rotating between two curves",
+        topics: "8.5",
+        problems: [
+          {
+            context: "Region between two polynomial curves",
+            stem: "A solid is generated by revolving the region bounded by $y = x$ and $y = x^2$ about the $x$-axis. Find the volume.",
+            answer: "The curves intersect at $x=0$ and $x=1$. On $[0,1]$, $y=x$ is on top so $R(x)=x$ and $r(x)=x^2$. $V = \\int_0^1 \\pi(x^2 - x^4)\\,dx = \\pi\\left[\\dfrac{x^3}{3}-\\dfrac{x^5}{5}\\right]_0^1 = \\pi\\left(\\dfrac{1}{3}-\\dfrac{1}{5}\\right) = \\dfrac{2\\pi}{15}$ cubic units."
+          },
+          {
+            context: "Rotation around a non-axis line",
+            stem: "A solid is generated by revolving the region bounded by $y = x$, $y = 0$, and $x = 1$ about the line $y = 1$. Find the volume.",
+            answer: "Distance from $y=1$ to outer boundary ($y=1$): outer radius $R=0$ — wait, the region sits below $y=1$. The outer radius is the distance from $y=1$ to $y=0$: $R=1$. The inner radius is the distance from $y=1$ to $y=x$: $r(x)=1-x$. $V = \\int_0^1 \\pi\\left(1^2 - (1-x)^2\\right)\\,dx = \\pi\\int_0^1(2x-x^2)\\,dx = \\pi\\left[x^2-\\dfrac{x^3}{3}\\right]_0^1 = \\dfrac{2\\pi}{3}$ cubic units."
+          },
+          {
+            context: "Integrating with respect to y",
+            stem: "A solid is generated by revolving the region bounded by $y = x^2$, $x = 0$, and $x = 2$ about the $y$-axis. Set up and evaluate using horizontal washers.",
+            answer: "The region runs from $y=0$ to $y=4$. Outer radius: $R(y)=2$ (the line $x=2$). Inner radius: $r(y)=\\sqrt{y}$ (the curve $x=\\sqrt{y}$). $V = \\int_0^4 \\pi(4-y)\\,dy = \\pi\\left[4y-\\dfrac{y^2}{2}\\right]_0^4 = \\pi(16-8) = 8\\pi$ cubic units."
+          }
+        ]
+      },
+
+      // ── TILE 2-C ─────────────────────────────────────────
+      {
+        icon: "↗️",
+        title: "Axes Parallel to x or y",
+        sub: "Rotating around non-coordinate lines",
+        topics: "8.6",
+        problems: [
+          {
+            context: "Rotation below the x-axis",
+            stem: "A solid is generated by revolving the region bounded by $y = \\sqrt{x}$, $x = 0$, $x = 4$, and the $x$-axis about the line $y = -1$. Find the volume.",
+            answer: "The axis $y=-1$ is below the region. Outer radius: $R(x) = \\sqrt{x}+1$ (distance from $y=-1$ to the curve). Inner radius: $r(x)=1$ (distance from $y=-1$ to the $x$-axis). $V = \\int_0^4 \\pi\\left[(\\sqrt{x}+1)^2 - 1^2\\right]\\,dx = \\pi\\int_0^4(x+2\\sqrt{x})\\,dx = \\pi\\left[\\dfrac{x^2}{2}+\\dfrac{4}{3}x^{3/2}\\right]_0^4 = \\pi\\left(8+\\dfrac{32}{3}\\right) = \\dfrac{56\\pi}{3}$ cubic units."
+          },
+          {
+            context: "Rotation around a vertical line",
+            stem: "A solid is generated by revolving the region bounded by $y = x$, $y = 0$, and $x = 2$ about the line $x = 3$. Integrate with respect to $y$.",
+            answer: "With horizontal slices, outer radius from $x=3$ to $x=0$ (the $y$-axis, left boundary): $R=3$. Inner radius from $x=3$ to $x=y$ (the line $y=x$, i.e. $x=y$): $r(y)=3-y$. $y$ ranges from $0$ to $2$. $V = \\int_0^2 \\pi(9-(3-y)^2)\\,dy = \\pi\\int_0^2(6y-y^2)\\,dy = \\pi\\left[3y^2-\\dfrac{y^3}{3}\\right]_0^2 = \\pi\\left(12-\\dfrac{8}{3}\\right) = \\dfrac{28\\pi}{3}$ cubic units."
+          },
+          {
+            context: "Rotation around a line through the region",
+            stem: "A solid is generated by revolving the region bounded by $y = \\sin x$, $y = 0$, $x = 0$, and $x = \\pi$ about the line $x = \\pi$. Set up the integral and use Desmos to evaluate numerically.",
+            answer: "Using vertical slices, each disk has radius $R(x) = \\pi - x$ (distance from $x=\\pi$ to the slice at $x$) and thickness $\\sin x\\,dx$ (height of the region at $x$). This is a shell-like setup; using the disk method about $x=\\pi$ requires integrating in $y$. Alternatively, set up: $V = \\int_0^{\\pi} \\pi(\\pi-x)^2 \\cdot 0\\,dx$... more cleanly, use shells (from Unit 8.6): $V = \\int_0^{\\pi} 2\\pi(\\pi-x)\\sin x\\,dx$. Integrating by parts or using Desmos: $V = 2\\pi[(-\\cos x)(\\pi-x)+\\sin x \\cdot (-1)]$ evaluated carefully $\\approx 2\\pi^2 \\approx 19.74$ cubic units."
+          }
+        ]
+      }
+    ]
+  },
+
+  // ═══════════════════════════════════════════════════════════
+  // COLUMN 3 — Known Cross-Sections  (8.7 – 8.8)
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: "col-3",
+    accentVar: "var(--col3-light)",
+    headerClass: "col-3-header",
+    tileClass: "col-3",
+    label: "Column III",
+    title: "Known Cross-Sections",
+    topics: "8.7 – 8.8",
+    tiles: [
+
+      // ── TILE 3-A ─────────────────────────────────────────
+      {
+        icon: "⬜",
+        title: "Squares & Rectangles",
+        sub: "Square and rectangular slices perpendicular to axis",
+        topics: "8.7",
+        problems: [
+          {
+            context: "Square cross-sections",
+            stem: "A solid has a base that is the region bounded by $y = \\sqrt{x}$, $x = 0$, $x = 4$, and the $x$-axis. Cross sections perpendicular to the $x$-axis are squares with side length equal to the height of the base region. Find the volume.",
+            answer: "Side length $s(x) = \\sqrt{x}$, so cross-sectional area $A(x) = x$. $V = \\int_0^4 x\\,dx = \\left[\\dfrac{x^2}{2}\\right]_0^4 = 8$ cubic units."
+          },
+          {
+            context: "Rectangular cross-sections with a ratio",
+            stem: "A solid has a base that is the region bounded by $y = \\cos x$, $x = 0$, $x = \\dfrac{\\pi}{2}$, and the $x$-axis. Cross sections perpendicular to the $x$-axis are rectangles with width equal to the height of the base region and height equal to twice the width. Find the volume.",
+            answer: "Width $= \\cos x$, height $= 2\\cos x$, so $A(x) = 2\\cos^2 x$. Using the identity $\\cos^2 x = \\dfrac{1+\\cos 2x}{2}$: $V = \\int_0^{\\pi/2} 2\\cos^2 x\\,dx = \\int_0^{\\pi/2}(1+\\cos 2x)\\,dx = \\left[x+\\dfrac{\\sin 2x}{2}\\right]_0^{\\pi/2} = \\dfrac{\\pi}{2}$ cubic units."
+          },
+          {
+            context: "Rectangles perpendicular to the y-axis",
+            stem: "A solid has a base that is the region bounded by $x = y^2$ and $x = 4$. Cross sections perpendicular to the $y$-axis are rectangles with width $4 - y^2$ and height $1$. Find the volume.",
+            answer: "$A(y) = 4 - y^2$. The base region in $y$: $y^2 \\leq 4 \\Rightarrow -2 \\leq y \\leq 2$. By symmetry: $V = 2\\int_0^2(4-y^2)\\,dy = 2\\left[4y-\\dfrac{y^3}{3}\\right]_0^2 = 2\\left(8-\\dfrac{8}{3}\\right) = \\dfrac{32}{3}$ cubic units."
+          }
+        ]
+      },
+
+      // ── TILE 3-B ─────────────────────────────────────────
+      {
+        icon: "△",
+        title: "Triangles & Semicircles",
+        sub: "Triangular and semicircular cross-sections",
+        topics: "8.8",
+        problems: [
+          {
+            context: "Equilateral triangle cross-sections",
+            stem: "A solid has a base that is the region bounded by $y = x$, $x = 0$, $x = 4$, and the $x$-axis. Cross sections perpendicular to the $x$-axis are equilateral triangles with side length $s(x) = x$. Find the volume.",
+            answer: "Area of an equilateral triangle: $A = \\dfrac{\\sqrt{3}}{4}s^2$. So $A(x) = \\dfrac{\\sqrt{3}}{4}x^2$. $V = \\int_0^4 \\dfrac{\\sqrt{3}}{4}x^2\\,dx = \\dfrac{\\sqrt{3}}{4}\\cdot\\dfrac{64}{3} = \\dfrac{16\\sqrt{3}}{3}$ cubic units."
+          },
+          {
+            context: "Isosceles right triangle cross-sections",
+            stem: "A solid has a base that is the region bounded by $y = \\sin x$, $x = 0$, $x = \\pi$, and the $x$-axis. Cross sections perpendicular to the $x$-axis are isosceles right triangles with one leg in the plane of the base region. Find the volume.",
+            answer: "Area of isosceles right triangle with leg $a$: $A = \\dfrac{1}{2}a^2$. So $A(x) = \\dfrac{1}{2}\\sin^2 x$. Using $\\sin^2 x = \\dfrac{1-\\cos 2x}{2}$: $V = \\int_0^{\\pi}\\dfrac{1}{2}\\sin^2 x\\,dx = \\dfrac{1}{4}\\int_0^{\\pi}(1-\\cos 2x)\\,dx = \\dfrac{1}{4}\\left[x-\\dfrac{\\sin 2x}{2}\\right]_0^{\\pi} = \\dfrac{\\pi}{4}$ cubic units."
+          },
+          {
+            context: "Semicircular cross-sections",
+            stem: "A solid has a base that is the region bounded by the quarter-circle $x^2 + y^2 = 1$ in the first quadrant. Cross sections perpendicular to the $x$-axis are semicircles. Find the volume.",
+            answer: "Radius $r(x) = \\dfrac{\\sqrt{1-x^2}}{2}$. Area of semicircle: $A(x) = \\dfrac{1}{2}\\pi r^2 = \\dfrac{\\pi(1-x^2)}{8}$. $V = \\int_0^1 \\dfrac{\\pi(1-x^2)}{8}\\,dx = \\dfrac{\\pi}{8}\\left[x-\\dfrac{x^3}{3}\\right]_0^1 = \\dfrac{\\pi}{8}\\cdot\\dfrac{2}{3} = \\dfrac{\\pi}{12}$ cubic units."
+          }
+        ]
+      },
+
+      // ── TILE 3-C ─────────────────────────────────────────
+      {
+        icon: "🎨",
+        title: "Mixed Cross-Section Practice",
+        sub: "Combining all cross-section types",
+        topics: "8.7 – 8.8",
+        problems: [
+          {
+            context: "Triangles with a given height-to-width ratio",
+            stem: "The region $0 \\leq x \\leq 2$, $0 \\leq y \\leq x$ is the base of a solid. Cross sections perpendicular to the $x$-axis are isosceles triangles with base in the region that are twice as tall as they are wide. Find the volume.",
+            answer: "Width (base of triangle) $= x$, height $= 2x$, so $A(x) = \\dfrac{1}{2}(x)(2x) = x^2$. $V = \\int_0^2 x^2\\,dx = \\left[\\dfrac{x^3}{3}\\right]_0^2 = \\dfrac{8}{3}$ cubic units."
+          },
+          {
+            context: "Semicircular base region",
+            stem: "A solid has a base that is the semicircular region bounded by $x^2+y^2=1$ for $y \\geq 0$. Cross sections perpendicular to the $x$-axis are isosceles right triangles with its hypotenuse in the plane of the base region. Find the volume.",
+            answer: "Leg $a = \\sqrt{\\frac{1-x^2}{2}}$, so $A(x) = \\dfrac{1}{2}a^2 = \\dfrac{1}{4}\\cdot (1-x^2)$. $V = \\dfrac{1}{3}$ cubic units."
+          },
+          {
+            context: "Challenge: choosing and applying the right formula",
+            stem: "A solid has a base that is the region between $y = x^2$ and $y = 4$. Cross sections perpendicular to the $y$-axis are squares with side length equal to the width of the base region at height $y$. Find the volume.",
+            answer: "At height $y$, the base region spans from $x = -\\sqrt{y}$ to $x = \\sqrt{y}$, so the width is $2\\sqrt{y}$. Side of square $= 2\\sqrt{y}$, area $A(y) = 4y$. $y$ ranges from $0$ to $4$. $V = \\int_0^4 4y\\,dy = 4\\cdot\\left[\\dfrac{y^2}{2}\\right]_0^4 = 32$ cubic units."
+          }
+        ]
+      }
+    ]
+  },
+
+  // ═══════════════════════════════════════════════════════════
+  // COLUMN 4 — Arc Length  (8.9 – 8.10)
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: "col-4",
+    accentVar: "var(--col4-light)",
+    headerClass: "col-4-header",
+    tileClass: "col-4",
+    label: "Column IV",
+    title: "Arc Length",
+    topics: "8.9 – 8.10",
+    tiles: [
+
+      // ── TILE 4-A ─────────────────────────────────────────
+      {
+        icon: "📏",
+        title: "Arc Length Formula",
+        sub: "$L = \\int\\sqrt{1 + (dy/dx)^2}\\,dx$",
+        topics: "8.9",
+        problems: [
+          {
+            context: "A cleverly factorable integrand",
+            stem: "Find the arc length of $y = \\dfrac{x^3}{3} + \\dfrac{1}{4x}$ from $x = 1$ to $x = 3$.",
+            answer: "$dy/dx = x^2 - \\dfrac{1}{4x^2}$. Then $1+(dy/dx)^2 = 1 + x^4 - \\dfrac{1}{2} + \\dfrac{1}{16x^4} = x^4 + \\dfrac{1}{2} + \\dfrac{1}{16x^4} = \\left(x^2+\\dfrac{1}{4x^2}\\right)^2$. So $L = \\int_1^3\\left(x^2+\\dfrac{1}{4x^2}\\right)dx = \\left[\\dfrac{x^3}{3}-\\dfrac{1}{4x}\\right]_1^3 = \\left(9-\\dfrac{1}{12}\\right)-\\left(\\dfrac{1}{3}-\\dfrac{1}{4}\\right) = \\dfrac{107}{12} - \\dfrac{1}{12} = \\dfrac{106}{12} = \\dfrac{53}{6} \\approx 8.833$ units."
+          },
+          {
+            context: "Hyperbolic function",
+            stem: "Find the arc length of $y = \\cosh x$ from $x = 0$ to $x = 2$. (Recall: $\\dfrac{d}{dx}[\\cosh x] = \\sinh x$ and $1 + \\sinh^2 x = \\cosh^2 x$.)",
+            answer: "$dy/dx = \\sinh x$, so $1+(dy/dx)^2 = \\cosh^2 x$, and $\\sqrt{1+(dy/dx)^2} = \\cosh x$. $L = \\int_0^2 \\cosh x\\,dx = [\\sinh x]_0^2 = \\sinh 2 = \\dfrac{e^2-e^{-2}}{2} \\approx 3.627$ units."
+          },
+          {
+            context: "Trigonometric function with scaling",
+            stem: "Find the arc length of $y = 2\\sin\\left(\\dfrac{x}{2}\\right)$ from $x = 0$ to $x = \\pi$. Set up the integral completely, then use Desmos to evaluate numerically.",
+            answer: "$dy/dx = \\cos\\left(\\dfrac{x}{2}\\right)$, so $1+(dy/dx)^2 = 1+\\cos^2\\!\\left(\\dfrac{x}{2}\\right)$. The arc length integral is $L = \\int_0^{\\pi}\\sqrt{1+\\cos^2\\!\\left(\\dfrac{x}{2}\\right)}\\,dx$. This has no elementary antiderivative. Using Desmos: $L \\approx 3.820$ units."
+          }
+        ]
+      },
+
+      // ── TILE 4-B ─────────────────────────────────────────
+      {
+        icon: "🔢",
+        title: "Arc Length with Numerical Integration",
+        sub: "Messy integrands handled by Desmos",
+        topics: "8.10",
+        problems: [
+          {
+            context: "Sine curve",
+            stem: "Find the arc length of $y = \\sin x$ from $x = 0$ to $x = \\pi$. Set up the integral completely, explain why a closed form does not exist, then use Desmos to find $L$ to three decimal places.",
+            answer: "$dy/dx = \\cos x$, so $L = \\int_0^{\\pi}\\sqrt{1+\\cos^2 x}\\,dx$. The integrand $\\sqrt{1+\\cos^2 x}$ is an elliptic integral — it has no elementary antiderivative. Using Desmos: $L \\approx 3.820$ units."
+          },
+          {
+            context: "Exponential curve",
+            stem: "Find the arc length of $y = e^x$ from $x = 0$ to $x = 1$. Set up the integral, then evaluate numerically with Desmos.",
+            answer: "$dy/dx = e^x$, so $L = \\int_0^1\\sqrt{1+e^{2x}}\\,dx$. Using Desmos: $L \\approx 2.003$ units."
+          },
+          {
+            context: "Rational function",
+            stem: "Find the arc length of $y = \\dfrac{1}{x}$ from $x = 1$ to $x = 3$. Set up the integral completely, then use Desmos to evaluate.",
+            answer: "$dy/dx = -\\dfrac{1}{x^2}$, so $1+(dy/dx)^2 = 1+\\dfrac{1}{x^4} = \\dfrac{x^4+1}{x^4}$. $L = \\int_1^3\\dfrac{\\sqrt{x^4+1}}{x^2}\\,dx$. Using Desmos: $L \\approx 2.305$ units."
+          }
+        ]
+      },
+
+      // ── TILE 4-C ─────────────────────────────────────────
+      {
+        icon: "⭐",
+        title: "Mixed Practice — AP Style",
+        sub: "Challenging arc length problems",
+        topics: "8.9 – 8.10",
+        problems: [
+          {
+            context: "Inverse trigonometric function",
+            stem: "Find the arc length of $y = \\arctan x$ from $x = 0$ to $x = 1$. Set up the integral completely, then use Desmos for the final numerical value.",
+            answer: "$dy/dx = \\dfrac{1}{1+x^2}$, so $1+(dy/dx)^2 = 1+\\dfrac{1}{(1+x^2)^2} = \\dfrac{(1+x^2)^2+1}{(1+x^2)^2}$. $L = \\int_0^1\\dfrac{\\sqrt{x^4+2x^2+2}}{1+x^2}\\,dx$. Using Desmos: $L \\approx 1.086$ units."
+          },
+          {
+            context: "Piecewise curve",
+            stem: "The curve is defined as $y = \\sqrt{x}$ on $[0,1]$ and $y = 2-x$ on $[1,2]$. Verify continuity at $x=1$, then find the total arc length of both pieces.",
+            answer: "Continuity: $\\sqrt{1} = 1$ and $2-1=1$ ✓. Piece 1: $dy/dx = \\dfrac{1}{2\\sqrt{x}}$, $L_1 = \\int_0^1\\sqrt{1+\\dfrac{1}{4x}}\\,dx \\approx 1.479$ units (Desmos). Piece 2: $dy/dx = -1$, $L_2 = \\int_1^2\\sqrt{2}\\,dx = \\sqrt{2} \\approx 1.414$ units. Total: $L \\approx 2.893$ units."
+          },
+          {
+            context: "Elegant exact result",
+            stem: "Find the arc length of $y = \\ln(\\cos x)$ from $x = 0$ to $x = \\dfrac{\\pi}{4}$.",
+            answer: "$dy/dx = \\dfrac{-\\sin x}{\\cos x} = -\\tan x$. So $1+(dy/dx)^2 = 1+\\tan^2 x = \\sec^2 x$, and $\\sqrt{\\sec^2 x} = |\\sec x| = \\sec x$ on $\\left[0,\\dfrac{\\pi}{4}\\right]$. $L = \\int_0^{\\pi/4}\\sec x\\,dx = \\Big[\\ln|\\sec x + \\tan x|\\Big]_0^{\\pi/4} = \\ln(\\sqrt{2}+1) - \\ln(1) = \\ln(\\sqrt{2}+1) \\approx 0.881$ units."
+          }
+        ]
+      }
+    ]
+  }
+
+]; // end columns
+
+
+/* ============================================================
+   RENDER BOARD
+============================================================ */
+function renderBoard() {
+  const grid = document.getElementById('board-grid');
+  grid.innerHTML = '';
+
+  columns.forEach((col, ci) => {
+    const colGroup = document.createElement('div');
+    colGroup.className = 'col-group';
+
+    const header = document.createElement('div');
+    header.className = `col-header ${col.headerClass}`;
+    header.style.gridColumn = ci + 1;
+    header.style.gridRow = 1;
+    header.innerHTML = `
+      <div class="col-header-num">${col.label}</div>
+      <h2>${col.title}</h2>
+      <div class="col-topics">${col.topics}</div>
+    `;
+    colGroup.appendChild(header);
+
+    col.tiles.forEach((tile, ti) => {
+      const tileEl = document.createElement('div');
+      tileEl.className = `tile ${col.tileClass}`;
+      tileEl.style.gridColumn = ci + 1;
+      tileEl.style.gridRow = ti + 2;
+      tileEl.setAttribute('role', 'button');
+      tileEl.setAttribute('tabindex', '0');
+      tileEl.setAttribute('aria-label', tile.title);
+      tileEl.innerHTML = `
+        <span class="tile-icon">${tile.icon}</span>
+        <div class="tile-title">${tile.title}</div>
+        <div class="tile-sub">${tile.sub}</div>
+        <div class="tile-topics">${tile.topics}</div>
+        <span class="tile-arrow">↗</span>
+      `;
+      tileEl.addEventListener('click', () => openModal(ci, ti));
+      tileEl.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') openModal(ci, ti); });
+      colGroup.appendChild(tileEl);
+    });
+
+    grid.appendChild(colGroup);
+  });
+}
+
+/* ============================================================
+   MODAL
+============================================================ */
+function openModal(colIdx, tileIdx) {
+  const col  = columns[colIdx];
+  const tile = col.tiles[tileIdx];
+
+  document.getElementById('modal-accent').style.background = col.accentVar;
+  document.getElementById('modal-col-label').style.color = col.accentVar;
+  document.getElementById('modal-col-label').textContent = col.label + ' · ' + col.title;
+  document.getElementById('modal-title').textContent = tile.title;
+
+  const body = document.getElementById('modal-body');
+  body.innerHTML = '';
+
+  tile.problems.forEach((prob, pi) => {
+    const block = document.createElement('div');
+    block.className = 'problem-block';
+
+    const answerId = `ans-${colIdx}-${tileIdx}-${pi}`;
+    const toggleId = `tog-${colIdx}-${tileIdx}-${pi}`;
+
+    block.innerHTML = `
+      <div class="problem-num">Problem ${pi + 1} of ${tile.problems.length}</div>
+      ${prob.context ? `<div class="problem-context">${prob.context}</div>` : ''}
+      <div class="problem-text">${prob.stem}</div>
+      <button class="answer-toggle" id="${toggleId}" onclick="toggleAnswer('${answerId}','${toggleId}')">
+        <span class="toggle-icon">▼</span> Show Answer
+      </button>
+      <div class="answer-panel" id="${answerId}">${prob.answer}</div>
+    `;
+    body.appendChild(block);
+  });
+
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('desmos-fab').classList.add('visible');
+
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([body]).catch(err => console.log(err));
+  }
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+  document.getElementById('desmos-fab').classList.remove('visible');
+}
+
+function toggleAnswer(panelId, toggleId) {
+  const panel  = document.getElementById(panelId);
+  const toggle = document.getElementById(toggleId);
+  const isOpen = panel.classList.contains('open');
+  panel.classList.toggle('open');
+  toggle.classList.toggle('open');
+  toggle.innerHTML = isOpen
+    ? '<span class="toggle-icon">▼</span> Show Answer'
+    : '<span class="toggle-icon">▼</span> Hide Answer';
+}
+
+/* ============================================================
+   RANDOM PRACTICE
+============================================================ */
+function openRandomProblem() {
+  const colIdx  = Math.floor(Math.random() * columns.length);
+  const col     = columns[colIdx];
+  const tileIdx = Math.floor(Math.random() * col.tiles.length);
+  const tile    = col.tiles[tileIdx];
+  const probIdx = Math.floor(Math.random() * tile.problems.length);
+  const prob    = tile.problems[probIdx];
+
+  const accentEl = document.getElementById('modal-accent');
+  accentEl.className = 'modal-header-accent random-accent';
+  accentEl.style.background = '';
+
+  document.getElementById('modal-col-label').style.color = 'var(--text-muted)';
+  document.getElementById('modal-col-label').innerHTML = 'BC Calculus · Unit 8: Area, Volume &amp; Arc Length';
+  document.getElementById('modal-title').textContent = 'General Practice';
+
+  const body = document.getElementById('modal-body');
+  body.innerHTML = '';
+
+  const block = document.createElement('div');
+  block.className = 'problem-block';
+  block.style.borderBottom = 'none';
+  block.style.marginBottom = '0';
+  block.style.paddingBottom = '0';
+
+  block.innerHTML = `
+    <div class="problem-num">🎲 General Practice</div>
+    ${prob.context ? `<div class="problem-context">${prob.context}</div>` : ''}
+    <div class="problem-text">${prob.stem}</div>
+    <button class="answer-toggle" id="rand-tog" onclick="toggleAnswer('rand-ans','rand-tog')">
+      <span class="toggle-icon">▼</span> Show Answer
+    </button>
+    <div class="answer-panel" id="rand-ans">${prob.answer}</div>
+  `;
+
+  body.appendChild(block);
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('desmos-fab').classList.add('visible');
+
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([body]).catch(err => console.log(err));
+  }
+}
+
+document.getElementById('random-btn').addEventListener('click', openRandomProblem);
+
+/* ============================================================
+   DESMOS BUTTON
+============================================================ */
+document.getElementById('desmos-fab').addEventListener('click', () => {
+  window.open('https://www.desmos.com/calculator', '_blank', 'width=1000,height=700,noopener,noreferrer');
+});
+
+/* ============================================================
+   EVENT LISTENERS
+============================================================ */
+document.getElementById('modal-close').addEventListener('click', closeModal);
+document.getElementById('modal-overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+/* ============================================================
+   INIT
+============================================================ */
+renderBoard();
+</script>
+</body>
+</html>
