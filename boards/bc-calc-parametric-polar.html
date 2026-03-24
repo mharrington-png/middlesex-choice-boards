@@ -1,0 +1,1990 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BC Calculus — Unit 9: Parametric &amp; Polar | Middlesex School</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet" />
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+    startup: { typeset: false }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+  /* ============================================================
+     TOKENS & RESET
+  ============================================================ */
+  :root {
+    --crimson:     #cf003d;
+    --crimson-dim: #8a0028;
+    --crimson-glow:#ff1a55;
+    --black:       #0d0d0d;
+    --surface:     #151515;
+    --surface2:    #1e1e1e;
+    --surface3:    #252525;
+    --border:      #2e2e2e;
+    --border-light:#3a3a3a;
+    --text:        #f0ece6;
+    --text-muted:  #9e9e9e;
+    --text-dim:    #666666;
+
+    --col1: #b5481a;
+    --col2: #1a5c8a;
+    --col3: #3a6b3a;
+    --col4: #6b3a8a;
+
+    --col1-light: #f4834a;
+    --col2-light: #4db3e8;
+    --col3-light: #5ecf5e;
+    --col4-light: #c47ee8;
+
+    --radius: 10px;
+    --radius-lg: 16px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.5);
+    --shadow-hover: 0 8px 40px rgba(0,0,0,0.7);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 16px;
+    line-height: 1.65;
+    min-height: 100vh;
+  }
+
+  /* ============================================================
+     HEADER — centered layout
+  ============================================================ */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 32px 40px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--crimson), var(--crimson-glow), var(--crimson));
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(207,0,61,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .header-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+  }
+
+  .school-tag {
+    font-family: 'Source Serif 4', serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--crimson-glow);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .school-tag::before,
+  .school-tag::after {
+    content: '';
+    display: inline-block;
+    width: 28px;
+    height: 1px;
+    background: var(--crimson-glow);
+  }
+
+  h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    margin-top: 4px;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--crimson-glow);
+  }
+
+  .header-meta {
+    margin-top: 4px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .meta-pill {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 3px 12px;
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+  }
+
+  /* ============================================================
+     INSTRUCTIONS BAR
+  ============================================================ */
+  .instructions {
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 40px;
+    font-size: 13px;
+    color: var(--text-muted);
+    text-align: center;
+    letter-spacing: 0.03em;
+  }
+
+  .instructions strong { color: var(--crimson-glow); font-weight: 600; }
+
+  /* ============================================================
+     BOARD GRID — equal-height tiles across columns
+  ============================================================ */
+  .board-wrap {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 36px 24px 60px;
+  }
+
+  .board-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto repeat(4, 1fr);
+    gap: 20px;
+  }
+
+  .col-group {
+    display: contents;
+  }
+
+  /* Column headers */
+  .col-header {
+    border-radius: var(--radius) var(--radius) 0 0;
+    padding: 16px 18px 14px;
+    position: relative;
+    overflow: hidden;
+    align-self: start;
+  }
+
+  .col-header::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .col-1-header { background: color-mix(in srgb, var(--col1) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col1) 40%, transparent); }
+  .col-2-header { background: color-mix(in srgb, var(--col2) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col2) 40%, transparent); }
+  .col-3-header { background: color-mix(in srgb, var(--col3) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col3) 40%, transparent); }
+  .col-4-header { background: color-mix(in srgb, var(--col4) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col4) 40%, transparent); }
+
+  .col-header-num {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    opacity: 0.7;
+  }
+
+  .col-1-header .col-header-num { color: var(--col1-light); }
+  .col-2-header .col-header-num { color: var(--col2-light); }
+  .col-3-header .col-header-num { color: var(--col3-light); }
+  .col-4-header .col-header-num { color: var(--col4-light); }
+
+  .col-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.25;
+  }
+
+  .col-header .col-topics {
+    margin-top: 6px;
+    font-size: 10.5px;
+    color: var(--text-dim);
+    letter-spacing: 0.04em;
+  }
+
+  /* ============================================================
+     TILES
+  ============================================================ */
+  .tile {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 18px 28px;
+    cursor: pointer;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+    position: relative;
+    overflow: hidden;
+    user-select: none;
+  }
+
+  .tile::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+    border-radius: var(--radius) 0 0 var(--radius);
+    transition: opacity 0.2s;
+  }
+
+  .col-1 .tile::before { background: var(--col1-light); }
+  .col-2 .tile::before { background: var(--col2-light); }
+  .col-3 .tile::before { background: var(--col3-light); }
+  .col-4 .tile::before { background: var(--col4-light); }
+
+  .tile:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-hover);
+    background: var(--surface3);
+  }
+
+  .col-1 .tile:hover { border-color: color-mix(in srgb, var(--col1) 60%, transparent); }
+  .col-2 .tile:hover { border-color: color-mix(in srgb, var(--col2) 60%, transparent); }
+  .col-3 .tile:hover { border-color: color-mix(in srgb, var(--col3) 60%, transparent); }
+  .col-4 .tile:hover { border-color: color-mix(in srgb, var(--col4) 60%, transparent); }
+
+  .tile-icon {
+    font-size: 18px;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .tile-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+    margin-bottom: 5px;
+  }
+
+  .tile-sub {
+    font-size: 11.5px;
+    color: var(--text-muted);
+    line-height: 1.4;
+  }
+
+  .tile-topics {
+    position: absolute;
+    bottom: 10px;
+    left: 18px;
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.06em;
+  }
+
+  .tile-arrow {
+    position: absolute;
+    bottom: 12px; right: 14px;
+    font-size: 14px;
+    opacity: 0.3;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+
+  .tile:hover .tile-arrow { opacity: 0.8; transform: translate(2px, -2px); }
+  .col-1 .tile:hover .tile-arrow { color: var(--col1-light); }
+  .col-2 .tile:hover .tile-arrow { color: var(--col2-light); }
+  .col-3 .tile:hover .tile-arrow { color: var(--col3-light); }
+  .col-4 .tile:hover .tile-arrow { color: var(--col4-light); }
+
+  /* ============================================================
+     MODAL
+  ============================================================ */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.82);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    backdrop-filter: blur(4px);
+  }
+
+  .modal-overlay.open { display: flex; animation: fadeIn 0.2s ease; }
+
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    width: 100%;
+    max-width: 760px;
+    max-height: 88vh;
+    overflow-y: auto;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.8);
+    animation: slideUp 0.22s ease;
+    position: relative;
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .modal-header {
+    padding: 24px 28px 20px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .modal-header-accent {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  }
+
+  .modal-col-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+  }
+
+  .modal-close {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.15s, color 0.15s;
+  }
+
+  .modal-close:hover { background: var(--crimson); color: white; border-color: var(--crimson); }
+
+  .modal-body { padding: 24px 28px 32px; }
+
+  /* Video section */
+  .video-section {
+    background: var(--surface2);
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 24px;
+  }
+
+  .video-label {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+
+  .video-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    color: var(--crimson-glow);
+    text-decoration: none;
+    font-size: 13.5px;
+    font-family: 'Source Serif 4', serif;
+    transition: color 0.15s;
+  }
+
+  .video-link:hover { color: #fff; }
+
+  .video-icon {
+    font-size: 12px;
+    opacity: 0.7;
+  }
+
+  /* Problems */
+  .problem-block {
+    margin-bottom: 28px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .problem-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+  .problem-num {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+  }
+
+  .problem-context {
+    font-size: 14px;
+    font-style: italic;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    padding-left: 12px;
+    border-left: 2px solid var(--border-light);
+  }
+
+  .problem-text {
+    font-size: 14.5px;
+    color: var(--text);
+    line-height: 1.7;
+    margin-bottom: 14px;
+  }
+
+  .problem-parts { margin-left: 0; list-style: none; }
+
+  .problem-parts li {
+    font-size: 14px;
+    color: var(--text);
+    margin-bottom: 8px;
+    padding-left: 24px;
+    position: relative;
+    line-height: 1.6;
+  }
+
+  .problem-parts li::before {
+    content: attr(data-part);
+    position: absolute;
+    left: 0;
+    font-weight: 700;
+    color: var(--text-muted);
+  }
+
+  .answer-toggle {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 9px 16px;
+    color: var(--text-muted);
+    font-family: 'Source Serif 4', serif;
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.15s;
+    margin-top: 4px;
+  }
+
+  .answer-toggle:hover { background: var(--surface3); border-color: var(--border-light); color: var(--text); }
+  .answer-toggle .toggle-icon { font-size: 10px; transition: transform 0.2s; }
+  .answer-toggle.open .toggle-icon { transform: rotate(180deg); }
+
+  .answer-panel {
+    display: none;
+    margin-top: 14px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-size: 13.5px;
+    line-height: 1.75;
+    color: var(--text);
+    animation: expandIn 0.18s ease;
+  }
+
+  @keyframes expandIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .answer-panel.open { display: block; }
+
+  .answer-part { margin-bottom: 10px; padding-left: 20px; position: relative; }
+  .answer-part:last-child { margin-bottom: 0; }
+  .answer-part-label { position: absolute; left: 0; font-weight: 700; color: var(--text-muted); }
+
+  /* ============================================================
+     RESPONSIVE
+  ============================================================ */
+  @media (max-width: 1000px) {
+    .board-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .col-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: calc(50% - 10px);
+    }
+    .col-header {
+      border-radius: var(--radius);
+    }
+    .tile {
+      grid-column: unset !important;
+      grid-row: unset !important;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .board-grid { flex-direction: column; }
+    .col-group { width: 100%; }
+    header { padding: 20px; }
+    .board-wrap { padding: 20px 12px 40px; }
+    .modal { border-radius: var(--radius); }
+    .modal-header, .modal-body { padding: 18px; }
+  }
+
+  .modal::-webkit-scrollbar { width: 6px; }
+  .modal::-webkit-scrollbar-track { background: var(--surface); }
+  .modal::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
+
+  /* ============================================================
+     RANDOM PRACTICE BAR
+  ============================================================ */
+  .random-wrap {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 24px 48px;
+  }
+
+  .random-btn {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border-light);
+    border-radius: 14px;
+    padding: 0 36px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.2s ease, background 0.2s ease;
+    font-family: 'Source Serif 4', serif;
+  }
+
+  .random-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(207,0,61,0.06) 30%, rgba(207,0,61,0.10) 50%, rgba(207,0,61,0.06) 70%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .random-btn:hover::before { opacity: 1; }
+
+  .random-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(207,0,61,0.18), 0 2px 8px rgba(0,0,0,0.4);
+    border-color: color-mix(in srgb, var(--crimson) 55%, transparent);
+    background: var(--surface3);
+  }
+
+  .random-btn:active { transform: translateY(0) scale(0.995); box-shadow: 0 2px 8px rgba(0,0,0,0.4); }
+
+  .random-btn-left-notch, .random-btn-right-notch {
+    position: absolute;
+    bottom: 0;
+    width: 28px; height: 5px;
+    background: var(--border);
+    border-radius: 3px 3px 0 0;
+    transition: background 0.2s;
+  }
+  .random-btn-left-notch  { left: 60px; }
+  .random-btn-right-notch { right: 60px; }
+  .random-btn:hover .random-btn-left-notch,
+  .random-btn:hover .random-btn-right-notch { background: color-mix(in srgb, var(--crimson) 40%, var(--border)); }
+
+  .random-btn-icon { font-size: 22px; flex-shrink: 0; transition: transform 0.3s ease; }
+  .random-btn:hover .random-btn-icon { transform: rotate(20deg) scale(1.15); }
+
+  .random-btn-label { display: flex; flex-direction: column; align-items: center; gap: 1px; }
+  .random-btn-title { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; color: var(--text); letter-spacing: 0.01em; line-height: 1.2; }
+  .random-btn-sub { font-size: 11.5px; color: var(--text-muted); letter-spacing: 0.07em; text-transform: uppercase; }
+
+  .random-btn-badge {
+    position: absolute;
+    right: 28px;
+    background: var(--surface3);
+    border: 1px solid var(--border-light);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-family: 'Source Serif 4', serif;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+
+  .random-btn:hover .random-btn-badge {
+    background: color-mix(in srgb, var(--crimson) 15%, var(--surface3));
+    color: var(--crimson-glow);
+    border-color: color-mix(in srgb, var(--crimson) 40%, transparent);
+  }
+
+  .random-accent {
+    background: linear-gradient(90deg, var(--col1-light), var(--col2-light), var(--col3-light), var(--col4-light));
+    background-size: 300% 100%;
+    animation: accentShift 4s ease infinite;
+  }
+
+  @keyframes accentShift {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  @media (max-width: 600px) {
+    .random-wrap { padding: 0 12px 36px; }
+    .random-btn { height: 64px; border-radius: 10px; }
+    .random-btn-badge, .random-btn-left-notch, .random-btn-right-notch { display: none; }
+  }
+
+  /* ============================================================
+     DESMOS FLOATING BUTTON
+  ============================================================ */
+  .desmos-fab {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    z-index: 1050;
+    background: var(--surface2);
+    border: 1px solid var(--border-light);
+    border-radius: 50px;
+    padding: 0 20px 0 14px;
+    height: 52px;
+    display: none;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    font-family: 'Source Serif 4', serif;
+  }
+
+  .desmos-fab.visible {
+    display: flex;
+    animation: fadeIn 0.18s ease;
+  }
+
+  .desmos-fab:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(207,0,61,0.25), 0 2px 8px rgba(0,0,0,0.5);
+    border-color: color-mix(in srgb, var(--crimson) 60%, transparent);
+    background: var(--surface3);
+  }
+
+  .desmos-fab:active { transform: translateY(0) scale(0.97); }
+
+  .desmos-fab-icon {
+    font-size: 20px;
+    line-height: 1;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+  }
+
+  .desmos-fab:hover .desmos-fab-icon { transform: rotate(-8deg) scale(1.1); }
+
+  .desmos-fab-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    display: block;
+    line-height: 1.25;
+  }
+
+  .desmos-fab-sub {
+    font-size: 9.5px;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    display: block;
+  }
+
+  @media (max-width: 600px) {
+    .desmos-fab { bottom: 20px; right: 16px; padding: 0 14px; }
+    .desmos-fab-sub { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     HEADER
+============================================================ -->
+<header>
+  <div class="header-inner">
+    <div class="school-tag">Middlesex School · mxschool.edu</div>
+    <h1>BC Calculus — Unit 9: <em>Parametric &amp; Polar</em></h1>
+    <div class="header-meta">
+      <span class="meta-pill">🌀 Parametric Curves</span>
+      <span class="meta-pill">📐 Parametric Derivatives</span>
+      <span class="meta-pill">🌐 Polar Coordinates</span>
+      <span class="meta-pill">∫ Area &amp; Arc Length</span>
+      <span class="meta-pill">Topics 9.1 – 9.9</span>
+    </div>
+  </div>
+</header>
+
+<div class="instructions">
+  Click any tile to open practice problems. Use <strong>Show Answer</strong> to check your work after attempting each part.
+</div>
+
+<!-- ============================================================
+     BOARD
+============================================================ -->
+<div class="board-wrap">
+  <div class="board-grid" id="board-grid"></div>
+</div>
+
+<!-- ============================================================
+     RANDOM PRACTICE BAR
+============================================================ -->
+<div class="random-wrap">
+  <button class="random-btn" id="random-btn" aria-label="Random Practice">
+    <div class="random-btn-left-notch"></div>
+    <div class="random-btn-right-notch"></div>
+    <span class="random-btn-icon">🎲</span>
+    <div class="random-btn-label">
+      <span class="random-btn-title">Random Practice</span>
+      <span class="random-btn-sub">Any topic · Any tile · Any problem</span>
+    </div>
+    <span class="random-btn-badge">48 problems</span>
+  </button>
+</div>
+
+<!-- ============================================================
+     DESMOS FLOATING BUTTON
+============================================================ -->
+<button class="desmos-fab" id="desmos-fab" aria-label="Open Desmos Graphing Calculator">
+  <span class="desmos-fab-icon">📈</span>
+  <span>
+    <span class="desmos-fab-title">Graphing Calculator</span>
+    <span class="desmos-fab-sub">Opens Desmos in a new tab</span>
+  </span>
+</button>
+
+<!-- ============================================================
+     MODAL
+============================================================ -->
+<div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div class="modal-header-accent" id="modal-accent"></div>
+      <div>
+        <div class="modal-col-label" id="modal-col-label"></div>
+        <div class="modal-title" id="modal-title"></div>
+      </div>
+      <button class="modal-close" id="modal-close" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   DATA — Edit problems here without touching layout code.
+   Each tile has: icon, title, sub, topics (AP topic numbers),
+   and problems[]. Each problem has context, stem, parts[], answers[].
+   To add a video: add video: { title: "...", url: "..." } to any tile.
+============================================================ */
+
+const columns = [
+
+  // ═══════════════════════════════════════════════════════════
+  // COLUMN 1 — Parametric Equations & Motion
+  //            Topics 9.1, 9.2, 9.3
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: "col-1",
+    accentVar: "var(--col1-light)",
+    headerClass: "col-1-header",
+    tileClass: "col-1",
+    label: "Column I",
+    title: "Parametric Equations & Motion",
+    topics: "Topics 9.1 – 9.3",
+    tiles: [
+
+      // ── TILE 1-A ──────────────────────────────────────────
+      {
+        icon: "🌀",
+        title: "Parametric Curves & Graphing",
+        sub: "Plotting, eliminating the parameter, and orientation",
+        topics: "9.1",
+        video: { title: "Parametric Equations Using Desmos", url: "https://www.youtube.com/watch?v=ioDHU0wEsus&feature=youtu.be" },
+        problems: [
+          {
+            context: "Context: Basic parametric curve",
+            stem: "A curve is defined parametrically by $x(t) = t^2 - 1$ and $y(t) = 2t$ for $-2 \\leq t \\leq 2$.",
+            parts: [
+              { label: "(a)", text: "Make a table of values for $t = -2, -1, 0, 1, 2$ and plot the resulting points." },
+              { label: "(b)", text: "Eliminate the parameter to express $y$ in terms of $x$. What type of curve is this?" },
+              { label: "(c)", text: "Describe the orientation (direction of travel) as $t$ increases from $-2$ to $2$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$t=-2$: $(3,-4)$; $t=-1$: $(0,-2)$; $t=0$: $(-1,0)$; $t=1$: $(0,2)$; $t=2$: $(3,4)$." },
+              { label: "(b)", text: "From $y=2t$, we get $t = \\frac{y}{2}$. Substituting: $x = \\left(\\frac{y}{2}\\right)^2 - 1 = \\frac{y^2}{4}-1$, so $y^2 = 4(x+1)$. This is a horizontal parabola opening to the right with vertex $(-1, 0)$." },
+              { label: "(c)", text: "As $t$ increases, the curve moves from $(3,-4)$ upward through $(-1,0)$ to $(3,4)$ — traveling from bottom to top (upward orientation)." }
+            ]
+          },
+          {
+            context: "Context: Circle parametrized by trig functions",
+            stem: "Let $x(t) = 3\\cos t$ and $y(t) = 3\\sin t$ for $0 \\leq t \\leq 2\\pi$.",
+            parts: [
+              { label: "(a)", text: "Eliminate the parameter to identify the curve. State its center and radius." },
+              { label: "(b)", text: "At what values of $t$ is $x$ at its maximum? At what values of $t$ is $y$ at its maximum?" },
+              { label: "(c)", text: "If the parameter range were restricted to $0 \\leq t \\leq \\pi$, describe the portion of the curve that would be traced." }
+            ],
+            answers: [
+              { label: "(a)", text: "$x^2 + y^2 = 9\\cos^2 t + 9\\sin^2 t = 9$. This is a circle centered at the origin with radius 3." },
+              { label: "(b)", text: "$x$ is maximum when $\\cos t = 1$, i.e., $t = 0$ (and $t = 2\\pi$). $y$ is maximum when $\\sin t = 1$, i.e., $t = \\frac{\\pi}{2}$." },
+              { label: "(c)", text: "For $0 \\leq t \\leq \\pi$, $\\sin t \\geq 0$, so only the upper semicircle is traced — from $(3,0)$ counterclockwise to $(-3, 0)$." }
+            ]
+          },
+          {
+            context: "Context: Physical motion — projectile",
+            stem: "A projectile is launched so that $x(t) = 40t$ and $y(t) = -16t^2 + 50t + 6$ (feet, seconds).",
+            parts: [
+              { label: "(a)", text: "Find the position of the projectile at $t = 1$ and $t = 2$ seconds." },
+              { label: "(b)", text: "At what time does the projectile reach its maximum height? What is the maximum height?" },
+              { label: "(c)", text: "Eliminate the parameter to express $y$ as a function of $x$. Identify the shape." }
+            ],
+            answers: [
+              { label: "(a)", text: "$t=1$: $(40, 40)$ ft. $t=2$: $(80, 42)$ ft." },
+              { label: "(b)", text: "$y'(t) = -32t+50 = 0 \\Rightarrow t = \\frac{50}{32} = \\frac{25}{16} \\approx 1.5625$ sec. Max height: $y(25/16) = -16(25/16)^2 + 50(25/16)+6 = -\\frac{625}{16}+\\frac{1250}{16}+6 = \\frac{625}{16}+6 \\approx 45.06$ ft." },
+              { label: "(c)", text: "$t = \\frac{x}{40}$. Substituting: $y = -16\\left(\\frac{x}{40}\\right)^2 + 50 \\cdot \\frac{x}{40} + 6 = -\\frac{x^2}{100} + \\frac{5x}{4} + 6$. This is a downward-opening parabola." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 1-B ──────────────────────────────────────────
+      {
+        icon: "📏",
+        title: "Derivatives of Parametric Equations",
+        sub: "Finding dy/dx and d²y/dx² from parametric form",
+        topics: "9.2",
+        video: { title: "Determine the First and Second Derivative of a Parametric Curve", url: "https://www.youtube.com/watch?v=QyL6IqIk9t0&feature=youtu.be" },
+        problems: [
+          {
+            context: "Context: First and second derivatives",
+            stem: "A curve is given parametrically by $x(t) = t^3 - 3t$ and $y(t) = t^2 - 1$.",
+            parts: [
+              { label: "(a)", text: "Find $\\dfrac{dy}{dx}$ in terms of $t$." },
+              { label: "(b)", text: "Find all values of $t$ where the tangent line is horizontal or vertical." },
+              { label: "(c)", text: "Find $\\dfrac{d^2y}{dx^2}$ in terms of $t$ and determine where the curve is concave up." }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\dfrac{dy}{dx} = \\dfrac{dy/dt}{dx/dt} = \\dfrac{2t}{3t^2 - 3} = \\dfrac{2t}{3(t^2-1)}$." },
+              { label: "(b)", text: "Horizontal tangent: $dy/dt = 2t = 0 \\Rightarrow t = 0$. Point: $(0, -1)$. Vertical tangent: $dx/dt = 3t^2-3 = 0 \\Rightarrow t = \\pm 1$. Points: $(-2,0)$ and $(2,0)$." },
+              { label: "(c)", text: "$\\dfrac{d^2y}{dx^2} = \\dfrac{\\frac{d}{dt}(dy/dx)}{dx/dt} = \\dfrac{\\frac{d}{dt}\\left(\\frac{2t}{3t^2-3}\\right)}{3t^2-3}$. Differentiating: $\\frac{d}{dt}\\left(\\frac{2t}{3(t^2-1)}\\right) = \\frac{2 \\cdot 3(t^2-1) - 2t \\cdot 6t}{9(t^2-1)^2} = \\frac{-6t^2-6}{9(t^2-1)^2} = \\frac{-2(t^2+1)}{3(t^2-1)^2}$. So $\\dfrac{d^2y}{dx^2} = \\dfrac{-2(t^2+1)}{3(t^2-1)^2 \\cdot 3(t^2-1)} = \\dfrac{-2(t^2+1)}{9(t^2-1)^3}$. Since $t^2+1 > 0$ always, sign depends on $(t^2-1)^3$: concave up when $t^2 - 1 < 0$, i.e., $-1 < t < 1$." }
+            ]
+          },
+          {
+            context: "Context: Tangent line to a parametric curve",
+            stem: "Let $x(t) = e^t$ and $y(t) = t^2 + 1$.",
+            parts: [
+              { label: "(a)", text: "Find $\\dfrac{dy}{dx}$ as a function of $t$." },
+              { label: "(b)", text: "Write the equation of the tangent line at $t = 0$." },
+              { label: "(c)", text: "At what value(s) of $t$ is the tangent line horizontal? Vertical?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\dfrac{dy}{dx} = \\dfrac{2t}{e^t}$." },
+              { label: "(b)", text: "At $t=0$: $(x,y) = (1, 1)$, slope $= \\frac{0}{1} = 0$. Tangent line: $y = 1$ (horizontal)." },
+              { label: "(c)", text: "Horizontal: $dy/dt = 2t = 0 \\Rightarrow t = 0$, point $(1,1)$. Vertical: $dx/dt = e^t = 0$ has no solution — $e^t > 0$ always, so there are no vertical tangents." }
+            ]
+          },
+          {
+            context: "Context: AP-style derivative with multiple representations",
+            stem: "The position of a particle at time $t$ is given by $x(t) = \\sin(\\pi t)$ and $y(t) = t^2 - 2t$ for $0 \\leq t \\leq 2$.",
+            parts: [
+              { label: "(a)", text: "Find the slope of the curve at $t = \\frac{1}{2}$." },
+              { label: "(b)", text: "Find all times $t$ on $(0, 2)$ where the particle is moving straight up or down (vertical tangent)." },
+              { label: "(c)", text: "At $t=1$, find the speed of the particle: $\\sqrt{\\left(\\frac{dx}{dt}\\right)^2 + \\left(\\frac{dy}{dt}\\right)^2}$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$dx/dt = \\pi\\cos(\\pi t)$, $dy/dt = 2t-2$. At $t=\\frac{1}{2}$: $dx/dt = \\pi\\cos(\\pi/2) = 0$, $dy/dt = 2(\\frac{1}{2})-2 = -1$. Since $dx/dt = 0$ and $dy/dt \\neq 0$, the curve has a vertical tangent — slope is undefined." },
+              { label: "(b)", text: "Vertical tangent when $dx/dt = \\pi\\cos(\\pi t) = 0$: $\\pi t = \\frac{\\pi}{2}$ or $\\frac{3\\pi}{2}$, so $t = \\frac{1}{2}$ and $t = \\frac{3}{2}$. Both are in $(0,2)$." },
+              { label: "(c)", text: "At $t=1$: $dx/dt = \\pi\\cos(\\pi) = -\\pi$, $dy/dt = 2(1)-2 = 0$. Speed $= \\sqrt{(-\\pi)^2 + 0^2} = \\pi \\approx 3.14$ units/sec." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 1-C ──────────────────────────────────────────
+      {
+        icon: "🏃",
+        title: "Speed, Distance & Arc Length (Parametric)",
+        sub: "Velocity vectors, speed, and total distance traveled",
+        topics: "9.3",
+        video: { title: "Determine the Arc Length of a Curve Given by Parametric Equations", url: "https://www.youtube.com/watch?v=WM89GkZq-Dw" },
+        problems: [
+          {
+            context: "Context: Velocity and speed of a particle",
+            stem: "A particle moves with position vector $\\mathbf{r}(t) = \\langle t^2,\\, \\frac{2}{3}t^3 \\rangle$ for $t \\geq 0$.",
+            parts: [
+              { label: "(a)", text: "Find the velocity vector $\\mathbf{r}'(t)$ and evaluate it at $t = 1$." },
+              { label: "(b)", text: "Find the speed $|\\mathbf{r}'(t)|$ of the particle at $t = 1$." },
+              { label: "(c)", text: "Set up, but do not evaluate, an integral for the total distance traveled from $t = 0$ to $t = 3$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\mathbf{r}'(t) = \\langle 2t,\\, 2t^2 \\rangle$. At $t=1$: $\\mathbf{r}'(1) = \\langle 2, 2 \\rangle$." },
+              { label: "(b)", text: "$|\\mathbf{r}'(1)| = \\sqrt{4 + 4} = \\sqrt{8} = 2\\sqrt{2} \\approx 2.83$ units/sec." },
+              { label: "(c)", text: "Distance $= \\displaystyle\\int_0^3 |\\mathbf{r}'(t)|\\, dt = \\int_0^3 \\sqrt{(2t)^2 + (2t^2)^2}\\, dt = \\int_0^3 \\sqrt{4t^2 + 4t^4}\\, dt = \\int_0^3 2t\\sqrt{1+t^2}\\, dt$." }
+            ]
+          },
+          {
+            context: "Context: Arc length computation",
+            stem: "A particle has position vector $\\mathbf{r}(t) = \\langle \\cos t,\\, \\sin t \\rangle$ for $0 \\leq t \\leq \\frac{\\pi}{2}$. Find the total distance traveled.",
+            parts: [
+              { label: "(a)", text: "Compute $x'(t)$ and $y'(t)$ and set up the arc length integral $\\displaystyle\\int_0^{\\pi/2}|\\mathbf{r}'(t)|\\, dt$." },
+              { label: "(b)", text: "Evaluate the integral exactly." },
+              { label: "(c)", text: "Explain why your answer makes sense geometrically (think about what curve this is and what portion is traced)." }
+            ],
+            answers: [
+              { label: "(a)", text: "$x'(t) = -\\sin t$, $y'(t) = \\cos t$. $|\\mathbf{r}'(t)| = \\sqrt{\\sin^2 t + \\cos^2 t} = 1$. Arc length $= \\displaystyle\\int_0^{\\pi/2} 1\\, dt$." },
+              { label: "(b)", text: "$\\displaystyle\\int_0^{\\pi/2} 1\\, dt = \\frac{\\pi}{2}$." },
+              { label: "(c)", text: "This curve traces the unit circle ($x^2+y^2=1$) from $(1,0)$ to $(0,1)$ — a quarter circle. The circumference of the full unit circle is $2\\pi$, so the quarter is $\\frac{\\pi}{2}$. ✓" }
+            ]
+          },
+          {
+            context: "Context: AP-style — total distance vs. displacement",
+            stem: "A particle moves so that $x(t) = t - \\sin t$ and $y(t) = 1 - \\cos t$ for $0 \\leq t \\leq 2\\pi$ (a cycloid).",
+            parts: [
+              { label: "(a)", text: "Find $x'(t)$ and $y'(t)$." },
+              { label: "(b)", text: "Compute the speed $\\sqrt{(x')^2+(y')^2}$ and simplify using a half-angle identity. (Hint: $1-\\cos t = 2\\sin^2(t/2)$.)" },
+              { label: "(c)", text: "Set up and evaluate the total arc length over $[0, 2\\pi]$. (Recall $\\int_0^{2\\pi} |\\sin(t/2)|\\, dt = 4$.)" }
+            ],
+            answers: [
+              { label: "(a)", text: "$x'(t) = 1 - \\cos t$, $y'(t) = \\sin t$." },
+              { label: "(b)", text: "Speed $= \\sqrt{(1-\\cos t)^2 + \\sin^2 t} = \\sqrt{1-2\\cos t+\\cos^2 t+\\sin^2 t} = \\sqrt{2-2\\cos t} = \\sqrt{4\\sin^2(t/2)} = 2|\\sin(t/2)|$. (Since $0\\leq t\\leq 2\\pi$, $\\sin(t/2)\\geq 0$, so $= 2\\sin(t/2)$.)" },
+              { label: "(c)", text: "Arc length $= \\displaystyle\\int_0^{2\\pi} 2\\sin(t/2)\\, dt$. Let $u = t/2$: $= \\displaystyle\\int_0^{\\pi} 2\\sin u \\cdot 2\\, du = 4\\int_0^{\\pi}\\sin u\\, du = 4[-\\cos u]_0^{\\pi} = 4[1+1] = 8$." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 1-D ──────────────────────────────────────────
+      {
+        icon: "🔀",
+        title: "Mixed Practice — Parametric",
+        sub: "AP-style problems combining 9.1–9.3",
+        topics: "9.1 – 9.3",
+        problems: [
+          {
+            context: "Context: AP free-response style",
+            stem: "A particle moves in the $xy$-plane with position vector $\\mathbf{r}(t) = \\langle t^3 - 3t,\\, 3t^2 - 9 \\rangle$ for $t \\geq 0$.",
+            parts: [
+              { label: "(a)", text: "Find $\\mathbf{r}'(t)$. Determine when each component of the velocity is zero, and explain why the particle is never fully at rest." },
+              { label: "(b)", text: "Find the slope of the path at $t = 2$." },
+              { label: "(c)", text: "At $t = \\frac{1}{2}$, is the particle moving left or right? Up or down? Justify using $\\mathbf{r}'\\!\\left(\\frac{1}{2}\\right)$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\mathbf{r}'(t) = \\langle 3t^2-3,\\, 6t \\rangle$. First component zero: $3t^2-3=0 \\Rightarrow t=1$. Second component zero: $6t=0 \\Rightarrow t=0$. These never coincide for $t \\geq 0$, so the particle is never fully at rest." },
+              { label: "(b)", text: "$\\dfrac{dy}{dx}\\Big|_{t=2} = \\dfrac{6(2)}{3(4)-3} = \\dfrac{12}{9} = \\dfrac{4}{3}$." },
+              { label: "(c)", text: "$\\mathbf{r}'\\!\\left(\\frac{1}{2}\\right) = \\langle 3(\\frac{1}{4})-3,\\, 3 \\rangle = \\langle -\\frac{9}{4},\\, 3 \\rangle$. Negative first component: moving left. Positive second component: moving up." }
+            ]
+          },
+          {
+            context: "Context: Parametric to Cartesian and back",
+            stem: "Consider the parametric curve $x = 2\\cos t + 1$, $y = 3\\sin t - 2$ for $0 \\leq t \\leq 2\\pi$.",
+            parts: [
+              { label: "(a)", text: "Eliminate the parameter to identify the curve. State its center, and the lengths of its semi-axes." },
+              { label: "(b)", text: "Find $\\dfrac{dy}{dx}$ at $t = \\dfrac{\\pi}{4}$." },
+              { label: "(c)", text: "Find all points on the curve where the tangent is horizontal or vertical." }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\cos t = \\frac{x-1}{2}$, $\\sin t = \\frac{y+2}{3}$. Since $\\cos^2 t + \\sin^2 t = 1$: $\\dfrac{(x-1)^2}{4} + \\dfrac{(y+2)^2}{9} = 1$. Ellipse centered at $(1,-2)$, semi-major axis $b=3$ (vertical), semi-minor axis $a=2$ (horizontal)." },
+              { label: "(b)", text: "$x'(t) = -2\\sin t$, $y'(t) = 3\\cos t$. $\\dfrac{dy}{dx}\\Big|_{t=\\pi/4} = \\dfrac{3\\cos(\\pi/4)}{-2\\sin(\\pi/4)} = \\dfrac{3 \\cdot \\frac{\\sqrt{2}}{2}}{-2 \\cdot \\frac{\\sqrt{2}}{2}} = -\\dfrac{3}{2}$." },
+              { label: "(c)", text: "Horizontal tangents: $y'(t) = 3\\cos t = 0 \\Rightarrow t = \\frac{\\pi}{2}, \\frac{3\\pi}{2}$. Points: $(1,-2+3) = (1,1)$ and $(1,-2-3) = (1,-5)$. Vertical tangents: $x'(t) = -2\\sin t = 0 \\Rightarrow t = 0, \\pi$. Points: $(3,-2)$ and $(-1,-2)$." }
+            ]
+          },
+          {
+            context: "Context: Calculator-active arc length",
+            stem: "A particle moves with position vector $\\mathbf{r}(t) = \\langle e^t \\cos t,\\, e^t \\sin t \\rangle$ for $0 \\leq t \\leq \\pi$.",
+            parts: [
+              { label: "(a)", text: "Find the velocity vector $\\mathbf{r}'(t)$ using the Product Rule." },
+              { label: "(b)", text: "Show that $|\\mathbf{r}'(t)|^2 = 2e^{2t}$." },
+              { label: "(c)", text: "Find the exact total distance traveled from $t=0$ to $t=\\pi$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\mathbf{r}'(t) = \\langle e^t\\cos t - e^t\\sin t,\\, e^t\\sin t + e^t\\cos t \\rangle = \\langle e^t(\\cos t - \\sin t),\\, e^t(\\sin t + \\cos t) \\rangle$." },
+              { label: "(b)", text: "$|\\mathbf{r}'(t)|^2 = e^{2t}(\\cos t - \\sin t)^2 + e^{2t}(\\sin t + \\cos t)^2 = e^{2t}[(\\cos^2t - 2\\sin t\\cos t + \\sin^2 t) + (\\sin^2 t + 2\\sin t\\cos t + \\cos^2 t)] = e^{2t}[1+1] = 2e^{2t}$. ✓" },
+              { label: "(c)", text: "Distance $= \\displaystyle\\int_0^{\\pi} |\\mathbf{r}'(t)|\\, dt = \\int_0^{\\pi}\\sqrt{2e^{2t}}\\, dt = \\sqrt{2}\\int_0^{\\pi} e^t\\, dt = \\sqrt{2}[e^t]_0^{\\pi} = \\sqrt{2}(e^{\\pi} - 1)$." }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  // ═══════════════════════════════════════════════════════════
+  // COLUMN 2 — Polar Coordinates & Curves
+  //            Topics 9.4, 9.5, 9.6
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: "col-2",
+    accentVar: "var(--col2-light)",
+    headerClass: "col-2-header",
+    tileClass: "col-2",
+    label: "Column II",
+    title: "Polar Coordinates & Curves",
+    topics: "Topics 9.4 – 9.6",
+    tiles: [
+
+      // ── TILE 2-A ──────────────────────────────────────────
+      {
+        icon: "🧭",
+        title: "Polar Coordinates & Conversion",
+        sub: "Plotting polar points, converting to/from Cartesian",
+        topics: "9.4",
+        video: { title: "Find the Polar Equation for a Parabola", url: "https://www.youtube.com/watch?v=XkZAtV8jNb4" },
+        problems: [
+          {
+            context: "Context: Plotting and converting polar points",
+            stem: "For each polar point, convert to Cartesian form $(x, y)$ and plot it.",
+            parts: [
+              { label: "(a)", text: "$\\left(4, \\dfrac{\\pi}{3}\\right)$" },
+              { label: "(b)", text: "$\\left(-3, \\dfrac{\\pi}{2}\\right)$ &nbsp; (negative $r$)" },
+              { label: "(c)", text: "$\\left(2, -\\dfrac{3\\pi}{4}\\right)$" }
+            ],
+            answers: [
+              { label: "(a)", text: "$x = 4\\cos(\\pi/3) = 4 \\cdot \\frac{1}{2} = 2$. $y = 4\\sin(\\pi/3) = 4 \\cdot \\frac{\\sqrt{3}}{2} = 2\\sqrt{3}$. Point: $(2, 2\\sqrt{3})$." },
+              { label: "(b)", text: "A negative $r$ reverses direction: $(r, \\theta) = (-3, \\pi/2)$ is the same as $(3, 3\\pi/2)$. $x = 3\\cos(3\\pi/2) = 0$, $y = 3\\sin(3\\pi/2) = -3$. Point: $(0, -3)$." },
+              { label: "(c)", text: "$x = 2\\cos(-3\\pi/4) = 2\\cdot(-\\frac{\\sqrt{2}}{2}) = -\\sqrt{2}$. $y = 2\\sin(-3\\pi/4) = 2\\cdot(-\\frac{\\sqrt{2}}{2}) = -\\sqrt{2}$. Point: $(-\\sqrt{2}, -\\sqrt{2})$." }
+            ]
+          },
+          {
+            context: "Context: Converting Cartesian to polar",
+            stem: "Convert each Cartesian equation to polar form $r = f(\\theta)$ or an equation relating $r$ and $\\theta$.",
+            parts: [
+              { label: "(a)", text: "$x^2 + y^2 = 25$" },
+              { label: "(b)", text: "$y = 3x$" },
+              { label: "(c)", text: "$x^2 + y^2 - 6x = 0$" }
+            ],
+            answers: [
+              { label: "(a)", text: "Since $x^2+y^2 = r^2$: $r^2 = 25$, so $r = 5$ (a circle of radius 5)." },
+              { label: "(b)", text: "$r\\sin\\theta = 3r\\cos\\theta \\Rightarrow \\tan\\theta = 3 \\Rightarrow \\theta = \\arctan 3$ (a ray from the origin)." },
+              { label: "(c)", text: "$r^2 - 6r\\cos\\theta = 0 \\Rightarrow r(r - 6\\cos\\theta) = 0 \\Rightarrow r = 6\\cos\\theta$ (a circle)." }
+            ]
+          },
+          {
+            context: "Context: Identifying polar curves",
+            stem: "Name and describe the polar curve given by each equation. Include key features (center, radius, number of petals, etc.).",
+            parts: [
+              { label: "(a)", text: "$r = 4$" },
+              { label: "(b)", text: "$r = 2 + 2\\cos\\theta$ &nbsp; (a limaçon)" },
+              { label: "(c)", text: "$r = 3\\sin(2\\theta)$ &nbsp; (a rose curve)" }
+            ],
+            answers: [
+              { label: "(a)", text: "Circle of radius 4 centered at the pole (origin)." },
+              { label: "(b)", text: "This is a cardioid (since the coefficients of the constant and $\\cos\\theta$ terms are equal). It passes through the pole, extends to $r=4$ when $\\theta=0$, and has a cusp at the origin when $\\theta=\\pi$. It is symmetric about the polar axis." },
+              { label: "(c)", text: "Rose curve with $n=2$ (even), so it has $2n = 4$ petals, each of length 3. Petals occur when $\\sin(2\\theta) = \\pm 1$, i.e., at $\\theta = \\pi/4, 3\\pi/4, 5\\pi/4, 7\\pi/4$." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 2-B ──────────────────────────────────────────
+      {
+        icon: "🌸",
+        title: "Graphing Polar Curves",
+        sub: "Circles, limaçons, rose curves, and lemniscates",
+        topics: "9.5",
+        video: { title: "Polar Equations using Desmos", url: "https://www.youtube.com/watch?v=GzSTnGTPjbQ" },
+        problems: [
+          {
+            context: "Context: Symmetry and key points",
+            stem: "Consider the limaçon $r = 3 + 2\\sin\\theta$.",
+            parts: [
+              { label: "(a)", text: "Find $r$ at $\\theta = 0, \\frac{\\pi}{2}, \\pi, \\frac{3\\pi}{2}$. Label these key points in polar form." },
+              { label: "(b)", text: "Is the curve symmetric about the polar axis, the line $\\theta = \\pi/2$, or the pole? Justify." },
+              { label: "(c)", text: "Find the maximum and minimum values of $r$ and state where they occur." }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\theta=0$: $r=3$. $\\theta=\\pi/2$: $r=5$. $\\theta=\\pi$: $r=3$. $\\theta=3\\pi/2$: $r=1$. Key points in polar form: $(3,0)$, $(5, \\pi/2)$, $(3,\\pi)$, $(1, 3\\pi/2)$." },
+              { label: "(b)", text: "Replace $\\theta$ with $\\pi - \\theta$: $r = 3 + 2\\sin(\\pi-\\theta) = 3+2\\sin\\theta$. Same equation ✓. The curve is symmetric about $\\theta = \\pi/2$ (the $y$-axis)." },
+              { label: "(c)", text: "Maximum: $r = 5$ when $\\sin\\theta = 1$, i.e., $\\theta = \\pi/2$. Minimum: $r = 1$ when $\\sin\\theta = -1$, i.e., $\\theta = 3\\pi/2$. Since $r > 0$ always, the curve is a dimpled limaçon with no inner loop." }
+            ]
+          },
+          {
+            context: "Context: Rose curves and inner loops",
+            stem: "Let $r = \\cos(3\\theta)$ (a three-petaled rose).",
+            parts: [
+              { label: "(a)", text: "Find the values of $\\theta$ in $[0, \\pi]$ where the curve passes through the pole (i.e., $r = 0$)." },
+              { label: "(b)", text: "Find the tip of the first petal (where $r$ is maximum for $\\theta$ near 0)." },
+              { label: "(c)", text: "Explain why the complete curve is traced for $\\theta \\in [0, \\pi]$ rather than $[0, 2\\pi]$ for odd-$n$ rose curves." }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\cos(3\\theta) = 0 \\Rightarrow 3\\theta = \\frac{\\pi}{2}, \\frac{3\\pi}{2}, \\frac{5\\pi}{2} \\Rightarrow \\theta = \\frac{\\pi}{6}, \\frac{\\pi}{2}, \\frac{5\\pi}{6}$ in $[0,\\pi]$." },
+              { label: "(b)", text: "First petal tip: maximum of $r = \\cos(3\\theta)$ near $\\theta=0$. Max when $3\\theta = 0$, so $\\theta = 0$: $r = \\cos 0 = 1$. Tip at polar point $(1, 0)$." },
+              { label: "(c)", text: "For odd $n$, the second half $[\\pi, 2\\pi]$ retraces the same petals (with $r$ negative, which reflects through the pole to the same Cartesian points). The $n$ petals are completed in $[0,\\pi]$. For even $n$, $2n$ petals require all of $[0, 2\\pi]$." }
+            ]
+          },
+          {
+            context: "Context: Intersection of polar curves",
+            stem: "Find all intersection points of $r = 1 + \\cos\\theta$ and $r = 1 - \\cos\\theta$.",
+            parts: [
+              { label: "(a)", text: "Set $1 + \\cos\\theta = 1 - \\cos\\theta$ and solve. Find the corresponding Cartesian points." },
+              { label: "(b)", text: "Check whether the pole is an intersection point that the algebraic method may have missed." },
+              { label: "(c)", text: "Why must we check the pole separately in polar curve intersections?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$1+\\cos\\theta = 1-\\cos\\theta \\Rightarrow 2\\cos\\theta = 0 \\Rightarrow \\theta = \\frac{\\pi}{2}, \\frac{3\\pi}{2}$. At both: $r = 1$. Points: $(1, \\pi/2) = (0,1)$ and $(1, 3\\pi/2) = (0,-1)$ in Cartesian." },
+              { label: "(b)", text: "$r = 1 + \\cos\\theta = 0 \\Rightarrow \\theta = \\pi$. $r = 1 - \\cos\\theta = 0 \\Rightarrow \\theta = 0$. Both curves pass through the pole $(0,0)$ at different values of $\\theta$ — so the pole is also an intersection point." },
+              { label: "(c)", text: "The pole is reached by different parameter values on each curve, so the algebraic method (which equates $r$ at the same $\\theta$) misses it. Polar curves can intersect at the same Cartesian point via different $(r, \\theta)$ representations." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 2-C ──────────────────────────────────────────
+      {
+        icon: "📐",
+        title: "Derivatives & Tangent Lines in Polar",
+        sub: "Finding dy/dx from polar equations; horizontal/vertical tangents",
+        topics: "9.6",
+        video: { title: "Determine the Slope of a Tangent Line to a Polar Curve", url: "https://www.youtube.com/watch?v=gCgCCgx98b8&feature=youtu.be" },
+        problems: [
+          {
+            context: "Context: Deriving dy/dx in polar form",
+            stem: "For the polar curve $r = f(\\theta)$, the slope of the tangent line is $\\dfrac{dy}{dx} = \\dfrac{\\frac{dr}{d\\theta}\\sin\\theta + r\\cos\\theta}{\\frac{dr}{d\\theta}\\cos\\theta - r\\sin\\theta}$.",
+            parts: [
+              { label: "(a)", text: "Explain where this formula comes from by writing $x = r\\cos\\theta$, $y = r\\sin\\theta$, and differentiating with respect to $\\theta$." },
+              { label: "(b)", text: "Use the formula to find $\\dfrac{dy}{dx}$ for $r = 2$ (a circle). Simplify." },
+              { label: "(c)", text: "Use the formula to find the slope of $r = 1 + \\cos\\theta$ at $\\theta = \\pi/2$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$x = r\\cos\\theta = f(\\theta)\\cos\\theta$, so $\\frac{dx}{d\\theta} = f'(\\theta)\\cos\\theta - f(\\theta)\\sin\\theta$. Similarly $\\frac{dy}{d\\theta} = f'(\\theta)\\sin\\theta + f(\\theta)\\cos\\theta$. Then $\\frac{dy}{dx} = \\frac{dy/d\\theta}{dx/d\\theta}$, giving the formula." },
+              { label: "(b)", text: "$r=2$, $\\frac{dr}{d\\theta}=0$. $\\frac{dy}{dx} = \\frac{0 \\cdot \\sin\\theta + 2\\cos\\theta}{0 \\cdot \\cos\\theta - 2\\sin\\theta} = \\frac{2\\cos\\theta}{-2\\sin\\theta} = -\\cot\\theta$. This is the slope of a tangent to a circle centered at origin, as expected." },
+              { label: "(c)", text: "$r = 1+\\cos\\theta$, $\\frac{dr}{d\\theta} = -\\sin\\theta$. At $\\theta=\\pi/2$: $r = 1$, $\\frac{dr}{d\\theta} = -1$. Numerator: $(-1)(1)+(1)(0) = -1$. Denominator: $(-1)(0)-(1)(1) = -1$. Slope $= \\frac{-1}{-1} = 1$." }
+            ]
+          },
+          {
+            context: "Context: Horizontal and vertical tangents",
+            stem: "Find all horizontal and vertical tangent lines to $r = 2\\sin\\theta$.",
+            parts: [
+              { label: "(a)", text: "Write $x$ and $y$ in terms of $\\theta$. Then find $\\dfrac{dx}{d\\theta}$ and $\\dfrac{dy}{d\\theta}$." },
+              { label: "(b)", text: "Find all $\\theta$ in $[0, \\pi]$ where $\\dfrac{dy}{d\\theta} = 0$ (horizontal tangents). Exclude points where $\\dfrac{dx}{d\\theta} = 0$ simultaneously." },
+              { label: "(c)", text: "Find all $\\theta$ in $[0, \\pi]$ where $\\dfrac{dx}{d\\theta} = 0$ (vertical tangents). State the Cartesian coordinates." }
+            ],
+            answers: [
+              { label: "(a)", text: "$x = 2\\sin\\theta\\cos\\theta = \\sin(2\\theta)$. $y = 2\\sin^2\\theta = 1-\\cos(2\\theta)$. $\\frac{dx}{d\\theta} = 2\\cos(2\\theta)$. $\\frac{dy}{d\\theta} = 2\\sin(2\\theta)$." },
+              { label: "(b)", text: "$dy/d\\theta = 2\\sin(2\\theta) = 0 \\Rightarrow 2\\theta = 0, \\pi, 2\\pi \\Rightarrow \\theta = 0, \\pi/2, \\pi$. At $\\theta=0$ and $\\theta=\\pi$: both $dx/d\\theta = 2 \\neq 0$, but $r=0$ (the pole). At $\\theta=\\pi/2$: $dx/d\\theta = 2\\cos(\\pi) = -2 \\neq 0$. Horizontal tangent at $\\theta = \\pi/2$: $r=2$, point $(0,2)$ in Cartesian." },
+              { label: "(c)", text: "$dx/d\\theta = 2\\cos(2\\theta) = 0 \\Rightarrow 2\\theta = \\pi/2, 3\\pi/2 \\Rightarrow \\theta = \\pi/4, 3\\pi/4$. At $\\theta=\\pi/4$: $r=\\sqrt{2}$, $(x,y)=(1,1)$. At $\\theta=3\\pi/4$: $r=\\sqrt{2}$, $(x,y)=(-1,1)$. Both are vertical tangent points." }
+            ]
+          },
+          {
+            context: "Context: Tangent line at the pole",
+            stem: "For a polar curve passing through the pole (where $r=0$), the tangent line at the pole is $\\theta = \\theta_0$ where $r(\\theta_0) = 0$.",
+            parts: [
+              { label: "(a)", text: "For $r = \\sin(2\\theta)$, find all values of $\\theta$ in $[0, 2\\pi]$ where the curve passes through the pole." },
+              { label: "(b)", text: "State the tangent lines at the pole for each of these values." },
+              { label: "(c)", text: "Explain in words why the tangent line at the pole is $\\theta = \\theta_0$ — what does the curve look like near the pole at that angle?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\sin(2\\theta) = 0 \\Rightarrow 2\\theta = 0, \\pi, 2\\pi, 3\\pi \\Rightarrow \\theta = 0, \\frac{\\pi}{2}, \\pi, \\frac{3\\pi}{2}$." },
+              { label: "(b)", text: "Tangent lines: $\\theta = 0$ (the positive $x$-axis), $\\theta = \\pi/2$ (the positive $y$-axis), $\\theta = \\pi$ (the negative $x$-axis), $\\theta = 3\\pi/2$ (the negative $y$-axis). The four petals enter the pole along these four directions." },
+              { label: "(c)", text: "Near the pole, as $\\theta \\to \\theta_0$, $r \\to 0$ along the direction $\\theta_0$. The curve approaches the origin tangentially along the ray $\\theta = \\theta_0$, so that ray is the tangent line." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 2-D ──────────────────────────────────────────
+      {
+        icon: "🌀",
+        title: "Mixed Practice — Polar",
+        sub: "AP-style problems combining 9.4–9.6",
+        topics: "9.4 – 9.6",
+        problems: [
+          {
+            context: "Context: Comprehensive polar analysis",
+            stem: "Consider the cardioid $r = 2 - 2\\cos\\theta$.",
+            parts: [
+              { label: "(a)", text: "Find the maximum value of $r$ and the angle at which it occurs. Find where the curve passes through the pole." },
+              { label: "(b)", text: "Find the slope of the tangent line at $\\theta = \\pi/2$." },
+              { label: "(c)", text: "Describe the symmetry of the curve. Then convert to Cartesian form and verify the symmetry." }
+            ],
+            answers: [
+              { label: "(a)", text: "Max $r = 4$ when $\\cos\\theta = -1$, i.e., $\\theta = \\pi$. Passes through pole when $r=0$: $2-2\\cos\\theta=0 \\Rightarrow \\theta = 0$." },
+              { label: "(b)", text: "$\\frac{dr}{d\\theta} = 2\\sin\\theta$. At $\\theta=\\pi/2$: $r=2$, $\\frac{dr}{d\\theta}=2$. Numerator: $2(1)+2(0)=2$. Denominator: $2(0)-2(1)=-2$. Slope $= \\frac{2}{-2} = -1$." },
+              { label: "(c)", text: "Replace $\\theta$ with $-\\theta$: $r = 2-2\\cos(-\\theta) = 2-2\\cos\\theta$. Same equation ✓ — symmetric about the polar axis ($x$-axis). In Cartesian: $r = 2-2\\frac{x}{r} \\Rightarrow r^2 = 2r - 2x \\Rightarrow x^2+y^2 = 2\\sqrt{x^2+y^2}-2x$. The $y \\to -y$ substitution leaves this unchanged, confirming $x$-axis symmetry." }
+            ]
+          },
+          {
+            context: "Context: Converting and matching representations",
+            stem: "The polar equation $r = \\dfrac{6}{2 - \\cos\\theta}$ can be converted to Cartesian form.",
+            parts: [
+              { label: "(a)", text: "Multiply both sides by $(2 - \\cos\\theta)$ and use $r\\cos\\theta = x$ and $r^2 = x^2+y^2$ to convert to Cartesian." },
+              { label: "(b)", text: "Complete the square to identify the conic. What type of conic is it?" },
+              { label: "(c)", text: "Find the eccentricity of this conic from the standard polar form $r = \\dfrac{ed}{1-e\\cos\\theta}$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$r(2-\\cos\\theta) = 6 \\Rightarrow 2r - r\\cos\\theta = 6 \\Rightarrow 2\\sqrt{x^2+y^2} = 6+x \\Rightarrow 4(x^2+y^2) = (6+x)^2 = 36+12x+x^2 \\Rightarrow 3x^2 - 12x + 4y^2 = 36$." },
+              { label: "(b)", text: "$3(x^2-4x) + 4y^2 = 36 \\Rightarrow 3(x-2)^2 + 4y^2 = 48 \\Rightarrow \\dfrac{(x-2)^2}{16} + \\dfrac{y^2}{12} = 1$. This is an ellipse centered at $(2,0)$ with $a^2=16$ (horizontal major axis)." },
+              { label: "(c)", text: "Rewrite: $r = \\dfrac{6}{2-\\cos\\theta} = \\dfrac{3}{1-\\frac{1}{2}\\cos\\theta}$. This matches $r = \\dfrac{ed}{1-e\\cos\\theta}$ with $e = \\frac{1}{2}$ and $ed = 3$. Eccentricity $= \\frac{1}{2}$ (confirms ellipse)." }
+            ]
+          },
+          {
+            context: "Context: Spiral and Archimedes",
+            stem: "The Archimedean spiral is given by $r = \\theta$ for $\\theta \\geq 0$.",
+            parts: [
+              { label: "(a)", text: "Find the Cartesian coordinates of the spiral at $\\theta = \\pi$, $\\theta = 2\\pi$, and $\\theta = 4\\pi$." },
+              { label: "(b)", text: "Find the slope of the tangent line at $\\theta = \\pi$." },
+              { label: "(c)", text: "Explain why $r = \\theta$ does not produce closed loops or petals, unlike $r = \\cos(2\\theta)$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\theta=\\pi$: $r=\\pi$, $(x,y) = (\\pi\\cos\\pi, \\pi\\sin\\pi) = (-\\pi, 0) \\approx (-3.14, 0)$. $\\theta=2\\pi$: $r=2\\pi$, $(x,y) = (2\\pi, 0) \\approx (6.28, 0)$. $\\theta=4\\pi$: $r=4\\pi$, $(x,y) = (4\\pi, 0) \\approx (12.57, 0)$." },
+              { label: "(b)", text: "$\\frac{dr}{d\\theta}=1$. At $\\theta=\\pi$: $r=\\pi$. Numerator: $1\\cdot\\sin\\pi + \\pi\\cos\\pi = 0 + \\pi(-1) = -\\pi$. Denominator: $1\\cdot\\cos\\pi - \\pi\\sin\\pi = -1-0 = -1$. Slope $= \\frac{-\\pi}{-1} = \\pi$." },
+              { label: "(c)", text: "Closed loops require the same Cartesian point to be revisited. For $r = \\theta$, $r$ grows without bound — each trip around the origin reaches a larger radius than the previous one. For $r = \\cos(2\\theta)$, the function is periodic, so the same $r$ values repeat each cycle, tracing the same petals repeatedly." }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  // ═══════════════════════════════════════════════════════════
+  // COLUMN 3 — Area in Polar Coordinates
+  //            Topics 9.7, 9.8
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: "col-3",
+    accentVar: "var(--col3-light)",
+    headerClass: "col-3-header",
+    tileClass: "col-3",
+    label: "Column III",
+    title: "Area in Polar Coordinates",
+    topics: "Topics 9.7 – 9.8",
+    tiles: [
+
+      // ── TILE 3-A ──────────────────────────────────────────
+      {
+        icon: "🥧",
+        title: "Area Enclosed by a Single Polar Curve",
+        sub: "Setting up and evaluating the polar area formula",
+        topics: "9.7",
+        video: { title: "Find the Area of the Inner Loop of a Limacon", url: "https://www.youtube.com/watch?v=ZSdDczKsmF0" },
+        problems: [
+          {
+            context: "Context: Area formula derivation and application",
+            stem: "The area enclosed by a polar curve $r = f(\\theta)$ from $\\theta = \\alpha$ to $\\theta = \\beta$ is $A = \\dfrac{1}{2}\\displaystyle\\int_\\alpha^\\beta r^2\\, d\\theta$.",
+            parts: [
+              { label: "(a)", text: "Explain why the formula uses $\\frac{1}{2}r^2$ rather than just $r$ — what geometric object is each infinitesimal piece?" },
+              { label: "(b)", text: "Find the area enclosed by the circle $r = 3$ (all of $[0, 2\\pi]$). Verify with the geometric formula." },
+              { label: "(c)", text: "Find the area enclosed by one petal of $r = \\cos(2\\theta)$. (Hint: one petal spans $-\\pi/4 \\leq \\theta \\leq \\pi/4$.)" }
+            ],
+            answers: [
+              { label: "(a)", text: "Each infinitesimal piece is a thin sector of a circle (a 'pie slice') with radius $r$ and angle $d\\theta$. The area of a sector is $\\frac{1}{2}r^2\\,d\\theta$, so integrating sweeps out all the sectors." },
+              { label: "(b)", text: "$A = \\frac{1}{2}\\displaystyle\\int_0^{2\\pi} 9\\, d\\theta = \\frac{9}{2}(2\\pi) = 9\\pi$. Check: $\\pi r^2 = \\pi(9) = 9\\pi$. ✓" },
+              { label: "(c)", text: "$A = \\frac{1}{2}\\displaystyle\\int_{-\\pi/4}^{\\pi/4} \\cos^2(2\\theta)\\, d\\theta = \\frac{1}{2}\\int_{-\\pi/4}^{\\pi/4} \\frac{1+\\cos(4\\theta)}{2}\\, d\\theta = \\frac{1}{4}\\left[\\theta + \\frac{\\sin(4\\theta)}{4}\\right]_{-\\pi/4}^{\\pi/4} = \\frac{1}{4}\\left(\\frac{\\pi}{4}+0-(-\\frac{\\pi}{4})-0\\right) = \\frac{\\pi}{8}$." }
+            ]
+          },
+          {
+            context: "Context: Total area of a rose curve",
+            stem: "Find the total area enclosed by the four-petaled rose $r = 2\\sin(2\\theta)$.",
+            parts: [
+              { label: "(a)", text: "Find the area of one petal. (Hint: the first petal is traced for $0 \\leq \\theta \\leq \\pi/2$.)" },
+              { label: "(b)", text: "State the total area enclosed by all four petals." },
+              { label: "(c)", text: "Compare with the area of the circumscribed circle of radius 2. What fraction of the circle is covered by the rose?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$A_1 = \\frac{1}{2}\\displaystyle\\int_0^{\\pi/2} 4\\sin^2(2\\theta)\\, d\\theta = 2\\int_0^{\\pi/2} \\frac{1-\\cos(4\\theta)}{2}\\, d\\theta = \\int_0^{\\pi/2} (1-\\cos(4\\theta))\\, d\\theta = \\left[\\theta - \\frac{\\sin(4\\theta)}{4}\\right]_0^{\\pi/2} = \\frac{\\pi}{2}$." },
+              { label: "(b)", text: "Total area $= 4 \\times \\frac{\\pi}{2} = 2\\pi$." },
+              { label: "(c)", text: "Circumscribed circle area: $\\pi(2)^2 = 4\\pi$. Fraction: $\\frac{2\\pi}{4\\pi} = \\frac{1}{2}$. The four-petaled rose covers exactly half the area of its circumscribed circle — a beautiful result!" }
+            ]
+          },
+          {
+            context: "Context: Area of a cardioid",
+            stem: "Find the area enclosed by the cardioid $r = 1 + \\sin\\theta$.",
+            parts: [
+              { label: "(a)", text: "Write the area integral. Use symmetry to simplify if possible." },
+              { label: "(b)", text: "Expand and integrate using the identity $\\sin^2\\theta = \\frac{1-\\cos(2\\theta)}{2}$." },
+              { label: "(c)", text: "The cardioid has a cusp at the pole. Explain why this doesn't affect the definite integral." }
+            ],
+            answers: [
+              { label: "(a)", text: "$A = \\frac{1}{2}\\displaystyle\\int_0^{2\\pi} (1+\\sin\\theta)^2\\, d\\theta$. (By symmetry about $\\theta = \\pi/2$, we could also write $A = \\displaystyle\\int_0^{\\pi}(1+\\sin\\theta)^2\\, d\\theta$, but using the full period is fine.)" },
+              { label: "(b)", text: "$(1+\\sin\\theta)^2 = 1 + 2\\sin\\theta + \\sin^2\\theta = 1 + 2\\sin\\theta + \\frac{1-\\cos(2\\theta)}{2} = \\frac{3}{2} + 2\\sin\\theta - \\frac{\\cos(2\\theta)}{2}$. $A = \\frac{1}{2}\\left[\\frac{3\\theta}{2} - 2\\cos\\theta - \\frac{\\sin(2\\theta)}{4}\\right]_0^{2\\pi} = \\frac{1}{2}\\left(3\\pi - 0\\right) = \\frac{3\\pi}{2}$." },
+              { label: "(c)", text: "The cusp (where $r=0$) is just one point in the integration, contributing measure zero to the integral. Cusps and corners don't affect the value of a definite integral." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 3-B ──────────────────────────────────────────
+      {
+        icon: "⚖️",
+        title: "Area Between Two Polar Curves",
+        sub: "Region between r = f(θ) and r = g(θ); finding intersections",
+        topics: "9.8",
+        video: { title: "Find the Area bounded by Two Polar Curves", url: "https://www.youtube.com/watch?v=sWaN7dfhB28" },
+        problems: [
+          {
+            context: "Context: Area between two curves",
+            stem: "Find the area of the region inside $r = 3$ and outside $r = 1 + \\cos\\theta$.",
+            parts: [
+              { label: "(a)", text: "Find the intersection points by setting $3 = 1 + \\cos\\theta$. Solve for $\\theta$." },
+              { label: "(b)", text: "Sketch and shade the region. Which curve is the outer boundary? Which is inner?" },
+              { label: "(c)", text: "Set up and evaluate the area integral $A = \\frac{1}{2}\\int_\\alpha^\\beta (r_\\text{outer}^2 - r_\\text{inner}^2)\\, d\\theta$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$1+\\cos\\theta = 3 \\Rightarrow \\cos\\theta = 2$. No solution! The curves do not intersect (since $\\cos\\theta \\leq 1$ always, $r = 1+\\cos\\theta \\leq 2 < 3$ everywhere). The entire cardioid lies inside the circle." },
+              { label: "(b)", text: "The circle $r=3$ is the outer boundary everywhere. The cardioid $r = 1+\\cos\\theta$ is the inner boundary. The region is the full circle minus the cardioid's interior." },
+              { label: "(c)", text: "$A = \\frac{1}{2}\\displaystyle\\int_0^{2\\pi}(9 - (1+\\cos\\theta)^2)\\, d\\theta = \\frac{1}{2}\\int_0^{2\\pi}(9 - 1 - 2\\cos\\theta - \\cos^2\\theta)\\, d\\theta = \\frac{1}{2}\\int_0^{2\\pi}\\left(8 - 2\\cos\\theta - \\frac{1+\\cos(2\\theta)}{2}\\right)d\\theta$. Evaluating: $\\frac{1}{2}\\left[\\frac{15\\theta}{2} - 2\\sin\\theta - \\frac{\\sin(2\\theta)}{4}\\right]_0^{2\\pi} = \\frac{1}{2}(15\\pi) = \\frac{15\\pi}{2}$." }
+            ]
+          },
+          {
+            context: "Context: Area inside both curves",
+            stem: "Find the area of the region inside both $r = \\sqrt{3}\\cos\\theta$ and $r = \\sin\\theta$.",
+            parts: [
+              { label: "(a)", text: "Find the intersection points." },
+              { label: "(b)", text: "Identify which curve is outer on each sub-interval. (Hint: check at a test angle in each region.)" },
+              { label: "(c)", text: "Set up the area integral(s). (You may leave as a set-up.)" }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\sqrt{3}\\cos\\theta = \\sin\\theta \\Rightarrow \\tan\\theta = \\sqrt{3} \\Rightarrow \\theta = \\pi/3$ (and the pole, where $r=0$). At $\\theta=\\pi/3$: $r = \\sqrt{3}\\cdot\\frac{1}{2} = \\frac{\\sqrt{3}}{2}$. Intersection at $\\left(\\frac{\\sqrt{3}}{2}, \\frac{\\pi}{3}\\right)$ and the pole." },
+              { label: "(b)", text: "For $0 \\leq \\theta \\leq \\pi/3$: test at $\\theta=\\pi/6$: $\\sqrt{3}\\cos(\\pi/6) = \\sqrt{3}\\cdot\\frac{\\sqrt{3}}{2} = \\frac{3}{2}$ vs. $\\sin(\\pi/6)=\\frac{1}{2}$. So $r_1 > r_2$ — circle $\\sqrt{3}\\cos\\theta$ is outer. For $\\pi/3 \\leq \\theta \\leq \\pi/2$: test at $\\theta=5\\pi/12$: $\\sin$ is larger, so $\\sin\\theta$ is outer." },
+              { label: "(c)", text: "$A = \\frac{1}{2}\\displaystyle\\int_0^{\\pi/3}(\\sqrt{3}\\cos\\theta)^2\\, d\\theta + \\frac{1}{2}\\int_{\\pi/3}^{\\pi/2}(\\sin\\theta)^2\\, d\\theta = \\frac{1}{2}\\int_0^{\\pi/3}3\\cos^2\\theta\\, d\\theta + \\frac{1}{2}\\int_{\\pi/3}^{\\pi/2}\\sin^2\\theta\\, d\\theta$." }
+            ]
+          },
+          {
+            context: "Context: AP-style area between a rose and a circle",
+            stem: "Find the area of the region inside $r = 1$ and outside $r = \\cos(2\\theta)$ in the first quadrant.",
+            parts: [
+              { label: "(a)", text: "In the first quadrant ($0 \\leq \\theta \\leq \\pi/2$), find where $\\cos(2\\theta) = 1$ and $\\cos(2\\theta) = 0$." },
+              { label: "(b)", text: "Explain how to break the area calculation into pieces based on the relative positions of the two curves." },
+              { label: "(c)", text: "Set up (but do not evaluate) the complete area integral(s) for the region." }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\cos(2\\theta) = 1 \\Rightarrow \\theta = 0$. $\\cos(2\\theta) = 0 \\Rightarrow \\theta = \\pi/4$. On $[0,\\pi/4]$, $\\cos(2\\theta) \\geq 0$; on $[\\pi/4, \\pi/2]$, $\\cos(2\\theta) \\leq 0$, so $r = \\cos(2\\theta)$ is negative there (curves don't exist)." },
+              { label: "(b)", text: "On $[0, \\pi/4]$: We need the piece inside $r=1$ but outside $r=\\cos(2\\theta)$. Check at $\\theta=\\pi/8$: $\\cos(\\pi/4) = \\frac{\\sqrt{2}}{2} \\approx 0.71 < 1$. So $r=1$ is the outer curve. On $[\\pi/4, \\pi/2]$: $\\cos(2\\theta) < 0$, so only $r=1$ exists — the entire sector from $\\pi/4$ to $\\pi/2$ is inside $r=1$." },
+              { label: "(c)", text: "$A = \\frac{1}{2}\\displaystyle\\int_0^{\\pi/4}(1^2 - \\cos^2(2\\theta))\\, d\\theta + \\frac{1}{2}\\int_{\\pi/4}^{\\pi/2} 1^2\\, d\\theta$." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 3-C ──────────────────────────────────────────
+      {
+        icon: "📏",
+        title: "Arc Length in Polar Coordinates",
+        sub: "Applying the polar arc length formula",
+        topics: "9.8",
+        video: { title: "Arc Length of a Polar Curve", url: "https://www.youtube.com/watch?v=PvtNEbKihDI" },
+        problems: [
+          {
+            context: "Context: Arc length formula in polar",
+            stem: "The arc length of a polar curve $r = f(\\theta)$ from $\\alpha$ to $\\beta$ is $L = \\displaystyle\\int_\\alpha^\\beta \\sqrt{r^2 + \\left(\\frac{dr}{d\\theta}\\right)^2}\\, d\\theta$.",
+            parts: [
+              { label: "(a)", text: "Explain how this formula follows from the parametric arc length formula $\\int \\sqrt{(dx/d\\theta)^2 + (dy/d\\theta)^2}\\, d\\theta$ with $x = r\\cos\\theta$ and $y = r\\sin\\theta$." },
+              { label: "(b)", text: "Find the arc length of $r = e^\\theta$ from $\\theta = 0$ to $\\theta = \\pi$." },
+              { label: "(c)", text: "Find the entire circumference of the cardioid $r = 1 + \\cos\\theta$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\frac{dx}{d\\theta} = r'\\cos\\theta - r\\sin\\theta$, $\\frac{dy}{d\\theta} = r'\\sin\\theta + r\\cos\\theta$. Squaring and adding: $(r')^2\\cos^2\\theta - 2rr'\\sin\\theta\\cos\\theta + r^2\\sin^2\\theta + (r')^2\\sin^2\\theta + 2rr'\\sin\\theta\\cos\\theta + r^2\\cos^2\\theta = (r')^2 + r^2$. So $\\sqrt{(dx/d\\theta)^2+(dy/d\\theta)^2} = \\sqrt{r^2+(r')^2}$. ✓" },
+              { label: "(b)", text: "$r' = e^\\theta$. $L = \\displaystyle\\int_0^\\pi \\sqrt{e^{2\\theta}+e^{2\\theta}}\\, d\\theta = \\sqrt{2}\\int_0^\\pi e^\\theta\\, d\\theta = \\sqrt{2}[e^\\theta]_0^\\pi = \\sqrt{2}(e^\\pi - 1)$." },
+              { label: "(c)", text: "$r'=-\\sin\\theta$. $r^2+(r')^2 = (1+\\cos\\theta)^2+\\sin^2\\theta = 1+2\\cos\\theta+\\cos^2\\theta+\\sin^2\\theta = 2+2\\cos\\theta = 4\\cos^2(\\theta/2)$. $L = \\displaystyle\\int_0^{2\\pi}\\sqrt{4\\cos^2(\\theta/2)}\\, d\\theta = 2\\int_0^{2\\pi}|\\cos(\\theta/2)|\\, d\\theta = 2\\cdot 2\\int_0^{\\pi}\\cos(\\theta/2)\\, d\\theta = 4[2\\sin(\\theta/2)]_0^{\\pi} = 8$." }
+            ]
+          },
+          {
+            context: "Context: Arc length computation — spiral",
+            stem: "Find the arc length of the Archimedean spiral $r = \\theta$ from $\\theta = 0$ to $\\theta = 2\\pi$. Set up only, then use a calculator.",
+            parts: [
+              { label: "(a)", text: "Write out the arc length integral." },
+              { label: "(b)", text: "State why this integral cannot be evaluated in closed form with elementary functions." },
+              { label: "(c)", text: "Use a numerical method (or calculator) to approximate the arc length to three decimal places." }
+            ],
+            answers: [
+              { label: "(a)", text: "$r = \\theta$, $r' = 1$. $L = \\displaystyle\\int_0^{2\\pi}\\sqrt{\\theta^2+1}\\, d\\theta$." },
+              { label: "(b)", text: "The antiderivative of $\\sqrt{\\theta^2+1}$ is $\\frac{\\theta\\sqrt{\\theta^2+1}}{2} + \\frac{\\ln(\\theta+\\sqrt{\\theta^2+1})}{2}$ (via trig substitution), which is a valid closed form. Numerically: $L \\approx 21.256$." },
+              { label: "(c)", text: "$L = \\left[\\frac{\\theta\\sqrt{\\theta^2+1}}{2}+\\frac{\\ln(\\theta+\\sqrt{\\theta^2+1})}{2}\\right]_0^{2\\pi} = \\frac{2\\pi\\sqrt{4\\pi^2+1}}{2}+\\frac{\\ln(2\\pi+\\sqrt{4\\pi^2+1})}{2} \\approx \\frac{2\\pi(6.301)}{2}+\\frac{\\ln(12.585)}{2} \\approx 19.80 + 1.26 \\approx 21.26$." }
+            ]
+          },
+          {
+            context: "Context: Comparing arc lengths",
+            stem: "Compare the arc lengths of $r = 2$ (a circle) and $r = 2\\cos\\theta + 2\\sin\\theta$ (also a circle, but rewritten).",
+            parts: [
+              { label: "(a)", text: "Find the arc length of $r = 2$ over $[0, 2\\pi]$ using the polar arc length formula." },
+              { label: "(b)", text: "Convert $r = 2\\cos\\theta + 2\\sin\\theta$ to Cartesian form and identify the curve (center and radius)." },
+              { label: "(c)", text: "Explain why the arc length of $r = 2\\cos\\theta + 2\\sin\\theta$ over $\\theta \\in [0, \\pi]$ (not $[0, 2\\pi]$) gives the full circumference of that circle." }
+            ],
+            answers: [
+              { label: "(a)", text: "$r=2$, $r'=0$. $L = \\int_0^{2\\pi}\\sqrt{4+0}\\, d\\theta = 2(2\\pi) = 4\\pi$. ✓ (Circumference $= 2\\pi r = 4\\pi$.)" },
+              { label: "(b)", text: "$r = 2\\cos\\theta+2\\sin\\theta \\Rightarrow r^2 = 2r\\cos\\theta+2r\\sin\\theta \\Rightarrow x^2+y^2 = 2x+2y \\Rightarrow (x-1)^2+(y-1)^2 = 2$. Circle centered at $(1,1)$ with radius $\\sqrt{2}$." },
+              { label: "(c)", text: "For $r = 2\\cos\\theta+2\\sin\\theta$, when $\\theta$ goes from $0$ to $\\pi$, $r$ goes from $2$ down to $-\\sqrt{2}$ and back — traversing the full circle once. At $\\theta = 3\\pi/4$, $r=0$ (pole). The second half $[\\pi, 2\\pi]$ retraces the same circle with negative $r$ values, doubling the trip. The circumference is $2\\pi\\sqrt{2}$; integrating over $[0,\\pi]$ gives this exactly." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 3-D ──────────────────────────────────────────
+      {
+        icon: "🧠",
+        title: "Mixed Practice — Area & Arc Length",
+        sub: "AP-style problems combining 9.7–9.8",
+        topics: "9.7 – 9.8",
+        problems: [
+          {
+            context: "Context: AP-style multi-part area problem",
+            stem: "Let $R$ be the region in the first and second quadrants bounded by $r = 2 + \\cos\\theta$ for $0 \\leq \\theta \\leq \\pi$.",
+            parts: [
+              { label: "(a)", text: "Write a single definite integral that gives the area of $R$. (Do not evaluate.)" },
+              { label: "(b)", text: "Evaluate the integral exactly." },
+              { label: "(c)", text: "Set up (do not evaluate) the integral for the arc length of the boundary of $R$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$A = \\dfrac{1}{2}\\displaystyle\\int_0^{\\pi}(2+\\cos\\theta)^2\\, d\\theta$." },
+              { label: "(b)", text: "$(2+\\cos\\theta)^2 = 4+4\\cos\\theta+\\cos^2\\theta = 4+4\\cos\\theta+\\frac{1+\\cos(2\\theta)}{2} = \\frac{9}{2}+4\\cos\\theta+\\frac{\\cos(2\\theta)}{2}$. $A = \\frac{1}{2}\\left[\\frac{9\\theta}{2}+4\\sin\\theta+\\frac{\\sin(2\\theta)}{4}\\right]_0^{\\pi} = \\frac{1}{2}\\cdot\\frac{9\\pi}{2} = \\frac{9\\pi}{4}$." },
+              { label: "(c)", text: "$r'=-\\sin\\theta$. $L = \\displaystyle\\int_0^{\\pi}\\sqrt{(2+\\cos\\theta)^2+\\sin^2\\theta}\\, d\\theta = \\int_0^{\\pi}\\sqrt{5+4\\cos\\theta}\\, d\\theta$." }
+            ]
+          },
+          {
+            context: "Context: Overlap area via subtraction",
+            stem: "Find the area of the region inside $r = 4\\sin\\theta$ and inside $r = 2$ (the part of their intersection).",
+            parts: [
+              { label: "(a)", text: "Find the intersection points." },
+              { label: "(b)", text: "Identify which curve is outer on each relevant sub-interval of $[0, \\pi]$." },
+              { label: "(c)", text: "Set up and evaluate the area of the intersection region." }
+            ],
+            answers: [
+              { label: "(a)", text: "$4\\sin\\theta = 2 \\Rightarrow \\sin\\theta = \\frac{1}{2} \\Rightarrow \\theta = \\frac{\\pi}{6}$ or $\\theta = \\frac{5\\pi}{6}$." },
+              { label: "(b)", text: "On $[0, \\pi/6]$: $4\\sin\\theta \\leq 2$, so $r = 4\\sin\\theta$ is inner (smaller). The intersection region is bounded by $r = 4\\sin\\theta$ here. On $[\\pi/6, 5\\pi/6]$: $4\\sin\\theta \\geq 2$, so $r=2$ is the bounding outer curve. On $[5\\pi/6, \\pi]$: symmetric to $[0, \\pi/6]$." },
+              { label: "(c)", text: "By symmetry about $\\theta=\\pi/2$: $A = 2\\left[\\frac{1}{2}\\int_0^{\\pi/6}(4\\sin\\theta)^2\\, d\\theta + \\frac{1}{2}\\int_{\\pi/6}^{\\pi/2}4\\, d\\theta\\right]$. First: $\\int_0^{\\pi/6}16\\sin^2\\theta\\, d\\theta = 8\\left[\\theta-\\frac{\\sin 2\\theta}{2}\\right]_0^{\\pi/6} = 8\\left(\\frac{\\pi}{6}-\\frac{\\sqrt{3}}{4}\\right) = \\frac{4\\pi}{3}-2\\sqrt{3}$. Second: $\\int_{\\pi/6}^{\\pi/2}2\\, d\\theta = 2\\cdot\\frac{\\pi}{3} = \\frac{2\\pi}{3}$. Total: $2\\left(\\frac{4\\pi}{3}-2\\sqrt{3}+\\frac{2\\pi}{3}\\right) = 2\\left(2\\pi-2\\sqrt{3}\\right) = 4\\pi-4\\sqrt{3}$." }
+            ]
+          },
+          {
+            context: "Context: Full review — area and length",
+            stem: "Consider the lemniscate $r^2 = 4\\cos(2\\theta)$, which is defined only where $\\cos(2\\theta) \\geq 0$.",
+            parts: [
+              { label: "(a)", text: "Find the range of $\\theta$ in $[0, 2\\pi]$ for which the curve is defined. How many loops does it have?" },
+              { label: "(b)", text: "Find the total area enclosed by both loops." },
+              { label: "(c)", text: "Set up (do not evaluate) the arc length of one loop." }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\cos(2\\theta) \\geq 0$ when $2\\theta \\in [-\\pi/2, \\pi/2] \\cup [3\\pi/2, 5\\pi/2]$, i.e., $\\theta \\in [-\\pi/4, \\pi/4] \\cup [3\\pi/4, 5\\pi/4]$ (mod $2\\pi$). This gives two loops, one on the right and one on the left." },
+              { label: "(b)", text: "One loop: $A_1 = \\frac{1}{2}\\displaystyle\\int_{-\\pi/4}^{\\pi/4}r^2\\, d\\theta = \\frac{1}{2}\\int_{-\\pi/4}^{\\pi/4}4\\cos(2\\theta)\\, d\\theta = 2[\\frac{\\sin(2\\theta)}{2}]_{-\\pi/4}^{\\pi/4} = [\\sin(2\\theta)]_{-\\pi/4}^{\\pi/4} = 1-(-1) = 2$. Total: $2 \\times 2 = 4$." },
+              { label: "(c)", text: "$r^2=4\\cos(2\\theta) \\Rightarrow 2r\\frac{dr}{d\\theta} = -8\\sin(2\\theta) \\Rightarrow \\frac{dr}{d\\theta} = \\frac{-4\\sin(2\\theta)}{r}$. $r^2+(r')^2 = 4\\cos(2\\theta)+\\frac{16\\sin^2(2\\theta)}{4\\cos(2\\theta)} = \\frac{4}{\\cos(2\\theta)}$. $L = \\displaystyle\\int_{-\\pi/4}^{\\pi/4}\\frac{2}{\\sqrt{\\cos(2\\theta)}}\\, d\\theta$." }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  // ═══════════════════════════════════════════════════════════
+  // COLUMN 4 — Mixed & AP-Style Practice
+  //            Topics 9.1 – 9.9
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: "col-4",
+    accentVar: "var(--col4-light)",
+    headerClass: "col-4-header",
+    tileClass: "col-4",
+    label: "Column IV",
+    title: "Mixed & AP-Style Practice",
+    topics: "Topics 9.1 – 9.9",
+    tiles: [
+
+      // ── TILE 4-A ──────────────────────────────────────────
+      {
+        icon: "🔁",
+        title: "Parametric vs. Polar — Connections",
+        sub: "Converting between parametric and polar; unified analysis",
+        topics: "9.1 – 9.6",
+        problems: [
+          {
+            context: "Context: A polar curve expressed parametrically",
+            stem: "The polar curve $r = 2\\cos\\theta$ can be written parametrically as $x(\\theta) = r\\cos\\theta = 2\\cos^2\\theta$ and $y(\\theta) = r\\sin\\theta = 2\\sin\\theta\\cos\\theta$.",
+            parts: [
+              { label: "(a)", text: "Use the double-angle identity to simplify $x(\\theta)$ and $y(\\theta)$." },
+              { label: "(b)", text: "Convert $r = 2\\cos\\theta$ to Cartesian form to identify the curve." },
+              { label: "(c)", text: "Using the parametric form from part (a), find the arc length of the full circle traced for $\\theta \\in [0, \\pi]$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$x = 2\\cos^2\\theta = 1+\\cos(2\\theta)$. $y = 2\\sin\\theta\\cos\\theta = \\sin(2\\theta)$." },
+              { label: "(b)", text: "$r = 2\\cos\\theta \\Rightarrow r^2 = 2r\\cos\\theta \\Rightarrow x^2+y^2 = 2x \\Rightarrow (x-1)^2+y^2 = 1$. Circle centered at $(1,0)$ with radius 1." },
+              { label: "(c)", text: "$x'(\\theta) = -2\\sin(2\\theta)$, $y'(\\theta) = 2\\cos(2\\theta)$. Speed $= \\sqrt{4\\sin^2(2\\theta)+4\\cos^2(2\\theta)} = 2$. $L = \\int_0^\\pi 2\\, d\\theta = 2\\pi$. ✓ (Circumference of a unit circle.)" }
+            ]
+          },
+          {
+            context: "Context: Converting a parametric curve to polar",
+            stem: "A curve is given by $x(t) = \\sin t\\cos t$ and $y(t) = \\sin^2 t$ for $0 \\leq t \\leq \\pi$.",
+            parts: [
+              { label: "(a)", text: "Find $x^2 + y^2$ and simplify. What does $r$ equal?" },
+              { label: "(b)", text: "Find $\\tan\\theta = y/x$ in terms of $t$, and simplify to find $\\theta$ in terms of $t$." },
+              { label: "(c)", text: "Conclude: what simple polar equation describes this curve?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$x^2+y^2 = \\sin^2 t\\cos^2 t + \\sin^4 t = \\sin^2 t(\\cos^2 t + \\sin^2 t) = \\sin^2 t$. So $r = |\\sin t| = \\sin t$ (since $\\sin t \\geq 0$ on $[0, \\pi]$)." },
+              { label: "(b)", text: "$\\tan\\theta = \\frac{y}{x} = \\frac{\\sin^2 t}{\\sin t \\cos t} = \\frac{\\sin t}{\\cos t} = \\tan t$. So $\\theta = t$." },
+              { label: "(c)", text: "Since $r = \\sin t$ and $\\theta = t$, we have $r = \\sin\\theta$ — a circle of diameter 1 centered at $(0, 1/2)$." }
+            ]
+          },
+          {
+            context: "Context: AP multi-representation analysis",
+            stem: "A particle moves along the Archimedean spiral $r = \\theta$ for $0 \\leq \\theta \\leq 2\\pi$, with position vector $\\mathbf{r}(\\theta) = \\langle \\theta\\cos\\theta,\\, \\theta\\sin\\theta \\rangle$.",
+            parts: [
+              { label: "(a)", text: "Find the velocity vector $\\mathbf{r}'(\\theta)$ and evaluate it at $\\theta = \\pi$." },
+              { label: "(b)", text: "Find the speed $|\\mathbf{r}'(\\pi)|$." },
+              { label: "(c)", text: "At $\\theta = \\pi$, is the particle moving toward or away from the origin? Justify using $dr/d\\theta$, and verify by inspecting $\\mathbf{r}'(\\pi)$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\mathbf{r}'(\\theta) = \\langle \\cos\\theta - \\theta\\sin\\theta,\\, \\sin\\theta + \\theta\\cos\\theta \\rangle$. At $\\theta=\\pi$: $\\mathbf{r}'(\\pi) = \\langle -1 - \\pi(0),\\, 0 + \\pi(-1) \\rangle = \\langle -1,\\, -\\pi \\rangle$." },
+              { label: "(b)", text: "$|\\mathbf{r}'(\\pi)| = \\sqrt{(-1)^2+(-\\pi)^2} = \\sqrt{1+\\pi^2} \\approx 3.30$." },
+              { label: "(c)", text: "$dr/d\\theta = 1 > 0$ everywhere, so $r$ is always increasing — the particle is always moving away from the origin. Consistent with $\\mathbf{r}'(\\pi) = \\langle -1, -\\pi \\rangle$: the velocity points into the third quadrant, carrying the particle further from the origin at $(-\\pi, 0)$." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 4-B ──────────────────────────────────────────
+      {
+        icon: "📋",
+        title: "AP Free-Response Style — Parametric",
+        sub: "Full multi-part problems in parametric calculus",
+        topics: "9.1 – 9.3",
+        problems: [
+          {
+            context: "Context: AP FRQ — parametric particle motion",
+            stem: "A particle moves in the $xy$-plane with position vector $\\mathbf{r}(t) = \\langle \\cos(2t),\\, \\sin t \\rangle$ for $0 \\leq t \\leq 2\\pi$.",
+            parts: [
+              { label: "(a)", text: "Find $\\mathbf{r}'(t)$. Determine all times $t \\in [0, 2\\pi]$ when $\\mathbf{r}'(t) = \\mathbf{0}$ (the particle is at rest). Justify." },
+              { label: "(b)", text: "Find the slope of the curve at $t = \\pi/4$. Write the equation of the tangent line at that point." },
+              { label: "(c)", text: "Eliminate the parameter and express $y$ in terms of $x$. What curve is this?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\mathbf{r}'(t) = \\langle -2\\sin(2t),\\, \\cos t \\rangle$. For $\\mathbf{r}'(t) = \\mathbf{0}$, both components must be zero simultaneously. First component zero: $\\sin(2t)=0 \\Rightarrow t = 0, \\pi/2, \\pi, 3\\pi/2, 2\\pi$. Second component zero: $\\cos t = 0 \\Rightarrow t = \\pi/2, 3\\pi/2$. Both zero at $t = \\pi/2$ and $t = 3\\pi/2$." },
+              { label: "(b)", text: "At $t=\\pi/4$: $\\mathbf{r}'(\\pi/4) = \\langle -2\\sin(\\pi/2),\\, \\cos(\\pi/4) \\rangle = \\langle -2,\\, \\frac{\\sqrt{2}}{2} \\rangle$. Slope $= \\frac{\\sqrt{2}/2}{-2} = -\\frac{\\sqrt{2}}{4}$. Position: $(0,\\, \\frac{\\sqrt{2}}{2})$. Tangent: $y - \\frac{\\sqrt{2}}{2} = -\\frac{\\sqrt{2}}{4}(x - 0)$." },
+              { label: "(c)", text: "$x = \\cos(2t) = 1-2\\sin^2 t = 1-2y^2$. So $x = 1-2y^2$, i.e., $y^2 = \\frac{1-x}{2}$. This is a horizontal parabola (with $y$ as the dependent variable), restricted to $|y| \\leq 1$." }
+            ]
+          },
+          {
+            context: "Context: AP FRQ — parametric area and arc length",
+            stem: "Let $C$ be the curve defined by $x(t) = t - \\frac{t^3}{3}$ and $y(t) = t^2$ for $-\\sqrt{3} \\leq t \\leq \\sqrt{3}$.",
+            parts: [
+              { label: "(a)", text: "Find all values of $t$ where $C$ has a horizontal tangent. Write the coordinates of those points." },
+              { label: "(b)", text: "Write an integral expression (do not evaluate) for the arc length of $C$ from $t=-\\sqrt{3}$ to $t = \\sqrt{3}$." },
+              { label: "(c)", text: "The curve is symmetric about the $y$-axis. Verify by showing $x(-t) = -x(t)$ and $y(-t) = y(t)$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$x'(t) = 1-t^2$, $y'(t) = 2t$. Horizontal tangent: $y' = 0$ and $x' \\neq 0$. $2t = 0 \\Rightarrow t=0$; $x'(0)=1 \\neq 0$. ✓ Point: $(0, 0)$." },
+              { label: "(b)", text: "$L = \\displaystyle\\int_{-\\sqrt{3}}^{\\sqrt{3}}\\sqrt{(1-t^2)^2 + 4t^2}\\, dt = \\int_{-\\sqrt{3}}^{\\sqrt{3}}\\sqrt{1-2t^2+t^4+4t^2}\\, dt = \\int_{-\\sqrt{3}}^{\\sqrt{3}}\\sqrt{(1+t^2)^2}\\, dt = \\int_{-\\sqrt{3}}^{\\sqrt{3}}(1+t^2)\\, dt$." },
+              { label: "(c)", text: "$x(-t) = (-t) - \\frac{(-t)^3}{3} = -t + \\frac{t^3}{3} = -\\left(t - \\frac{t^3}{3}\\right) = -x(t)$. ✓ $y(-t) = (-t)^2 = t^2 = y(t)$. ✓ The curve is symmetric about the $y$-axis." }
+            ]
+          },
+          {
+            context: "Context: AP FRQ — speed, position, and direction",
+            stem: "A particle has position $x(t) = t^2 - 4t$ and $y(t) = \\frac{t^3}{3} - 4t$ for $t \\geq 0$.",
+            parts: [
+              { label: "(a)", text: "Find the velocity vector at $t = 3$. Is the particle moving left or right? Up or down?" },
+              { label: "(b)", text: "Find the speed at $t = 3$." },
+              { label: "(c)", text: "Find all $t \\geq 0$ when the particle is moving in the direction of increasing $x$ and decreasing $y$ simultaneously." }
+            ],
+            answers: [
+              { label: "(a)", text: "$x'(t) = 2t-4$, $y'(t) = t^2-4$. At $t=3$: $x'(3) = 2 > 0$ (moving right), $y'(3) = 5 > 0$ (moving up). Velocity vector: $\\langle 2, 5 \\rangle$." },
+              { label: "(b)", text: "Speed $= \\sqrt{4+25} = \\sqrt{29} \\approx 5.39$." },
+              { label: "(c)", text: "Increasing $x$: $x'(t) = 2t-4 > 0 \\Rightarrow t > 2$. Decreasing $y$: $y'(t) = t^2-4 < 0 \\Rightarrow -2 < t < 2$. Both conditions cannot hold simultaneously for $t \\geq 0$ — they don't overlap. (There is no time when the particle moves right and downward simultaneously.)" }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 4-C ──────────────────────────────────────────
+      {
+        icon: "🌐",
+        title: "AP Free-Response Style — Polar",
+        sub: "Full multi-part problems in polar calculus",
+        topics: "9.4 – 9.8",
+        problems: [
+          {
+            context: "Context: AP FRQ — polar curve analysis",
+            stem: "Let $f(\\theta) = 1 + 2\\sin\\theta$ for $0 \\leq \\theta \\leq 2\\pi$.",
+            parts: [
+              { label: "(a)", text: "Find all values of $\\theta \\in [0, 2\\pi]$ where $f(\\theta) = 0$. What does this mean about the curve?" },
+              { label: "(b)", text: "For the portion where $f(\\theta) > 0$, find the total area enclosed. (Split into two sub-intervals if needed.)" },
+              { label: "(c)", text: "Find the values of $\\theta$ where the curve has a horizontal tangent." }
+            ],
+            answers: [
+              { label: "(a)", text: "$1+2\\sin\\theta = 0 \\Rightarrow \\sin\\theta = -\\frac{1}{2} \\Rightarrow \\theta = \\frac{7\\pi}{6}, \\frac{11\\pi}{6}$. The curve passes through the pole at these angles — it is a limaçon with an inner loop." },
+              { label: "(b)", text: "Outer loop: $f(\\theta) > 0$ on $[0, 7\\pi/6] \\cup [11\\pi/6, 2\\pi]$. $A_{\\text{outer}} = \\frac{1}{2}\\displaystyle\\int_0^{7\\pi/6}(1+2\\sin\\theta)^2\\, d\\theta + \\frac{1}{2}\\int_{11\\pi/6}^{2\\pi}(1+2\\sin\\theta)^2\\, d\\theta$. Expanding and integrating using symmetry: $A_{\\text{outer}} = \\frac{1}{2}\\int_{-\\pi/6}^{7\\pi/6}(1+2\\sin\\theta)^2\\, d\\theta$. After expanding: $= \\pi + \\frac{3\\pi}{2} - \\frac{3\\sqrt{3}}{2}$. Full outer loop area $\\approx 8.20$." },
+              { label: "(c)", text: "From the formula: horizontal tangent where $\\frac{dy}{d\\theta} = \\frac{dr}{d\\theta}\\sin\\theta + r\\cos\\theta = 0$. $\\frac{dr}{d\\theta} = 2\\cos\\theta$. Setting $2\\cos\\theta\\sin\\theta + (1+2\\sin\\theta)\\cos\\theta = 0$: $\\cos\\theta(2\\sin\\theta+1+2\\sin\\theta) = 0 \\Rightarrow \\cos\\theta = 0$ or $4\\sin\\theta + 1 = 0$. So $\\theta = \\frac{\\pi}{2}, \\frac{3\\pi}{2}$ or $\\sin\\theta = -\\frac{1}{4}$." }
+            ]
+          },
+          {
+            context: "Context: AP FRQ — area between polar curves",
+            stem: "Let $R$ be the region inside the rose $r = 2\\cos(2\\theta)$ and outside the circle $r = \\sqrt{2}$ in the first quadrant.",
+            parts: [
+              { label: "(a)", text: "Find the intersection of $r = 2\\cos(2\\theta)$ and $r = \\sqrt{2}$ in the first quadrant." },
+              { label: "(b)", text: "Set up a definite integral for the area of $R$." },
+              { label: "(c)", text: "Evaluate the integral." }
+            ],
+            answers: [
+              { label: "(a)", text: "$2\\cos(2\\theta) = \\sqrt{2} \\Rightarrow \\cos(2\\theta) = \\frac{\\sqrt{2}}{2} \\Rightarrow 2\\theta = \\frac{\\pi}{4} \\Rightarrow \\theta = \\frac{\\pi}{8}$. In the first quadrant, intersection at $\\theta = \\frac{\\pi}{8}$, $r = \\sqrt{2}$." },
+              { label: "(b)", text: "The first petal spans $[0, \\pi/4]$. Region $R$: $r = 2\\cos(2\\theta)$ is outer and $r=\\sqrt{2}$ is inner for $\\theta \\in [0, \\pi/8]$ (where $2\\cos(2\\theta) > \\sqrt{2}$). $A = \\frac{1}{2}\\displaystyle\\int_0^{\\pi/8}(4\\cos^2(2\\theta)-2)\\, d\\theta$." },
+              { label: "(c)", text: "$A = \\frac{1}{2}\\displaystyle\\int_0^{\\pi/8}(4\\cdot\\frac{1+\\cos(4\\theta)}{2}-2)\\, d\\theta = \\frac{1}{2}\\int_0^{\\pi/8}(2+2\\cos(4\\theta)-2)\\, d\\theta = \\frac{1}{2}\\int_0^{\\pi/8}2\\cos(4\\theta)\\, d\\theta = \\left[\\frac{\\sin(4\\theta)}{4}\\right]_0^{\\pi/8} = \\frac{\\sin(\\pi/2)}{4} = \\frac{1}{4}$." }
+            ]
+          },
+          {
+            context: "Context: AP FRQ — mixed polar",
+            stem: "The curve $C$ is given in polar form by $r = 3 - 3\\cos\\theta$ (a cardioid).",
+            parts: [
+              { label: "(a)", text: "Find the total area enclosed by $C$." },
+              { label: "(b)", text: "The line $y = k$ (for some constant $k > 0$) intersects the cardioid. Express $y = r\\sin\\theta$ in terms of $\\theta$ and find the $\\theta$-values where $y$ is maximized." },
+              { label: "(c)", text: "Find the maximum value of $y$ on the cardioid and the polar coordinates of that point." }
+            ],
+            answers: [
+              { label: "(a)", text: "$A = \\frac{1}{2}\\displaystyle\\int_0^{2\\pi}(3-3\\cos\\theta)^2\\, d\\theta = \\frac{9}{2}\\int_0^{2\\pi}(1-\\cos\\theta)^2\\, d\\theta = \\frac{9}{2}\\int_0^{2\\pi}(1-2\\cos\\theta+\\cos^2\\theta)\\, d\\theta = \\frac{9}{2}\\left(2\\pi + 0 + \\pi\\right) = \\frac{27\\pi}{2}$." },
+              { label: "(b)", text: "$y = r\\sin\\theta = (3-3\\cos\\theta)\\sin\\theta = 3\\sin\\theta - 3\\sin\\theta\\cos\\theta = 3\\sin\\theta - \\frac{3}{2}\\sin(2\\theta)$. Set $\\frac{dy}{d\\theta} = 3\\cos\\theta - 3\\cos(2\\theta) = 0 \\Rightarrow \\cos\\theta = \\cos(2\\theta) = 2\\cos^2\\theta-1 \\Rightarrow 2\\cos^2\\theta-\\cos\\theta-1=0 \\Rightarrow (2\\cos\\theta+1)(\\cos\\theta-1)=0 \\Rightarrow \\cos\\theta=-\\frac{1}{2}$ or $\\cos\\theta=1$. So $\\theta = \\frac{2\\pi}{3}$ (in $(0,\\pi)$) gives maximum $y$." },
+              { label: "(c)", text: "$\\theta = 2\\pi/3$: $r = 3-3\\cos(2\\pi/3) = 3-3(-\\frac{1}{2}) = \\frac{9}{2}$. $y = \\frac{9}{2}\\sin(2\\pi/3) = \\frac{9}{2}\\cdot\\frac{\\sqrt{3}}{2} = \\frac{9\\sqrt{3}}{4}$. Maximum $y = \\frac{9\\sqrt{3}}{4}$ at polar point $\\left(\\frac{9}{2}, \\frac{2\\pi}{3}\\right)$." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 4-D ──────────────────────────────────────────
+      {
+        icon: "🏆",
+        title: "Comprehensive Review — All of Unit 9",
+        sub: "Challenging multi-part problems spanning 9.1–9.9",
+        topics: "9.1 – 9.9",
+        problems: [
+          {
+            context: "Context: Full unit synthesis",
+            stem: "A curve $C$ is defined by $x(t) = \\sin t$ and $y(t) = \\sin(2t)$ for $0 \\leq t \\leq 2\\pi$. This is a Lissajous figure.",
+            parts: [
+              { label: "(a)", text: "Find all $t \\in (0, 2\\pi)$ where the curve has a horizontal tangent." },
+              { label: "(b)", text: "Find the slope of the curve at $t = \\pi/4$ and the equation of the tangent line there." },
+              { label: "(c)", text: "The curve crosses itself. Find the Cartesian coordinates of any self-intersection." }
+            ],
+            answers: [
+              { label: "(a)", text: "$x'(t) = \\cos t$, $y'(t) = 2\\cos(2t)$. Horizontal tangent: $y' = 0$, $x' \\neq 0$. $2\\cos(2t) = 0 \\Rightarrow t = \\pi/4, 3\\pi/4, 5\\pi/4, 7\\pi/4$. At each: $\\cos t \\neq 0$. All four give horizontal tangents." },
+              { label: "(b)", text: "At $t=\\pi/4$: $(x,y) = (\\frac{\\sqrt{2}}{2}, 1)$. $\\frac{dy}{dx} = \\frac{2\\cos(\\pi/2)}{\\cos(\\pi/4)} = \\frac{0}{\\sqrt{2}/2} = 0$. (This is one of the horizontal tangent points.) Tangent: $y = 1$." },
+              { label: "(c)", text: "The curve crosses itself wherever the same $(x,y)$ occurs at two different $t$ values. Since $x = \\sin t$, need $\\sin t_1 = \\sin t_2$, e.g., $t_1 = \\pi - t_2$. Then $y_1 = \\sin(2t_1)$ and $y_2 = \\sin(2t_2) = \\sin(2\\pi - 2t_1) = -\\sin(2t_1)$. For $y_1 = y_2$: $\\sin(2t_1) = 0 \\Rightarrow t_1 = 0, \\pi/2, \\pi$. So self-intersections at $x=0$: $(0,0)$ and $(0,0)$ at $t=0,\\pi$; also at $(0,0)$ again (the origin, multiple passes). The figure-8 self-intersects at the origin." }
+            ]
+          },
+          {
+            context: "Context: Polar, area, and a calculator-active problem",
+            stem: "Consider the two curves $r_1 = 3\\sin\\theta$ and $r_2 = 1 + \\sin\\theta$ for $0 \\leq \\theta \\leq \\pi$.",
+            parts: [
+              { label: "(a)", text: "Find all intersection points (both algebraic and check the pole)." },
+              { label: "(b)", text: "Write, but do not evaluate, an integral expression for the area of the region inside $r_1$ and outside $r_2$." },
+              { label: "(c)", text: "Use a calculator to evaluate the integral from part (b). Report to three decimal places." }
+            ],
+            answers: [
+              { label: "(a)", text: "$3\\sin\\theta = 1+\\sin\\theta \\Rightarrow 2\\sin\\theta = 1 \\Rightarrow \\sin\\theta = \\frac{1}{2} \\Rightarrow \\theta = \\frac{\\pi}{6}, \\frac{5\\pi}{6}$. At both: $r = \\frac{3}{2}$. Points: $(\\frac{3}{2}, \\pi/6)$ and $(\\frac{3}{2}, 5\\pi/6)$. Pole: $r_1=0$ at $\\theta=0,\\pi$; $r_2 = 0$ has no solution in $[0,\\pi]$ (since $1+\\sin\\theta \\geq 1$). The pole is not on $r_2$, so it's not an intersection." },
+              { label: "(b)", text: "$A = \\frac{1}{2}\\displaystyle\\int_{\\pi/6}^{5\\pi/6}[(3\\sin\\theta)^2 - (1+\\sin\\theta)^2]\\, d\\theta = \\frac{1}{2}\\int_{\\pi/6}^{5\\pi/6}[9\\sin^2\\theta - 1 - 2\\sin\\theta - \\sin^2\\theta]\\, d\\theta = \\frac{1}{2}\\int_{\\pi/6}^{5\\pi/6}[8\\sin^2\\theta - 2\\sin\\theta - 1]\\, d\\theta$." },
+              { label: "(c)", text: "Expanding: $8\\sin^2\\theta = 4(1-\\cos 2\\theta)$. Integral $= \\frac{1}{2}\\int_{\\pi/6}^{5\\pi/6}(3-4\\cos(2\\theta)-2\\sin\\theta)\\, d\\theta = \\frac{1}{2}[3\\theta-2\\sin(2\\theta)+2\\cos\\theta]_{\\pi/6}^{5\\pi/6}$. Evaluating: $\\frac{1}{2}[(\\frac{5\\pi}{2}-\\sqrt{3}-\\sqrt{3})-(\\frac{\\pi}{2}+\\sqrt{3}+\\sqrt{3})] = \\frac{1}{2}(2\\pi - 4\\sqrt{3}) = \\pi - 2\\sqrt{3} \\approx 0.274$." }
+            ]
+          },
+          {
+            context: "Context: From limit definition to arc length",
+            stem: "Each of the following is a limit or integral expression from Unit 9. Identify what it represents and evaluate it.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\lim_{h \\to 0} \\frac{y(t_0+h)-y(t_0)}{x(t_0+h)-x(t_0)}$ where $x(t) = t^3$ and $y(t) = t^2$. Evaluate at $t_0 = 2$." },
+              { label: "(b)", text: "$\\dfrac{1}{2}\\displaystyle\\int_0^{\\pi} \\sin^2(\\theta)\\, d\\theta$" },
+              { label: "(c)", text: "$\\displaystyle\\int_0^{\\pi/2}\\sqrt{(- \\sin t)^2 + (\\cos t)^2}\\, dt$" }
+            ],
+            answers: [
+              { label: "(a)", text: "This is $\\dfrac{dy}{dx}$ at $t_0 = 2$ (the slope of the parametric curve). $\\frac{dy}{dx} = \\frac{y'(t)}{x'(t)} = \\frac{2t}{3t^2} = \\frac{2}{3t}$. At $t_0=2$: slope $= \\frac{1}{3}$." },
+              { label: "(b)", text: "This is the area enclosed by $r = \\sin\\theta$ (a circle) over the upper half-plane. $\\frac{1}{2}\\int_0^\\pi\\sin^2\\theta\\, d\\theta = \\frac{1}{2}\\cdot\\frac{\\pi}{2} = \\frac{\\pi}{4}$. (The full circle $r=\\sin\\theta$ has area $\\frac{\\pi}{4}$, matching the geometric formula $\\pi r^2 = \\pi(\\frac{1}{2})^2 = \\frac{\\pi}{4}$. ✓)" },
+              { label: "(c)", text: "Arc length of $x = \\cos t$, $y = \\sin t$ from $t=0$ to $t=\\pi/2$. $\\sqrt{\\sin^2 t + \\cos^2 t} = 1$. Arc length $= \\int_0^{\\pi/2}1\\, dt = \\frac{\\pi}{2}$ — the arc length of a quarter unit circle. ✓" }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+
+]; // end columns
+
+
+/* ============================================================
+   RENDER BOARD
+============================================================ */
+function renderBoard() {
+  const grid = document.getElementById('board-grid');
+  grid.innerHTML = '';
+
+  columns.forEach((col, ci) => {
+    const colGroup = document.createElement('div');
+    colGroup.className = 'col-group';
+
+    // Header
+    const header = document.createElement('div');
+    header.className = `col-header ${col.headerClass}`;
+    header.style.gridColumn = ci + 1;
+    header.style.gridRow = 1;
+    header.innerHTML = `
+      <div class="col-header-num">${col.label}</div>
+      <h2>${col.title}</h2>
+      <div class="col-topics">${col.topics}</div>
+    `;
+    colGroup.appendChild(header);
+
+    // Tiles
+    col.tiles.forEach((tile, ti) => {
+      const tileEl = document.createElement('div');
+      tileEl.className = `tile ${col.tileClass}`;
+      tileEl.style.gridColumn = ci + 1;
+      tileEl.style.gridRow = ti + 2;
+      tileEl.setAttribute('role', 'button');
+      tileEl.setAttribute('tabindex', '0');
+      tileEl.setAttribute('aria-label', tile.title);
+      tileEl.innerHTML = `
+        <span class="tile-icon">${tile.icon}</span>
+        <div class="tile-title">${tile.title}</div>
+        <div class="tile-sub">${tile.sub}</div>
+        <div class="tile-topics">${tile.topics}</div>
+        <span class="tile-arrow">↗</span>
+      `;
+      tileEl.addEventListener('click', () => openModal(ci, ti));
+      tileEl.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') openModal(ci, ti); });
+      colGroup.appendChild(tileEl);
+    });
+
+    grid.appendChild(colGroup);
+  });
+}
+
+/* ============================================================
+   MODAL
+============================================================ */
+function openModal(colIdx, tileIdx) {
+  const col  = columns[colIdx];
+  const tile = col.tiles[tileIdx];
+
+  const accentEl = document.getElementById('modal-accent');
+  accentEl.className = 'modal-header-accent';
+  accentEl.style.background = col.accentVar;
+
+  const labelEl = document.getElementById('modal-col-label');
+  labelEl.style.color = col.accentVar;
+  labelEl.textContent = col.label + ' · ' + col.title;
+
+  document.getElementById('modal-title').textContent = tile.title;
+
+  const body = document.getElementById('modal-body');
+  body.innerHTML = '';
+
+  // Optional video section
+  if (tile.video) {
+    const videoSection = document.createElement('div');
+    videoSection.className = 'video-section';
+    videoSection.innerHTML = `
+      <div class="video-label">📹 Watch First</div>
+      <a href="${tile.video.url}" target="_blank" rel="noopener" class="video-link">
+        ${tile.video.title} — mathispower4u
+        <span class="video-icon">▶</span>
+      </a>
+    `;
+    body.appendChild(videoSection);
+  }
+
+  tile.problems.forEach((prob, pi) => {
+    const block = document.createElement('div');
+    block.className = 'problem-block';
+
+    let partsHTML = '';
+    if (prob.parts && prob.parts.length) {
+      partsHTML = `<ul class="problem-parts">` +
+        prob.parts.map(p => `<li data-part="${p.label}">${p.text}</li>`).join('') +
+        `</ul>`;
+    }
+
+    let answersHTML = '';
+    if (prob.answers && prob.answers.length) {
+      answersHTML = prob.answers.map(a =>
+        `<div class="answer-part"><span class="answer-part-label">${a.label}</span>${a.text}</div>`
+      ).join('');
+    }
+
+    const answerId = `ans-${colIdx}-${tileIdx}-${pi}`;
+    const toggleId = `tog-${colIdx}-${tileIdx}-${pi}`;
+
+    block.innerHTML = `
+      <div class="problem-num">Problem ${pi + 1} of ${tile.problems.length}</div>
+      ${prob.context ? `<div class="problem-context">${prob.context}</div>` : ''}
+      <div class="problem-text">${prob.stem}</div>
+      ${partsHTML}
+      <button class="answer-toggle" id="${toggleId}" onclick="toggleAnswer('${answerId}','${toggleId}')">
+        <span class="toggle-icon">▼</span> Show Answer
+      </button>
+      <div class="answer-panel" id="${answerId}">
+        ${answersHTML}
+      </div>
+    `;
+    body.appendChild(block);
+  });
+
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('desmos-fab').classList.add('visible');
+
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([body]).catch(err => console.log(err));
+  }
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+  document.getElementById('desmos-fab').classList.remove('visible');
+}
+
+function toggleAnswer(panelId, toggleId) {
+  const panel  = document.getElementById(panelId);
+  const toggle = document.getElementById(toggleId);
+  const isOpen = panel.classList.contains('open');
+  panel.classList.toggle('open');
+  toggle.classList.toggle('open');
+  toggle.innerHTML = isOpen
+    ? '<span class="toggle-icon">▼</span> Show Answer'
+    : '<span class="toggle-icon">▼</span> Hide Answer';
+}
+
+/* ============================================================
+   RANDOM PRACTICE
+============================================================ */
+function openRandomProblem() {
+  const colIdx  = Math.floor(Math.random() * columns.length);
+  const col     = columns[colIdx];
+  const tileIdx = Math.floor(Math.random() * col.tiles.length);
+  const tile    = col.tiles[tileIdx];
+  const probIdx = Math.floor(Math.random() * tile.problems.length);
+  const prob    = tile.problems[probIdx];
+
+  const accentEl = document.getElementById('modal-accent');
+  accentEl.className = 'modal-header-accent random-accent';
+  accentEl.style.background = '';
+
+  const labelEl = document.getElementById('modal-col-label');
+  labelEl.style.color = 'var(--text-muted)';
+  labelEl.innerHTML = 'BC Calculus · Unit 9: Parametric &amp; Polar';
+
+  document.getElementById('modal-title').textContent = 'General Practice';
+
+  const body = document.getElementById('modal-body');
+  body.innerHTML = '';
+
+  const block = document.createElement('div');
+  block.className = 'problem-block';
+  block.style.borderBottom = 'none';
+  block.style.marginBottom = '0';
+  block.style.paddingBottom = '0';
+
+  let partsHTML = '';
+  if (prob.parts && prob.parts.length) {
+    partsHTML = `<ul class="problem-parts">` +
+      prob.parts.map(p => `<li data-part="${p.label}">${p.text}</li>`).join('') +
+      `</ul>`;
+  }
+
+  let answersHTML = '';
+  if (prob.answers && prob.answers.length) {
+    answersHTML = prob.answers.map(a =>
+      `<div class="answer-part"><span class="answer-part-label">${a.label}</span>${a.text}</div>`
+    ).join('');
+  }
+
+  block.innerHTML = `
+    <div class="problem-num">🎲 General Practice</div>
+    ${prob.context ? `<div class="problem-context">${prob.context}</div>` : ''}
+    <div class="problem-text">${prob.stem}</div>
+    ${partsHTML}
+    <button class="answer-toggle" id="rand-tog" onclick="toggleAnswer('rand-ans','rand-tog')">
+      <span class="toggle-icon">▼</span> Show Answer
+    </button>
+    <div class="answer-panel" id="rand-ans">
+      ${answersHTML}
+    </div>
+  `;
+
+  body.appendChild(block);
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('desmos-fab').classList.add('visible');
+
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([body]).catch(err => console.log(err));
+  }
+}
+
+document.getElementById('random-btn').addEventListener('click', openRandomProblem);
+
+/* ============================================================
+   DESMOS BUTTON
+============================================================ */
+document.getElementById('desmos-fab').addEventListener('click', () => {
+  window.open('https://www.desmos.com/calculator', '_blank', 'width=1000,height=700,noopener,noreferrer');
+});
+
+/* ============================================================
+   EVENT LISTENERS
+============================================================ */
+document.getElementById('modal-close').addEventListener('click', closeModal);
+document.getElementById('modal-overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+/* ============================================================
+   INIT
+============================================================ */
+renderBoard();
+</script>
+</body>
+</html>
