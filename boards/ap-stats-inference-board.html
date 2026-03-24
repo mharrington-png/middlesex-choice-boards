@@ -739,6 +739,87 @@
     .random-btn-badge { display: none; }
     .random-btn-left-notch, .random-btn-right-notch { display: none; }
   }
+
+  /* ============================================================
+     DESMOS FLOATING BUTTON
+  ============================================================ */
+  .desmos-btn {
+    display: none; /* hidden until a modal opens */
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    z-index: 1050;
+    align-items: center;
+    gap: 10px;
+    background: var(--surface2);
+    border: 1px solid var(--border-light);
+    border-radius: 50px;
+    padding: 10px 18px 10px 14px;
+    cursor: pointer;
+    font-family: 'Source Serif 4', serif;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.2s ease, background 0.2s ease;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    text-decoration: none;
+  }
+
+  .desmos-btn.visible {
+    display: flex;
+    animation: fadeInUp 0.22s ease;
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .desmos-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(207,0,61,0.22), 0 2px 8px rgba(0,0,0,0.4);
+    border-color: color-mix(in srgb, var(--crimson) 55%, transparent);
+    background: var(--surface3);
+  }
+
+  .desmos-btn:active {
+    transform: translateY(0) scale(0.97);
+  }
+
+  .desmos-btn-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .desmos-btn-label {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1px;
+  }
+
+  .desmos-btn-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+
+  .desmos-btn-sub {
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 600px) {
+    .desmos-btn {
+      bottom: 20px;
+      right: 16px;
+      padding: 10px 14px;
+    }
+    .desmos-btn-sub { display: none; }
+  }
 </style>
 </head>
 <body>
@@ -809,6 +890,17 @@
     <div class="modal-body" id="modal-body"></div>
   </div>
 </div>
+
+<!-- ============================================================
+     DESMOS FLOATING BUTTON
+============================================================ -->
+<button class="desmos-btn" id="desmos-btn" aria-label="Open Desmos Graphing Calculator">
+  <span class="desmos-btn-icon">📈</span>
+  <div class="desmos-btn-label">
+    <span class="desmos-btn-title">Graphing Calculator</span>
+    <span class="desmos-btn-sub">Opens Desmos in a new tab</span>
+  </div>
+</button>
 
 <script>
 /* ============================================================
@@ -1766,6 +1858,7 @@ function openModal(colIdx, tileIdx) {
 
   const overlay = document.getElementById('modal-overlay');
   overlay.classList.add('open');
+  document.getElementById('desmos-btn').classList.add('visible');
   document.body.style.overflow = 'hidden';
 
   // Typeset MathJax if loaded
@@ -1776,6 +1869,7 @@ function openModal(colIdx, tileIdx) {
 
 function closeModal() {
   document.getElementById('modal-overlay').classList.remove('open');
+  document.getElementById('desmos-btn').classList.remove('visible');
   document.body.style.overflow = '';
 }
 
@@ -1857,6 +1951,7 @@ function openRandomProblem() {
 
   const overlay = document.getElementById('modal-overlay');
   overlay.classList.add('open');
+  document.getElementById('desmos-btn').classList.add('visible');
   document.body.style.overflow = 'hidden';
 
   if (window.MathJax && MathJax.typesetPromise) {
@@ -1875,6 +1970,9 @@ document.getElementById('modal-overlay').addEventListener('click', e => {
 });
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') closeModal();
+});
+document.getElementById('desmos-btn').addEventListener('click', () => {
+  window.open('https://www.desmos.com/calculator', '_blank', 'width=650,height=350,noopener,noreferrer');
 });
 
 /* ============================================================
