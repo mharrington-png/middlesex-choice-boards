@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Problem Solving — Student Counting Problems | Middlesex School</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet" />
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+    startup: {
+      typeset: false,
+      ready() {
+        MathJax.startup.defaultReady();
+        renderBoard();
+        MathJax.typesetPromise([document.getElementById('board-grid')])
+          .catch(err => console.log(err));
+      }
+    }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+  :root {
+    --crimson:      #cf003d;
+    --crimson-dim:  #8a0028;
+    --crimson-glow: #ff1a55;
+    --black:        #0d0d0d;
+    --surface:      #151515;
+    --surface2:     #1e1e1e;
+    --surface3:     #252525;
+    --border:       #2e2e2e;
+    --border-light: #3a3a3a;
+    --text:         #f0ece6;
+    --text-muted:   #9e9e9e;
+    --text-dim:     #666666;
+
+    --col1: #cf003d;
+    --col2: #1a6b5a;
+    --col3: #4a5568;
+    --col4: #7c4a1e;
+
+    --col1-light: #ff4d75;
+    --col2-light: #2dd4bf;
+    --col3-light: #94a3b8;
+    --col4-light: #f59e0b;
+
+    --radius: 10px;
+    --radius-lg: 16px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.5);
+    --shadow-hover: 0 8px 40px rgba(0,0,0,0.7);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 16px;
+    line-height: 1.65;
+    min-height: 100vh;
+  }
+
+  /* ============================================================ HEADER */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 32px 40px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--crimson), var(--crimson-glow), var(--crimson));
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(207,0,61,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+  }
+  .school-tag {
+    font-family: 'Source Serif 4', serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--crimson-glow);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .school-tag::before, .school-tag::after {
+    content: '';
+    display: inline-block;
+    width: 28px; height: 1px;
+    background: var(--crimson-glow);
+  }
+  h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    margin-top: 4px;
+  }
+  h1 em { font-style: italic; color: var(--crimson-glow); }
+  .header-meta {
+    margin-top: 4px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .meta-pill {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 3px 12px;
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+  }
+
+  /* ============================================================ INSTRUCTIONS */
+  .instructions {
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 40px;
+    font-size: 13px;
+    color: var(--text-muted);
+    text-align: center;
+    letter-spacing: 0.03em;
+  }
+  .instructions strong { color: var(--crimson-glow); font-weight: 600; }
+
+  /* ============================================================ BOARD GRID */
+  .board-wrap {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 36px 24px 60px;
+  }
+  .board-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto repeat(4, 1fr);
+    gap: 20px;
+  }
+  .col-group { display: contents; }
+
+  /* Column headers */
+  .col-header {
+    border-radius: var(--radius) var(--radius) 0 0;
+    padding: 16px 18px 14px;
+    position: relative;
+    overflow: hidden;
+    align-self: start;
+  }
+  .col-header::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .col-1-header { background: color-mix(in srgb, var(--col1) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col1) 40%, transparent); }
+  .col-2-header { background: color-mix(in srgb, var(--col2) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col2) 40%, transparent); }
+  .col-3-header { background: color-mix(in srgb, var(--col3) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col3) 40%, transparent); }
+  .col-4-header { background: color-mix(in srgb, var(--col4) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col4) 40%, transparent); }
+
+  .col-header-num {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    opacity: 0.7;
+  }
+  .col-1-header .col-header-num { color: var(--col1-light); }
+  .col-2-header .col-header-num { color: var(--col2-light); }
+  .col-3-header .col-header-num { color: var(--col3-light); }
+  .col-4-header .col-header-num { color: var(--col4-light); }
+
+  .col-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.25;
+  }
+  .col-header .col-topics {
+    margin-top: 6px;
+    font-size: 10.5px;
+    color: var(--text-dim);
+    letter-spacing: 0.04em;
+  }
+
+  /* ============================================================ TILES */
+  .tile {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 18px 36px;
+    cursor: pointer;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+    position: relative;
+    overflow: hidden;
+    user-select: none;
+  }
+  .tile::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    border-radius: var(--radius) 0 0 var(--radius);
+    transition: opacity 0.2s;
+  }
+  .col-1 .tile::before { background: var(--col1-light); }
+  .col-2 .tile::before { background: var(--col2-light); }
+  .col-3 .tile::before { background: var(--col3-light); }
+  .col-4 .tile::before { background: var(--col4-light); }
+
+  .tile:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-hover);
+    background: var(--surface3);
+  }
+  .col-1 .tile:hover { border-color: color-mix(in srgb, var(--col1) 60%, transparent); }
+  .col-2 .tile:hover { border-color: color-mix(in srgb, var(--col2) 60%, transparent); }
+  .col-3 .tile:hover { border-color: color-mix(in srgb, var(--col3) 60%, transparent); }
+  .col-4 .tile:hover { border-color: color-mix(in srgb, var(--col4) 60%, transparent); }
+
+  .tile-icon { font-size: 18px; margin-bottom: 8px; display: block; }
+  .tile-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+    margin-bottom: 5px;
+  }
+  .tile-sub { font-size: 11.5px; color: var(--text-muted); line-height: 1.4; }
+
+  .tile-byline {
+    position: absolute;
+    bottom: 10px;
+    left: 18px;
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.08em;
+    font-style: italic;
+  }
+
+  .tile-arrow {
+    position: absolute;
+    bottom: 12px; right: 14px;
+    font-size: 14px;
+    opacity: 0.3;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  .tile:hover .tile-arrow { opacity: 0.8; transform: translate(2px, -2px); }
+  .col-1 .tile:hover .tile-arrow { color: var(--col1-light); }
+  .col-2 .tile:hover .tile-arrow { color: var(--col2-light); }
+  .col-3 .tile:hover .tile-arrow { color: var(--col3-light); }
+  .col-4 .tile:hover .tile-arrow { color: var(--col4-light); }
+
+  /* ============================================================ MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.82);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    backdrop-filter: blur(4px);
+  }
+  .modal-overlay.open { display: flex; animation: fadeIn 0.2s ease; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    width: 100%;
+    max-width: 760px;
+    max-height: 88vh;
+    overflow-y: auto;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.8);
+    animation: slideUp 0.22s ease;
+    position: relative;
+  }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .modal-header {
+    padding: 24px 28px 20px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .modal-header-accent {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  }
+  .modal-col-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+  }
+  .modal-byline {
+    margin-top: 5px;
+    font-size: 12px;
+    color: var(--text-dim);
+    font-style: italic;
+    letter-spacing: 0.04em;
+  }
+  .modal-close {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.15s, color 0.15s;
+  }
+  .modal-close:hover { background: var(--crimson); color: white; border-color: var(--crimson); }
+
+  .modal-body { padding: 24px 28px 32px; }
+
+  /* Problem blocks */
+  .problem-block {
+    margin-bottom: 28px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--border);
+  }
+  .problem-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+  .problem-context {
+    font-size: 14px;
+    font-style: italic;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    padding-left: 12px;
+    border-left: 2px solid var(--border-light);
+  }
+  .problem-text {
+    font-size: 14.5px;
+    color: var(--text);
+    line-height: 1.75;
+    margin-bottom: 14px;
+  }
+
+  .answer-toggle {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 9px 16px;
+    color: var(--text-muted);
+    font-family: 'Source Serif 4', serif;
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.15s;
+    margin-top: 4px;
+  }
+  .answer-toggle:hover { background: var(--surface3); border-color: var(--border-light); color: var(--text); }
+  .answer-toggle .toggle-icon { font-size: 10px; transition: transform 0.2s; }
+  .answer-toggle.open .toggle-icon { transform: rotate(180deg); }
+
+  .answer-panel {
+    display: none;
+    margin-top: 14px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-size: 13.5px;
+    line-height: 1.8;
+    color: var(--text);
+    animation: expandIn 0.18s ease;
+  }
+  @keyframes expandIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .answer-panel.open { display: block; }
+  .answer-panel p { margin-bottom: 8px; }
+  .answer-panel p:last-child { margin-bottom: 0; }
+
+  /* ============================================================ RANDOM PRACTICE BAR */
+  .random-wrap {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 24px 48px;
+  }
+  .random-btn {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border-light);
+    border-radius: 14px;
+    padding: 0 36px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.2s ease, background 0.2s ease;
+    font-family: 'Source Serif 4', serif;
+  }
+  .random-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(207,0,61,0.06) 30%, rgba(207,0,61,0.10) 50%, rgba(207,0,61,0.06) 70%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .random-btn:hover::before { opacity: 1; }
+  .random-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(207,0,61,0.18), 0 2px 8px rgba(0,0,0,0.4);
+    border-color: color-mix(in srgb, var(--crimson) 55%, transparent);
+    background: var(--surface3);
+  }
+  .random-btn:active { transform: translateY(0) scale(0.995); }
+  .random-btn-left-notch, .random-btn-right-notch {
+    position: absolute;
+    bottom: 0;
+    width: 28px; height: 5px;
+    background: var(--border);
+    border-radius: 3px 3px 0 0;
+    transition: background 0.2s;
+  }
+  .random-btn-left-notch  { left: 60px; }
+  .random-btn-right-notch { right: 60px; }
+  .random-btn:hover .random-btn-left-notch,
+  .random-btn:hover .random-btn-right-notch { background: color-mix(in srgb, var(--crimson) 40%, var(--border)); }
+  .random-btn-icon { font-size: 22px; flex-shrink: 0; transition: transform 0.3s ease; }
+  .random-btn:hover .random-btn-icon { transform: rotate(20deg) scale(1.15); }
+  .random-btn-label { display: flex; flex-direction: column; align-items: center; gap: 1px; }
+  .random-btn-title { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; color: var(--text); letter-spacing: 0.01em; line-height: 1.2; }
+  .random-btn-sub { font-size: 11.5px; color: var(--text-muted); letter-spacing: 0.07em; text-transform: uppercase; }
+  .random-btn-badge {
+    position: absolute;
+    right: 28px;
+    background: var(--surface3);
+    border: 1px solid var(--border-light);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-family: 'Source Serif 4', serif;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+  .random-btn:hover .random-btn-badge {
+    background: color-mix(in srgb, var(--crimson) 15%, var(--surface3));
+    color: var(--crimson-glow);
+    border-color: color-mix(in srgb, var(--crimson) 40%, transparent);
+  }
+  .random-accent {
+    background: linear-gradient(90deg, var(--col1-light), var(--col2-light), var(--col3-light), var(--col4-light));
+    background-size: 300% 100%;
+    animation: accentShift 4s ease infinite;
+  }
+  @keyframes accentShift {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  /* ============================================================ DESMOS FAB */
+  .desmos-fab {
+    position: fixed;
+    bottom: 32px; right: 32px;
+    z-index: 1050;
+    background: var(--surface2);
+    border: 1px solid var(--border-light);
+    border-radius: 50px;
+    padding: 0 20px 0 14px;
+    height: 52px;
+    display: none;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    font-family: 'Source Serif 4', serif;
+  }
+  .desmos-fab.visible { display: flex; animation: fadeIn 0.18s ease; }
+  .desmos-fab:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(207,0,61,0.25), 0 2px 8px rgba(0,0,0,0.5);
+    border-color: color-mix(in srgb, var(--crimson) 60%, transparent);
+    background: var(--surface3);
+  }
+  .desmos-fab-icon { font-size: 20px; line-height: 1; flex-shrink: 0; transition: transform 0.2s ease; }
+  .desmos-fab:hover .desmos-fab-icon { transform: rotate(-8deg) scale(1.1); }
+  .desmos-fab-title { font-family: 'Playfair Display', serif; font-size: 0.82rem; font-weight: 700; color: var(--text); white-space: nowrap; display: block; line-height: 1.25; }
+  .desmos-fab-sub { font-size: 9.5px; color: var(--text-muted); letter-spacing: 0.08em; text-transform: uppercase; white-space: nowrap; display: block; }
+
+  /* ============================================================ RESPONSIVE */
+  @media (max-width: 1000px) {
+    .board-grid { display: flex; flex-wrap: wrap; gap: 20px; }
+    .col-group { display: flex; flex-direction: column; gap: 10px; width: calc(50% - 10px); }
+    .col-header { border-radius: var(--radius); }
+    .tile { grid-column: unset !important; grid-row: unset !important; }
+  }
+  @media (max-width: 600px) {
+    .board-grid { flex-direction: column; }
+    .col-group { width: 100%; }
+    header { padding: 20px; }
+    .board-wrap { padding: 20px 12px 40px; }
+    .modal { border-radius: var(--radius); }
+    .modal-header, .modal-body { padding: 18px; }
+    .random-wrap { padding: 0 12px 36px; }
+    .random-btn { height: 64px; border-radius: 10px; }
+    .random-btn-badge, .random-btn-left-notch, .random-btn-right-notch { display: none; }
+    .desmos-fab { bottom: 20px; right: 16px; padding: 0 14px; }
+    .desmos-fab-sub { display: none; }
+  }
+
+  .modal::-webkit-scrollbar { width: 6px; }
+  .modal::-webkit-scrollbar-track { background: var(--surface); }
+  .modal::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="school-tag">Middlesex School · mxschool.edu</div>
+    <h1>Problem Solving — <em>Student Counting Problems</em></h1>
+    <div class="header-meta">
+      <span class="meta-pill">🔐 Locks &amp; Codes</span>
+      <span class="meta-pill">🪑 Seating &amp; Arrangements</span>
+      <span class="meta-pill">👥 Committees &amp; Groups</span>
+      <span class="meta-pill">🪙 Distributions</span>
+      <span class="meta-pill">Written by your classmates</span>
+    </div>
+  </div>
+</header>
+
+<div class="instructions">
+  Each problem was written by a Middlesex student. Click any tile to read the full problem. Use <strong>Show Solution</strong> to check your work after genuinely attempting it.
+</div>
+
+<!-- BOARD -->
+<div class="board-wrap">
+  <div class="board-grid" id="board-grid"></div>
+</div>
+
+<!-- RANDOM PRACTICE BAR -->
+<div class="random-wrap">
+  <button class="random-btn" id="random-btn" aria-label="Random Practice">
+    <div class="random-btn-left-notch"></div>
+    <div class="random-btn-right-notch"></div>
+    <span class="random-btn-icon">🎲</span>
+    <div class="random-btn-label">
+      <span class="random-btn-title">Random Problem</span>
+      <span class="random-btn-sub">Any category · Any student · Any problem</span>
+    </div>
+    <span class="random-btn-badge">16 problems</span>
+  </button>
+</div>
+
+<!-- DESMOS FAB -->
+<button class="desmos-fab" id="desmos-fab" aria-label="Open Desmos Graphing Calculator">
+  <span class="desmos-fab-icon">📈</span>
+  <span>
+    <span class="desmos-fab-title">Graphing Calculator</span>
+    <span class="desmos-fab-sub">Opens Desmos in a new tab</span>
+  </span>
+</button>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div class="modal-header-accent" id="modal-accent"></div>
+      <div>
+        <div class="modal-col-label" id="modal-col-label"></div>
+        <div class="modal-title" id="modal-title"></div>
+        <div class="modal-byline" id="modal-byline"></div>
+      </div>
+      <button class="modal-close" id="modal-close" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   DATA
+   Edit problems here without touching layout code.
+   Each tile: icon, title, sub, author, problem (stem string), solution (HTML string)
+============================================================ */
+
+const columns = [
+
+  // ═══════════════════════════════════════════════════════════
+  // COLUMN 1 — Locks & Codes
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: "col-1",
+    accentVar: "var(--col1-light)",
+    headerClass: "col-1-header",
+    tileClass: "col-1",
+    label: "Column I",
+    title: "Locks & Codes",
+    topics: "Permutations with restrictions",
+    tiles: [
+
+      {
+        icon: "⚽",
+        title: "The Soccer Cooler Code",
+        sub: "4-character lock with letters and digits — starts with a letter, no repeats",
+        author: "Bryan",
+        problem: `Before a soccer game, the team needs to use the ice cooler — but it's locked with a code only the trainer who left to get lunch knows. The lock takes a 4-character code using letters A, B, C, D, E, F (6 possible letters) and digits 1, 2, 3, 4 (4 possible digits). The trainer keeps a note on the lock: the code (1) is exactly 4 characters long, (2) must contain exactly 2 letters and 2 numbers, (3) has no repeated characters, and (4) must start with a letter.<br><br>How many codes are possible?`,
+        solution: `<p>We need to count 4-character codes that: start with a letter, contain exactly 2 letters and 2 digits, with no repeats.</p>
+<p><strong>Step 1 — Choose which 2 letters appear:</strong> $\\binom{6}{2} = 15$ ways.</p>
+<p><strong>Step 2 — Choose which 2 digits appear:</strong> $\\binom{4}{2} = 6$ ways.</p>
+<p><strong>Step 3 — Arrange the 4 characters with the restriction that position 1 is a letter.</strong><br>
+Fix position 1 as one of the 2 chosen letters: 2 choices. Then arrange the remaining 3 characters (1 letter + 2 digits) in positions 2–4: $3! = 6$ ways.</p>
+<p><strong>Total:</strong> $15 \\times 6 \\times 2 \\times 6 = \\mathbf{1{,}080}$ codes.</p>`
+      },
+
+      {
+        icon: "🚲",
+        title: "Mrs. Spears' Bike Lock",
+        sub: "4-number code from {1,2,3,4,5,6}, no repeats, order matters",
+        author: "Jake",
+        problem: `Mrs. Spears has a very expensive bike that she always keeps locked with a bike lock. She told the school at announcements that the lock has 6 numbers and the only possible numbers are 1, 2, 3, 4, 5, and 6. The combination to the lock cannot contain any repeated numbers, and the order of the numbers does matter. The code is 4 numbers long.<br><br>Mrs. Spears wonders how many possible different 4-number codes are possible.`,
+        solution: `<p>We are choosing an ordered sequence of 4 distinct numbers from the set {1, 2, 3, 4, 5, 6}. Since order matters and there are no repeats, this is a permutation.</p>
+<p>$$P(6,4) = \\frac{6!}{(6-4)!} = \\frac{6!}{2!} = 6 \\times 5 \\times 4 \\times 3 = \\mathbf{360}$$</p>
+<p>There are <strong>360</strong> possible codes.</p>`
+      },
+
+      {
+        icon: "⏳",
+        title: "The Time Capsule Combination",
+        sub: "4-letter arrangement from 4 distinct first initials",
+        author: "Josephine",
+        problem: `A group of adults — Aiden, Becca, Charlie, and Dylan — have just dug up their time capsule from high school. They really want to open it, but there is one problem: they've forgotten the 4-letter combination. All they know is that the letters for the combination come from the first letter of each of their names.<br><br>How many different arrangements could they possibly try?`,
+        solution: `<p>The four letters are A, B, C, D (one from each name). All four letters must be used, and order matters (it's a combination lock arrangement).</p>
+<p>This is simply the number of permutations of 4 distinct objects:</p>
+<p>$$4! = 4 \\times 3 \\times 2 \\times 1 = \\mathbf{24}$$</p>
+<p>There are <strong>24</strong> arrangements they could try.</p>`
+      },
+
+      {
+        icon: "🔒",
+        title: "Joshua's Locker Code",
+        sub: "5-digit code, no repeats, no leading zero, at least one even digit",
+        author: "Joshua",
+        problem: `A locker code is made of 5 digits. The digits don't repeat, and the first digit cannot be zero. At least one even number must be used.<br><br>How many valid locker codes are available?`,
+        solution: `<p>It's easier to use complementary counting: count all valid 5-digit codes with no repeats and no leading zero, then subtract those with <em>no</em> even digits.</p>
+<p><strong>Total codes (no repeats, no leading zero):</strong><br>
+First digit: 9 choices (1–9). Remaining 4 positions: $9 \\times 8 \\times 7 = 504$ ways. Total: $9 \\times 504 = 4{,}536$.</p>
+<p><strong>Codes with NO even digits</strong> (digits from {1,3,5,7,9} only — 5 odd digits):<br>
+First digit: 5 choices. Then choose 4 more from remaining 4 odd digits: $4 \\times 3 \\times 2 \\times 1 = 24$ ways. Total: $5 \\times 24 = 120$.</p>
+<p><strong>Answer:</strong> $4{,}536 - 120 = \\mathbf{4{,}416}$ valid codes.</p>`
+      }
+
+    ]
+  },
+
+  // ═══════════════════════════════════════════════════════════
+  // COLUMN 2 — Seating & Arrangements
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: "col-2",
+    accentVar: "var(--col2-light)",
+    headerClass: "col-2-header",
+    tileClass: "col-2",
+    label: "Column II",
+    title: "Seating & Arrangements",
+    topics: "Circular permutations, adjacency constraints",
+    tiles: [
+
+      {
+        icon: "🃏",
+        title: "The Poker Hand with Exactly One Ace",
+        sub: "5-card hands from a 52-card deck containing exactly 1 ace",
+        author: "Alex B.",
+        problem: `From a standard 52-card deck, how many 5-card hands contain exactly 1 ace?<br><br>Useful information:<br>• There are 4 aces in the deck.<br>• There are 48 non-ace cards in the deck.`,
+        solution: `<p>We need exactly 1 ace and exactly 4 non-ace cards.</p>
+<p><strong>Choose 1 ace from 4:</strong> $\\binom{4}{1} = 4$</p>
+<p><strong>Choose 4 non-ace cards from 48:</strong> $\\binom{48}{4} = \\dfrac{48 \\times 47 \\times 46 \\times 45}{4!} = \\dfrac{4{,}669{,}920}{24} = 194{,}580$</p>
+<p><strong>Total:</strong> $4 \\times 194{,}580 = \\mathbf{778{,}320}$ hands.</p>`
+      },
+
+      {
+        icon: "🍽️",
+        title: "Dinner at Bessie's",
+        sub: "9 people at a round table with three adjacency constraints",
+        author: "Alex H.",
+        problem: `On Saturday night, Bessie invites 7 seniors to have dinner at her house. Including Bessie and Mr. Spears, there are 9 people seated at a round table. The constraints are:<br><br>
+• Mr. and Mrs. Spears must sit next to each other.<br>
+• Two seniors, Katie and Cate, are BFFs and must sit next to each other.<br>
+• Ali and Alex got in a fight and refuse to sit next to each other.<br><br>
+How many seating arrangements are possible?`,
+        solution: `<p><strong>Step 1 — Treat {Mr. & Mrs. Spears} as a block and {Katie & Cate} as a block.</strong> This gives us 7 units (2 blocks + 5 individuals) around a circular table.</p>
+<p>Circular arrangements of 7 units: $(7-1)! = 6! = 720$.</p>
+<p>Internal arrangements: Spears block $= 2!= 2$; Katie–Cate block $= 2! = 2$. Multiply: $720 \\times 2 \\times 2 = 2{,}880$.</p>
+<p><strong>Step 2 — Subtract arrangements where Ali and Alex ARE adjacent.</strong><br>
+Now treat {Ali, Alex} as a third block: 6 units around a circular table.<br>
+$(6-1)! \\times 2! \\times 2! \\times 2! = 120 \\times 8 = 960$.</p>
+<p><strong>Answer:</strong> $2{,}880 - 960 = \\mathbf{1{,}920}$ valid arrangements.</p>`
+      },
+
+      {
+        icon: "💑",
+        title: "Couples at the Lunch Table",
+        sub: "10 people (4 couples + 2 others) at a round table — at least 2 couples adjacent",
+        author: "Aaron",
+        problem: `There are 10 seats at a round lunch table. Eight of the seats are taken by 4 couples, and the remaining 2 seats are taken by 2 other students (not part of any couple). If at least two of the four couples must sit next to each other, how many unique seating arrangements are there?<br><br><em>Hint: Use inclusion-exclusion. Let $A_i$ be the event that couple $i$ sits together, and count arrangements with at least 2 of the $A_i$ occurring.</em>`,
+        solution: `<p>Fix one person to account for rotational equivalence. Total circular arrangements of 10 people: $(10-1)! = 9! = 362{,}880$.</p>
+<p>Let $A_i$ be the set of arrangements where couple $i$ sits together (treated as a 2-person block with $2!$ internal arrangements). Key counts:</p>
+<p>$|A_i| = 8! \\times 2$ &nbsp; (9 units in a circle)</p>
+<p>$|A_i \\cap A_j| = 7! \\times 2^2$ &nbsp; (8 units)</p>
+<p>$|A_i \\cap A_j \\cap A_k| = 6! \\times 2^3$ &nbsp; (7 units)</p>
+<p>$|A_1 \\cap A_2 \\cap A_3 \\cap A_4| = 5! \\times 2^4$ &nbsp; (6 units)</p>
+<p><strong>At least 2 couples together</strong> (by inclusion-exclusion):</p>
+<p>$$\\binom{4}{2}\\cdot 7!\\cdot 4 \\;-\\; \\binom{4}{3}\\cdot\\binom{3}{1}\\cdot 6!\\cdot 8 \\;+\\; \\binom{4}{4}\\cdot\\binom{4}{2}\\cdot 5!\\cdot 16$$</p>
+<p>$$= 6\\cdot 5{,}040\\cdot 4 \\;-\\; 4\\cdot 3\\cdot 720\\cdot 8 \\;+\\; 1\\cdot 6\\cdot 120\\cdot 16$$</p>
+<p>$$= 120{,}960 \\;-\\; 69{,}120 \\;+\\; 11{,}520 \\;=\\; \\mathbf{63{,}360}$$</p>
+<p><em>Note: This is a challenging problem — if your answer differs, check whether you're correctly applying the inclusion-exclusion correction terms for overcounting triples and quadruples.</em></p>`
+      },
+
+      {
+        icon: "⛪",
+        title: "Chapel Row Seating",
+        sub: "8 students in a row — juniors separated, freshmen together",
+        author: "KC",
+        problem: `The new seating chart at Chapel only fits 8 students in a row. There are 3 juniors, 3 sophomores, and 2 freshmen, and they all have to sit in the same row. The 3 juniors don't want to sit next to each other, and the 2 freshmen have to sit together.<br><br>How many seating arrangements are possible?`,
+        solution: `<p><strong>Step 1 — Treat the 2 freshmen as a block.</strong> We now have 7 units to arrange in a line: {FreshBlock, J1, J2, J3, S1, S2, S3}. The block has $2! = 2$ internal arrangements.</p>
+<p><strong>Step 2 — Count arrangements where NO two juniors are adjacent.</strong><br>
+Arrange the 4 non-junior units (FreshBlock, S1, S2, S3) in a line: $4! = 24$ ways. This creates 5 gaps (before, between, and after). Choose 3 of those 5 gaps for the juniors: $P(5,3) = 60$ ways. Then multiply by the freshmen block arrangement: $24 \\times 60 \\times 2 = 2{,}880$.</p>
+<p>There are $\\mathbf{2{,}880}$ valid seating arrangements.</p>`
+      },
+
+      {
+        icon: "📚",
+        title: "The Math and History Bookshelf",
+        sub: "Arrange 6 math and 2 history books — no two history books adjacent",
+        author: "Sebastien",
+        problem: `How many ways can you place 6 math books and 2 history books on a shelf so that no 2 history books are next to each other?`,
+        solution: `<p>We use the gap method to ensure no two history books are adjacent.</p>
+<p><strong>Step 1 — Arrange the 6 math books.</strong> Since the books are distinct, there are $6! = 720$ ways.</p>
+<p><strong>Step 2 — Identify the gaps.</strong> With 6 math books in a row, there are 7 gaps (one before each book, one between each pair, one after the last): _ M _ M _ M _ M _ M _ M _.</p>
+<p><strong>Step 3 — Place the 2 history books in distinct gaps</strong> (so they can't be adjacent). Choose 2 of the 7 gaps and assign the 2 distinct history books: $P(7, 2) = 7 \\times 6 = 42$ ways.</p>
+<p><strong>Total:</strong> $720 \\times 42 = \\mathbf{30{,}240}$ arrangements.</p>
+<p><em>Note: Sebastien's original solution also arrived at 30,240 using this exact method — well done!</em></p>`
+      },
+
+    ]
+  },
+
+  // ═══════════════════════════════════════════════════════════
+  // COLUMN 3 — Committees & Groups
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: "col-3",
+    accentVar: "var(--col3-light)",
+    headerClass: "col-3-header",
+    tileClass: "col-3",
+    label: "Column III",
+    title: "Committees & Groups",
+    topics: "Combinations with inclusion/exclusion constraints",
+    tiles: [
+
+      {
+        icon: "🎓",
+        title: "Community Presentation Groups",
+        sub: "Groups of 4 from 20 students, order doesn't matter",
+        author: "Niko",
+        problem: `From a class of 20 students, a group of students will present their project to the school during Community Time. How many different groups of 4 are possible, if order doesn't matter?`,
+        solution: `<p>We need to choose 4 students from 20 where order does not matter — this is a combination.</p>
+<p>$$\\binom{20}{4} = \\frac{20!}{4! \\cdot 16!} = \\frac{20 \\times 19 \\times 18 \\times 17}{4 \\times 3 \\times 2 \\times 1} = \\frac{116{,}280}{24} = \\mathbf{4{,}845}$$</p>
+<p>There are <strong>4,845</strong> possible groups.</p>`
+      },
+
+      {
+        icon: "🌿",
+        title: "The Community Service Trip",
+        sub: "3 students from 7 (4 girls, 3 boys) — must include exactly 1 boy",
+        author: "Dinero",
+        problem: `At school, there is a Community Service Club that consists of 7 students: 4 girls and 3 boys. There is an opportunity for a service trip, but only 3 students are allowed to go. If a team must include exactly 1 boy, how many different teams are possible? The order of the teams does not matter.`,
+        solution: `<p>We need exactly 1 boy and exactly 2 girls.</p>
+<p><strong>Choose 1 boy from 3:</strong> $\\binom{3}{1} = 3$</p>
+<p><strong>Choose 2 girls from 4:</strong> $\\binom{4}{2} = 6$</p>
+<p><strong>Total:</strong> $3 \\times 6 = \\mathbf{18}$ possible teams.</p>`
+      },
+
+      {
+        icon: "☕",
+        title: "Starbucks or Dunkin'?",
+        sub: "Groups of 5 from 18 students who must all agree on the same location",
+        author: "Lily",
+        problem: `After school, 18 students are deciding where to go for a study break: Starbucks or Dunkin'. Of these students, 7 will only go to Starbucks, 5 will only go to Dunkin', and 6 don't care and will go to either place.<br><br>A group of 5 students is chosen at random to go together. How many different groups of 5 students can be formed if the group must all agree on the same location?`,
+        solution: `<p>The group must all go to the same place. There are two cases:</p>
+<p><strong>Case 1 — All go to Starbucks:</strong> The group can include the 7 Starbucks-only students and the 6 flexible students (13 total). Choose 5: $\\binom{13}{5} = 1{,}287$.</p>
+<p><strong>Case 2 — All go to Dunkin':</strong> The group can include the 5 Dunkin'-only students and the 6 flexible students (11 total). Choose 5: $\\binom{11}{5} = 462$.</p>
+<p><strong>Total:</strong> $1{,}287 + 462 = \\mathbf{1{,}749}$ groups.</p>`
+      },
+
+    ]
+  },
+
+  // ═══════════════════════════════════════════════════════════
+  // COLUMN 4 — Distributions
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: "col-4",
+    accentVar: "var(--col4-light)",
+    headerClass: "col-4-header",
+    tileClass: "col-4",
+    label: "Column IV",
+    title: "Distributions",
+    topics: "Stars & bars, non-adjacency, distributing identical items",
+    tiles: [
+
+      {
+        icon: "💐",
+        title: "Wedding Flower Arrangements",
+        sub: "Arrange 13 roses and 4 carnations — no two carnations adjacent",
+        author: "Cassidy",
+        problem: `You are organizing flowers at a wedding. How many ways can you arrange 13 roses and 4 carnations so that no two carnations are next to each other?`,
+        solution: `<p>We need to place 4 carnations among 13 roses so that no two carnations are adjacent.</p>
+<p><strong>Step 1 —</strong> First, arrange the 13 (identical) roses in a row. This creates 14 gaps (one before each rose and one after the last): _ R _ R _ R _ … _ R _.</p>
+<p><strong>Step 2 —</strong> Choose 4 of these 14 gaps for the carnations (treating carnations as identical): $\\binom{14}{4} = 1{,}001$.</p>
+<p><strong>Step 3 —</strong> However, since the carnations are distinguishable (they're individual flowers), multiply by the number of ways to arrange 4 carnations in those chosen positions: $4! = 24$. Similarly for roses if they're distinct, but the problem implies identical roses.</p>
+<p>If all flowers of the same type are identical: $\\binom{14}{4} = \\mathbf{1{,}001}$ arrangements. If carnations are distinct: $\\binom{14}{4} \\times 4! = 1{,}001 \\times 24 = \\mathbf{24{,}024}$ arrangements.</p>`
+      },
+
+      {
+        icon: "🍗",
+        title: "The Late Dining Hall Dinner",
+        sub: "Distribute 18 pieces of orange chicken to 5 players — min 2, max 6 each",
+        author: "Alex H.",
+        problem: `Five hockey players walk into the dining hall after late practice. There are only 18 pieces of orange chicken left. Some of the guys have a dorm dinner later and will eat again. If each player must get at least 2 pieces of chicken and no student may get more than 6 pieces of chicken, how many different ways can they distribute the chicken?`,
+        solution: `<p>Let $x_i$ be the number of pieces player $i$ gets, with $2 \\leq x_i \\leq 6$ for each $i$ and $\\sum x_i = 18$.</p>
+<p><strong>Substitute</strong> $y_i = x_i - 2$ (so $0 \\leq y_i \\leq 4$): $\\sum y_i = 18 - 10 = 8$.</p>
+<p><strong>Without the upper bound</strong>, solutions to $\\sum y_i = 8$ with $y_i \\geq 0$: $\\binom{8+4}{4} = \\binom{12}{4} = 495$.</p>
+<p><strong>Subtract cases where some $y_i \\geq 5$:</strong> If player $i$ has $y_i \\geq 5$, let $z_i = y_i - 5$: $z_i + \\sum_{j \\neq i} y_j = 3$. Solutions: $\\binom{7}{4} = 35$. There are 5 such players, giving $5 \\times 35 = 175$ cases. No player can have $y_i \\geq 10$ (since total is 8), so no over-subtraction.</p>
+<p><strong>Answer:</strong> $495 - 175 = \\mathbf{320}$ distributions.</p>`
+      },
+
+      {
+        icon: "⚔️",
+        title: "The Pirate Captain's Gold",
+        sub: "Distribute 20 coins among 6 crewmembers — at least 1 each",
+        author: "Tiger",
+        problem: `A pirate captain has 20 gold coins to divide among 6 crewmembers. Every crew member must receive at least 1 coin or they'll jump the ship. How many ways can the captain distribute the coins?`,
+        solution: `<p>We need the number of ways to distribute 20 identical coins among 6 distinct crewmembers such that each gets at least 1.</p>
+<p><strong>Substitute</strong> $y_i = x_i - 1$ (so $y_i \\geq 0$): $\\sum y_i = 20 - 6 = 14$.</p>
+<p>By stars and bars:</p>
+<p>$$\\binom{14 + 5}{5} = \\binom{19}{5} = \\frac{19 \\times 18 \\times 17 \\times 16 \\times 15}{5!} = \\frac{1{,}395{,}360}{120} = \\mathbf{11{,}628}$$</p>
+<p>There are <strong>11,628</strong> ways to distribute the coins.</p>`
+      },
+
+      {
+        icon: "✈️",
+        title: "Planes to Military Bases",
+        sub: "Distribute 48 planes to 12 bases — at least 2 per base",
+        author: "Joaquin",
+        problem: `The United States Department of Defense is greatly concerned with the security of their military installations in the Indo-Pacific region. The Secretary of Defense is wondering how many ways the D.O.D. can distribute planes to military bases in the region if there are currently 12 bases and 48 planes, and each base needs at least 2 planes for adequate protection.`,
+        solution: `<p>We need to distribute 48 identical planes among 12 distinct bases with each base receiving at least 2.</p>
+<p><strong>Substitute</strong> $y_i = x_i - 2$ (so $y_i \\geq 0$): $\\sum y_i = 48 - 24 = 24$.</p>
+<p>By stars and bars, the number of non-negative integer solutions is:</p>
+<p>$$\\binom{24 + 11}{11} = \\binom{35}{11}$$</p>
+<p>$$\\binom{35}{11} = \\frac{35!}{11! \\cdot 24!} = \\mathbf{417{,}225{,}900}$$</p>
+<p>There are <strong>417,225,900</strong> ways to distribute the planes.</p>`
+      }
+
+    ]
+  }
+
+]; // end columns
+
+
+/* ============================================================
+   RENDER BOARD
+============================================================ */
+function renderBoard() {
+  const grid = document.getElementById('board-grid');
+  grid.innerHTML = '';
+
+  columns.forEach((col, ci) => {
+    const colGroup = document.createElement('div');
+    colGroup.className = 'col-group';
+
+    // Header
+    const header = document.createElement('div');
+    header.className = `col-header ${col.headerClass}`;
+    header.style.gridColumn = ci + 1;
+    header.style.gridRow = 1;
+    header.innerHTML = `
+      <div class="col-header-num">${col.label}</div>
+      <h2>${col.title}</h2>
+      <div class="col-topics">${col.topics}</div>
+    `;
+    colGroup.appendChild(header);
+
+    // Tiles
+    col.tiles.forEach((tile, ti) => {
+      const tileEl = document.createElement('div');
+      tileEl.className = `tile ${col.tileClass}`;
+      tileEl.style.gridColumn = ci + 1;
+      tileEl.style.gridRow = ti + 2;
+      tileEl.setAttribute('role', 'button');
+      tileEl.setAttribute('tabindex', '0');
+      tileEl.setAttribute('aria-label', tile.title);
+      tileEl.innerHTML = `
+        <span class="tile-icon">${tile.icon}</span>
+        <div class="tile-title">${tile.title}</div>
+        <div class="tile-sub">${tile.sub}</div>
+        <div class="tile-byline">by ${tile.author}</div>
+        <span class="tile-arrow">↗</span>
+      `;
+      tileEl.addEventListener('click', () => openModal(ci, ti));
+      tileEl.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') openModal(ci, ti); });
+      colGroup.appendChild(tileEl);
+    });
+
+    grid.appendChild(colGroup);
+  });
+}
+
+/* ============================================================
+   MODAL
+============================================================ */
+function openModal(colIdx, tileIdx) {
+  const col  = columns[colIdx];
+  const tile = col.tiles[tileIdx];
+
+  const accentEl = document.getElementById('modal-accent');
+  accentEl.className = 'modal-header-accent';
+  accentEl.style.background = col.accentVar;
+
+  const labelEl = document.getElementById('modal-col-label');
+  labelEl.style.color = col.accentVar;
+  labelEl.textContent = col.label + ' · ' + col.title;
+
+  document.getElementById('modal-title').textContent = tile.title;
+  document.getElementById('modal-byline').textContent = 'Written by ' + tile.author;
+
+  const body = document.getElementById('modal-body');
+  body.innerHTML = '';
+
+  const block = document.createElement('div');
+  block.className = 'problem-block';
+  block.style.borderBottom = 'none';
+  block.style.marginBottom = '0';
+  block.style.paddingBottom = '0';
+
+  const answerId = `ans-${colIdx}-${tileIdx}`;
+  const toggleId = `tog-${colIdx}-${tileIdx}`;
+
+  block.innerHTML = `
+    <div class="problem-text">${tile.problem}</div>
+    <button class="answer-toggle" id="${toggleId}" onclick="toggleAnswer('${answerId}','${toggleId}')">
+      <span class="toggle-icon">▼</span> Show Solution
+    </button>
+    <div class="answer-panel" id="${answerId}">
+      ${tile.solution}
+    </div>
+  `;
+  body.appendChild(block);
+
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('desmos-fab').classList.add('visible');
+
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([body]).catch(err => console.log(err));
+  }
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+  document.getElementById('desmos-fab').classList.remove('visible');
+}
+
+function toggleAnswer(panelId, toggleId) {
+  const panel  = document.getElementById(panelId);
+  const toggle = document.getElementById(toggleId);
+  const isOpen = panel.classList.contains('open');
+  panel.classList.toggle('open');
+  toggle.classList.toggle('open');
+  toggle.innerHTML = isOpen
+    ? '<span class="toggle-icon">▼</span> Show Solution'
+    : '<span class="toggle-icon">▼</span> Hide Solution';
+
+  if (!isOpen && window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([panel]).catch(err => console.log(err));
+  }
+}
+
+/* ============================================================
+   RANDOM PROBLEM
+============================================================ */
+function openRandomProblem() {
+  const colIdx  = Math.floor(Math.random() * columns.length);
+  const col     = columns[colIdx];
+  const tileIdx = Math.floor(Math.random() * col.tiles.length);
+  const tile    = col.tiles[tileIdx];
+
+  const accentEl = document.getElementById('modal-accent');
+  accentEl.className = 'modal-header-accent random-accent';
+  accentEl.style.background = '';
+
+  const labelEl = document.getElementById('modal-col-label');
+  labelEl.style.color = 'var(--text-muted)';
+  labelEl.textContent = 'Problem Solving · Student Counting Problems';
+
+  document.getElementById('modal-title').textContent = 'Random Problem';
+  document.getElementById('modal-byline').textContent = 'Written by ' + tile.author;
+
+  const body = document.getElementById('modal-body');
+  body.innerHTML = '';
+
+  const block = document.createElement('div');
+  block.className = 'problem-block';
+  block.style.borderBottom = 'none';
+  block.style.marginBottom = '0';
+  block.style.paddingBottom = '0';
+
+  block.innerHTML = `
+    <div class="problem-text">${tile.problem}</div>
+    <button class="answer-toggle" id="rand-tog" onclick="toggleAnswer('rand-ans','rand-tog')">
+      <span class="toggle-icon">▼</span> Show Solution
+    </button>
+    <div class="answer-panel" id="rand-ans">
+      ${tile.solution}
+    </div>
+  `;
+
+  body.appendChild(block);
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('desmos-fab').classList.add('visible');
+
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([body]).catch(err => console.log(err));
+  }
+}
+
+document.getElementById('random-btn').addEventListener('click', openRandomProblem);
+
+/* ============================================================
+   DESMOS FAB
+============================================================ */
+document.getElementById('desmos-fab').addEventListener('click', () => {
+  window.open('https://www.desmos.com/calculator', '_blank', 'width=1000,height=700,noopener,noreferrer');
+});
+
+/* ============================================================
+   EVENT LISTENERS
+============================================================ */
+document.getElementById('modal-close').addEventListener('click', closeModal);
+document.getElementById('modal-overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+</script>
+</body>
+</html>
