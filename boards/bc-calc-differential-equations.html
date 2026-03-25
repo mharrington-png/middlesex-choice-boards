@@ -1,0 +1,1992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BC Calculus — Unit 7: Differential Equations | Middlesex School</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet" />
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+    startup: {
+      typeset: false,
+      ready() {
+        MathJax.startup.defaultReady();
+        renderBoard();
+        MathJax.typesetPromise([document.getElementById('board-grid')])
+          .catch(err => console.log(err));
+      }
+    }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+  /* ============================================================
+     TOKENS & RESET
+  ============================================================ */
+  :root {
+    --crimson:     #cf003d;
+    --crimson-dim: #8a0028;
+    --crimson-glow:#ff1a55;
+    --black:       #0d0d0d;
+    --surface:     #151515;
+    --surface2:    #1e1e1e;
+    --surface3:    #252525;
+    --border:      #2e2e2e;
+    --border-light:#3a3a3a;
+    --text:        #f0ece6;
+    --text-muted:  #9e9e9e;
+    --text-dim:    #666666;
+
+    --col1: #cf003d;
+    --col2: #1a6b5a;
+    --col3: #4a5568;
+    --col4: #7c4a1e;
+
+    --col1-light: #ff4d75;
+    --col2-light: #2dd4bf;
+    --col3-light: #94a3b8;
+    --col4-light: #f59e0b;
+
+    --radius: 10px;
+    --radius-lg: 16px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.5);
+    --shadow-hover: 0 8px 40px rgba(0,0,0,0.7);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 16px;
+    line-height: 1.65;
+    min-height: 100vh;
+  }
+
+  /* ============================================================
+     HEADER
+  ============================================================ */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 32px 40px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--crimson), var(--crimson-glow), var(--crimson));
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(207,0,61,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .header-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+  }
+
+  .school-tag {
+    font-family: 'Source Serif 4', serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--crimson-glow);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .school-tag::before,
+  .school-tag::after {
+    content: '';
+    display: inline-block;
+    width: 28px;
+    height: 1px;
+    background: var(--crimson-glow);
+  }
+
+  h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    margin-top: 4px;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--crimson-glow);
+  }
+
+  .header-meta {
+    margin-top: 4px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .meta-pill {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 3px 12px;
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+  }
+
+  /* ============================================================
+     INSTRUCTIONS BAR
+  ============================================================ */
+  .instructions {
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 40px;
+    font-size: 13px;
+    color: var(--text-muted);
+    text-align: center;
+    letter-spacing: 0.03em;
+  }
+
+  .instructions strong { color: var(--crimson-glow); font-weight: 600; }
+
+  /* ============================================================
+     BOARD GRID
+  ============================================================ */
+  .board-wrap {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 36px 24px 60px;
+  }
+
+  .board-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto repeat(4, 1fr);
+    gap: 20px;
+  }
+
+  .col-group {
+    display: contents;
+  }
+
+  /* Column headers */
+  .col-header {
+    border-radius: var(--radius) var(--radius) 0 0;
+    padding: 16px 18px 14px;
+    position: relative;
+    overflow: hidden;
+    align-self: start;
+  }
+
+  .col-header::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .col-1-header { background: color-mix(in srgb, var(--col1) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col1) 40%, transparent); }
+  .col-2-header { background: color-mix(in srgb, var(--col2) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col2) 40%, transparent); }
+  .col-3-header { background: color-mix(in srgb, var(--col3) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col3) 40%, transparent); }
+  .col-4-header { background: color-mix(in srgb, var(--col4) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col4) 40%, transparent); }
+
+  .col-header-num {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    opacity: 0.7;
+  }
+
+  .col-1-header .col-header-num { color: var(--col1-light); }
+  .col-2-header .col-header-num { color: var(--col2-light); }
+  .col-3-header .col-header-num { color: var(--col3-light); }
+  .col-4-header .col-header-num { color: var(--col4-light); }
+
+  .col-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.25;
+  }
+
+  .col-header .col-topics {
+    margin-top: 6px;
+    font-size: 10.5px;
+    color: var(--text-dim);
+    letter-spacing: 0.04em;
+  }
+
+  /* ============================================================
+     TILES
+  ============================================================ */
+  .tile {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 18px 28px;
+    cursor: pointer;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+    position: relative;
+    overflow: hidden;
+    user-select: none;
+  }
+
+  .tile::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+    border-radius: var(--radius) 0 0 var(--radius);
+    transition: opacity 0.2s;
+  }
+
+  .col-1 .tile::before { background: var(--col1-light); }
+  .col-2 .tile::before { background: var(--col2-light); }
+  .col-3 .tile::before { background: var(--col3-light); }
+  .col-4 .tile::before { background: var(--col4-light); }
+
+  .tile:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-hover);
+    background: var(--surface3);
+  }
+
+  .col-1 .tile:hover { border-color: color-mix(in srgb, var(--col1) 60%, transparent); }
+  .col-2 .tile:hover { border-color: color-mix(in srgb, var(--col2) 60%, transparent); }
+  .col-3 .tile:hover { border-color: color-mix(in srgb, var(--col3) 60%, transparent); }
+  .col-4 .tile:hover { border-color: color-mix(in srgb, var(--col4) 60%, transparent); }
+
+  .tile-icon {
+    font-size: 18px;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .tile-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+    margin-bottom: 5px;
+  }
+
+  .tile-sub {
+    font-size: 11.5px;
+    color: var(--text-muted);
+    line-height: 1.4;
+  }
+
+  .tile-topics {
+    position: absolute;
+    bottom: 10px;
+    left: 18px;
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.06em;
+  }
+
+  .tile-arrow {
+    position: absolute;
+    bottom: 12px; right: 14px;
+    font-size: 14px;
+    opacity: 0.3;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+
+  .tile:hover .tile-arrow { opacity: 0.8; transform: translate(2px, -2px); }
+  .col-1 .tile:hover .tile-arrow { color: var(--col1-light); }
+  .col-2 .tile:hover .tile-arrow { color: var(--col2-light); }
+  .col-3 .tile:hover .tile-arrow { color: var(--col3-light); }
+  .col-4 .tile:hover .tile-arrow { color: var(--col4-light); }
+
+  /* ============================================================
+     MODAL
+  ============================================================ */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.82);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    backdrop-filter: blur(4px);
+  }
+
+  .modal-overlay.open { display: flex; animation: fadeIn 0.2s ease; }
+
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    width: 100%;
+    max-width: 760px;
+    max-height: 88vh;
+    overflow-y: auto;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.8);
+    animation: slideUp 0.22s ease;
+    position: relative;
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .modal-header {
+    padding: 24px 28px 20px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .modal-header-accent {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  }
+
+  .modal-col-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+  }
+
+  .modal-close {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.15s, color 0.15s;
+  }
+
+  .modal-close:hover { background: var(--crimson); color: white; border-color: var(--crimson); }
+
+  .modal-body { padding: 24px 28px 32px; }
+
+  /* Video section */
+  .video-section {
+    background: var(--surface2);
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 24px;
+  }
+
+  .video-label {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+
+  .video-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    color: var(--crimson-glow);
+    text-decoration: none;
+    font-size: 13.5px;
+    font-family: 'Source Serif 4', serif;
+    transition: color 0.15s;
+  }
+
+  .video-link:hover { color: #fff; }
+  .video-icon { font-size: 12px; opacity: 0.7; }
+
+  /* Problems */
+  .problem-block {
+    margin-bottom: 28px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .problem-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+  .problem-num {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+  }
+
+  .problem-context {
+    font-size: 14px;
+    font-style: italic;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    padding-left: 12px;
+    border-left: 2px solid var(--border-light);
+  }
+
+  .problem-text {
+    font-size: 14.5px;
+    color: var(--text);
+    line-height: 1.7;
+    margin-bottom: 14px;
+  }
+
+  .problem-parts { margin-left: 0; list-style: none; }
+
+  .problem-parts li {
+    font-size: 14px;
+    color: var(--text);
+    margin-bottom: 8px;
+    padding-left: 24px;
+    position: relative;
+    line-height: 1.6;
+  }
+
+  .problem-parts li::before {
+    content: attr(data-part);
+    position: absolute;
+    left: 0;
+    font-weight: 700;
+    color: var(--text-muted);
+  }
+
+  .answer-toggle {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 9px 16px;
+    color: var(--text-muted);
+    font-family: 'Source Serif 4', serif;
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.15s;
+    margin-top: 4px;
+  }
+
+  .answer-toggle:hover { background: var(--surface3); border-color: var(--border-light); color: var(--text); }
+  .answer-toggle .toggle-icon { font-size: 10px; transition: transform 0.2s; }
+  .answer-toggle.open .toggle-icon { transform: rotate(180deg); }
+
+  .answer-panel {
+    display: none;
+    margin-top: 14px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-size: 13.5px;
+    line-height: 1.75;
+    color: var(--text);
+    animation: expandIn 0.18s ease;
+  }
+
+  @keyframes expandIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .answer-panel.open { display: block; }
+
+  .answer-part { margin-bottom: 10px; padding-left: 20px; position: relative; }
+  .answer-part:last-child { margin-bottom: 0; }
+  .answer-part-label { position: absolute; left: 0; font-weight: 700; color: var(--text-muted); }
+
+  /* Slope field SVG container */
+  .slope-field-wrap {
+    margin: 12px 0 8px;
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  .slope-field-label {
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  /* Graph image for slope field problems */
+  .problem-img {
+    display: block;
+    width: 360px;
+    max-width: 100%;
+    border-radius: 6px;
+    margin: 10px 0 6px;
+  }
+
+  /* ============================================================
+     RESPONSIVE
+  ============================================================ */
+  @media (max-width: 1000px) {
+    .board-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .col-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: calc(50% - 10px);
+    }
+    .col-header { border-radius: var(--radius); }
+    .tile {
+      grid-column: unset !important;
+      grid-row: unset !important;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .board-grid { flex-direction: column; }
+    .col-group { width: 100%; }
+    header { padding: 20px; }
+    .board-wrap { padding: 20px 12px 40px; }
+    .modal { border-radius: var(--radius); }
+    .modal-header, .modal-body { padding: 18px; }
+  }
+
+  .modal::-webkit-scrollbar { width: 6px; }
+  .modal::-webkit-scrollbar-track { background: var(--surface); }
+  .modal::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
+
+  /* ============================================================
+     RANDOM PRACTICE BAR
+  ============================================================ */
+  .random-wrap {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 24px 48px;
+  }
+
+  .random-btn {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border-light);
+    border-radius: 14px;
+    padding: 0 36px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.2s ease, background 0.2s ease;
+    font-family: 'Source Serif 4', serif;
+  }
+
+  .random-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(207,0,61,0.06) 30%, rgba(207,0,61,0.10) 50%, rgba(207,0,61,0.06) 70%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .random-btn:hover::before { opacity: 1; }
+
+  .random-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(207,0,61,0.18), 0 2px 8px rgba(0,0,0,0.4);
+    border-color: color-mix(in srgb, var(--crimson) 55%, transparent);
+    background: var(--surface3);
+  }
+
+  .random-btn:active { transform: translateY(0) scale(0.995); box-shadow: 0 2px 8px rgba(0,0,0,0.4); }
+
+  .random-btn-left-notch, .random-btn-right-notch {
+    position: absolute;
+    bottom: 0;
+    width: 28px; height: 5px;
+    background: var(--border);
+    border-radius: 3px 3px 0 0;
+    transition: background 0.2s;
+  }
+  .random-btn-left-notch  { left: 60px; }
+  .random-btn-right-notch { right: 60px; }
+  .random-btn:hover .random-btn-left-notch,
+  .random-btn:hover .random-btn-right-notch { background: color-mix(in srgb, var(--crimson) 40%, var(--border)); }
+
+  .random-btn-icon { font-size: 22px; flex-shrink: 0; transition: transform 0.3s ease; }
+  .random-btn:hover .random-btn-icon { transform: rotate(20deg) scale(1.15); }
+
+  .random-btn-label { display: flex; flex-direction: column; align-items: center; gap: 1px; }
+  .random-btn-title { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; color: var(--text); letter-spacing: 0.01em; line-height: 1.2; }
+  .random-btn-sub { font-size: 11.5px; color: var(--text-muted); letter-spacing: 0.07em; text-transform: uppercase; }
+
+  .random-btn-badge {
+    position: absolute;
+    right: 28px;
+    background: var(--surface3);
+    border: 1px solid var(--border-light);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-family: 'Source Serif 4', serif;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+
+  .random-btn:hover .random-btn-badge {
+    background: color-mix(in srgb, var(--crimson) 15%, var(--surface3));
+    color: var(--crimson-glow);
+    border-color: color-mix(in srgb, var(--crimson) 40%, transparent);
+  }
+
+  .random-accent {
+    background: linear-gradient(90deg, var(--col1-light), var(--col2-light), var(--col3-light), var(--col4-light));
+    background-size: 300% 100%;
+    animation: accentShift 4s ease infinite;
+  }
+
+  @keyframes accentShift {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  @media (max-width: 600px) {
+    .random-wrap { padding: 0 12px 36px; }
+    .random-btn { height: 64px; border-radius: 10px; }
+    .random-btn-badge, .random-btn-left-notch, .random-btn-right-notch { display: none; }
+  }
+
+  /* ============================================================
+     DESMOS FLOATING BUTTON
+  ============================================================ */
+  .desmos-fab {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    z-index: 1050;
+    background: var(--surface2);
+    border: 1px solid var(--border-light);
+    border-radius: 50px;
+    padding: 0 20px 0 14px;
+    height: 52px;
+    display: none;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    font-family: 'Source Serif 4', serif;
+  }
+
+  .desmos-fab.visible { display: flex; animation: fadeIn 0.18s ease; }
+
+  .desmos-fab:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(207,0,61,0.25), 0 2px 8px rgba(0,0,0,0.5);
+    border-color: color-mix(in srgb, var(--crimson) 60%, transparent);
+    background: var(--surface3);
+  }
+
+  .desmos-fab:active { transform: translateY(0) scale(0.97); }
+
+  .desmos-fab-icon { font-size: 20px; line-height: 1; flex-shrink: 0; transition: transform 0.2s ease; }
+  .desmos-fab:hover .desmos-fab-icon { transform: rotate(-8deg) scale(1.1); }
+
+  .desmos-fab-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    display: block;
+    line-height: 1.25;
+  }
+
+  .desmos-fab-sub {
+    font-size: 9.5px;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    display: block;
+  }
+
+  @media (max-width: 600px) {
+    .desmos-fab { bottom: 20px; right: 16px; padding: 0 14px; }
+    .desmos-fab-sub { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     HEADER
+============================================================ -->
+<header>
+  <div class="header-inner">
+    <div class="school-tag">Middlesex School · mxschool.edu</div>
+    <h1>BC Calculus — Unit 7: <em>Differential Equations</em></h1>
+    <div class="header-meta">
+      <span class="meta-pill">📐 Modeling &amp; Verifying</span>
+      <span class="meta-pill">〰️ Slope Fields</span>
+      <span class="meta-pill">🔢 Euler's Method</span>
+      <span class="meta-pill">∫ Separation of Variables</span>
+      <span class="meta-pill">📈 Logistic Growth</span>
+      <span class="meta-pill">Topics 7.1 – 7.9</span>
+    </div>
+  </div>
+</header>
+
+<div class="instructions">
+  Click any tile to open practice problems. Use <strong>Show Answer</strong> to check your work after attempting each part.
+</div>
+
+<!-- ============================================================
+     BOARD
+============================================================ -->
+<div class="board-wrap">
+  <div class="board-grid" id="board-grid"></div>
+</div>
+
+<!-- ============================================================
+     RANDOM PRACTICE BAR
+============================================================ -->
+<div class="random-wrap">
+  <button class="random-btn" id="random-btn" aria-label="Random Practice">
+    <div class="random-btn-left-notch"></div>
+    <div class="random-btn-right-notch"></div>
+    <span class="random-btn-icon">🎲</span>
+    <div class="random-btn-label">
+      <span class="random-btn-title">Random Practice</span>
+      <span class="random-btn-sub">Any topic · Any tile · Any problem</span>
+    </div>
+    <span class="random-btn-badge">47 problems</span>
+  </button>
+</div>
+
+<!-- ============================================================
+     DESMOS FLOATING BUTTON
+============================================================ -->
+<button class="desmos-fab" id="desmos-fab" aria-label="Open Desmos Graphing Calculator">
+  <span class="desmos-fab-icon">📈</span>
+  <span>
+    <span class="desmos-fab-title">Graphing Calculator</span>
+    <span class="desmos-fab-sub">Opens Desmos in a new tab</span>
+  </span>
+</button>
+
+<!-- ============================================================
+     MODAL
+============================================================ -->
+<div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div class="modal-header-accent" id="modal-accent"></div>
+      <div>
+        <div class="modal-col-label" id="modal-col-label"></div>
+        <div class="modal-title" id="modal-title"></div>
+      </div>
+      <button class="modal-close" id="modal-close" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   DATA
+   Edit problems here without touching layout code.
+   GRAPH NEEDED comments mark places where a slope field
+   or direction field image would enhance the problem.
+   Replace each comment with:
+     <img src='img/filename.png' alt='description' class='problem-img'>
+   once you have created the image in Desmos or GeoGebra.
+
+   Slope fields in answers use inline SVG (9–12 grid points).
+============================================================ */
+
+const columns = [
+
+  // ═══════════════════════════════════════════════════════════
+  // COLUMN 1 — Modeling & Verifying Differential Equations
+  //            Topics 7.1, 7.2
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: "col-1",
+    accentVar: "var(--col1-light)",
+    headerClass: "col-1-header",
+    tileClass: "col-1",
+    label: "Column I",
+    title: "Modeling & Verifying Differential Equations",
+    topics: "Topics 7.1 – 7.2",
+    tiles: [
+
+      // ── TILE 1-A ──────────────────────────────────────────
+      {
+        icon: "📝",
+        video: { title: "Writing a Diff Eq to Model Change in a Bank Account", url: "https://www.youtube.com/watch?v=FHskxBd-JOo" },
+        title: "Writing Differential Equations",
+        sub: "Translating verbal descriptions into $dy/dx$ statements",
+        topics: "7.1",
+        problems: [
+          {
+            context: "Context: Proportional rate of change",
+            stem: "For each scenario, write a differential equation that models the situation. Define all variables.",
+            parts: [
+              { label: "(a)", text: "The rate of change of a population $P$ with respect to time $t$ is proportional to the population itself." },
+              { label: "(b)", text: "The rate of change of a population $P$ is proportional to the product of the current population and the difference between a carrying capacity of 500 and the current population." },
+              { label: "(c)", text: "Newton's Law of Cooling: the rate at which an object's temperature $T$ changes is proportional to the difference between its temperature and the surrounding room temperature $T_r$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\dfrac{dP}{dt} = kP$ for some constant $k$. (Exponential growth if $k > 0$, decay if $k < 0$.)" },
+              { label: "(b)", text: "$\\dfrac{dP}{dt} = kP(500 - P)$ for some constant $k > 0$. This is the logistic model with carrying capacity 500." },
+              { label: "(c)", text: "$\\dfrac{dT}{dt} = k(T - T_r)$ for some constant $k < 0$ (negative, since the object cools toward $T_r$)." }
+            ]
+          },
+          {
+            context: "Context: Rates in applied settings",
+            stem: "Write a differential equation for each situation.",
+            parts: [
+              { label: "(a)", text: "A 500-liter tank contains salt water. Pure water flows in at 5 L/min, and well-mixed solution flows out at 5 L/min. Let $Q$ = grams of salt in the tank at time $t$ minutes." },
+              { label: "(b)", text: "A savings account earns 3% annual interest compounded continuously. Let $A$ = balance in dollars at time $t$ years." },
+              { label: "(c)", text: "A rumor spreads through a school of 800 students. The rate of spread is jointly proportional to the number who have heard it, $H$, and the number who have not." }
+            ],
+            answers: [
+              { label: "(a)", text: "Salt flows out at $\\frac{Q}{500} \\cdot 5 = \\frac{Q}{100}$ g/min. No salt flows in. So $\\dfrac{dQ}{dt} = -\\dfrac{Q}{100}$." },
+              { label: "(b)", text: "$\\dfrac{dA}{dt} = 0.03A$." },
+              { label: "(c)", text: "$\\dfrac{dH}{dt} = kH(800 - H)$ for some constant $k > 0$." }
+            ]
+          },
+          {
+            context: "Context: Identifying variables and meaning",
+            stem: "The differential equation $\\dfrac{dP}{dt} = 0.04P - 200$ models a fish population (in hundreds) in a lake, where $t$ is in years.",
+            parts: [
+              { label: "(a)", text: "Interpret each term in the equation in context." },
+              { label: "(b)", text: "Find the equilibrium population (where $dP/dt = 0$)." },
+              { label: "(c)", text: "If the current population is 4,000 fish, is the population increasing or decreasing? Justify." }
+            ],
+            answers: [
+              { label: "(a)", text: "$0.04P$: the fish population grows at a rate of 4% per year. $-200$: 200 hundred fish are harvested per year at a constant rate. Together: net growth rate = natural growth minus harvesting." },
+              { label: "(b)", text: "$0.04P - 200 = 0 \\Rightarrow P = 5000$ hundred fish = 500,000 fish." },
+              { label: "(c)", text: "$P = 4000$ hundred. $\\dfrac{dP}{dt} = 0.04(4000) - 200 = 160 - 200 = -40 < 0$. The population is decreasing." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 1-B ──────────────────────────────────────────
+      {
+        icon: "✅",
+        video: { title: "Verifying Solutions to Diff Eqs", url: "https://www.youtube.com/watch?v=SAgPUt5dam4" },
+        title: "Verifying Solutions",
+        sub: "Substituting into a DE to confirm a function is a solution",
+        topics: "7.2",
+        problems: [
+          {
+            context: "Context: Checking a proposed solution",
+            stem: "For each differential equation, verify that the given function is a solution.",
+            parts: [
+              { label: "(a)", text: "$\\dfrac{dy}{dx} = 2y$; &nbsp; $y = 3e^{2x}$" },
+              { label: "(b)", text: "$\\dfrac{dy}{dx} = -y + 1$; &nbsp; $y = 1 + Ce^{-x}$ for any constant $C$" },
+              { label: "(c)", text: "$\\dfrac{d^2y}{dx^2} + y = 0$; &nbsp; $y = A\\sin x + B\\cos x$" }
+            ],
+            answers: [
+              { label: "(a)", text: "$y' = 6e^{2x}$. Check: $2y = 2(3e^{2x}) = 6e^{2x} = y'$. ✓" },
+              { label: "(b)", text: "$y' = -Ce^{-x}$. Check: $-y + 1 = -(1 + Ce^{-x}) + 1 = -Ce^{-x} = y'$. ✓ (valid for all $C$)" },
+              { label: "(c)", text: "$y' = A\\cos x - B\\sin x$, $y'' = -A\\sin x - B\\cos x$. Check: $y'' + y = (-A\\sin x - B\\cos x) + (A\\sin x + B\\cos x) = 0$. ✓" }
+            ]
+          },
+          {
+            context: "Context: Initial conditions — finding C",
+            stem: "The general solution of $\\dfrac{dy}{dx} = 3y$ is $y = Ce^{3x}$.",
+            parts: [
+              { label: "(a)", text: "Verify that $y = Ce^{3x}$ satisfies the differential equation for any constant $C$." },
+              { label: "(b)", text: "Find the particular solution satisfying $y(0) = 5$." },
+              { label: "(c)", text: "Find the particular solution satisfying $y(1) = e^3$. What is $C$?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$y' = 3Ce^{3x} = 3(Ce^{3x}) = 3y$. ✓" },
+              { label: "(b)", text: "$5 = Ce^0 = C$. Particular solution: $y = 5e^{3x}$." },
+              { label: "(c)", text: "$e^3 = Ce^{3(1)} = Ce^3 \\Rightarrow C = 1$. Particular solution: $y = e^{3x}$." }
+            ]
+          },
+          {
+            context: "Context: Distinguishing general from particular solutions",
+            stem: "Consider $\\dfrac{dy}{dx} = \\cos x$.",
+            parts: [
+              { label: "(a)", text: "Find the general solution by antidifferentiation." },
+              { label: "(b)", text: "How many particular solutions does this DE have? What determines which one describes a specific situation?" },
+              { label: "(c)", text: "Find the particular solution passing through $(\\pi, 0)$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$y = \\sin x + C$." },
+              { label: "(b)", text: "Infinitely many — one for each real value of $C$. An initial condition (a specific point on the curve) determines $C$ and selects a unique particular solution." },
+              { label: "(c)", text: "$0 = \\sin\\pi + C = 0 + C \\Rightarrow C = 0$. Particular solution: $y = \\sin x$." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 1-C ──────────────────────────────────────────
+      {
+        icon: "🔍",
+        video: { title: "The General Antiderivative of a Polynomial Function", url: "https://www.youtube.com/watch?v=RMtjkFUjem4" },
+        title: "General vs. Particular Solutions",
+        sub: "Families of solutions, initial conditions, and $C$",
+        topics: "7.2",
+        problems: [
+          {
+            context: "Context: Families of curves",
+            stem: "The differential equation $\\dfrac{dy}{dx} = 2x$ has general solution $y = x^2 + C$.",
+            parts: [
+              { label: "(a)", text: "Describe geometrically what the family of solutions looks like." },
+              { label: "(b)", text: "Find the three particular solutions passing through $(0, -2)$, $(0, 0)$, and $(0, 3)$." },
+              { label: "(c)", text: "Is there a solution passing through both $(1, 5)$ and $(2, 6)$? Justify." }
+            ],
+            answers: [
+              { label: "(a)", text: "The family $y = x^2 + C$ is a collection of vertical translations of the parabola $y = x^2$. Each curve has the same shape; they differ only in their vertical position." },
+              { label: "(b)", text: "$(0,-2)$: $C = -2$, so $y = x^2-2$. $(0,0)$: $C = 0$, so $y = x^2$. $(0,3)$: $C = 3$, so $y = x^2+3$." },
+              { label: "(c)", text: "From $(1,5)$: $5 = 1 + C \\Rightarrow C = 4$. Check $(2,6)$: $4+4 = 8 \\neq 6$. No — no single parabola in this family passes through both points." }
+            ]
+          },
+          {
+            context: "Context: Implicit solutions",
+            stem: "The equation $x^2 + y^2 = C$ (where $C > 0$) defines a family of curves.",
+            parts: [
+              { label: "(a)", text: "Differentiate implicitly to find $dy/dx$ as a function of $x$ and $y$. What differential equation does this family satisfy?" },
+              { label: "(b)", text: "Find the particular solution through $(3, 4)$." },
+              { label: "(c)", text: "Describe the geometry. What do these solution curves look like?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$2x + 2y\\dfrac{dy}{dx} = 0 \\Rightarrow \\dfrac{dy}{dx} = -\\dfrac{x}{y}$." },
+              { label: "(b)", text: "$C = 9 + 16 = 25$. Particular solution: $x^2 + y^2 = 25$." },
+              { label: "(c)", text: "Each solution curve is a circle centered at the origin with radius $\\sqrt{C}$. The family fills the plane with concentric circles." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 1-D ──────────────────────────────────────────
+      {
+        icon: "🧠",
+        title: "Mixed Practice — Modeling & Verification",
+        sub: "AP-style problems combining 7.1 and 7.2",
+        topics: "7.1 – 7.2",
+        problems: [
+          {
+            context: "Context: Multi-part modeling problem",
+            stem: "A 100-gallon tank initially contains 10 lbs of salt dissolved in 50 gallons of water. Brine containing 2 lbs/gal flows in at 3 gal/min, and the well-mixed solution drains at 3 gal/min. Let $Q(t)$ = lbs of salt at time $t$ minutes.",
+            parts: [
+              { label: "(a)", text: "Explain why the volume stays constant at 50 gallons." },
+              { label: "(b)", text: "Write a differential equation for $Q(t)$. Include the initial condition." },
+              { label: "(c)", text: "Verify that $Q(t) = 100 - 90e^{-3t/50}$ satisfies both the DE and the initial condition." }
+            ],
+            answers: [
+              { label: "(a)", text: "Flow rate in = flow rate out = 3 gal/min, so the volume doesn't change." },
+              { label: "(b)", text: "Rate in: $2 \\cdot 3 = 6$ lbs/min. Rate out: $\\frac{Q}{50} \\cdot 3 = \\frac{3Q}{50}$ lbs/min. $\\dfrac{dQ}{dt} = 6 - \\dfrac{3Q}{50}$, $Q(0) = 10$." },
+              { label: "(c)", text: "$Q' = -90 \\cdot (-3/50) e^{-3t/50} = \\frac{270}{50}e^{-3t/50}$. Check: $6 - \\frac{3Q}{50} = 6 - \\frac{3(100-90e^{-3t/50})}{50} = 6 - 6 + \\frac{270}{50}e^{-3t/50} = \\frac{270}{50}e^{-3t/50}$. ✓ &nbsp; $Q(0) = 100 - 90 = 10$. ✓" }
+            ]
+          },
+          {
+            context: "Context: Reading and interpreting a DE",
+            stem: "A biologist models a predator population $P$ (in thousands) by $\\dfrac{dP}{dt} = -0.1P + 0.002P^2$.",
+            parts: [
+              { label: "(a)", text: "Factor the right side and find all equilibrium values of $P$." },
+              { label: "(b)", text: "If $P = 30$ (thousand), evaluate $dP/dt$. Is the population growing or declining?" },
+              { label: "(c)", text: "Interpret the two terms on the right side biologically." }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\frac{dP}{dt} = P(-0.1 + 0.002P) = 0$ when $P = 0$ or $P = 50$. Equilibria at $P = 0$ and $P = 50$ thousand." },
+              { label: "(b)", text: "$\\frac{dP}{dt} = -0.1(30) + 0.002(900) = -3 + 1.8 = -1.2 < 0$. The population is declining." },
+              { label: "(c)", text: "$-0.1P$: natural mortality — the population declines at a rate proportional to its size (e.g., death rate exceeds birth rate without prey). $0.002P^2$: growth from predator–predator interaction or abundance of prey — larger populations find more resources and reproduce faster." }
+            ]
+          },
+          {
+            context: "Context: AP free-response style",
+            stem: "Let $y = f(x)$ be a solution to $\\dfrac{dy}{dx} = x - y$ with $f(0) = 2$.",
+            parts: [
+              { label: "(a)", text: "Find $f'(0)$ and $f''(0)$. (For $f''$, differentiate both sides of the DE with respect to $x$.)" },
+              { label: "(b)", text: "Write the second-degree Taylor polynomial for $f$ centered at $x = 0$." },
+              { label: "(c)", text: "Use your polynomial to estimate $f(0.2)$. Is this likely an overestimate or underestimate? Explain." }
+            ],
+            answers: [
+              { label: "(a)", text: "$f'(0) = 0 - 2 = -2$. Differentiate: $y'' = 1 - y'$. So $f''(0) = 1 - f'(0) = 1 - (-2) = 3$." },
+              { label: "(b)", text: "$P_2(x) = f(0) + f'(0)x + \\frac{f''(0)}{2}x^2 = 2 - 2x + \\frac{3}{2}x^2$." },
+              { label: "(c)", text: "$P_2(0.2) = 2 - 0.4 + \\frac{3}{2}(0.04) = 2 - 0.4 + 0.06 = 1.66$. The Taylor polynomial uses only local information and ignores higher-order terms; the actual solution may diverge from this estimate. Whether it's an over/underestimate depends on the sign of $f'''(0)$ (the next term), but students should note the approximation becomes less reliable further from $x = 0$." }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  // ═══════════════════════════════════════════════════════════
+  // COLUMN 2 — Slope Fields & Euler's Method
+  //            Topics 7.3, 7.4, 7.5
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: "col-2",
+    accentVar: "var(--col2-light)",
+    headerClass: "col-2-header",
+    tileClass: "col-2",
+    label: "Column II",
+    title: "Slope Fields & Euler's Method",
+    topics: "Topics 7.3 – 7.5",
+    tiles: [
+
+      // ── TILE 2-A ──────────────────────────────────────────
+      {
+        icon: "〰️",
+        video: { title: "Slope Fields", url: "https://www.youtube.com/watch?v=zuidhc0LAG8" },
+        title: "Sketching Slope Fields",
+        sub: "Drawing direction fields from $dy/dx = f(x, y)$",
+        topics: "7.3",
+        problems: [
+          {
+            context: "Context: Reading slope values from a DE",
+            stem: "For the differential equation $\\dfrac{dy}{dx} = x + y$, complete the following.",
+            parts: [
+              { label: "(a)", text: "Compute $dy/dx$ at each of the following points: $(0,0)$, $(1,0)$, $(0,1)$, $(-1, 1)$, $(1,-1)$." },
+              { label: "(b)", text: "Sketch a slope field on the grid with $x \\in \\{-1, 0, 1\\}$ and $y \\in \\{-1, 0, 1\\}$ — 9 grid points total. Draw a short segment with the correct slope at each point.<br><img src='img/u72a1bp.png' alt='Blank 3x3 grid for dy/dx = x+y' class='problem-img'>" },
+              { label: "(c)", text: "On your slope field, sketch the particular solution through $(0, 0)$. Does it appear to grow or decay as $x$ increases?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$(0,0)$: $0$. $(1,0)$: $1$. $(0,1)$: $1$. $(-1,1)$: $0$. $(1,-1)$: $0$." },
+              { label: "(b)", text: "<img src='img/u72a1ba.png' alt='Completed slope field for dy/dx = x+y' class='problem-img'>At each grid point $(x,y)$, draw a short segment with slope $x+y$. On the line $y = -x$, all slopes are zero (horizontal segments). Above this line slopes are positive; below, negative." },
+              { label: "(c)", text: "<img src='img/u72a1ca.png' alt='Slope field with solution curve through (0,0)' class='problem-img'>The solution through $(0,0)$ grows (curves upward to the right) because for $x > 0$, $dy/dx = x + y > 0$ and increasing." }
+            ]
+          },
+          {
+            context: "Context: Slopes depending only on y",
+            stem: "Consider $\\dfrac{dy}{dx} = y(1 - y)$.",
+            parts: [
+              { label: "(a)", text: "What are the equilibrium solutions (values of $y$ where $dy/dx = 0$ for all $x$)?" },
+              { label: "(b)", text: "Sketch a slope field for $x \\in \\{0, 1, 2\\}$ and $y \\in \\{-0.5, 0, 0.5, 1, 1.5\\}$ — 15 grid points.<br><img src='img/u72a2bs.png' alt='Blank slope field grid for dy/dx = y(1-y)' class='problem-img'>" },
+              { label: "(c)", text: "Describe the behavior of solution curves starting above $y = 1$, between $y = 0$ and $y = 1$, and below $y = 0$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$y(1-y) = 0 \\Rightarrow y = 0$ or $y = 1$. These are horizontal equilibrium lines." },
+              { label: "(b)", text: "<img src='img/u72a2ba.png' alt='Completed slope field for dy/dx = y(1-y)' class='problem-img'>Since slope depends only on $y$, all segments in the same horizontal row have the same slope. Row $y=0.5$: slope $= 0.5(0.5) = 0.25$ (positive, gentle rise). Row $y=1.5$: slope $= 1.5(-0.5) = -0.75$ (negative)." },
+              { label: "(c)", text: "Above $y=1$: $dy/dx < 0$, solutions decrease toward $y=1$. Between $0$ and $1$: $dy/dx > 0$, solutions increase toward $y=1$. Below $y=0$: $dy/dx < 0$, solutions decrease away from $y=0$ (unbounded decrease)." }
+            ]
+          },
+          {
+            context: "Context: Identifying isoclines",
+            stem: "The isoclines of $\\dfrac{dy}{dx} = f(x,y)$ are curves along which the slope is constant.",
+            parts: [
+              { label: "(a)", text: "For $\\dfrac{dy}{dx} = \\dfrac{x}{y}$, find the equation of the isocline along which all slopes equal 1. Along which all slopes equal $-1$." },
+              { label: "(b)", text: "Find all points where the slope field has horizontal segments (slope 0). What curve do these form?" },
+              { label: "(c)", text: "Describe the shape of solution curves. (Hint: $\\dfrac{dy}{dx} = \\dfrac{x}{y}$ implies $y\\,dy = x\\,dx$. Integrate both sides.)" }
+            ],
+            answers: [
+              { label: "(a)", text: "Slope $= 1$: $x/y = 1 \\Rightarrow y = x$. Slope $= -1$: $y = -x$." },
+              { label: "(b)", text: "Slope $= 0$: $x/y = 0 \\Rightarrow x = 0$ (the $y$-axis), provided $y \\neq 0$. Horizontal segments occur along the $y$-axis." },
+              { label: "(c)", text: "Integrating: $\\frac{y^2}{2} = \\frac{x^2}{2} + C$, i.e., $y^2 - x^2 = K$. The solution curves are hyperbolas (and, for $K = 0$, the lines $y = \\pm x$)." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 2-B ──────────────────────────────────────────
+      {
+        icon: "🗺️",
+        video: { title: "Determine Slope Field from a Diff Eq", url: "https://www.youtube.com/watch?v=4baLVDDjzgY" },
+        title: "Reasoning from Slope Fields",
+        sub: "Reading solutions and behavior from a direction field",
+        topics: "7.4",
+        problems: [
+          {
+            context: "Context: Reading a slope field",
+            stem: "A slope field for $\\dfrac{dy}{dx} = (2-y)(y+1)$ is shown.<br><img src='img/u72b1s.png' alt='Slope field for dy/dx = (2-y)(y+1)' class='problem-img'>",
+            parts: [
+              { label: "(a)", text: "Identify the equilibrium solutions visible in the slope field." },
+              { label: "(b)", text: "Sketch the particular solution through $(0, 1)$. Where does it appear to be heading as $x \\to \\infty$?" },
+              { label: "(c)", text: "Sketch the particular solution through $(0, 3)$. Contrast its long-run behavior with that of the solution in (b)." }
+            ],
+            answers: [
+              { label: "(a)", text: "Equilibria occur where all slope segments are horizontal: $y = 2$ and $y = -1$ (where $f(x,y) = 0$ for all $x$)." },
+              { label: "(b)", text: "<img src='img/u72b1a.png' alt='Solution curves through (0,1) and (0,3)' class='problem-img'>Starting at $(0,1)$, between the two equilibria: $dy/dx > 0$ (positive slopes), so the solution increases, approaching $y = 2$ asymptotically as $x \\to \\infty$. $y = 2$ is a stable equilibrium from below." },
+              { label: "(c)", text: "Starting at $(0,3)$, above $y=2$: $dy/dx < 0$, so the solution decreases toward $y=2$. Both solutions approach $y=2$, but from opposite directions. $y=2$ is stable; $y=-1$ is unstable." }
+            ]
+          },
+          {
+            context: "Context: Identifying a DE from its slope field",
+            stem: "The slope field below is shown for a differential equation of the form $\\dfrac{dy}{dx} = f(x,y)$.<br><img src='img/u72b2s.png' alt='Slope field to identify' class='problem-img'><br>Which of the following is the differential equation? <strong>Identify your choice and justify it using at least two features of the slope field.</strong><br><br>(A) &nbsp; $\\dfrac{dy}{dx} = x + y$ <br>(B) &nbsp; $\\dfrac{dy}{dx} = xy$ <br>(C) &nbsp; $\\dfrac{dy}{dx} = x^2$ <br>(D) &nbsp; $\\dfrac{dy}{dx} = y^2$",
+            parts: [],
+            answers: [
+              { label: "", text: "<strong>(B) &nbsp; $dy/dx = xy$</strong><br><br>Two justifying features:<br><br><strong>1. Horizontal segments along both axes.</strong> When $x = 0$ or $y = 0$, the slope $xy = 0$, so every segment on the $x$-axis and $y$-axis is horizontal. This rules out (A) ($x+y = 0$ only on the line $y=-x$), (C) ($x^2 = 0$ only on the $y$-axis, not the $x$-axis), and (D) ($y^2 = 0$ only on the $x$-axis, not the $y$-axis).<br><br><strong>2. Four-quadrant sign pattern.</strong> In QI ($x>0, y>0$) and QIII ($x<0, y<0$), the product $xy > 0$, so slopes are positive. In QII and QIV, $xy < 0$, so slopes are negative. This antisymmetric pattern is visible in the field and is unique to $xy$ among the choices." }
+            ]
+          },
+          {
+            context: "Context: Sketching a particular solution from a slope field",
+            stem: "A slope field for $\\dfrac{dy}{dx} = -\\dfrac{x}{y}$ is shown.<br><img src='img/u72b3s.png' alt='Slope field for dy/dx = -x/y' class='problem-img'>",
+            parts: [
+              { label: "(a)", text: "Sketch the particular solution passing through $(1, 1)$. Describe its shape." },
+              { label: "(b)", text: "Sketch the particular solution passing through $(0, -2)$. Describe its shape." },
+              { label: "(c)", text: "Confirm algebraically: solve $y\\,dy = -x\\,dx$ and identify the family of curves. Why does each solution curve only give a semicircle, not the full circle?" }
+            ],
+            answers: [
+              { label: "(a)", text: "<img src='img/u72b3a.png' alt='Solution semicircles through (1,1) and (0,-2)' class='problem-img'>Through $(1,1)$: $r^2 = 1^2+1^2 = 2$, so the full circle is $x^2+y^2=2$. Since $y(1)=1>0$, the solution stays on the upper semicircle $y = \\sqrt{2-x^2}$ on $(-\\sqrt{2},\\sqrt{2})$." },
+              { label: "(b)", text: "Through $(0,-2)$: $r^2 = 0+4=4$, so the full circle is $x^2+y^2=4$. Since $y(0)=-2<0$, the solution stays on the lower semicircle $y = -\\sqrt{4-x^2}$ on $(-2, 2)$." },
+              { label: "(c)", text: "Integrating: $\\frac{y^2}{2} = -\\frac{x^2}{2} + C$, i.e., $x^2+y^2 = K$. The solution curves are circles. However, the DE $dy/dx = -x/y$ is undefined at $y=0$, so no solution curve can cross the $x$-axis — each curve is confined to either $y>0$ or $y<0$ depending on its initial condition, giving only a semicircle. This is why solutions pass the vertical line test." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 2-C ──────────────────────────────────────────
+      {
+        icon: "🔁",
+        video: { title: "Determine a Diff Eq from its Slope Field", url: "https://www.youtube.com/watch?v=GCqI_MJAaDc" },
+        title: "Matching DEs to Slope Fields",
+        sub: "Using isoclines, equilibria, and symmetry to match",
+        topics: "7.3 – 7.4",
+        problems: [
+          {
+            context: "Context: Using features to match",
+            stem: "For each DE, describe three distinctive features of its slope field that would allow you to identify it from a picture.",
+            parts: [
+              { label: "(a)", text: "$\\dfrac{dy}{dx} = \\sin x$" },
+              { label: "(b)", text: "$\\dfrac{dy}{dx} = y - x^2$" },
+              { label: "(c)", text: "$\\dfrac{dy}{dx} = \\dfrac{y}{x}$ &nbsp; (for $x \\neq 0$)" }
+            ],
+            answers: [
+              { label: "(a)", text: "(1) Slopes depend only on $x$, so each column has uniform slope. (2) Slopes are periodic in $x$, with zero-slope columns at $x = 0, \\pm\\pi, \\pm 2\\pi, \\ldots$ (3) Slopes oscillate between $-1$ and $1$. Solution curves look like sinusoidal-shaped antiderivatives ($y = -\\cos x + C$)." },
+              { label: "(b)", text: "(1) Zero-slope isocline is $y = x^2$ (a parabola): segments along this parabola are horizontal. (2) Above the parabola: positive slopes; below: negative. (3) Slopes grow in magnitude far from the parabola; no vertical-only symmetry." },
+              { label: "(c)", text: "(1) Slopes depend only on the ratio $y/x$; along any line $y = mx$ through the origin, all slopes equal $m$ (constant on rays from origin). (2) Undefined along $x = 0$. (3) In QI and QIII, slopes positive; in QII and QIV, negative. Solution curves are power functions $y = Cx$." }
+            ]
+          },
+          {
+            context: "Context: Stability of equilibria",
+            stem: "The slope field for $\\dfrac{dy}{dx} = (y-1)(y-3)$ is shown.<br><img src='img/u72c2s.png' alt='Slope field for dy/dx = (y-1)(y-3)' class='problem-img'>",
+            parts: [
+              { label: "(a)", text: "Identify both equilibrium solutions. Classify each as stable or unstable." },
+              { label: "(b)", text: "If $y(0) = 2$, describe the long-run behavior of the solution." },
+              { label: "(c)", text: "If $y(0) = 4$, describe the long-run behavior. Contrast with (b)." }
+            ],
+            answers: [
+              { label: "(a)", text: "$y = 1$ and $y = 3$. Test: for $y$ slightly above 1, $(y-1)(y-3) < 0$ → $dy/dx < 0$ → moves back toward 1. For $y$ slightly below 1, $(y-1)(y-3) > 0$ → $dy/dx > 0$ → moves back toward 1. So $y=1$ is <strong>stable</strong>. For $y$ near 3: values above 3 give $dy/dx > 0$ (moves away), values below 3 give $dy/dx < 0$ (moves away). So $y=3$ is <strong>unstable</strong>." },
+              { label: "(b)", text: "<img src='img/u72c2a.png' alt='Solution curves for y(0)=2 and y(0)=4' class='problem-img'>At $y=2$, $(2-1)(2-3) = -1 < 0$, so $dy/dx < 0$: the solution decreases. It will approach the stable equilibrium $y = 1$ as $x \\to \\infty$." },
+              { label: "(c)", text: "At $y=4$, $(4-1)(4-3) = 3 > 0$, so $dy/dx > 0$: the solution increases without bound, moving away from $y=3$. In contrast to (b), this solution diverges to $+\\infty$." }
+            ]
+          },
+          {
+            context: "Context: DE from a slope field description",
+            stem: "A student looks at a slope field and makes these observations: (i) all slopes along the $x$-axis are zero; (ii) for $y > 0$, all slopes are positive; (iii) the magnitude of the slope grows as $y$ increases; (iv) all slopes in a given horizontal row are equal.",
+            parts: [
+              { label: "(a)", text: "Based on observations (i) and (ii), what can you conclude about $f(x,y)$ along $y = 0$ and for $y > 0$?" },
+              { label: "(b)", text: "Based on (iii) and (iv), propose a specific DE $dy/dx = f(y)$ consistent with all four observations." },
+              { label: "(c)", text: "Write the general solution to your DE and describe the family of curves." }
+            ],
+            answers: [
+              { label: "(a)", text: "$f(x, 0) = 0$ for all $x$ (zero along $y=0$), and $f(x, y) > 0$ when $y > 0$. Combined with (iv), $f$ depends only on $y$." },
+              { label: "(b)", text: "$\\dfrac{dy}{dx} = y$ fits all observations: zero at $y=0$; positive for $y>0$; magnitude increases with $y$; independent of $x$." },
+              { label: "(c)", text: "General solution: $y = Ce^x$. These are exponential curves, one for each value of $C$: growing for $C > 0$, the $x$-axis for $C = 0$, decaying for $C < 0$." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 2-D ──────────────────────────────────────────
+      {
+        icon: "📐",
+        video: { title: "Euler's Method Intro and Example", url: "https://www.youtube.com/watch?v=Pm_JWX6DI1I" },
+        title: "Euler's Method",
+        sub: "Step-by-step numerical approximation; over/underestimates",
+        topics: "7.5",
+        problems: [
+          {
+            context: "Context: Applying Euler's method",
+            stem: "Use Euler's method with the given step size to approximate $y(b)$.",
+            parts: [
+              { label: "(a)", text: "$\\dfrac{dy}{dx} = x + y$, $y(0) = 1$. Use step size $h = 0.5$ to approximate $y(1)$." },
+              { label: "(b)", text: "$\\dfrac{dy}{dx} = 2x$, $y(0) = 0$. Use $h = 1$ to approximate $y(2)$. Compare to the exact answer." },
+              { label: "(c)", text: "For part (b), use $h = 0.5$ and approximate $y(2)$ again. Does a smaller step size give a better result?" }
+            ],
+            answers: [
+              { label: "(a)", text: "Step 1: $x_0=0, y_0=1$, slope $= 0+1=1$, $y_1 = 1 + 1(0.5) = 1.5$. Step 2: $x_1=0.5, y_1=1.5$, slope $= 0.5+1.5=2$, $y_2 = 1.5 + 2(0.5) = 2.5$. Euler approximation: $y(1) \\approx 2.5$. (Exact: $y = 2e^x - x - 1$, $y(1) \\approx 3.44$)" },
+              { label: "(b)", text: "Step 1: $x_0=0, y_0=0$, slope $=0$, $y_1 = 0$. Step 2: $x_1=1, y_1=0$, slope $=2$, $y_2 = 0 + 2(1) = 2$. Euler: $y(2) \\approx 2$. Exact: $y = x^2$, $y(2) = 4$. Euler gives half the true value with $h=1$." },
+              { label: "(c)", text: "Steps at $x = 0, 0.5, 1, 1.5$: slopes $0, 1, 2, 3$. $y_1 = 0$, $y_2 = 0.5$, $y_3 = 1.5$, $y_4 = 3$. Euler: $y(2) \\approx 3$. Better than $h=1$ (error $= 1$ vs. $2$), but still an underestimate since $y = x^2$ is concave up." }
+            ]
+          },
+          {
+            context: "Context: Over- and underestimates",
+            stem: "Use Euler's method with step size $h = 0.5$ to approximate $y(1)$ given $\\dfrac{dy}{dx} = y$ and $y(0) = 1$.",
+            parts: [
+              { label: "(a)", text: "Carry out two Euler steps and state your approximation." },
+              { label: "(b)", text: "The exact solution is $y = e^x$. Is your Euler approximation an overestimate or underestimate of $e^1 \\approx 2.718$? Explain why in terms of concavity." },
+              { label: "(c)", text: "Would a smaller step size still produce an underestimate, or could it produce an overestimate? Explain." }
+            ],
+            answers: [
+              { label: "(a)", text: "Step 1: slope $= y_0 = 1$, $y_1 = 1 + 1(0.5) = 1.5$. Step 2: slope $= y_1 = 1.5$, $y_2 = 1.5 + 1.5(0.5) = 2.25$. Approximation: $y(1) \\approx 2.25$." },
+              { label: "(b)", text: "$2.25 < 2.718$, so this is an <strong>underestimate</strong>. Since $y = e^x$ is concave up ($y'' = e^x > 0$), the tangent line at each step lies below the curve. Euler's method follows these tangent lines, so each step falls short of the actual function value — underestimating throughout." },
+              { label: "(c)", text: "For a concave up function, Euler's method always underestimates, regardless of step size. Smaller steps reduce the error but the approximation remains below the true value. To overshoot a concave-up curve, you'd need to use more than the slope at the left endpoint." }
+            ]
+          },
+          {
+            context: "Context: Euler from a table",
+            stem: "The rate of change of a population $P$ (in hundreds) satisfies $\\dfrac{dP}{dt} = 0.1P\\left(1 - \\dfrac{P}{10}\\right)$. At $t = 0$, $P = 2$.",
+            parts: [
+              { label: "(a)", text: "Use one Euler step with $h = 1$ to estimate $P(1)$." },
+              { label: "(b)", text: "Use one more Euler step to estimate $P(2)$." },
+              { label: "(c)", text: "The carrying capacity of this model is $P = 10$. Given where $P$ starts (below carrying capacity), would you expect Euler's method to overestimate or underestimate the true population at $t=2$? Justify using concavity." }
+            ],
+            answers: [
+              { label: "(a)", text: "Slope at $(0, 2)$: $0.1(2)(1 - 2/10) = 0.2(0.8) = 0.16$. $P(1) \\approx 2 + 0.16(1) = 2.16$." },
+              { label: "(b)", text: "Slope at $(1, 2.16)$: $0.1(2.16)(1 - 2.16/10) = 0.216(0.784) \\approx 0.169$. $P(2) \\approx 2.16 + 0.169 = 2.329$." },
+              { label: "(c)", text: "For $P$ between 0 and the inflection point (at $P = 5$, half the carrying capacity), the logistic curve is concave up, so Euler's method underestimates. For $P$ between 5 and 10, the curve is concave down and Euler overestimates. Starting at $P = 2$, we're in the concave-up region early on, so we expect an underestimate for small $t$." }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  // ═══════════════════════════════════════════════════════════
+  // COLUMN 3 — Separation of Variables & Logistic Growth
+  //            Topics 7.6, 7.7, 7.8, 7.9
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: "col-3",
+    accentVar: "var(--col3-light)",
+    headerClass: "col-3-header",
+    tileClass: "col-3",
+    label: "Column III",
+    title: "Separation of Variables & Logistic Growth",
+    topics: "Topics 7.6 – 7.9",
+    tiles: [
+
+      // ── TILE 3-A ──────────────────────────────────────────
+      {
+        icon: "✂️",
+        video: { title: "Solving a Diff Eq by Separation of Variables", url: "https://www.youtube.com/watch?v=Mep3AEX1n4Y" },
+        title: "General Solutions by Separation",
+        sub: "Separating variables and integrating both sides",
+        topics: "7.6",
+        problems: [
+          {
+            context: "Context: Basic separation technique",
+            stem: "Find the general solution to each differential equation using separation of variables.",
+            parts: [
+              { label: "(a)", text: "$\\dfrac{dy}{dx} = 3x^2 y$" },
+              { label: "(b)", text: "$\\dfrac{dy}{dx} = \\dfrac{x}{y}$" },
+              { label: "(c)", text: "$\\dfrac{dy}{dt} = \\dfrac{t+1}{y^2}$" }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\dfrac{dy}{y} = 3x^2\\,dx \\Rightarrow \\ln|y| = x^3 + C_1 \\Rightarrow y = Ce^{x^3}$." },
+              { label: "(b)", text: "$y\\,dy = x\\,dx \\Rightarrow \\dfrac{y^2}{2} = \\dfrac{x^2}{2} + C_1 \\Rightarrow y^2 - x^2 = C$ (hyperbolas)." },
+              { label: "(c)", text: "$y^2\\,dy = (t+1)\\,dt \\Rightarrow \\dfrac{y^3}{3} = \\dfrac{t^2}{2} + t + C_1 \\Rightarrow y^3 = \\dfrac{3t^2}{2} + 3t + C$." }
+            ]
+          },
+          {
+            context: "Context: Separating with trigonometric functions",
+            stem: "Find the general solution to $\\dfrac{dy}{dx} = y\\cos x$.",
+            parts: [
+              { label: "(a)", text: "Separate variables and write each side as an integral." },
+              { label: "(b)", text: "Evaluate both integrals and solve for $y$ explicitly." },
+              { label: "(c)", text: "Verify your solution by substituting back into the original DE." }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\dfrac{dy}{y} = \\cos x\\,dx \\Rightarrow \\int \\dfrac{dy}{y} = \\int \\cos x\\,dx$." },
+              { label: "(b)", text: "$\\ln|y| = \\sin x + C_1 \\Rightarrow y = e^{C_1}e^{\\sin x} = Ce^{\\sin x}$." },
+              { label: "(c)", text: "$y' = Ce^{\\sin x} \\cdot \\cos x = y\\cos x$. ✓" }
+            ]
+          },
+          {
+            context: "Context: Recognizing when separation applies",
+            stem: "Determine whether each DE is separable. If yes, separate it. If no, explain why not.",
+            parts: [
+              { label: "(a)", text: "$\\dfrac{dy}{dx} = x^2 + y^2$" },
+              { label: "(b)", text: "$\\dfrac{dy}{dx} = \\dfrac{xy + y}{x}$" },
+              { label: "(c)", text: "$\\dfrac{dy}{dx} = e^{x+y}$" }
+            ],
+            answers: [
+              { label: "(a)", text: "Not separable. $x^2 + y^2$ cannot be written as a product $g(x) \\cdot h(y)$ — it's a sum, not a product." },
+              { label: "(b)", text: "Separable: $\\dfrac{dy}{dx} = \\dfrac{y(x+1)}{x} = \\left(\\dfrac{x+1}{x}\\right)y$. So $\\dfrac{dy}{y} = \\dfrac{x+1}{x}dx = \\left(1 + \\dfrac{1}{x}\\right)dx$." },
+              { label: "(c)", text: "Separable: $e^{x+y} = e^x \\cdot e^y$. So $\\dfrac{dy}{dx} = e^x e^y \\Rightarrow e^{-y}\\,dy = e^x\\,dx$." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 3-B ──────────────────────────────────────────
+      {
+        icon: "📌",
+        video: { title: "Determine a Function given the Second Derivative and Initial Conditions", url: "https://www.youtube.com/watch?v=s52Pm9UslPM" },
+        title: "Particular Solutions with Initial Conditions",
+        sub: "Finding $C$ from a given point on the solution curve",
+        topics: "7.7",
+        problems: [
+          {
+            context: "Context: Solving an IVP",
+            stem: "Solve each initial value problem.",
+            parts: [
+              { label: "(a)", text: "$\\dfrac{dy}{dx} = -2y$, $y(0) = 3$" },
+              { label: "(b)", text: "$\\dfrac{dy}{dx} = \\dfrac{x}{y}$, $y(0) = 4$" },
+              { label: "(c)", text: "$\\dfrac{dy}{dx} = y^2 x$, $y(1) = 2$" }
+            ],
+            answers: [
+              { label: "(a)", text: "Separate: $\\dfrac{dy}{y} = -2\\,dx \\Rightarrow y = Ce^{-2x}$. IC: $3 = Ce^0 = C$. Solution: $y = 3e^{-2x}$." },
+              { label: "(b)", text: "$y\\,dy = x\\,dx \\Rightarrow y^2/2 = x^2/2 + C_1$. IC: $16/2 = 0 + C_1 \\Rightarrow C_1 = 8$. So $y^2 = x^2 + 16$, i.e. $y = \\sqrt{x^2+16}$ (positive branch since $y(0)=4>0$)." },
+              { label: "(c)", text: "$\\dfrac{dy}{y^2} = x\\,dx \\Rightarrow -\\dfrac{1}{y} = \\dfrac{x^2}{2} + C$. IC: $-\\dfrac{1}{2} = \\dfrac{1}{2} + C \\Rightarrow C = -1$. So $-\\dfrac{1}{y} = \\dfrac{x^2}{2} - 1 \\Rightarrow y = \\dfrac{1}{1 - x^2/2} = \\dfrac{2}{2-x^2}$." }
+            ]
+          },
+          {
+            context: "Context: Physics application — Newton's Law of Cooling",
+            stem: "A cup of coffee at 190°F is placed in a room at 70°F. After 10 minutes, the coffee has cooled to 160°F. Newton's Law of Cooling gives $\\dfrac{dT}{dt} = k(T - 70)$.",
+            parts: [
+              { label: "(a)", text: "Solve the IVP with $T(0) = 190$ to find $T(t)$ in terms of $k$." },
+              { label: "(b)", text: "Use $T(10) = 160$ to find $k$. Leave your answer in exact form." },
+              { label: "(c)", text: "How long will it take the coffee to cool to 100°F? Round to the nearest minute." }
+            ],
+            answers: [
+              { label: "(a)", text: "Let $u = T - 70$, $du/dt = ku$, so $u = Ce^{kt}$, $T = 70 + Ce^{kt}$. IC: $190 = 70 + C \\Rightarrow C = 120$. So $T(t) = 70 + 120e^{kt}$." },
+              { label: "(b)", text: "$160 = 70 + 120e^{10k} \\Rightarrow e^{10k} = \\frac{90}{120} = \\frac{3}{4} \\Rightarrow k = \\frac{1}{10}\\ln\\frac{3}{4} < 0$." },
+              { label: "(c)", text: "$100 = 70 + 120e^{kt} \\Rightarrow e^{kt} = \\frac{30}{120} = \\frac{1}{4}$. $t = \\dfrac{\\ln(1/4)}{k} = \\dfrac{\\ln(1/4)}{\\frac{1}{10}\\ln(3/4)} = \\dfrac{10\\ln(1/4)}{\\ln(3/4)} \\approx \\dfrac{10(-1.386)}{-0.2877} \\approx 48$ minutes." }
+            ]
+          },
+          {
+            context: "Context: Domain considerations",
+            stem: "Solve $\\dfrac{dy}{dx} = y^2$ with $y(0) = 1$.",
+            parts: [
+              { label: "(a)", text: "Separate and solve; find the particular solution." },
+              { label: "(b)", text: "What is the domain of your solution? What happens at the boundary of this domain?" },
+              { label: "(c)", text: "If instead $y(0) = -1$, what is the particular solution and its domain? How does it differ?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$y^{-2}\\,dy = dx \\Rightarrow -1/y = x + C$. IC: $-1 = C$, so $-1/y = x - 1$, giving $y = \\dfrac{1}{1-x}$." },
+              { label: "(b)", text: "Domain: $x < 1$ (for the branch containing $x = 0$). As $x \\to 1^-$, $y \\to +\\infty$ — the solution blows up in finite time. The DE has no solution defined for all $x \\geq 1$ with this initial condition." },
+              { label: "(c)", text: "$-1/y = x + C$. IC: $-1/(-1) = 1 = C$. $y = \\dfrac{1}{-(x+1)} = \\dfrac{-1}{x+1}$. Domain: $x > -1$ (the branch through $(0,-1)$). As $x \\to -1^+$, $y \\to -\\infty$. Both solutions blow up, but in opposite directions and at different finite times." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 3-C ──────────────────────────────────────────
+      {
+        icon: "📡",
+        video: { title: "IVP with Exponential Growth Equation", url: "https://www.youtube.com/watch?v=QCtNGI4Qylc" },
+        title: "Exponential Growth & Decay Models",
+        sub: "Solving $dP/dt = kP$ and applying to real contexts",
+        topics: "7.8",
+        problems: [
+          {
+            context: "Context: Radioactive decay",
+            stem: "Carbon-14 has a half-life of 5730 years. A sample initially contains $N_0$ atoms.",
+            parts: [
+              { label: "(a)", text: "Write and solve the IVP for $N(t)$, the number of atoms at time $t$ years." },
+              { label: "(b)", text: "Find the value of $k$ in terms of exact expressions involving ln." },
+              { label: "(c)", text: "An archaeologist finds a bone sample with 60% of its original carbon-14 remaining. Estimate the age of the bone." }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\dfrac{dN}{dt} = kN$, $N(0) = N_0$. Solution: $N(t) = N_0 e^{kt}$." },
+              { label: "(b)", text: "Half-life: $N(5730) = N_0/2$. $e^{5730k} = 1/2 \\Rightarrow k = \\dfrac{\\ln(1/2)}{5730} = \\dfrac{-\\ln 2}{5730}$." },
+              { label: "(c)", text: "$0.60 N_0 = N_0 e^{kt} \\Rightarrow e^{kt} = 0.6 \\Rightarrow t = \\dfrac{\\ln 0.6}{k} = \\dfrac{\\ln 0.6}{-\\ln 2 / 5730} = \\dfrac{5730\\ln 0.6}{-\\ln 2} \\approx \\dfrac{5730(-0.5108)}{-0.6931} \\approx 4223$ years." }
+            ]
+          },
+          {
+            context: "Context: Continuous compound interest",
+            stem: "An investment grows continuously at 5% per year. The initial investment is $\\$8000$.",
+            parts: [
+              { label: "(a)", text: "Write and solve the IVP for $A(t)$, the account balance at time $t$ years." },
+              { label: "(b)", text: "How long will it take the investment to double? Give an exact answer and a decimal approximation." },
+              { label: "(c)", text: "Compare: at the same interest rate, how much would $\\$8000$ grow to in 20 years if compounded annually (not continuously)? Which is larger and why?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\dfrac{dA}{dt} = 0.05A$, $A(0) = 8000$. Solution: $A(t) = 8000e^{0.05t}$." },
+              { label: "(b)", text: "$16000 = 8000e^{0.05t} \\Rightarrow e^{0.05t} = 2 \\Rightarrow t = \\dfrac{\\ln 2}{0.05} = 20\\ln 2 \\approx 13.86$ years." },
+              { label: "(c)", text: "Annual: $A = 8000(1.05)^{20} \\approx 8000(2.6533) \\approx \\$21{,}226$. Continuous: $A(20) = 8000e^{1} \\approx 8000(2.7183) \\approx \\$21{,}746$. Continuous compounding is slightly larger because interest is earned on interest more frequently (instantaneously)." }
+            ]
+          },
+          {
+            context: "Context: Population with emigration",
+            stem: "A city's population $P$ (in thousands) satisfies $\\dfrac{dP}{dt} = 0.02P - 5$, where $t$ is in years.",
+            parts: [
+              { label: "(a)", text: "Find the equilibrium population. Interpret in context." },
+              { label: "(b)", text: "Rewrite the DE as $\\dfrac{dP}{dt} = 0.02(P - 250)$ and solve the IVP with $P(0) = 300$." },
+              { label: "(c)", text: "Use your solution to determine whether the city's population will grow or shrink in the long run. What if $P(0) = 200$?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$0.02P - 5 = 0 \\Rightarrow P = 250$ thousand. If the population is exactly 250,000, emigration exactly balances natural growth and the population stays constant." },
+              { label: "(b)", text: "Let $u = P - 250$: $du/dt = 0.02u$, so $u = Ce^{0.02t}$. IC: $u(0) = 50 \\Rightarrow C = 50$. Solution: $P(t) = 250 + 50e^{0.02t}$." },
+              { label: "(c)", text: "As $t \\to \\infty$, $50e^{0.02t} \\to \\infty$, so the population grows without bound. Starting at $P(0) = 200$: $C = -50$, $P(t) = 250 - 50e^{0.02t}$. The population decreases and reaches zero in finite time — the city depopulates. $P = 250$ is an unstable equilibrium." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 3-D ──────────────────────────────────────────
+      {
+        icon: "🌱",
+        video: { title: "Logistic Growth Differential Equations", url: "https://www.youtube.com/watch?v=zkAPudy52U4" },
+        title: "Logistic Growth",
+        sub: "Carrying capacity, inflection point, and long-run behavior",
+        topics: "7.9",
+        problems: [
+          {
+            context: "Context: The logistic model",
+            stem: "A population $P$ satisfies the logistic equation $\\dfrac{dP}{dt} = 0.1P\\!\\left(1 - \\dfrac{P}{500}\\right)$.",
+            parts: [
+              { label: "(a)", text: "Identify the carrying capacity $L$ and the intrinsic growth rate $k$." },
+              { label: "(b)", text: "Find all equilibrium solutions. Classify each as stable or unstable." },
+              { label: "(c)", text: "At what population size is $dP/dt$ maximized? What is the maximum growth rate?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$k = 0.1$, $L = 500$." },
+              { label: "(b)", text: "$P = 0$ and $P = 500$. $P = 0$ is unstable (small positive populations grow away from it). $P = 500$ is stable (populations above or below 500 return toward it)." },
+              { label: "(c)", text: "$dP/dt = 0.1P(1 - P/500)$ is a downward-opening parabola in $P$, maximized at $P = L/2 = 250$. Maximum rate: $0.1(250)(1 - 1/2) = 0.1(250)(0.5) = 12.5$ per unit time." }
+            ]
+          },
+          {
+            context: "Context: Logistic behavior and the inflection point",
+            stem: "The logistic model $\\dfrac{dP}{dt} = kP(L - P)$ (written slightly differently) has the solution $P(t) = \\dfrac{L}{1 + Ae^{-kLt}}$.",
+            parts: [
+              { label: "(a)", text: "Verify: show that $\\lim_{t\\to\\infty} P(t) = L$." },
+              { label: "(b)", text: "Find the inflection point of $P(t)$ — the time when $d^2P/dt^2 = 0$ — and the population value at that time." },
+              { label: "(c)", text: "Interpret the inflection point in context. What is happening to the population's growth rate at that moment?" }
+            ],
+            answers: [
+              { label: "(a)", text: "As $t \\to \\infty$, $e^{-kLt} \\to 0$, so $P \\to \\dfrac{L}{1+0} = L$. ✓" },
+              { label: "(b)", text: "$d^2P/dt^2 = 0$ when $dP/dt$ is maximized, which (from Tile 3-D Problem 1) occurs at $P = L/2$. Setting $P(t) = L/2$: $\\dfrac{L}{1+Ae^{-kLt}} = \\dfrac{L}{2} \\Rightarrow 1 + Ae^{-kLt} = 2 \\Rightarrow Ae^{-kLt} = 1 \\Rightarrow t = \\dfrac{\\ln A}{kL}$." },
+              { label: "(c)", text: "At the inflection point, the population growth rate $dP/dt$ is at its maximum. Before this point, growth is accelerating; after it, growth is decelerating (the population is still growing, but more and more slowly as it approaches the carrying capacity)." }
+            ]
+          },
+          {
+            context: "Context: Full logistic IVP",
+            stem: "A colony of bacteria has a carrying capacity of 1000 and satisfies $\\dfrac{dP}{dt} = 0.002P(1000 - P)$, with $P(0) = 100$.",
+            parts: [
+              { label: "(a)", text: "Rewrite the DE in the form $\\dfrac{dP}{dt} = kP(L - P)$. Identify $k$ and $L$." },
+              { label: "(b)", text: "Use the solution formula $P(t) = \\dfrac{L}{1 + Ae^{-kLt}}$ and the initial condition to find $A$." },
+              { label: "(c)", text: "Estimate the population at $t = 5$. At what time does the population reach 900 (90% of capacity)? Give an exact expression." }
+            ],
+            answers: [
+              { label: "(a)", text: "$k = 0.002$, $L = 1000$." },
+              { label: "(b)", text: "$100 = \\dfrac{1000}{1 + A} \\Rightarrow 1 + A = 10 \\Rightarrow A = 9$." },
+              { label: "(c)", text: "$P(5) = \\dfrac{1000}{1 + 9e^{-0.002 \\cdot 1000 \\cdot 5}} = \\dfrac{1000}{1 + 9e^{-10}} \\approx \\dfrac{1000}{1 + 9(0.0000454)} \\approx 1000/(1.000408) \\approx 999.6$. For $P = 900$: $900 = \\dfrac{1000}{1+9e^{-2t}} \\Rightarrow 1+9e^{-2t} = \\frac{10}{9} \\Rightarrow e^{-2t} = \\frac{1}{81} \\Rightarrow t = \\dfrac{\\ln 81}{2} = \\dfrac{4\\ln 3}{2} = 2\\ln 3 \\approx 2.20$." }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  // ═══════════════════════════════════════════════════════════
+  // COLUMN 4 — AP-Style Mixed Practice
+  //            Topics 7.1 – 7.9
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: "col-4",
+    accentVar: "var(--col4-light)",
+    headerClass: "col-4-header",
+    tileClass: "col-4",
+    label: "Column IV",
+    title: "AP-Style Mixed Practice",
+    topics: "Topics 7.1 – 7.9",
+    tiles: [
+
+      // ── TILE 4-A ──────────────────────────────────────────
+      {
+        icon: "🚀",
+        video: { title: "Finding Stopping Distance of a Car", url: "https://www.youtube.com/watch?v=xpJ0qz620f8" },
+        title: "Motion Problems & Initial Value Problems",
+        sub: "Connecting position, velocity, and DEs with IVPs",
+        topics: "7.6 – 7.7",
+        problems: [
+          {
+            context: "Context: Particle motion with DE",
+            stem: "A particle moves along the $x$-axis. Its velocity at time $t \\geq 0$ satisfies $\\dfrac{dv}{dt} = 6 - 2v$, with $v(0) = 1$.",
+            parts: [
+              { label: "(a)", text: "Solve the IVP to find $v(t)$." },
+              { label: "(b)", text: "What is the terminal velocity (limiting velocity as $t \\to \\infty$)?" },
+              { label: "(c)", text: "If $x(0) = 0$, find the position function $x(t)$ by integrating $v(t)$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\dfrac{dv}{6-2v} = dt \\Rightarrow -\\frac{1}{2}\\ln|6-2v| = t + C$. IC: at $t=0$, $v=1$: $-\\frac{1}{2}\\ln 4 = C$. Solving: $6 - 2v = 4e^{-2t} \\Rightarrow v(t) = 3 - 2e^{-2t}$." },
+              { label: "(b)", text: "$\\lim_{t\\to\\infty} v(t) = 3 - 0 = 3$. The terminal velocity is 3." },
+              { label: "(c)", text: "$x(t) = \\int_0^t (3-2e^{-2s})\\,ds = 3t + e^{-2t}\\Big|_0^t = 3t + e^{-2t} - 1$." }
+            ]
+          },
+          {
+            context: "Context: Free-fall with air resistance",
+            stem: "An object of mass $m$ falls from rest. Air resistance produces a force proportional to velocity, giving $m\\dfrac{dv}{dt} = mg - bv$, where $g = 10$ m/s² and $b/m = 0.4$. So $\\dfrac{dv}{dt} = 10 - 0.4v$, $v(0) = 0$.",
+            parts: [
+              { label: "(a)", text: "Solve the Initial Value Problem for $v(t)$." },
+              { label: "(b)", text: "Find the terminal velocity." },
+              { label: "(c)", text: "How long does it take to reach 90% of terminal velocity?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\dfrac{dv}{10-0.4v} = dt \\Rightarrow -\\frac{1}{0.4}\\ln|10-0.4v| = t + C$. IC: $-\\frac{1}{0.4}\\ln 10 = C$. Solving: $v(t) = 25(1 - e^{-0.4t})$." },
+              { label: "(b)", text: "Terminal velocity: $\\lim_{t\\to\\infty} 25(1-e^{-0.4t}) = 25$ m/s." },
+              { label: "(c)", text: "$0.9 \\times 25 = 22.5 = 25(1-e^{-0.4t}) \\Rightarrow e^{-0.4t} = 0.1 \\Rightarrow t = \\dfrac{-\\ln 0.1}{0.4} = \\dfrac{\\ln 10}{0.4} \\approx 5.76$ seconds." }
+            ]
+          },
+          {
+            context: "Context: AP free-response — full IVP",
+            stem: "Let $f$ be a differentiable function satisfying $\\dfrac{dy}{dx} = \\dfrac{2x}{y}$ with $y > 0$ and $y(1) = 3$.",
+            parts: [
+              { label: "(a)", text: "Find the particular solution $y = f(x)$." },
+              { label: "(b)", text: "Find the domain of $f$." },
+              { label: "(c)", text: "Find the $x$-value where the tangent line to $f$ is horizontal, or explain why none exists." }
+            ],
+            answers: [
+              { label: "(a)", text: "$y\\,dy = 2x\\,dx \\Rightarrow y^2/2 = x^2 + C$. IC: $9/2 = 1 + C \\Rightarrow C = 7/2$. So $y^2 = 2x^2 + 7 \\Rightarrow y = \\sqrt{2x^2+7}$." },
+              { label: "(b)", text: "$2x^2 + 7 > 0$ for all real $x$, so the domain is all real numbers $(-\\infty, \\infty)$." },
+              { label: "(c)", text: "$dy/dx = 2x/y = 0$ requires $x = 0$. At $x = 0$: $y = \\sqrt{7}$. The tangent line is horizontal at $(0, \\sqrt{7})$." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 4-B ──────────────────────────────────────────
+      {
+        icon: "⚖️",
+        video: { title: "Point of Equilibrium", url: "https://www.youtube.com/watch?v=GLxuA4qE1d4" },
+        title: "Equilibrium & Stability",
+        sub: "Finding and classifying equilibria; phase line analysis",
+        topics: "7.1, 7.4, 7.9",
+        problems: [
+          {
+            context: "Context: Phase line analysis",
+            stem: "Consider $\\dfrac{dP}{dt} = P(P-2)(4-P)$.",
+            parts: [
+              { label: "(a)", text: "Find all equilibrium values of $P$." },
+              { label: "(b)", text: "Classify each equilibrium as stable, unstable, or semi-stable. Justify." }
+            ],
+            answers: [
+              { label: "(a)", text: "$P = 0$, $P = 2$, $P = 4$." },
+              { label: "(b)", text: "Test each interval: $P \\in (-\\infty,0)$: pick $P=-1$: $(-1)(-3)(5) = 15 > 0$, increasing. $P \\in (0,2)$: pick $P=1$: $(1)(-1)(3) = -3 < 0$, decreasing. $P \\in (2,4)$: pick $P=3$: $(3)(1)(1) = 3 > 0$, increasing. $P \\in (4,\\infty)$: pick $P=5$: $(5)(3)(-1) = -15 < 0$, decreasing.<br><br>$P=0$: increasing to the left, decreasing to the right — <strong>unstable</strong>. $P=2$: decreasing from above, increasing from below — <strong>stable</strong>. $P=4$: increasing from below, decreasing from above — <strong>stable</strong>." }
+            ]
+          },
+          {
+            context: "Context: Autonomous DEs and long-run behavior",
+            stem: "A disease spreads through a population of 1000. Let $I$ = number infected. The DE is $\\dfrac{dI}{dt} = 0.003I(1000 - I) - 0.5I$.",
+            parts: [
+              { label: "(a)", text: "Simplify the right side and factor it." },
+              { label: "(b)", text: "Find the equilibrium values and interpret each biologically." },
+              { label: "(c)", text: "If initially $I = 10$, will the disease grow into an epidemic or die out? Justify." }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\dfrac{dI}{dt} = 3I - 0.003I^2 - 0.5I = 2.5I - 0.003I^2 = I(2.5 - 0.003I)$." },
+              { label: "(b)", text: "$I = 0$ (disease-free) and $I = 2.5/0.003 \\approx 833$. $I=0$: everyone healthy — unstable (any small infection will grow). $I \\approx 833$: endemic equilibrium — the disease persists at this level." },
+              { label: "(c)", text: "At $I = 10$: $dI/dt = 10(2.5 - 0.03) = 10(2.47) > 0$. The infection is growing. Starting from any $I > 0$, the disease will grow toward the endemic equilibrium $I \\approx 833$. It will not die out on its own under this model." }
+            ]
+          },
+          {
+            context: "Context: Logistic equilibrium and AP-style reasoning",
+            stem: "The number of fish (in hundreds) in a lake satisfies $\\dfrac{dP}{dt} = 0.5P\\left(1 - \\dfrac{P}{8}\\right) - H$, where $H$ is the harvesting rate (hundreds of fish per year).",
+            parts: [
+              { label: "(a)", text: "With no harvesting ($H = 0$), find the equilibria and the carrying capacity." },
+              { label: "(b)", text: "With $H = 0.5$, rewrite the right side and find the new equilibria." },
+              { label: "(c)", text: "What is the maximum sustainable harvesting rate $H_{\\max}$ that still allows a stable nonzero equilibrium? What happens to the fish population if $H > H_{\\max}$?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$P = 0$ and $P = 8$ (carrying capacity = 800 fish)." },
+              { label: "(b)", text: "$\\dfrac{dP}{dt} = 0.5P - \\dfrac{P^2}{16} - 0.5 = -\\dfrac{1}{16}(P^2 - 8P + 8)$. Setting to zero: $P = \\dfrac{8 \\pm \\sqrt{64-32}}{2} = 4 \\pm 2\\sqrt{2}$. Equilibria at $P \\approx 1.17$ (unstable) and $P \\approx 6.83$ (stable)." },
+              { label: "(c)", text: "The two equilibria merge when the discriminant $= 0$: $H_{\\max}$ occurs when the quadratic $P^2 - 8P + 16H/0.5$ has a double root: $64 - 4(16H/0.5) = 0 \\Rightarrow H_{\\max} = 0.5$. Wait — refining: $0.5P(1-P/8) = H$ max at $P = 4$ (vertex): $H_{\\max} = 0.5(4)(1-1/2) = 1$. For $H > 1$, the parabola never crosses zero for $P > 0$; $dP/dt < 0$ always, and the fish population collapses to extinction." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 4-C ──────────────────────────────────────────
+      {
+        icon: "📋",
+        title: "Multi-Part: Slope Fields & Separation",
+        sub: "AP free-response — connecting graphical and analytic methods",
+        topics: "7.3 – 7.7",
+        problems: [
+          {
+            context: "Context: AP free-response style, Part A",
+            stem: "Consider the differential equation $\\dfrac{dy}{dx} = \\dfrac{2y}{x}$ for $x > 0$.",
+            parts: [
+              { label: "(a)", text: "Sketch a slope field for this DE at the nine points $(x,y)$ with $x \\in \\{1, 2, 3\\}$ and $y \\in \\{-1, 0, 1\\}$.<br><img src='img/u74c1as.png' alt='Blank 3x3 grid for dy/dx = 2y/x' class='problem-img'>" },
+              { label: "(b)", text: "Describe the behavior of solution curves near $y = 0$ for $x > 0$." },
+              { label: "(c)", text: "Find the general solution by separation of variables." }
+            ],
+            answers: [
+              { label: "(a)", text: "<img src='img/u74c1aa.png' alt='Completed slope field for dy/dx = 2y/x with solution curves' class='problem-img'>Slopes at each point: $(1,-1)$: $-2$; $(1,0)$: $0$; $(1,1)$: $2$; $(2,-1)$: $-1$; $(2,0)$: $0$; $(2,1)$: $1$; $(3,-1)$: $-2/3$; $(3,0)$: $0$; $(3,1)$: $2/3$." },
+              { label: "(b)", text: "Along $y = 0$: all slopes are zero, so $y = 0$ is an equilibrium (constant solution). Solution curves near $y = 0$ are tangent to the $x$-axis, and because the slope has the same sign as $y$, they move away from $y=0$: $y = 0$ is an unstable equilibrium." },
+              { label: "(c)", text: "$\\dfrac{dy}{y} = \\dfrac{2}{x}\\,dx \\Rightarrow \\ln|y| = 2\\ln x + C \\Rightarrow |y| = e^C x^2 \\Rightarrow y = Cx^2$ (absorbing sign into $C$)." }
+            ]
+          },
+          {
+            context: "Context: AP free-response style, Part B",
+            stem: "Let $y = f(x)$ be the particular solution to $\\dfrac{dy}{dx} = \\dfrac{2y}{x}$ passing through $(1, 3)$.",
+            parts: [
+              { label: "(a)", text: "Find the particular solution $f(x)$." },
+              { label: "(b)", text: "Find $f'(x)$ and $f''(x)$. Use these to determine whether $f$ is concave up or concave down at $x = 1$." },
+              { label: "(c)", text: "Use Euler's method with step size $h = 0.5$, starting at $(1,3)$, to approximate $f(2)$ in two steps. Compare to the exact value." }
+            ],
+            answers: [
+              { label: "(a)", text: "$y = Cx^2$. IC: $3 = C(1) \\Rightarrow C = 3$. Particular solution: $f(x) = 3x^2$." },
+              { label: "(b)", text: "$f'(x) = 6x$, $f''(x) = 6 > 0$. Since $f'' > 0$, $f$ is concave up at $x = 1$ (and everywhere)." },
+              { label: "(c)", text: "Step 1: at $(1,3)$, slope $= 2(3)/1 = 6$. $y(1.5) \\approx 3 + 6(0.5) = 6$. Step 2: at $(1.5, 6)$, slope $= 2(6)/1.5 = 8$. $y(2) \\approx 6 + 8(0.5) = 10$. Exact: $f(2) = 3(4) = 12$. Euler underestimates by 2, consistent with $f$ being concave up." }
+            ]
+          },
+          {
+            context: "Context: AP free-response — full problem",
+            stem: "The differential equation $\\dfrac{dy}{dx} = (1-y)\\cos x$ has the general solution $y = 1 + Ce^{-\\sin x}$.",
+            parts: [
+              { label: "(a)", text: "Verify the general solution." },
+              { label: "(b)", text: "Find the particular solution with $y(0) = 3$." },
+              { label: "(c)", text: "Describe the long-run behavior of your particular solution as $x \\to \\infty$. Does $y$ approach a finite limit? Explain." }
+            ],
+            answers: [
+              { label: "(a)", text: "$y' = Ce^{-\\sin x}(-\\cos x) = -\\cos x(Ce^{-\\sin x})$. Check: $(1-y)\\cos x = (1 - 1 - Ce^{-\\sin x})\\cos x = -Ce^{-\\sin x}\\cos x = y'$. ✓" },
+              { label: "(b)", text: "$3 = 1 + Ce^{0} = 1 + C \\Rightarrow C = 2$. Particular solution: $y = 1 + 2e^{-\\sin x}$." },
+              { label: "(c)", text: "As $x \\to \\infty$, $\\sin x$ oscillates between $-1$ and $1$, so $e^{-\\sin x}$ oscillates between $e^{-1}$ and $e^1$. Therefore $y = 1 + 2e^{-\\sin x}$ oscillates between $1 + 2/e \\approx 1.74$ and $1 + 2e \\approx 6.44$ indefinitely — it does not approach a single finite limit." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 4-D ──────────────────────────────────────────
+      {
+        icon: "🏆",
+        title: "Multi-Part: Comprehensive Free Response",
+        sub: "Full AP-style problems spanning all of Unit 7",
+        topics: "7.1 – 7.9",
+        problems: [
+          {
+            context: "Context: AP free-response — logistic + slope field",
+            stem: "A population of deer in a wildlife preserve satisfies $\\dfrac{dP}{dt} = 0.04P\\left(1 - \\dfrac{P}{600}\\right)$, where $P$ is the number of deer and $t$ is in years.",
+            parts: [
+              { label: "(a)", text: "Describe the behavior of solutions starting above and below $P = 600$." },
+              { label: "(b)", text: "Find and classify the equilibrium solutions. At what population level is the growth rate greatest?" },
+              { label: "(c)", text: "If $P(0) = 100$, use Euler's method with $h = 5$ to approximate $P(5)$ and $P(10)$." }
+            ],
+            answers: [
+              { label: "(a)", text: "Solutions starting below 600 increase toward it; solutions starting above 600 decrease toward it." },
+              { label: "(b)", text: "Equilibria: $P = 0$ (unstable) and $P = 600$ (stable). Growth rate maximized at $P = 300$ (half the carrying capacity): max rate $= 0.04(300)(0.5) = 6$ deer/year." },
+              { label: "(c)", text: "Step 1: $P_0 = 100$, slope $= 0.04(100)(1 - 100/600) = 4(5/6) \\approx 3.33$. $P_1 \\approx 100 + 3.33(5) = 116.67$. Step 2: slope $\\approx 0.04(116.67)(1-116.67/600) \\approx 4.667 \\cdot 0.806 \\approx 3.76$. $P_2 \\approx 116.67 + 3.76(5) \\approx 135.5$." }
+            ]
+          },
+          {
+            context: "Context: AP free-response — mixing problem",
+            stem: "A tank holds 200 gallons of brine. Initially there are 20 lbs of salt. Pure water flows in at 4 gal/min; the well-mixed solution drains at 4 gal/min. Let $Q(t)$ = lbs of salt at time $t$.",
+            parts: [
+              { label: "(a)", text: "Write the Initial Value Problem for $Q(t)$." },
+              { label: "(b)", text: "Solve the IVP." },
+              { label: "(c)", text: "How much salt remains after 1 hour? When does the tank contain less than 5 lbs of salt?" }
+            ],
+            answers: [
+              { label: "(a)", text: "Rate in: $0$ lbs/min. Rate out: $\\dfrac{Q}{200} \\cdot 4 = \\dfrac{Q}{50}$. DE: $\\dfrac{dQ}{dt} = -\\dfrac{Q}{50}$, $Q(0) = 20$." },
+              { label: "(b)", text: "$Q(t) = 20e^{-t/50}$." },
+              { label: "(c)", text: "$Q(60) = 20e^{-60/50} = 20e^{-1.2} \\approx 20(0.3012) \\approx 6.02$ lbs. For $Q < 5$: $20e^{-t/50} < 5 \\Rightarrow e^{-t/50} < 0.25 \\Rightarrow t > 50\\ln 4 \\approx 69.3$ minutes." }
+            ]
+          },
+          {
+            context: "Context: AP free-response — full unit synthesis",
+            stem: "Let $y = g(x)$ satisfy $\\dfrac{dy}{dx} = y - y^2$ with $g(0) = 0.25$.",
+            parts: [
+              { label: "(a)", text: "Find all equilibrium solutions and classify each as stable or unstable using the phase line." },
+              { label: "(b)", text: "Solve the Initial Value Problem using separation of variables. (Use partial fractions: $\\dfrac{1}{y(1-y)} = \\dfrac{1}{y} + \\dfrac{1}{1-y}$.)" },
+              { label: "(c)", text: "Describe the long-run behavior of $g(x)$ as $x \\to \\infty$. Does your analytic solution confirm what the slope field / phase line predicted?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$y - y^2 = y(1-y) = 0$: equilibria at $y = 0$ and $y = 1$. Phase line: for $y \\in (0,1)$, $dy/dx > 0$ (increasing); for $y > 1$, $dy/dx < 0$ (decreasing); for $y < 0$, $dy/dx < 0$ (decreasing away from 0). $y = 0$ is unstable; $y = 1$ is stable." },
+              { label: "(b)", text: "$\\displaystyle\\int\\left(\\frac{1}{y}+\\frac{1}{1-y}\\right)dy = \\int dx \\Rightarrow \\ln|y| - \\ln|1-y| = x + C \\Rightarrow \\ln\\left|\\frac{y}{1-y}\\right| = x + C \\Rightarrow \\frac{y}{1-y} = Ke^x$. IC: $g(0)=0.25$: $\\frac{0.25}{0.75} = \\frac{1}{3} = K$. So $\\frac{y}{1-y} = \\frac{e^x}{3} \\Rightarrow 3y = e^x(1-y) \\Rightarrow y(3+e^x) = e^x \\Rightarrow g(x) = \\dfrac{e^x}{3+e^x}$." },
+              { label: "(c)", text: "As $x \\to \\infty$: $g(x) = \\dfrac{e^x}{3+e^x} = \\dfrac{1}{3e^{-x}+1} \\to \\dfrac{1}{0+1} = 1$. The solution approaches the stable equilibrium $y = 1$, confirming the phase line analysis. The solution is a logistic-type curve, increasing from 0.25 toward 1." }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+
+]; // end columns
+
+
+/* ============================================================
+   RENDER BOARD
+============================================================ */
+function renderBoard() {
+  const grid = document.getElementById('board-grid');
+  grid.innerHTML = '';
+
+  columns.forEach((col, ci) => {
+    const colGroup = document.createElement('div');
+    colGroup.className = 'col-group';
+
+    // Header
+    const header = document.createElement('div');
+    header.className = `col-header ${col.headerClass}`;
+    header.style.gridColumn = ci + 1;
+    header.style.gridRow = 1;
+    header.innerHTML = `
+      <div class="col-header-num">${col.label}</div>
+      <h2>${col.title}</h2>
+      <div class="col-topics">${col.topics}</div>
+    `;
+    colGroup.appendChild(header);
+
+    // Tiles
+    col.tiles.forEach((tile, ti) => {
+      const tileEl = document.createElement('div');
+      tileEl.className = `tile ${col.tileClass}`;
+      tileEl.style.gridColumn = ci + 1;
+      tileEl.style.gridRow = ti + 2;
+      tileEl.setAttribute('role', 'button');
+      tileEl.setAttribute('tabindex', '0');
+      tileEl.setAttribute('aria-label', tile.title);
+      tileEl.innerHTML = `
+        <span class="tile-icon">${tile.icon}</span>
+        <div class="tile-title">${tile.title}</div>
+        <div class="tile-sub">${tile.sub}</div>
+        <div class="tile-topics">${tile.topics}</div>
+        <span class="tile-arrow">↗</span>
+      `;
+      tileEl.addEventListener('click', () => openModal(ci, ti));
+      tileEl.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') openModal(ci, ti); });
+      colGroup.appendChild(tileEl);
+    });
+
+    grid.appendChild(colGroup);
+  });
+}
+
+/* ============================================================
+   MODAL
+============================================================ */
+function openModal(colIdx, tileIdx) {
+  const col  = columns[colIdx];
+  const tile = col.tiles[tileIdx];
+
+  const accentEl = document.getElementById('modal-accent');
+  accentEl.className = 'modal-header-accent';
+  accentEl.style.background = col.accentVar;
+
+  const labelEl = document.getElementById('modal-col-label');
+  labelEl.style.color = col.accentVar;
+  labelEl.textContent = col.label + ' · ' + col.title;
+
+  document.getElementById('modal-title').textContent = tile.title;
+
+  const body = document.getElementById('modal-body');
+  body.innerHTML = '';
+
+  // Optional video section
+  if (tile.video) {
+    const videoSection = document.createElement('div');
+    videoSection.className = 'video-section';
+    videoSection.innerHTML = `
+      <div class="video-label">📹 Watch First</div>
+      <a href="${tile.video.url}" target="_blank" rel="noopener" class="video-link">
+        ${tile.video.title} — mathispower4u
+        <span class="video-icon">▶</span>
+      </a>
+    `;
+    body.appendChild(videoSection);
+  }
+
+  tile.problems.forEach((prob, pi) => {
+    const block = document.createElement('div');
+    block.className = 'problem-block';
+
+    let partsHTML = '';
+    if (prob.parts && prob.parts.length) {
+      partsHTML = `<ul class="problem-parts">` +
+        prob.parts.map(p => `<li data-part="${p.label}">${p.text}</li>`).join('') +
+        `</ul>`;
+    }
+
+    let answersHTML = '';
+    if (prob.answers && prob.answers.length) {
+      answersHTML = prob.answers.map(a =>
+        `<div class="answer-part"><span class="answer-part-label">${a.label}</span>${a.text}</div>`
+      ).join('');
+    }
+
+    const answerId = `ans-${colIdx}-${tileIdx}-${pi}`;
+    const toggleId = `tog-${colIdx}-${tileIdx}-${pi}`;
+
+    block.innerHTML = `
+      <div class="problem-num">Problem ${pi + 1} of ${tile.problems.length}</div>
+      ${prob.context ? `<div class="problem-context">${prob.context}</div>` : ''}
+      <div class="problem-text">${prob.stem}</div>
+      ${partsHTML}
+      <button class="answer-toggle" id="${toggleId}" onclick="toggleAnswer('${answerId}','${toggleId}')">
+        <span class="toggle-icon">▼</span> Show Answer
+      </button>
+      <div class="answer-panel" id="${answerId}">
+        ${answersHTML}
+      </div>
+    `;
+    body.appendChild(block);
+  });
+
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('desmos-fab').classList.add('visible');
+
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([body]).catch(err => console.log(err));
+  }
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+  document.getElementById('desmos-fab').classList.remove('visible');
+}
+
+function toggleAnswer(panelId, toggleId) {
+  const panel  = document.getElementById(panelId);
+  const toggle = document.getElementById(toggleId);
+  const isOpen = panel.classList.contains('open');
+  panel.classList.toggle('open');
+  toggle.classList.toggle('open');
+  toggle.innerHTML = isOpen
+    ? '<span class="toggle-icon">▼</span> Show Answer'
+    : '<span class="toggle-icon">▼</span> Hide Answer';
+}
+
+/* ============================================================
+   RANDOM PRACTICE
+============================================================ */
+function openRandomProblem() {
+  const colIdx  = Math.floor(Math.random() * columns.length);
+  const col     = columns[colIdx];
+  const tileIdx = Math.floor(Math.random() * col.tiles.length);
+  const tile    = col.tiles[tileIdx];
+  const probIdx = Math.floor(Math.random() * tile.problems.length);
+  const prob    = tile.problems[probIdx];
+
+  const accentEl = document.getElementById('modal-accent');
+  accentEl.className = 'modal-header-accent random-accent';
+  accentEl.style.background = '';
+
+  const labelEl = document.getElementById('modal-col-label');
+  labelEl.style.color = 'var(--text-muted)';
+  labelEl.innerHTML = 'BC Calculus · Unit 7: Differential Equations';
+
+  document.getElementById('modal-title').textContent = 'General Practice';
+
+  const body = document.getElementById('modal-body');
+  body.innerHTML = '';
+
+  const block = document.createElement('div');
+  block.className = 'problem-block';
+  block.style.borderBottom = 'none';
+  block.style.marginBottom = '0';
+  block.style.paddingBottom = '0';
+
+  let partsHTML = '';
+  if (prob.parts && prob.parts.length) {
+    partsHTML = `<ul class="problem-parts">` +
+      prob.parts.map(p => `<li data-part="${p.label}">${p.text}</li>`).join('') +
+      `</ul>`;
+  }
+
+  let answersHTML = '';
+  if (prob.answers && prob.answers.length) {
+    answersHTML = prob.answers.map(a =>
+      `<div class="answer-part"><span class="answer-part-label">${a.label}</span>${a.text}</div>`
+    ).join('');
+  }
+
+  block.innerHTML = `
+    <div class="problem-num">🎲 General Practice</div>
+    ${prob.context ? `<div class="problem-context">${prob.context}</div>` : ''}
+    <div class="problem-text">${prob.stem}</div>
+    ${partsHTML}
+    <button class="answer-toggle" id="rand-tog" onclick="toggleAnswer('rand-ans','rand-tog')">
+      <span class="toggle-icon">▼</span> Show Answer
+    </button>
+    <div class="answer-panel" id="rand-ans">
+      ${answersHTML}
+    </div>
+  `;
+
+  body.appendChild(block);
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('desmos-fab').classList.add('visible');
+
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([body]).catch(err => console.log(err));
+  }
+}
+
+document.getElementById('random-btn').addEventListener('click', openRandomProblem);
+
+/* ============================================================
+   DESMOS BUTTON
+============================================================ */
+document.getElementById('desmos-fab').addEventListener('click', () => {
+  window.open('https://www.desmos.com/calculator', '_blank', 'width=1000,height=700,noopener,noreferrer');
+});
+
+/* ============================================================
+   EVENT LISTENERS
+============================================================ */
+document.getElementById('modal-close').addEventListener('click', closeModal);
+document.getElementById('modal-overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+</script>
+</body>
+</html>
