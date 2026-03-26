@@ -8,6 +8,7 @@
 <script>
   window.MathJax = {
     tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+    svg: { fontCache: 'global' },
     startup: {
       typeset: false,
       ready() {
@@ -19,7 +20,7 @@
     }
   };
 </script>
-<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
 <style>
   /* ============================================================
      TOKENS & RESET
@@ -708,7 +709,7 @@ const columns = [
             context: "Context: Physics — displacement vs. distance",
             stem: "A particle moves along a number line with velocity $v(t)$ feet per second. The graph of $v$ on $[0, 6]$ consists of a line segment from $(0, 4)$ to $(2, 4)$, then from $(2, 4)$ to $(4, -2)$, then from $(4, -2)$ to $(6, -2)$.<br><br><img src='img/u61aP1p.png' alt='Graph of piecewise linear velocity v(t) on [0,6]' class='problem-img'>",
             parts: [
-              { label: "(a)", text: "Find the total displacement of the particle on $[0, 6]$ by computing $\\displaystyle\\int_0^6 v(t)\\,dt$ as a sum of signed areas." },
+              { label: "(a)", text: "Find the total displacement of the particle on $[0, 6]$." },
               { label: "(b)", text: "Find the total distance traveled by the particle on $[0, 6]$." },
               { label: "(c)", text: "At what time in $(0, 6)$ does the particle change direction? Justify." }
             ],
@@ -775,9 +776,9 @@ const columns = [
             context: "Context: Midpoint rule and error analysis",
             stem: "Approximate $\\displaystyle\\int_1^5 \\frac{1}{x}\\,dx$ using $n = 4$ equal subintervals.",
             parts: [
-              { label: "(a)", text: "Compute the midpoint Riemann sum $M_4$ using midpoints $x = 1.5, 2.5, 3.5, 4.5$." },
+              { label: "(a)", text: "Compute the midpoint Riemann sum $M_4$." },
               { label: "(b)", text: "Compute the exact value of $\\displaystyle\\int_1^5 \\frac{1}{x}\\,dx$." },
-              { label: "(c)", text: "Find the absolute error of $M_4$. Is $M_4$ an overestimate or underestimate? Why? (Hint: consider the concavity of $1/x$.)" }
+              { label: "(c)", text: "Find the absolute error of $M_4$. Is $M_4$ an overestimate or underestimate? Justify." }
             ],
             answers: [
               { label: "(a)", text: "$M_4 = 1\\cdot\\left(\\frac{1}{1.5}+\\frac{1}{2.5}+\\frac{1}{3.5}+\\frac{1}{4.5}\\right) = \\frac{2}{3}+\\frac{2}{5}+\\frac{2}{7}+\\frac{2}{9} \\approx 0.6667+0.4+0.2857+0.2222 \\approx 1.5746$." },
@@ -867,7 +868,7 @@ const columns = [
             stem: "A car's velocity (in mph) is recorded at the times shown.<br><br><table style='border-collapse:collapse;font-size:13.5px;margin:4px 0 10px'><thead><tr><th style='border:1px solid #3a3a3a;padding:5px 10px;background:#252525;color:#f0ece6'>$t$ (hr)</th><th style='border:1px solid #3a3a3a;padding:5px 10px;background:#252525;color:#f0ece6'>0</th><th style='border:1px solid #3a3a3a;padding:5px 10px;background:#252525;color:#f0ece6'>0.5</th><th style='border:1px solid #3a3a3a;padding:5px 10px;background:#252525;color:#f0ece6'>1.0</th><th style='border:1px solid #3a3a3a;padding:5px 10px;background:#252525;color:#f0ece6'>1.5</th><th style='border:1px solid #3a3a3a;padding:5px 10px;background:#252525;color:#f0ece6'>2.0</th></tr></thead><tbody><tr><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6'>$v(t)$ (mph)</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>20</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>30</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>50</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>40</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>35</td></tr></tbody></table>",
             parts: [
               { label: "(a)", text: "Use a trapezoidal sum with 4 subintervals to approximate $\\displaystyle\\int_0^2 v(t)\\,dt$. Include units and interpret the result." },
-              { label: "(b)", text: "Is your estimate in (a) an over- or underestimate? To answer, consider whether $v$ is concave up or concave down (use the change in slopes)." },
+              { label: "(b)", text: "Is your estimate in (a) an over- or underestimate? Justify." },
               { label: "(c)", text: "Explain why $\\displaystyle\\int_0^2 v(t)\\,dt$ gives displacement, not distance traveled, and why those are the same here." }
             ],
             answers: [
@@ -950,7 +951,7 @@ const columns = [
             stem: "The graph of $f$ is shown below. Define $g(x) = \\displaystyle\\int_{-3}^x f(t)\\,dt$.<br><br><img src='img/u62aP2p.png' alt='Graph of piecewise f on [-3,5]' class='problem-img'>",
             parts: [
               { label: "(a)", text: "Find $g(-3)$, $g(0)$, and $g(4)$." },
-              { label: "(b)", text: "On what intervals is $g$ increasing? Decreasing? Justify using $g' = f$." },
+              { label: "(b)", text: "On what intervals is $g$ increasing? Decreasing? Justify." },
               { label: "(c)", text: "Find the absolute maximum of $g$ on $[-3, 5]$." }
             ],
             answers: [
@@ -963,7 +964,7 @@ const columns = [
             context: "Context: Using FTC to find a function value",
             stem: "It is given that $f'(x) = \\cos x$ and $f(0) = 3$.",
             parts: [
-              { label: "(a)", text: "Using FTC Part 1, express $f(x)$ as $f(0)$ plus a definite integral." },
+              { label: "(a)", text: "Find $f(x)$." },
               { label: "(b)", text: "Evaluate the integral to find a closed-form expression for $f(x)$." },
               { label: "(c)", text: "Verify your answer by differentiating and checking the initial condition." }
             ],
@@ -1002,9 +1003,9 @@ const columns = [
             context: "Context: Net change theorem",
             stem: "A particle moves along the $x$-axis. Its acceleration is $a(t) = 6t - 4$ ft/s². At $t = 0$, $v(0) = 2$ ft/s and $s(0) = -1$ ft.",
             parts: [
-              { label: "(a)", text: "Find the velocity function $v(t)$ using the Net Change Theorem: $v(t) = v(0) + \\displaystyle\\int_0^t a(\\tau)\\,d\\tau$." },
+              { label: "(a)", text: "Find the velocity function $v(t)$." },
               { label: "(b)", text: "Find the position function $s(t)$." },
-              { label: "(c)", text: "Find the total distance traveled on $[0, 3]$. (Identify where $v = 0$ first.)" }
+              { label: "(c)", text: "Find the total distance traveled on $[0, 3]$." }
             ],
             answers: [
               { label: "(a)", text: "$v(t) = 2 + \\int_0^t(6\\tau-4)\\,d\\tau = 2 + [3\\tau^2-4\\tau]_0^t = 2 + 3t^2 - 4t$." },
@@ -1042,7 +1043,7 @@ const columns = [
             stem: "The graph of $f'$ on $[0,8]$ is shown below.<br><br><img src='img/u62cP1p.png' alt=\"Graph of f' on [0,8]\" class='problem-img'>",
             parts: [
               { label: "(a)", text: "On what intervals is $f$ increasing? Decreasing? Concave up? Concave down?" },
-              { label: "(b)", text: "If $f(0) = 1$, estimate $f(4)$ given $\\displaystyle\\int_0^4 f'(t)\\,dt \\approx 8$ (area under curve)." },
+              { label: "(b)", text: "If $f(0) = 1$, estimate $f(4)$ using the graph." },
               { label: "(c)", text: "Sketch a possible graph of $f$ on $[0,8]$, labeling the location of any relative extrema." }
             ],
             answers: [
@@ -1164,7 +1165,7 @@ const columns = [
             parts: [
               { label: "(a)", text: "$f(x) = 4x^3 - 6x + \\dfrac{1}{x^2}$" },
               { label: "(b)", text: "$g(x) = 3\\sin x - 2\\cos x + e^x$" },
-              { label: "(c)", text: "$h(x) = \\dfrac{x^3 - 5x}{x}$ &nbsp;&nbsp; (simplify first)" }
+              { label: "(c)", text: "$h(x) = \\dfrac{x^3 - 5x}{x}$" }
             ],
             answers: [
               { label: "(a)", text: "$F(x) = x^4 - 3x^2 - x^{-1} + C = x^4 - 3x^2 - \\dfrac{1}{x} + C$." },
@@ -1229,8 +1230,8 @@ const columns = [
             context: "Context: u-substitution requiring algebraic manipulation",
             stem: "Evaluate each integral. These require a non-obvious substitution or algebraic step before substituting.",
             parts: [
-              { label: "(a)", text: "$\\displaystyle\\int x\\sqrt{x+1}\\,dx$ &nbsp;&nbsp; (let $u = x+1$, then express $x$ in terms of $u$)" },
-              { label: "(b)", text: "$\\displaystyle\\int \\tan x\\,dx$ &nbsp;&nbsp; (write as $\\int \\frac{\\sin x}{\\cos x}\\,dx$, then substitute)" },
+              { label: "(a)", text: "$\\displaystyle\\int x\\sqrt{x+1}\\,dx$" },
+              { label: "(b)", text: "$\\displaystyle\\int \\tan x\\,dx$" },
               { label: "(c)", text: "$\\displaystyle\\int \\frac{\\ln x}{x}\\,dx$" }
             ],
             answers: [
@@ -1284,7 +1285,7 @@ const columns = [
             parts: [
               { label: "(a)", text: "$\\displaystyle\\int \\frac{dx}{x^2+4x+13}$" },
               { label: "(b)", text: "$\\displaystyle\\int \\frac{dx}{x^2+6x+10}$" },
-              { label: "(c)", text: "$\\displaystyle\\int_0^1 \\frac{dx}{x^2+2x+2}$ &nbsp;&nbsp; (evaluate the definite integral)" }
+              { label: "(c)", text: "$\\displaystyle\\int_0^1 \\frac{dx}{x^2+2x+2}$" }
             ],
             answers: [
               { label: "(a)", text: "Complete the square: $x^2+4x+13 = (x+2)^2+9$. Let $u=x+2$. $\\displaystyle\\int \\frac{du}{u^2+9} = \\frac{1}{3}\\arctan\\frac{u}{3}+C = \\frac{1}{3}\\arctan\\frac{x+2}{3}+C$." },
@@ -1298,7 +1299,7 @@ const columns = [
             parts: [
               { label: "(a)", text: "$\\displaystyle\\int \\frac{2x^2-1}{x+3}\\,dx$" },
               { label: "(b)", text: "$\\displaystyle\\int \\frac{5}{x^2-4x+8}\\,dx$" },
-              { label: "(c)", text: "$\\displaystyle\\int \\frac{x^2+x+1}{x^2+1}\\,dx$ &nbsp;&nbsp; (split into separate fractions)" }
+              { label: "(c)", text: "$\\displaystyle\\int \\frac{x^2+x+1}{x^2+1}\\,dx$" }
             ],
             answers: [
               { label: "(a)", text: "Long division: $\\frac{2x^2-1}{x+3} = 2x-6+\\frac{17}{x+3}$. $\\displaystyle\\int = x^2-6x+17\\ln|x+3|+C$." },
@@ -1322,7 +1323,7 @@ const columns = [
             parts: [
               { label: "(a)", text: "$\\displaystyle\\int \\frac{\\cos(\\sqrt{x})}{\\sqrt{x}}\\,dx$" },
               { label: "(b)", text: "$\\displaystyle\\int x^2 \\cdot e^{x^3+1}\\,dx$" },
-              { label: "(c)", text: "$\\displaystyle\\int \\frac{x^3+1}{x^2+1}\\,dx$ &nbsp;&nbsp; (long division, then split)" }
+              { label: "(c)", text: "$\\displaystyle\\int \\frac{x^3+1}{x^2+1}\\,dx$" }
             ],
             answers: [
               { label: "(a)", text: "Let $u = \\sqrt{x}$, $du = \\frac{1}{2\\sqrt{x}}\\,dx$, so $\\frac{dx}{\\sqrt{x}} = 2\\,du$. $\\displaystyle\\int \\cos u \\cdot 2\\,du = 2\\sin(\\sqrt{x})+C$." },
@@ -1335,7 +1336,7 @@ const columns = [
             stem: "Evaluate each definite integral exactly.",
             parts: [
               { label: "(a)", text: "$\\displaystyle\\int_0^{\\ln 3} e^{2x}\\,dx$" },
-              { label: "(b)", text: "$\\displaystyle\\int_{\\pi/6}^{\\pi/2} \\cos^2 x \\sin x\\,dx$ &nbsp;&nbsp; (let $u = \\cos x$)" },
+              { label: "(b)", text: "$\\displaystyle\\int_{\\pi/6}^{\\pi/2} \\cos^2 x \\sin x\\,dx$" },
               { label: "(c)", text: "$\\displaystyle\\int_0^2 \\frac{4x}{x^2+1}\\,dx$" }
             ],
             answers: [
@@ -1348,9 +1349,9 @@ const columns = [
             context: "Context: Using initial conditions with definite integrals",
             stem: "Let $F(x) = \\displaystyle\\int_2^x \\frac{t^2-4}{t-2}\\,dt$ for $x \\neq 2$.",
             parts: [
-              { label: "(a)", text: "Simplify the integrand $\\dfrac{t^2-4}{t-2}$ by factoring. Then find a closed form for $F(x)$." },
+              { label: "(a)", text: "Find a closed form for $F(x)$." },
               { label: "(b)", text: "Find $F'(x)$ using both your closed form and FTC. Verify they agree." },
-              { label: "(c)", text: "What is the value of $F(5)$? Interpret in context as a net area." }
+              { label: "(c)", text: "What is the value of $F(5)$? Interpret in context." }
             ],
             answers: [
               { label: "(a)", text: "$\\frac{t^2-4}{t-2} = \\frac{(t-2)(t+2)}{t-2} = t+2$ (for $t \\neq 2$). $F(x) = \\displaystyle\\int_2^x (t+2)\\,dt = \\left[\\frac{t^2}{2}+2t\\right]_2^x = \\frac{x^2}{2}+2x - (2+4) = \\frac{x^2}{2}+2x-6$." },
@@ -1391,7 +1392,7 @@ const columns = [
             parts: [
               { label: "(a)", text: "$\\displaystyle\\int x e^x\\,dx$" },
               { label: "(b)", text: "$\\displaystyle\\int x\\cos x\\,dx$" },
-              { label: "(c)", text: "$\\displaystyle\\int \\ln x\\,dx$ &nbsp;&nbsp; (let $u = \\ln x$, $dv = dx$)" }
+              { label: "(c)", text: "$\\displaystyle\\int \\ln x\\,dx$" }
             ],
             answers: [
               { label: "(a)", text: "Let $u=x$, $dv=e^x\\,dx$; then $du=dx$, $v=e^x$. $\\displaystyle\\int xe^x\\,dx = xe^x - \\int e^x\\,dx = xe^x - e^x + C = e^x(x-1)+C$." },
@@ -1403,14 +1404,12 @@ const columns = [
             context: "Context: Repeated integration by parts",
             stem: "Evaluate $\\displaystyle\\int x^2 e^x\\,dx$ using integration by parts twice (tabular method or iterated).",
             parts: [
-              { label: "(a)", text: "Apply parts once with $u = x^2$, $dv = e^x\\,dx$. State the resulting integral." },
-              { label: "(b)", text: "Apply parts again to the remaining integral." },
-              { label: "(c)", text: "Write the final answer and verify by differentiating." }
+              { label: "(a)", text: "Evaluate $\\displaystyle\\int x^2 e^x\\,dx$." },
+              { label: "(b)", text: "Verify your answer by differentiating." }
             ],
             answers: [
-              { label: "(a)", text: "$u=x^2$, $du=2x\\,dx$, $v=e^x$. $\\displaystyle\\int x^2 e^x\\,dx = x^2 e^x - 2\\int xe^x\\,dx$." },
-              { label: "(b)", text: "From Tile 4-A (a): $\\displaystyle\\int xe^x\\,dx = e^x(x-1)+C$. So $\\displaystyle\\int x^2 e^x\\,dx = x^2 e^x - 2e^x(x-1) + C = x^2 e^x - 2xe^x + 2e^x + C$." },
-              { label: "(c)", text: "$F(x) = e^x(x^2-2x+2)$. Check: $F'(x) = e^x(x^2-2x+2)+e^x(2x-2) = e^x(x^2-2x+2+2x-2) = e^x \\cdot x^2 = x^2 e^x$ ✓." }
+              { label: "(a)", text: "$u=x^2$, $du=2x\\,dx$, $v=e^x$. $\\displaystyle\\int x^2 e^x\\,dx = x^2 e^x - 2\\int xe^x\\,dx$. Applying IBP again to $\\int xe^x\\,dx$ (with $u=x$, $v=e^x$): $xe^x - e^x + C$. So $\\displaystyle\\int x^2 e^x\\,dx = x^2 e^x - 2e^x(x-1) + C = e^x(x^2-2x+2)+C$." },
+              { label: "(b)", text: "$F(x) = e^x(x^2-2x+2)$. $F'(x) = e^x(x^2-2x+2)+e^x(2x-2) = e^x(x^2) = x^2 e^x$ ✓." }
             ]
           },
           {
@@ -1442,7 +1441,7 @@ const columns = [
             context: "Context: Setting up partial fractions",
             stem: "Decompose each rational function into partial fractions, then integrate.",
             parts: [
-              { label: "(a)", text: "$\\displaystyle\\int \\frac{1}{x^2-1}\\,dx$ &nbsp;&nbsp; (factor denominator first)" },
+              { label: "(a)", text: "$\\displaystyle\\int \\frac{1}{x^2-1}\\,dx$" },
               { label: "(b)", text: "$\\displaystyle\\int \\frac{3x+5}{(x+1)(x+2)}\\,dx$" },
               { label: "(c)", text: "$\\displaystyle\\int \\frac{x}{x^2-5x+6}\\,dx$" }
             ],
@@ -1470,9 +1469,9 @@ const columns = [
             context: "Context: Partial fractions in a modeling context",
             stem: "The logistic growth model leads to the integral $\\displaystyle\\int \\frac{dP}{P(1-P/K)}$, where $K$ is the carrying capacity. Let $K = 100$.",
             parts: [
-              { label: "(a)", text: "Write $\\dfrac{1}{P(1-P/100)} = \\dfrac{100}{P(100-P)}$ and decompose using partial fractions." },
+              { label: "(a)", text: "Decompose $\\dfrac{1}{P(1-P/100)}$ using partial fractions." },
               { label: "(b)", text: "Integrate and simplify the result." },
-              { label: "(c)", text: "If $P(0) = 10$ and $\\displaystyle\\int_0^T \\frac{dP}{P(1-P/100)} = 1.5$, use your antiderivative to find $P(T)$ approximately. (Use the solved form $\\ln\\left|\\frac{P}{100-P}\\right| = t + C$.)" }
+              { label: "(c)", text: "If $P(0) = 10$ and $\\displaystyle\\int_0^T \\frac{dP}{P(1-P/100)} = 1.5$, use your antiderivative to find $P(T)$ approximately." }
             ],
             answers: [
               { label: "(a)", text: "$\\frac{100}{P(100-P)} = \\frac{A}{P}+\\frac{B}{100-P}$. $P=0$: $A=1$. $P=100$: $B=1$. So decomposition is $\\frac{1}{P}+\\frac{1}{100-P}$." },
@@ -1523,9 +1522,9 @@ const columns = [
             context: "Context: Comparison test for improper integrals",
             stem: "Use the Comparison Test to determine convergence or divergence without computing the exact value.",
             parts: [
-              { label: "(a)", text: "$\\displaystyle\\int_1^{\\infty} \\frac{1}{x^2 + 1}\\,dx$ &nbsp;&nbsp; (compare to $\\int_1^{\\infty} \\frac{1}{x^2}\\,dx$)" },
-              { label: "(b)", text: "$\\displaystyle\\int_1^{\\infty} \\frac{e^x}{e^{2x}+1}\\,dx$ &nbsp;&nbsp; (bound $e^{2x}+1 > e^{2x}$)" },
-              { label: "(c)", text: "$\\displaystyle\\int_1^{\\infty} \\frac{\\sin^2 x}{x^2}\\,dx$ &nbsp;&nbsp; (use $0 \\leq \\sin^2 x \\leq 1$)" }
+              { label: "(a)", text: "$\\displaystyle\\int_1^{\\infty} \\frac{1}{x^2 + 1}\\,dx$" },
+              { label: "(b)", text: "$\\displaystyle\\int_1^{\\infty} \\frac{e^x}{e^{2x}+1}\\,dx$" },
+              { label: "(c)", text: "$\\displaystyle\\int_1^{\\infty} \\frac{\\sin^2 x}{x^2}\\,dx$" }
             ],
             answers: [
               { label: "(a)", text: "Since $x^2+1 > x^2$, we have $\\frac{1}{x^2+1} < \\frac{1}{x^2}$ for all $x \\geq 1$. Since $\\displaystyle\\int_1^{\\infty}\\frac{1}{x^2}\\,dx = 1$ converges and the integrand is bounded below by 0, by the comparison test $\\displaystyle\\int_1^{\\infty}\\frac{1}{x^2+1}\\,dx$ converges." },
@@ -1561,28 +1560,22 @@ const columns = [
             context: "Context: Integration by parts — looping",
             stem: "Evaluate $\\displaystyle\\int e^x \\cos x\\,dx$ using the 'looping' technique: integrate by parts twice, then solve for the integral algebraically.",
             parts: [
-              { label: "(a)", text: "Apply IBP with $u = e^x$, $dv = \\cos x\\,dx$. State the result." },
-              { label: "(b)", text: "Apply IBP again to $\\displaystyle\\int e^x \\sin x\\,dx$ from step (a) with $u = e^x$, $dv = \\sin x\\,dx$." },
-              { label: "(c)", text: "You should see $\\displaystyle\\int e^x \\cos x\\,dx$ appear on both sides. Solve algebraically." }
+              { label: "(a)", text: "Evaluate $\\displaystyle\\int e^x \\cos x\\,dx$." }
             ],
             answers: [
-              { label: "(a)", text: "$u=e^x$, $dv=\\cos x\\,dx$; $v=\\sin x$. $\\displaystyle\\int e^x\\cos x\\,dx = e^x\\sin x - \\int e^x \\sin x\\,dx$." },
-              { label: "(b)", text: "$u=e^x$, $dv=\\sin x\\,dx$; $v=-\\cos x$. $\\displaystyle\\int e^x\\sin x\\,dx = -e^x\\cos x + \\int e^x\\cos x\\,dx$." },
-              { label: "(c)", text: "Substituting (b) into (a): $\\displaystyle\\int e^x\\cos x\\,dx = e^x\\sin x - \\left(-e^x\\cos x + \\int e^x\\cos x\\,dx\\right) = e^x\\sin x + e^x\\cos x - \\int e^x\\cos x\\,dx$. Let $I = \\displaystyle\\int e^x\\cos x\\,dx$: $2I = e^x(\\sin x+\\cos x) \\Rightarrow I = \\dfrac{e^x(\\sin x+\\cos x)}{2}+C$." }
+              { label: "(a)", text: "Apply IBP with $u=e^x$, $dv=\\cos x\\,dx$: $\\displaystyle\\int e^x\\cos x\\,dx = e^x\\sin x - \\int e^x\\sin x\\,dx$. Apply IBP again to $\\int e^x\\sin x\\,dx$ with $u=e^x$, $dv=\\sin x\\,dx$: $-e^x\\cos x + \\int e^x\\cos x\\,dx$. Substituting back: $\\displaystyle\\int e^x\\cos x\\,dx = e^x\\sin x + e^x\\cos x - \\int e^x\\cos x\\,dx$. Solving for the integral: $I = \\dfrac{e^x(\\sin x+\\cos x)}{2}+C$." }
             ]
           },
           {
             context: "Context: AP free-response style — comprehensive",
             stem: "Evaluate $\\displaystyle\\int_0^{\\infty} xe^{-x}\\,dx$ — an improper integral requiring integration by parts.",
             parts: [
-              { label: "(a)", text: "Rewrite as $\\displaystyle\\lim_{b\\to\\infty}\\int_0^b xe^{-x}\\,dx$ and apply IBP with $u=x$, $dv=e^{-x}\\,dx$." },
-              { label: "(b)", text: "Evaluate the resulting definite integral on $[0,b]$ and simplify." },
-              { label: "(c)", text: "Take the limit as $b\\to\\infty$. You will need $\\displaystyle\\lim_{b\\to\\infty} be^{-b} = 0$. State this limit and explain why it holds (exponential decay dominates polynomial growth)." }
+              { label: "(a)", text: "Evaluate $\\displaystyle\\int_0^{\\infty} xe^{-x}\\,dx$." },
+              { label: "(b)", text: "In evaluating the limit, you will encounter $\\displaystyle\\lim_{b\\to\\infty} be^{-b}$. State its value and explain why it holds." }
             ],
             answers: [
-              { label: "(a)", text: "$u=x$, $dv=e^{-x}\\,dx$; $du=dx$, $v=-e^{-x}$. $\\displaystyle\\int_0^b xe^{-x}\\,dx = \\left[-xe^{-x}\\right]_0^b + \\int_0^b e^{-x}\\,dx = -be^{-b} + [-e^{-x}]_0^b = -be^{-b} - e^{-b}+1$." },
-              { label: "(b)", text: "$\\displaystyle\\int_0^b xe^{-x}\\,dx = 1 - e^{-b}(b+1)$." },
-              { label: "(c)", text: "$\\displaystyle\\lim_{b\\to\\infty}(1-e^{-b}(b+1)) = 1 - 0 = 1$. Since $e^{-b} \\to 0$ exponentially fast while $b+1$ grows only polynomially, $\\lim_{b\\to\\infty}be^{-b} = 0$ by L'Hôpital: $\\frac{b}{e^b} \\to \\frac{1}{e^b} \\to 0$. Therefore $\\displaystyle\\int_0^{\\infty}xe^{-x}\\,dx = 1$." }
+              { label: "(a)", text: "Rewrite as $\\lim_{b\\to\\infty}\\int_0^b xe^{-x}\\,dx$. IBP with $u=x$, $dv=e^{-x}\\,dx$; $v=-e^{-x}$: $\\left[-xe^{-x}\\right]_0^b + \\int_0^b e^{-x}\\,dx = -be^{-b} + [-e^{-x}]_0^b = 1 - e^{-b}(b+1)$. Taking the limit: $\\displaystyle\\int_0^{\\infty}xe^{-x}\\,dx = 1$." },
+              { label: "(b)", text: "$\\displaystyle\\lim_{b\\to\\infty}be^{-b} = 0$. Exponential decay dominates polynomial growth: by L'Hôpital, $\\frac{b}{e^b} \\to \\frac{1}{e^b} \\to 0$." }
             ]
           }
         ]
