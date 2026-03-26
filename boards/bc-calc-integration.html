@@ -1,0 +1,1821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BC Calculus — Unit 6: Integration | Middlesex School</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet" />
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+    startup: {
+      typeset: false,
+      ready() {
+        MathJax.startup.defaultReady();
+        renderBoard();
+        MathJax.typesetPromise([document.getElementById('board-grid')])
+          .catch(err => console.log(err));
+      }
+    }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+  /* ============================================================
+     TOKENS & RESET
+  ============================================================ */
+  :root {
+    --crimson:     #cf003d;
+    --crimson-dim: #8a0028;
+    --crimson-glow:#ff1a55;
+    --black:       #0d0d0d;
+    --surface:     #151515;
+    --surface2:    #1e1e1e;
+    --surface3:    #252525;
+    --border:      #2e2e2e;
+    --border-light:#3a3a3a;
+    --text:        #f0ece6;
+    --text-muted:  #9e9e9e;
+    --text-dim:    #666666;
+
+    --col1: #cf003d;
+    --col2: #1a6b5a;
+    --col3: #4a5568;
+    --col4: #7c4a1e;
+
+    --col1-light: #ff4d75;
+    --col2-light: #2dd4bf;
+    --col3-light: #94a3b8;
+    --col4-light: #f59e0b;
+
+    --radius: 10px;
+    --radius-lg: 16px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.5);
+    --shadow-hover: 0 8px 40px rgba(0,0,0,0.7);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 16px;
+    line-height: 1.65;
+    min-height: 100vh;
+  }
+
+  /* ============================================================
+     HEADER
+  ============================================================ */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 32px 40px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--crimson), var(--crimson-glow), var(--crimson));
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(207,0,61,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .header-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+  }
+
+  .school-tag {
+    font-family: 'Source Serif 4', serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--crimson-glow);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .school-tag::before,
+  .school-tag::after {
+    content: '';
+    display: inline-block;
+    width: 28px;
+    height: 1px;
+    background: var(--crimson-glow);
+  }
+
+  h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    margin-top: 4px;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--crimson-glow);
+  }
+
+  .header-meta {
+    margin-top: 4px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .meta-pill {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 3px 12px;
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+  }
+
+  /* ============================================================
+     INSTRUCTIONS BAR
+  ============================================================ */
+  .instructions {
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 40px;
+    font-size: 13px;
+    color: var(--text-muted);
+    text-align: center;
+    letter-spacing: 0.03em;
+  }
+
+  .instructions strong { color: var(--crimson-glow); font-weight: 600; }
+
+  /* ============================================================
+     BOARD GRID
+  ============================================================ */
+  .board-wrap {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 36px 24px 60px;
+  }
+
+  .board-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto repeat(4, 1fr);
+    gap: 20px;
+  }
+
+  .col-group { display: contents; }
+
+  .col-header {
+    border-radius: var(--radius) var(--radius) 0 0;
+    padding: 16px 18px 14px;
+    position: relative;
+    overflow: hidden;
+    align-self: start;
+  }
+
+  .col-header::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .col-1-header { background: color-mix(in srgb, var(--col1) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col1) 40%, transparent); }
+  .col-2-header { background: color-mix(in srgb, var(--col2) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col2) 40%, transparent); }
+  .col-3-header { background: color-mix(in srgb, var(--col3) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col3) 40%, transparent); }
+  .col-4-header { background: color-mix(in srgb, var(--col4) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col4) 40%, transparent); }
+
+  .col-header-num {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    opacity: 0.7;
+  }
+
+  .col-1-header .col-header-num { color: var(--col1-light); }
+  .col-2-header .col-header-num { color: var(--col2-light); }
+  .col-3-header .col-header-num { color: var(--col3-light); }
+  .col-4-header .col-header-num { color: var(--col4-light); }
+
+  .col-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.25;
+  }
+
+  .col-header .col-topics {
+    margin-top: 6px;
+    font-size: 10.5px;
+    color: var(--text-dim);
+    letter-spacing: 0.04em;
+  }
+
+  /* ============================================================
+     TILES
+  ============================================================ */
+  .tile {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 18px 28px;
+    cursor: pointer;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+    position: relative;
+    overflow: hidden;
+    user-select: none;
+  }
+
+  .tile::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+    border-radius: var(--radius) 0 0 var(--radius);
+    transition: opacity 0.2s;
+  }
+
+  .col-1 .tile::before { background: var(--col1-light); }
+  .col-2 .tile::before { background: var(--col2-light); }
+  .col-3 .tile::before { background: var(--col3-light); }
+  .col-4 .tile::before { background: var(--col4-light); }
+
+  .tile:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-hover);
+    background: var(--surface3);
+  }
+
+  .col-1 .tile:hover { border-color: color-mix(in srgb, var(--col1) 60%, transparent); }
+  .col-2 .tile:hover { border-color: color-mix(in srgb, var(--col2) 60%, transparent); }
+  .col-3 .tile:hover { border-color: color-mix(in srgb, var(--col3) 60%, transparent); }
+  .col-4 .tile:hover { border-color: color-mix(in srgb, var(--col4) 60%, transparent); }
+
+  .tile-icon { font-size: 18px; margin-bottom: 8px; display: block; }
+  .tile-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+    margin-bottom: 5px;
+  }
+  .tile-sub { font-size: 11.5px; color: var(--text-muted); line-height: 1.4; }
+  .tile-topics { position: absolute; bottom: 10px; left: 18px; font-size: 10px; color: var(--text-dim); letter-spacing: 0.06em; }
+  .tile-arrow { position: absolute; bottom: 12px; right: 14px; font-size: 14px; opacity: 0.3; transition: opacity 0.2s, transform 0.2s; }
+  .tile:hover .tile-arrow { opacity: 0.8; transform: translate(2px, -2px); }
+  .col-1 .tile:hover .tile-arrow { color: var(--col1-light); }
+  .col-2 .tile:hover .tile-arrow { color: var(--col2-light); }
+  .col-3 .tile:hover .tile-arrow { color: var(--col3-light); }
+  .col-4 .tile:hover .tile-arrow { color: var(--col4-light); }
+
+  /* ============================================================
+     MODAL
+  ============================================================ */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.82);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    backdrop-filter: blur(4px);
+  }
+
+  .modal-overlay.open { display: flex; animation: fadeIn 0.2s ease; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    width: 100%;
+    max-width: 760px;
+    max-height: 88vh;
+    overflow-y: auto;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.8);
+    animation: slideUp 0.22s ease;
+    position: relative;
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .modal-header {
+    padding: 24px 28px 20px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .modal-header-accent {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  }
+
+  .modal-col-label { font-size: 10px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 6px; }
+  .modal-title { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; color: var(--text); line-height: 1.2; }
+
+  .modal-close {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.15s, color 0.15s;
+  }
+  .modal-close:hover { background: var(--crimson); color: white; border-color: var(--crimson); }
+
+  .modal-body { padding: 24px 28px 32px; }
+
+  .problem-block {
+    margin-bottom: 28px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--border);
+  }
+  .problem-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+  .problem-num { font-size: 10.5px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 10px; }
+  .problem-context { font-size: 14px; font-style: italic; color: var(--text-muted); margin-bottom: 10px; padding-left: 12px; border-left: 2px solid var(--border-light); }
+  .problem-text { font-size: 14.5px; color: var(--text); line-height: 1.7; margin-bottom: 14px; }
+
+  .problem-parts { margin-left: 0; list-style: none; }
+  .problem-parts li { font-size: 14px; color: var(--text); margin-bottom: 8px; padding-left: 24px; position: relative; line-height: 1.6; }
+  .problem-parts li::before { content: attr(data-part); position: absolute; left: 0; font-weight: 700; color: var(--text-muted); }
+
+  .answer-toggle {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 9px 16px;
+    color: var(--text-muted);
+    font-family: 'Source Serif 4', serif;
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.15s;
+    margin-top: 4px;
+  }
+  .answer-toggle:hover { background: var(--surface3); border-color: var(--border-light); color: var(--text); }
+  .answer-toggle .toggle-icon { font-size: 10px; transition: transform 0.2s; }
+  .answer-toggle.open .toggle-icon { transform: rotate(180deg); }
+
+  .answer-panel {
+    display: none;
+    margin-top: 14px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-size: 13.5px;
+    line-height: 1.75;
+    color: var(--text);
+    animation: expandIn 0.18s ease;
+  }
+  @keyframes expandIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+  .answer-panel.open { display: block; }
+
+  .answer-part { margin-bottom: 10px; padding-left: 20px; position: relative; }
+  .answer-part:last-child { margin-bottom: 0; }
+  .answer-part-label { position: absolute; left: 0; font-weight: 700; color: var(--text-muted); }
+
+  .problem-img { display: block; width: 360px; max-width: 100%; border-radius: 6px; margin: 10px 0 6px; }
+
+  /* Video section */
+  .video-section {
+    background: var(--surface2);
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 24px;
+  }
+
+  .video-label {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+
+  .video-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    color: var(--crimson-glow);
+    text-decoration: none;
+    font-size: 13.5px;
+    font-family: 'Source Serif 4', serif;
+    transition: color 0.15s;
+  }
+
+  .video-link:hover { color: #fff; }
+  .video-icon { font-size: 12px; opacity: 0.7; }
+
+  /* ============================================================
+     RESPONSIVE
+  ============================================================ */
+  @media (max-width: 1000px) {
+    .board-grid { display: flex; flex-wrap: wrap; gap: 20px; }
+    .col-group { display: flex; flex-direction: column; gap: 10px; width: calc(50% - 10px); }
+    .col-header { border-radius: var(--radius); }
+    .tile { grid-column: unset !important; grid-row: unset !important; }
+  }
+
+  @media (max-width: 600px) {
+    .board-grid { flex-direction: column; }
+    .col-group { width: 100%; }
+    header { padding: 20px; }
+    .board-wrap { padding: 20px 12px 40px; }
+    .modal { border-radius: var(--radius); }
+    .modal-header, .modal-body { padding: 18px; }
+  }
+
+  .modal::-webkit-scrollbar { width: 6px; }
+  .modal::-webkit-scrollbar-track { background: var(--surface); }
+  .modal::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
+
+  /* ============================================================
+     RANDOM PRACTICE BAR
+  ============================================================ */
+  .random-wrap { max-width: 1400px; margin: 0 auto; padding: 0 24px 48px; }
+
+  .random-btn {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border-light);
+    border-radius: 14px;
+    padding: 0 36px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.2s ease, background 0.2s ease;
+    font-family: 'Source Serif 4', serif;
+  }
+
+  .random-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(207,0,61,0.06) 30%, rgba(207,0,61,0.10) 50%, rgba(207,0,61,0.06) 70%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .random-btn:hover::before { opacity: 1; }
+  .random-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(207,0,61,0.18), 0 2px 8px rgba(0,0,0,0.4);
+    border-color: color-mix(in srgb, var(--crimson) 55%, transparent);
+    background: var(--surface3);
+  }
+  .random-btn:active { transform: translateY(0) scale(0.995); box-shadow: 0 2px 8px rgba(0,0,0,0.4); }
+
+  .random-btn-left-notch, .random-btn-right-notch {
+    position: absolute; bottom: 0;
+    width: 28px; height: 5px;
+    background: var(--border);
+    border-radius: 3px 3px 0 0;
+    transition: background 0.2s;
+  }
+  .random-btn-left-notch  { left: 60px; }
+  .random-btn-right-notch { right: 60px; }
+  .random-btn:hover .random-btn-left-notch,
+  .random-btn:hover .random-btn-right-notch { background: color-mix(in srgb, var(--crimson) 40%, var(--border)); }
+
+  .random-btn-icon { font-size: 22px; flex-shrink: 0; transition: transform 0.3s ease; }
+  .random-btn:hover .random-btn-icon { transform: rotate(20deg) scale(1.15); }
+
+  .random-btn-label { display: flex; flex-direction: column; align-items: center; gap: 1px; }
+  .random-btn-title { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; color: var(--text); letter-spacing: 0.01em; line-height: 1.2; }
+  .random-btn-sub { font-size: 11.5px; color: var(--text-muted); letter-spacing: 0.07em; text-transform: uppercase; }
+
+  .random-btn-badge {
+    position: absolute; right: 28px;
+    background: var(--surface3);
+    border: 1px solid var(--border-light);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-family: 'Source Serif 4', serif;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+  .random-btn:hover .random-btn-badge {
+    background: color-mix(in srgb, var(--crimson) 15%, var(--surface3));
+    color: var(--crimson-glow);
+    border-color: color-mix(in srgb, var(--crimson) 40%, transparent);
+  }
+
+  .random-accent {
+    background: linear-gradient(90deg, var(--col1-light), var(--col2-light), var(--col3-light), var(--col4-light));
+    background-size: 300% 100%;
+    animation: accentShift 4s ease infinite;
+  }
+  @keyframes accentShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+  @media (max-width: 600px) {
+    .random-wrap { padding: 0 12px 36px; }
+    .random-btn { height: 64px; border-radius: 10px; }
+    .random-btn-badge, .random-btn-left-notch, .random-btn-right-notch { display: none; }
+  }
+
+  /* ============================================================
+     DESMOS FLOATING BUTTON
+  ============================================================ */
+  .desmos-fab {
+    position: fixed; bottom: 32px; right: 32px;
+    z-index: 1050;
+    background: var(--surface2);
+    border: 1px solid var(--border-light);
+    border-radius: 50px;
+    padding: 0 20px 0 14px;
+    height: 52px;
+    display: none;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    font-family: 'Source Serif 4', serif;
+  }
+  .desmos-fab.visible { display: flex; animation: fadeIn 0.18s ease; }
+  .desmos-fab:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(207,0,61,0.25), 0 2px 8px rgba(0,0,0,0.5);
+    border-color: color-mix(in srgb, var(--crimson) 60%, transparent);
+    background: var(--surface3);
+  }
+  .desmos-fab:active { transform: translateY(0) scale(0.97); }
+  .desmos-fab-icon { font-size: 20px; line-height: 1; flex-shrink: 0; transition: transform 0.2s ease; }
+  .desmos-fab:hover .desmos-fab-icon { transform: rotate(-8deg) scale(1.1); }
+  .desmos-fab-title { font-family: 'Playfair Display', serif; font-size: 0.82rem; font-weight: 700; color: var(--text); letter-spacing: 0.01em; white-space: nowrap; display: block; line-height: 1.25; }
+  .desmos-fab-sub { font-size: 9.5px; color: var(--text-muted); letter-spacing: 0.08em; text-transform: uppercase; white-space: nowrap; display: block; }
+
+  @media (max-width: 600px) {
+    .desmos-fab { bottom: 20px; right: 16px; padding: 0 14px; }
+    .desmos-fab-sub { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="school-tag">Middlesex School · mxschool.edu</div>
+    <h1>BC Calculus — Unit 6: <em>Integration &amp; Accumulation of Change</em></h1>
+    <div class="header-meta">
+      <span class="meta-pill">∫ Riemann Sums</span>
+      <span class="meta-pill">📐 Fundamental Theorem</span>
+      <span class="meta-pill">🔁 Antiderivatives &amp; Substitution</span>
+      <span class="meta-pill">∞ BC Techniques</span>
+      <span class="meta-pill">Topics 6.1 – 6.14</span>
+    </div>
+  </div>
+</header>
+
+<div class="instructions">
+  Click any tile to open practice problems. Use <strong>Show Answer</strong> to check your work after attempting each part.
+</div>
+
+<div class="board-wrap">
+  <div class="board-grid" id="board-grid"></div>
+</div>
+
+<div class="random-wrap">
+  <button class="random-btn" id="random-btn" aria-label="Random Practice">
+    <div class="random-btn-left-notch"></div>
+    <div class="random-btn-right-notch"></div>
+    <span class="random-btn-icon">🎲</span>
+    <div class="random-btn-label">
+      <span class="random-btn-title">Random Practice</span>
+      <span class="random-btn-sub">Any topic · Any tile · Any problem</span>
+    </div>
+    <span class="random-btn-badge">48 problems</span>
+  </button>
+</div>
+
+<button class="desmos-fab" id="desmos-fab" aria-label="Open Desmos Graphing Calculator">
+  <span class="desmos-fab-icon">📈</span>
+  <span>
+    <span class="desmos-fab-title">Graphing Calculator</span>
+    <span class="desmos-fab-sub">Opens Desmos in a new tab</span>
+  </span>
+</button>
+
+<div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div class="modal-header-accent" id="modal-accent"></div>
+      <div>
+        <div class="modal-col-label" id="modal-col-label"></div>
+        <div class="modal-title" id="modal-title"></div>
+      </div>
+      <button class="modal-close" id="modal-close" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   DATA — Edit problems here without touching layout code.
+============================================================ */
+
+const columns = [
+
+  // ═══════════════════════════════════════════════════════════
+  // COLUMN 1 — The Definite Integral & Riemann Sums
+  //            Topics 6.1 – 6.3
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: "col-1",
+    accentVar: "var(--col1-light)",
+    headerClass: "col-1-header",
+    tileClass: "col-1",
+    label: "Column I",
+    title: "The Definite Integral & Riemann Sums",
+    topics: "Topics 6.1 – 6.3",
+    tiles: [
+
+      // ── TILE 1-A ──────────────────────────────────────────
+      {
+        icon: "📦",
+        title: "Exploring Accumulation of Change",
+        sub: "Area, signed area, and the definite integral as accumulation",
+        topics: "6.1",
+        video: { title: "Application of Integration: Net Change in Calories Given Rates", url: "https://www.youtube.com/watch?v=4UQXmDS-JZ0" },
+        problems: [
+          {
+            context: "Context: Physics — displacement vs. distance",
+            stem: "A particle moves along a number line with velocity $v(t)$ feet per second. The graph of $v$ on $[0, 6]$ consists of a line segment from $(0, 4)$ to $(2, 4)$, then from $(2, 4)$ to $(4, -2)$, then from $(4, -2)$ to $(6, -2)$.<br><br><img src='img/u61aP1p.png' alt='Graph of piecewise linear velocity v(t) on [0,6]' class='problem-img'>",
+            parts: [
+              { label: "(a)", text: "Find the total displacement of the particle on $[0, 6]$ by computing $\\displaystyle\\int_0^6 v(t)\\,dt$ as a sum of signed areas." },
+              { label: "(b)", text: "Find the total distance traveled by the particle on $[0, 6]$." },
+              { label: "(c)", text: "At what time in $(0, 6)$ does the particle change direction? Justify." }
+            ],
+            answers: [
+              { label: "(a)", text: "From $t=0$ to $t=2$: rectangle, area $= 4 \\cdot 2 = 8$. From $t=2$ to $t=4$: triangle with base 2, heights 4 to $-2$ — zero crossing at $t = 2 + \\frac{4}{6}\\cdot 2 = \\frac{10}{3}$. Triangle above: $\\frac{1}{2}\\cdot\\frac{4}{3}\\cdot 4 = \\frac{8}{3}$; triangle below: $\\frac{1}{2}\\cdot\\frac{2}{3}\\cdot 2 = \\frac{2}{3}$. Wait — actually the segment from $(2,4)$ to $(4,-2)$ has slope $-3$, zero at $t = 2 + 4/3 = 10/3$. Area above axis: $\\frac{1}{2}\\cdot\\frac{4}{3}\\cdot 4 = \\frac{8}{3}$. Area below: $\\frac{1}{2}\\cdot\\frac{2}{3}\\cdot 2 = \\frac{2}{3}$. From $t=4$ to $t=6$: rectangle, area $= -2 \\cdot 2 = -4$. Total displacement $= 8 + \\frac{8}{3} - \\frac{2}{3} - 4 = 4 + 2 = 6$ ft." },
+              { label: "(b)", text: "Total distance $= |8| + \\frac{8}{3} + \\frac{2}{3} + |-4| = 8 + \\frac{10}{3} + 4 = 12 + \\frac{10}{3} = \\frac{46}{3} \\approx 15.3$ ft." },
+              { label: "(c)", text: "The particle changes direction when $v(t) = 0$ and $v$ changes sign. The velocity crosses zero at $t = \\frac{10}{3}$ (where the segment from $(2,4)$ to $(4,-2)$ crosses the $t$-axis). At that moment $v$ changes from positive to negative, so the particle reverses direction." }
+            ]
+          },
+          {
+            context: "Context: Interpreting the definite integral",
+            stem: "A tank is being filled with water. The rate of flow (gallons per minute) is $r(t)$, which is positive and decreasing on $[0, 10]$. It is known that $\\displaystyle\\int_0^{10} r(t)\\,dt = 85$.",
+            parts: [
+              { label: "(a)", text: "Interpret the meaning of $\\displaystyle\\int_0^{10} r(t)\\,dt = 85$ in context. Include units." },
+              { label: "(b)", text: "Is $\\displaystyle\\int_0^{10} r(t)\\,dt$ an overestimate or underestimate of the area under $r$ if estimated with a left Riemann sum? Explain." },
+              { label: "(c)", text: "If the tank initially contains 30 gallons, write an expression for the amount of water in the tank at time $t = 10$." }
+            ],
+            answers: [
+              { label: "(a)", text: "Over the 10-minute interval, a total of 85 gallons of water flowed into the tank." },
+              { label: "(b)", text: "Since $r(t)$ is decreasing, the function values at the left endpoints are greater than the function values throughout each subinterval. Therefore a left Riemann sum is an overestimate of the actual integral." },
+              { label: "(c)", text: "$A(10) = 30 + \\displaystyle\\int_0^{10} r(t)\\,dt = 30 + 85 = 115$ gallons." }
+            ]
+          },
+          {
+            context: "Context: Negative and positive regions",
+            stem: "Let $f(x) = x^2 - 4$ on $[-3, 3]$.",
+            parts: [
+              { label: "(a)", text: "Identify the $x$-values where $f(x) = 0$ on $[-3, 3]$." },
+              { label: "(b)", text: "Without computing, determine whether $\\displaystyle\\int_{-3}^{3} f(x)\\,dx$ is positive, negative, or zero. Justify using symmetry and the sign of $f$." },
+              { label: "(c)", text: "Compute $\\displaystyle\\int_{-3}^{3}(x^2 - 4)\\,dx$ exactly and verify your answer in (b)." }
+            ],
+            answers: [
+              { label: "(a)", text: "$f(x) = 0$ at $x = \\pm 2$." },
+              { label: "(b)", text: "$f$ is an even function, and $f(x) < 0$ on $(-2, 2)$ while $f(x) > 0$ on $(-3,-2) \\cup (2,3)$. The region below the axis is wider relative to its depth. Computing gives a net negative value (the negative area on $[-2,2]$ dominates). We'd expect the integral to be negative." },
+              { label: "(c)", text: "$\\displaystyle\\int_{-3}^{3}(x^2-4)\\,dx = \\left[\\frac{x^3}{3} - 4x\\right]_{-3}^{3} = (9-12)-(- 9+12) = -3-3 = -6$. Negative, confirming (b)." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 1-B ──────────────────────────────────────────
+      {
+        icon: "📊",
+        title: "Riemann Sums",
+        sub: "LRAM, RRAM, midpoint, and trapezoidal approximations",
+        topics: "6.2",
+        video: { title: "Find Distance by Approximating Area Under a Function", url: "https://www.youtube.com/watch?v=dH4H-J51CI0" },
+        problems: [
+          {
+            context: "Context: Table of values",
+            stem: "Selected values of a continuous function $f$ are given below.<br><br><table style='border-collapse:collapse;font-size:13.5px;margin:4px 0 10px'><thead><tr><th style='border:1px solid #3a3a3a;padding:5px 12px;background:#252525;color:#f0ece6'>$x$</th><th style='border:1px solid #3a3a3a;padding:5px 12px;background:#252525;color:#f0ece6'>0</th><th style='border:1px solid #3a3a3a;padding:5px 12px;background:#252525;color:#f0ece6'>2</th><th style='border:1px solid #3a3a3a;padding:5px 12px;background:#252525;color:#f0ece6'>4</th><th style='border:1px solid #3a3a3a;padding:5px 12px;background:#252525;color:#f0ece6'>6</th><th style='border:1px solid #3a3a3a;padding:5px 12px;background:#252525;color:#f0ece6'>8</th></tr></thead><tbody><tr><td style='border:1px solid #3a3a3a;padding:5px 12px;background:#1e1e1e;color:#f0ece6'>$f(x)$</td><td style='border:1px solid #3a3a3a;padding:5px 12px;background:#1e1e1e;color:#f0ece6;text-align:center'>3</td><td style='border:1px solid #3a3a3a;padding:5px 12px;background:#1e1e1e;color:#f0ece6;text-align:center'>7</td><td style='border:1px solid #3a3a3a;padding:5px 12px;background:#1e1e1e;color:#f0ece6;text-align:center'>10</td><td style='border:1px solid #3a3a3a;padding:5px 12px;background:#1e1e1e;color:#f0ece6;text-align:center'>8</td><td style='border:1px solid #3a3a3a;padding:5px 12px;background:#1e1e1e;color:#f0ece6;text-align:center'>5</td></tr></tbody></table>Use four subintervals of equal width $\\Delta x = 2$ to approximate $\\displaystyle\\int_0^8 f(x)\\,dx$.",
+            parts: [
+              { label: "(a)", text: "Left Riemann sum $L_4$." },
+              { label: "(b)", text: "Right Riemann sum $R_4$." },
+              { label: "(c)", text: "Trapezoidal sum $T_4$. Is this an over- or underestimate if $f$ is concave down on $[0,8]$? Explain." }
+            ],
+            answers: [
+              { label: "(a)", text: "$L_4 = 2(f(0)+f(2)+f(4)+f(6)) = 2(3+7+10+8) = 2(28) = 56$." },
+              { label: "(b)", text: "$R_4 = 2(f(2)+f(4)+f(6)+f(8)) = 2(7+10+8+5) = 2(30) = 60$." },
+              { label: "(c)", text: "$T_4 = \\frac{\\Delta x}{2}(f(0)+2f(2)+2f(4)+2f(6)+f(8)) = 1(3+14+20+16+5) = 58$. If $f$ is concave down, the trapezoids lie below the curve, so $T_4$ is an underestimate of the true integral." }
+            ]
+          },
+          {
+            context: "Context: Midpoint rule and error analysis",
+            stem: "Approximate $\\displaystyle\\int_1^5 \\frac{1}{x}\\,dx$ using $n = 4$ equal subintervals.",
+            parts: [
+              { label: "(a)", text: "Compute the midpoint Riemann sum $M_4$ using midpoints $x = 1.5, 2.5, 3.5, 4.5$." },
+              { label: "(b)", text: "Compute the exact value of $\\displaystyle\\int_1^5 \\frac{1}{x}\\,dx$." },
+              { label: "(c)", text: "Find the absolute error of $M_4$. Is $M_4$ an overestimate or underestimate? Why? (Hint: consider the concavity of $1/x$.)" }
+            ],
+            answers: [
+              { label: "(a)", text: "$M_4 = 1\\cdot\\left(\\frac{1}{1.5}+\\frac{1}{2.5}+\\frac{1}{3.5}+\\frac{1}{4.5}\\right) = \\frac{2}{3}+\\frac{2}{5}+\\frac{2}{7}+\\frac{2}{9} \\approx 0.6667+0.4+0.2857+0.2222 \\approx 1.5746$." },
+              { label: "(b)", text: "$\\displaystyle\\int_1^5 \\frac{1}{x}\\,dx = \\ln 5 \\approx 1.6094$." },
+              { label: "(c)", text: "Absolute error $= |1.5746 - 1.6094| \\approx 0.035$. Since $\\frac{d^2}{dx^2}\\left(\\frac{1}{x}\\right) = \\frac{2}{x^3} > 0$, the function is concave up on $[1,5]$. For concave-up functions, the midpoint rule underestimates the true value — confirmed here." }
+            ]
+          },
+          {
+            context: "Context: Summation notation and Riemann sum setup",
+            stem: "Express $\\displaystyle\\int_1^4 (2x+1)\\,dx$ as a limit of a right Riemann sum.",
+            parts: [
+              { label: "(a)", text: "With $n$ equal subintervals on $[1,4]$, write $\\Delta x$ and the right endpoint $x_i = 1 + i\\,\\Delta x$." },
+              { label: "(b)", text: "Write the right Riemann sum $R_n$ in sigma notation and simplify." },
+              { label: "(c)", text: "Evaluate the limit $\\displaystyle\\lim_{n\\to\\infty} R_n$ to confirm it equals the exact integral $\\displaystyle\\int_1^4(2x+1)\\,dx$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\Delta x = \\dfrac{4-1}{n} = \\dfrac{3}{n}$. &nbsp; $x_i = 1 + \\dfrac{3i}{n}$." },
+              { label: "(b)", text: "$R_n = \\displaystyle\\sum_{i=1}^{n} f(x_i)\\Delta x = \\sum_{i=1}^{n}\\left(2\\left(1+\\frac{3i}{n}\\right)+1\\right)\\frac{3}{n} = \\sum_{i=1}^{n}\\left(3+\\frac{6i}{n}\\right)\\frac{3}{n} = \\frac{3}{n}\\sum_{i=1}^{n}3 + \\frac{18}{n^2}\\sum_{i=1}^{n}i = 9 + \\frac{18}{n^2}\\cdot\\frac{n(n+1)}{2} = 9 + 9\\cdot\\frac{n+1}{n}$." },
+              { label: "(c)", text: "$\\displaystyle\\lim_{n\\to\\infty}R_n = 9 + 9(1) = 18$. Check: $\\displaystyle\\int_1^4(2x+1)\\,dx = [x^2+x]_1^4 = (16+4)-(1+1) = 20-2 = 18$. ✓" }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 1-C ──────────────────────────────────────────
+      {
+        icon: "🔢",
+        title: "Definite Integral Notation & Properties",
+        sub: "Integral rules, linearity, and additivity of intervals",
+        topics: "6.3 / 6.6",
+        video: { title: "Setting up a Definite Integral", url: "https://www.youtube.com/watch?v=6pQUsnRKxSg" },
+        problems: [
+          {
+            context: "Context: Integral properties",
+            stem: "Suppose $\\displaystyle\\int_1^5 f(x)\\,dx = 8$, $\\displaystyle\\int_1^5 g(x)\\,dx = -3$, and $\\displaystyle\\int_3^5 f(x)\\,dx = 2$.",
+            parts: [
+              { label: "(a)", text: "Find $\\displaystyle\\int_1^5 [3f(x) - 2g(x)]\\,dx$." },
+              { label: "(b)", text: "Find $\\displaystyle\\int_1^3 f(x)\\,dx$." },
+              { label: "(c)", text: "Find $\\displaystyle\\int_5^1 f(x)\\,dx$ and $\\displaystyle\\int_3^3 g(x)\\,dx$. Explain using integral properties." }
+            ],
+            answers: [
+              { label: "(a)", text: "$3(8) - 2(-3) = 24 + 6 = 30$." },
+              { label: "(b)", text: "$\\displaystyle\\int_1^3 f(x)\\,dx = \\int_1^5 f(x)\\,dx - \\int_3^5 f(x)\\,dx = 8 - 2 = 6$." },
+              { label: "(c)", text: "$\\displaystyle\\int_5^1 f(x)\\,dx = -\\int_1^5 f(x)\\,dx = -8$. Reversing limits negates the integral. $\\displaystyle\\int_3^3 g(x)\\,dx = 0$. An integral over an interval of zero width is always zero (no area accumulated)." }
+            ]
+          },
+          {
+            context: "Context: Comparing integrals using inequalities",
+            stem: "Without computing, determine which is larger in each pair. Justify using integral comparison properties.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\int_0^4 x^2\\,dx$ vs. $\\displaystyle\\int_0^4 x^3\\,dx$." },
+              { label: "(b)", text: "$\\displaystyle\\int_0^{\\pi} \\sin x\\,dx$ vs. $0$." },
+              { label: "(c)", text: "If $2 \\leq f(x) \\leq 5$ for all $x \\in [1, 6]$, find lower and upper bounds for $\\displaystyle\\int_1^6 f(x)\\,dx$." }
+            ],
+            answers: [
+              { label: "(a)", text: "On $[0, 4]$, we have $x \\geq 0$, so $x^3 \\geq x^2$ when $x \\geq 1$. Since $x^3 \\geq x^2$ for $x \\in [1,4]$ and $x^3 \\leq x^2$ for $x \\in [0,1]$, the dominant behavior is $x^3 > x^2$ on most of $[0,4]$. Thus $\\displaystyle\\int_0^4 x^3\\,dx > \\int_0^4 x^2\\,dx$." },
+              { label: "(b)", text: "$\\sin x \\geq 0$ on $[0, \\pi]$, so $\\displaystyle\\int_0^{\\pi}\\sin x\\,dx \\geq 0$. In fact $\\sin x > 0$ on $(0,\\pi)$, so the integral is strictly positive: $> 0$." },
+              { label: "(c)", text: "By the comparison property: $2(6-1) \\leq \\displaystyle\\int_1^6 f(x)\\,dx \\leq 5(6-1)$, so $10 \\leq \\displaystyle\\int_1^6 f(x)\\,dx \\leq 25$." }
+            ]
+          },
+          {
+            context: "Context: Evaluating definite integrals using geometry",
+            stem: "Use the geometric interpretation of the definite integral (area, signed area) to evaluate each.<br><br><img src='img/u61cP3p.png' alt='Three graphs showing shaded regions for geometric integrals' class='problem-img'>",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\int_{-3}^{3}\\sqrt{9-x^2}\\,dx$" },
+              { label: "(b)", text: "$\\displaystyle\\int_{0}^{4}|2x-4|\\,dx$" },
+              { label: "(c)", text: "$\\displaystyle\\int_{-2}^{5}(x+1)\\,dx$" }
+            ],
+            answers: [
+              { label: "(a)", text: "$y = \\sqrt{9-x^2}$ is the upper semicircle of radius 3. Area $= \\dfrac{1}{2}\\pi(3)^2 = \\dfrac{9\\pi}{2}$." },
+              { label: "(b)", text: "$|2x-4| = 0$ at $x=2$. On $[0,2]$: $f = 4-2x$ (triangle with base 2, height 4), area $= 4$. On $[2,4]$: $f = 2x-4$ (triangle with base 2, height 4), area $= 4$. Total $= 8$." },
+              { label: "(c)", text: "The integrand $x+1$ is a line. At $x=-2$: $-1$; at $x=5$: $6$. This forms a trapezoid with a zero crossing at $x=-1$. Triangle below axis ($x\\in[-2,-1]$): area $= -\\frac{1}{2}(1)(1) = -\\frac{1}{2}$. Trapezoid above axis ($x\\in[-1,5]$): area $= \\frac{1}{2}(6)(6) = 18$. Total $= -\\frac{1}{2}+18 = \\frac{35}{2}$." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 1-D ──────────────────────────────────────────
+      {
+        icon: "🧮",
+        title: "Mixed Practice — Riemann Sums & Accumulation",
+        sub: "AP-style multi-part problems combining 6.1–6.3",
+        topics: "6.1 – 6.3",
+        problems: [
+          {
+            context: "Context: AP free-response style — table",
+            stem: "A car's velocity (in mph) is recorded at the times shown.<br><br><table style='border-collapse:collapse;font-size:13.5px;margin:4px 0 10px'><thead><tr><th style='border:1px solid #3a3a3a;padding:5px 10px;background:#252525;color:#f0ece6'>$t$ (hr)</th><th style='border:1px solid #3a3a3a;padding:5px 10px;background:#252525;color:#f0ece6'>0</th><th style='border:1px solid #3a3a3a;padding:5px 10px;background:#252525;color:#f0ece6'>0.5</th><th style='border:1px solid #3a3a3a;padding:5px 10px;background:#252525;color:#f0ece6'>1.0</th><th style='border:1px solid #3a3a3a;padding:5px 10px;background:#252525;color:#f0ece6'>1.5</th><th style='border:1px solid #3a3a3a;padding:5px 10px;background:#252525;color:#f0ece6'>2.0</th></tr></thead><tbody><tr><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6'>$v(t)$ (mph)</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>20</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>30</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>50</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>40</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>35</td></tr></tbody></table>",
+            parts: [
+              { label: "(a)", text: "Use a trapezoidal sum with 4 subintervals to approximate $\\displaystyle\\int_0^2 v(t)\\,dt$. Include units and interpret the result." },
+              { label: "(b)", text: "Is your estimate in (a) an over- or underestimate? To answer, consider whether $v$ is concave up or concave down (use the change in slopes)." },
+              { label: "(c)", text: "Explain why $\\displaystyle\\int_0^2 v(t)\\,dt$ gives displacement, not distance traveled, and why those are the same here." }
+            ],
+            answers: [
+              { label: "(a)", text: "$T_4 = \\frac{0.5}{2}(20+2(30)+2(50)+2(40)+35) = 0.25(20+60+100+80+35) = 0.25(295) = 73.75$ miles. The car traveled approximately 73.75 miles during the 2-hour interval." },
+              { label: "(b)", text: "Slopes between consecutive points: $(30-20)/0.5=20$, $(50-30)/0.5=40$, $(40-50)/0.5=-20$, $(35-40)/0.5=-10$. Since the slopes first increase then decrease, $v$ is not uniformly concave up or down — the trapezoid rule could be either. On $[0,1]$ the slopes increase (concave up → underestimate); on $[1,2]$ the slopes increase (less negative → concave up → underestimate). Overall likely an underestimate." },
+              { label: "(c)", text: "Since $v(t) > 0$ throughout $[0,2]$ (all velocities are positive), the car never reverses direction, so displacement equals distance. Both equal $\\displaystyle\\int_0^2 v(t)\\,dt$." }
+            ]
+          },
+          {
+            context: "Context: Riemann sum to integral limit",
+            stem: "Recognize each limit as a definite integral and evaluate it.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\lim_{n\\to\\infty}\\sum_{i=1}^{n}\\frac{1}{n}\\left(\\frac{i}{n}\\right)^3$" },
+              { label: "(b)", text: "$\\displaystyle\\lim_{n\\to\\infty}\\sum_{i=1}^{n}\\frac{3}{n}\\sin\\left(\\frac{3i}{n}\\right)$" },
+              { label: "(c)", text: "$\\displaystyle\\lim_{n\\to\\infty}\\frac{1}{n}\\sum_{i=1}^{n}e^{i/n}$" }
+            ],
+            answers: [
+              { label: "(a)", text: "This is $\\displaystyle\\int_0^1 x^3\\,dx = \\left[\\frac{x^4}{4}\\right]_0^1 = \\frac{1}{4}$." },
+              { label: "(b)", text: "Here $\\Delta x = \\frac{3}{n}$, $x_i = \\frac{3i}{n}$ on $[0,3]$. This is $\\displaystyle\\int_0^3 \\sin x\\,dx = [-\\cos x]_0^3 = -\\cos 3 + \\cos 0 = 1 - \\cos 3 \\approx 1.990$." },
+              { label: "(c)", text: "Here $\\Delta x = \\frac{1}{n}$, $x_i = \\frac{i}{n}$ on $[0,1]$. This is $\\displaystyle\\int_0^1 e^x\\,dx = [e^x]_0^1 = e - 1$." }
+            ]
+          },
+          {
+            context: "Context: Signed area and net change",
+            stem: "The graph of $f$ on $[0,8]$ has: a semicircle of radius 2 above the $x$-axis centered at $x=2$, and a triangle with base from $x=4$ to $x=8$ and apex at $(6, -3)$ below the $x$-axis.<br><br><img src='img/u61dP3p.png' alt='Graph of f on [0,8] with semicircle above and triangle below x-axis' class='problem-img'>",
+            parts: [
+              { label: "(a)", text: "Evaluate $\\displaystyle\\int_0^4 f(x)\\,dx$ using the geometric area formula." },
+              { label: "(b)", text: "Evaluate $\\displaystyle\\int_4^8 f(x)\\,dx$ using the geometric area formula." },
+              { label: "(c)", text: "Find all values of $c$ in $(0,8)$ such that $\\displaystyle\\int_0^c f(x)\\,dx = 0$. Explain your reasoning." }
+            ],
+            answers: [
+              { label: "(a)", text: "The semicircle has radius 2, so area $= \\frac{1}{2}\\pi(4) = 2\\pi$. $\\displaystyle\\int_0^4 f(x)\\,dx = 2\\pi \\approx 6.28$." },
+              { label: "(b)", text: "The triangle has base 4 and height 3, area $= \\frac{1}{2}(4)(3) = 6$, but it's below the axis. $\\displaystyle\\int_4^8 f(x)\\,dx = -6$." },
+              { label: "(c)", text: "We need $\\displaystyle\\int_0^c f(x)\\,dx = 0$. For $c \\in [4,8]$: $\\displaystyle\\int_0^c f = 2\\pi + \\int_4^c f$. The triangle below the axis at $x \\in [4,8]$ accumulates area linearly (with a triangular shape). We need $\\int_4^c f = -2\\pi$. Since $\\int_4^8 f = -6$ and $2\\pi \\approx 6.28 > 6$, the zero doesn't occur in $[4,8]$. So $c$ does not exist in $(0,8)$ — the accumulated positive area always exceeds the negative region." }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  // ═══════════════════════════════════════════════════════════
+  // COLUMN 2 — The Fundamental Theorem of Calculus
+  //            Topics 6.4 – 6.7
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: "col-2",
+    accentVar: "var(--col2-light)",
+    headerClass: "col-2-header",
+    tileClass: "col-2",
+    label: "Column II",
+    title: "The Fundamental Theorem of Calculus",
+    topics: "Topics 6.4 – 6.7",
+    tiles: [
+
+      // ── TILE 2-A ──────────────────────────────────────────
+      {
+        icon: "🏗️",
+        title: "FTC Part 1 — Accumulation Functions",
+        sub: "Differentiating integrals with variable upper limits",
+        topics: "6.4 – 6.5",
+        video: { title: "The Derivative of an Integral", url: "https://www.youtube.com/watch?v=jyRdHbHeUuU" },
+        problems: [
+          {
+            context: "Context: Differentiating accumulation functions",
+            stem: "Let $F(x) = \\displaystyle\\int_0^x f(t)\\,dt$ where $f$ is continuous. Use FTC Part 1 to find $F'(x)$.",
+            parts: [
+              { label: "(a)", text: "$F(x) = \\displaystyle\\int_0^x \\sin(t^2)\\,dt$" },
+              { label: "(b)", text: "$G(x) = \\displaystyle\\int_x^3 e^{t^2}\\,dt$" },
+              { label: "(c)", text: "$H(x) = \\displaystyle\\int_1^{x^3} \\ln t\\,dt$ &nbsp;&nbsp; (Chain Rule required)" }
+            ],
+            answers: [
+              { label: "(a)", text: "$F'(x) = \\sin(x^2)$." },
+              { label: "(b)", text: "$G(x) = -\\displaystyle\\int_3^x e^{t^2}\\,dt$, so $G'(x) = -e^{x^2}$." },
+              { label: "(c)", text: "Let $u = x^3$. By FTC + Chain Rule: $H'(x) = \\ln(x^3)\\cdot 3x^2 = 3x^2 \\ln(x^3) = 9x^2 \\ln x$." }
+            ]
+          },
+          {
+            context: "Context: Behavior of accumulation functions",
+            stem: "The graph of $f$ is shown below. Define $g(x) = \\displaystyle\\int_{-3}^x f(t)\\,dt$.<br><br><img src='img/u62aP2p.png' alt='Graph of piecewise f on [-3,5]' class='problem-img'>",
+            parts: [
+              { label: "(a)", text: "Find $g(-3)$, $g(0)$, and $g(4)$." },
+              { label: "(b)", text: "On what intervals is $g$ increasing? Decreasing? Justify using $g' = f$." },
+              { label: "(c)", text: "Find the absolute maximum of $g$ on $[-3, 5]$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$g(-3) = 0$. $g(0) = \\int_{-3}^0 2\\,dt = 6$. $g(4) = 6 + \\int_0^4 f\\,dt = 6 - 2\\pi$ (semicircle below axis: area $= \\frac{1}{2}\\pi(2)^2 = 2\\pi$)." },
+              { label: "(b)", text: "$g'(x) = f(x)$. $g$ is increasing where $f > 0$: on $(-3, 0)$. $g$ is decreasing where $f < 0$: on $(0, 4)$ (semicircle below axis) and $(4, 5)$." },
+              { label: "(c)", text: "$g$ increases until $x=0$, then decreases. The absolute maximum is at $x=0$: $g(0) = 6$." }
+            ]
+          },
+          {
+            context: "Context: Using FTC to find a function value",
+            stem: "It is given that $f'(x) = \\cos x$ and $f(0) = 3$.",
+            parts: [
+              { label: "(a)", text: "Using FTC Part 1, express $f(x)$ as $f(0)$ plus a definite integral." },
+              { label: "(b)", text: "Evaluate the integral to find a closed-form expression for $f(x)$." },
+              { label: "(c)", text: "Verify your answer by differentiating and checking the initial condition." }
+            ],
+            answers: [
+              { label: "(a)", text: "$f(x) = f(0) + \\displaystyle\\int_0^x f'(t)\\,dt = 3 + \\int_0^x \\cos t\\,dt$." },
+              { label: "(b)", text: "$f(x) = 3 + [\\sin t]_0^x = 3 + \\sin x$." },
+              { label: "(c)", text: "$f'(x) = \\cos x$ ✓. $f(0) = 3 + \\sin 0 = 3$ ✓." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 2-B ──────────────────────────────────────────
+      {
+        icon: "⚖️",
+        title: "FTC Part 2 — Evaluating Definite Integrals",
+        sub: "Using antiderivatives to compute exact values",
+        topics: "6.7",
+        video: { title: "Evaluating a Definite Integral with FTC", url: "https://www.youtube.com/watch?v=A6wzK4ewg-c" },
+        problems: [
+          {
+            context: "Context: Evaluating with FTC Part 2",
+            stem: "Evaluate each definite integral exactly. Show all antiderivative work.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\int_1^4 \\left(3x^2 - \\frac{2}{x}\\right)dx$" },
+              { label: "(b)", text: "$\\displaystyle\\int_0^{\\pi/2}(\\sin x + \\cos x)\\,dx$" },
+              { label: "(c)", text: "$\\displaystyle\\int_0^2 (e^x - 3x)\\,dx$" }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\left[x^3 - 2\\ln x\\right]_1^4 = (64 - 2\\ln 4) - (1 - 0) = 63 - 2\\ln 4 = 63 - 4\\ln 2$." },
+              { label: "(b)", text: "$[-\\cos x + \\sin x]_0^{\\pi/2} = (-\\cos(\\pi/2)+\\sin(\\pi/2)) - (-\\cos 0 + \\sin 0) = (0+1)-(-1+0) = 1+1 = 2$." },
+              { label: "(c)", text: "$[e^x - \\frac{3x^2}{2}]_0^2 = (e^2 - 6) - (1 - 0) = e^2 - 7$." }
+            ]
+          },
+          {
+            context: "Context: Net change theorem",
+            stem: "A particle moves along the $x$-axis. Its acceleration is $a(t) = 6t - 4$ ft/s². At $t = 0$, $v(0) = 2$ ft/s and $s(0) = -1$ ft.",
+            parts: [
+              { label: "(a)", text: "Find the velocity function $v(t)$ using the Net Change Theorem: $v(t) = v(0) + \\displaystyle\\int_0^t a(\\tau)\\,d\\tau$." },
+              { label: "(b)", text: "Find the position function $s(t)$." },
+              { label: "(c)", text: "Find the total distance traveled on $[0, 3]$. (Identify where $v = 0$ first.)" }
+            ],
+            answers: [
+              { label: "(a)", text: "$v(t) = 2 + \\int_0^t(6\\tau-4)\\,d\\tau = 2 + [3\\tau^2-4\\tau]_0^t = 2 + 3t^2 - 4t$." },
+              { label: "(b)", text: "$s(t) = -1 + \\int_0^t v(\\tau)\\,d\\tau = -1 + [3\\tau^2-4\\tau + 2\\tau + t^3 - 2t^2]$. More carefully: $s(t) = -1 + [\\tau^3 - 2\\tau^2 + 2\\tau]_0^t = -1 + t^3 - 2t^2 + 2t$." },
+              { label: "(c)", text: "$v(t) = 3t^2-4t+2 = 0$: discriminant $= 16-24 < 0$, so $v(t) > 0$ always (since leading coeff positive and no real roots). Thus distance = displacement = $s(3)-s(0) = (-1+27-18+6)-(-1) = 14+1 = 15$ ft." }
+            ]
+          },
+          {
+            context: "Context: FTC Part 2 with substitution",
+            stem: "Evaluate each integral. You may need to simplify or rewrite first.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\int_1^e \\frac{3}{x}\\,dx$" },
+              { label: "(b)", text: "$\\displaystyle\\int_0^4 \\sqrt{x}\\,dx$" },
+              { label: "(c)", text: "$\\displaystyle\\int_{-1}^{1} (x^3 + 5x)\\,dx$ &nbsp;&nbsp; (use symmetry to simplify before integrating)" }
+            ],
+            answers: [
+              { label: "(a)", text: "$[3\\ln x]_1^e = 3\\ln e - 3\\ln 1 = 3(1) - 0 = 3$." },
+              { label: "(b)", text: "$\\left[\\frac{2}{3}x^{3/2}\\right]_0^4 = \\frac{2}{3}(8) - 0 = \\frac{16}{3}$." },
+              { label: "(c)", text: "$x^3 + 5x$ is an odd function (both terms odd). By symmetry, $\\displaystyle\\int_{-1}^1 (x^3+5x)\\,dx = 0$." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 2-C ──────────────────────────────────────────
+      {
+        icon: "🔗",
+        title: "Connecting FTC to Graphs of f, F, and f′",
+        sub: "Reading accumulation, increase/decrease, and concavity",
+        topics: "6.5",
+        video: { title: "Antiderivative Concept: Given Information about f, describe F", url: "https://www.youtube.com/watch?v=W21HgSUt8vI" },
+        problems: [
+          {
+            context: "Context: Inferring f from the graph of f′",
+            stem: "The graph of $f'$ on $[0,8]$ is shown below.<br><br><img src='img/u62cP1p.png' alt=\"Graph of f' on [0,8]\" class='problem-img'>",
+            parts: [
+              { label: "(a)", text: "On what intervals is $f$ increasing? Decreasing? Concave up? Concave down?" },
+              { label: "(b)", text: "If $f(0) = 1$, estimate $f(4)$ given $\\displaystyle\\int_0^4 f'(t)\\,dt \\approx 8$ (area under curve)." },
+              { label: "(c)", text: "Sketch a possible graph of $f$ on $[0,8]$, labeling the location of any relative extrema." }
+            ],
+            answers: [
+              { label: "(a)", text: "$f$ increasing where $f' > 0$: on $(0,4)$. Decreasing where $f' < 0$: on $(4,8)$. Concave down where $f'$ is decreasing: on $(0,4)$ (since $f'$ decreases from 4 to 0). Concave up where $f'$ is increasing — if $f'$ is linear from 0 to $-2$ on $(4,8)$, then $f'$ is decreasing on $(4,8)$ too, so $f$ is concave down on all of $(0,8)$." },
+              { label: "(b)", text: "$f(4) = f(0) + \\displaystyle\\int_0^4 f'(t)\\,dt \\approx 1 + 8 = 9$." },
+              { label: "(c)", text: "$f$ rises from $(0,1)$ to a maximum at $x=4$ with $f(4) \\approx 9$, then decreases. The curve is concave down throughout (shaped like an arch). No relative minimum on $(0,8)$ — relative max at $x=4$." }
+            ]
+          },
+          {
+            context: "Context: The Mean Value Theorem for Integrals",
+            stem: "The Mean Value Theorem for Integrals states: if $f$ is continuous on $[a,b]$, there exists $c \\in (a,b)$ such that $\\displaystyle\\int_a^b f(x)\\,dx = f(c)(b-a)$.",
+            parts: [
+              { label: "(a)", text: "Find the average value of $f(x) = x^2$ on $[0,3]$." },
+              { label: "(b)", text: "Find the value of $c$ in $(0,3)$ guaranteed by the MVT for Integrals." },
+              { label: "(c)", text: "For $g(x) = \\sin x$ on $[0, \\pi]$, find the average value and the guaranteed $c$-value." }
+            ],
+            answers: [
+              { label: "(a)", text: "$f_{\\text{avg}} = \\dfrac{1}{3-0}\\displaystyle\\int_0^3 x^2\\,dx = \\frac{1}{3}\\cdot\\frac{27}{3} = 3$." },
+              { label: "(b)", text: "Set $f(c) = 3$: $c^2 = 3 \\Rightarrow c = \\sqrt{3} \\approx 1.732 \\in (0,3)$. ✓" },
+              { label: "(c)", text: "$g_{\\text{avg}} = \\dfrac{1}{\\pi}\\displaystyle\\int_0^{\\pi}\\sin x\\,dx = \\dfrac{1}{\\pi}[-\\cos x]_0^{\\pi} = \\dfrac{1}{\\pi}(1+1) = \\dfrac{2}{\\pi}$. Set $\\sin c = \\dfrac{2}{\\pi}$: $c = \\arcsin\\left(\\dfrac{2}{\\pi}\\right) \\approx 0.690$ or $c = \\pi - \\arcsin\\left(\\dfrac{2}{\\pi}\\right) \\approx 2.452$." }
+            ]
+          },
+          {
+            context: "Context: FTC applied to a table",
+            stem: "The function $g$ is defined by $g(x) = \\displaystyle\\int_0^x f(t)\\,dt$ where $f$ has the values in the table below.<br><br><table style='border-collapse:collapse;font-size:13.5px;margin:4px 0 10px'><thead><tr><th style='border:1px solid #3a3a3a;padding:5px 12px;background:#252525;color:#f0ece6'>$t$</th><th style='border:1px solid #3a3a3a;padding:5px 12px;background:#252525;color:#f0ece6'>0</th><th style='border:1px solid #3a3a3a;padding:5px 12px;background:#252525;color:#f0ece6'>1</th><th style='border:1px solid #3a3a3a;padding:5px 12px;background:#252525;color:#f0ece6'>2</th><th style='border:1px solid #3a3a3a;padding:5px 12px;background:#252525;color:#f0ece6'>3</th><th style='border:1px solid #3a3a3a;padding:5px 12px;background:#252525;color:#f0ece6'>4</th></tr></thead><tbody><tr><td style='border:1px solid #3a3a3a;padding:5px 12px;background:#1e1e1e;color:#f0ece6'>$f(t)$</td><td style='border:1px solid #3a3a3a;padding:5px 12px;background:#1e1e1e;color:#f0ece6;text-align:center'>2</td><td style='border:1px solid #3a3a3a;padding:5px 12px;background:#1e1e1e;color:#f0ece6;text-align:center'>5</td><td style='border:1px solid #3a3a3a;padding:5px 12px;background:#1e1e1e;color:#f0ece6;text-align:center'>3</td><td style='border:1px solid #3a3a3a;padding:5px 12px;background:#1e1e1e;color:#f0ece6;text-align:center'>$-1$</td><td style='border:1px solid #3a3a3a;padding:5px 12px;background:#1e1e1e;color:#f0ece6;text-align:center'>$-4$</td></tr></tbody></table>",
+            parts: [
+              { label: "(a)", text: "Find $g'(2)$ and $g'(4)$. Interpret each." },
+              { label: "(b)", text: "Approximate $g(3)$ using a trapezoidal sum on $[0,3]$ with $\\Delta t = 1$." },
+              { label: "(c)", text: "On what interval does $g$ appear to have a local maximum? Justify." }
+            ],
+            answers: [
+              { label: "(a)", text: "$g'(2) = f(2) = 3$ — at $t=2$, the accumulation function is increasing at rate 3. $g'(4) = f(4) = -4$ — at $t=4$, $g$ is decreasing at rate 4." },
+              { label: "(b)", text: "$g(3) \\approx T_3 = \\frac{1}{2}(f(0)+2f(1)+2f(2)+f(3)) = \\frac{1}{2}(2+10+6-1) = \\frac{17}{2} = 8.5$." },
+              { label: "(c)", text: "$g' = f$ changes from positive to negative between $t=2$ and $t=3$ (since $f(2)=3>0$ and $f(3)=-1<0$). So $g$ has a local maximum somewhere on $(2,3)$. By IVT applied to $f$, there exists a $c \\in (2,3)$ where $f(c) = 0$, i.e., $g'(c) = 0$." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 2-D ──────────────────────────────────────────
+      {
+        icon: "🏆",
+        title: "Mixed Practice — FTC",
+        sub: "AP-style multi-part problems combining 6.4–6.7",
+        topics: "6.4 – 6.7",
+        problems: [
+          {
+            context: "Context: FTC Part 1 with composite limits",
+            stem: "Define $F(x) = \\displaystyle\\int_{\\cos x}^{x^2} \\sqrt{1+t^3}\\,dt$.",
+            parts: [
+              { label: "(a)", text: "Find $F'(x)$ using FTC Part 1 and the Chain Rule." },
+              { label: "(b)", text: "Evaluate $F'(0)$." },
+              { label: "(c)", text: "Explain why $F(x)$ is increasing at $x = 1$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$F'(x) = \\sqrt{1+(x^2)^3}\\cdot 2x - \\sqrt{1+\\cos^3 x}\\cdot(-\\sin x) = 2x\\sqrt{1+x^6} + \\sin x\\sqrt{1+\\cos^3 x}$." },
+              { label: "(b)", text: "$F'(0) = 2(0)\\sqrt{1+0} + \\sin(0)\\sqrt{1+1} = 0 + 0 = 0$." },
+              { label: "(c)", text: "At $x=1$: $F'(1) = 2(1)\\sqrt{1+1} + \\sin(1)\\sqrt{1+\\cos^3(1)}$. Both terms are positive (since $\\sin(1)>0$ and $\\cos(1)>0$). Therefore $F'(1) > 0$, so $F$ is increasing at $x=1$." }
+            ]
+          },
+          {
+            context: "Context: AP-style free response",
+            stem: "Let $f$ be a continuous function such that $\\displaystyle\\int_0^5 f(x)\\,dx = 12$ and $\\displaystyle\\int_0^5 [f(x)]^2\\,dx = 40$. Define $g(x) = \\displaystyle\\int_0^x f(t)\\,dt$.",
+            parts: [
+              { label: "(a)", text: "Find $g(5)$." },
+              { label: "(b)", text: "Find the average value of $f$ on $[0,5]$." },
+              { label: "(c)", text: "A student claims that $\\left(\\displaystyle\\int_0^5 f(x)\\,dx\\right)^2 = \\displaystyle\\int_0^5 [f(x)]^2\\,dx$. Is the student correct? Verify numerically and explain the error." }
+            ],
+            answers: [
+              { label: "(a)", text: "$g(5) = \\displaystyle\\int_0^5 f(t)\\,dt = 12$." },
+              { label: "(b)", text: "$f_{\\text{avg}} = \\dfrac{1}{5}\\displaystyle\\int_0^5 f(x)\\,dx = \\dfrac{12}{5} = 2.4$." },
+              { label: "(c)", text: "The student is incorrect. $\\left(\\displaystyle\\int_0^5 f\\,dx\\right)^2 = 144 \\neq 40 = \\displaystyle\\int_0^5 [f]^2\\,dx$. The square of an integral is not the integral of the square — this is a common algebraic error. By the Cauchy-Schwarz inequality, $\\left(\\int f\\right)^2 \\leq (b-a)\\int f^2$; here $144 \\leq 5(40) = 200$ ✓." }
+            ]
+          },
+          {
+            context: "Context: Combining FTC and net change",
+            stem: "Water drains from a tank at rate $r(t) = 10e^{-0.2t}$ gallons per minute. The tank initially holds 200 gallons.",
+            parts: [
+              { label: "(a)", text: "Write a definite integral expression for the amount of water remaining at time $T$." },
+              { label: "(b)", text: "Evaluate $\\displaystyle\\int_0^5 r(t)\\,dt$ exactly." },
+              { label: "(c)", text: "Find the time $T$ at which exactly half the water has drained. Give an exact answer." }
+            ],
+            answers: [
+              { label: "(a)", text: "$W(T) = 200 - \\displaystyle\\int_0^T 10e^{-0.2t}\\,dt$." },
+              { label: "(b)", text: "$\\displaystyle\\int_0^5 10e^{-0.2t}\\,dt = \\left[-50e^{-0.2t}\\right]_0^5 = -50e^{-1}+50 = 50(1-e^{-1}) \\approx 31.6$ gallons." },
+              { label: "(c)", text: "Half the water drained means $\\displaystyle\\int_0^T 10e^{-0.2t}\\,dt = 100$. $\\Rightarrow [-50e^{-0.2t}]_0^T = 100 \\Rightarrow -50e^{-0.2T}+50=100 \\Rightarrow e^{-0.2T} = -1$. This has no solution — only 50 gallons total can ever drain (as $T\\to\\infty$, the total approaches $50$). The tank never loses half its water." }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  // ═══════════════════════════════════════════════════════════
+  // COLUMN 3 — Antiderivatives, Indefinite Integrals & u-Sub
+  //            Topics 6.8 – 6.9
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: "col-3",
+    accentVar: "var(--col3-light)",
+    headerClass: "col-3-header",
+    tileClass: "col-3",
+    label: "Column III",
+    title: "Antiderivatives & u-Substitution",
+    topics: "Topics 6.8 – 6.9",
+    tiles: [
+
+      // ── TILE 3-A ──────────────────────────────────────────
+      {
+        icon: "🔙",
+        title: "Basic Antiderivative Rules",
+        sub: "Reversing derivatives: power, trig, exponential, and log",
+        topics: "6.8",
+        video: { title: "Basic Antiderivatives involving Inverse Trig Functions", url: "https://www.youtube.com/watch?v=P0bEIxgGfYg" },
+        problems: [
+          {
+            context: "Context: Finding general antiderivatives",
+            stem: "Find the most general antiderivative $F(x)$ of each function.",
+            parts: [
+              { label: "(a)", text: "$f(x) = 4x^3 - 6x + \\dfrac{1}{x^2}$" },
+              { label: "(b)", text: "$g(x) = 3\\sin x - 2\\cos x + e^x$" },
+              { label: "(c)", text: "$h(x) = \\dfrac{x^3 - 5x}{x}$ &nbsp;&nbsp; (simplify first)" }
+            ],
+            answers: [
+              { label: "(a)", text: "$F(x) = x^4 - 3x^2 - x^{-1} + C = x^4 - 3x^2 - \\dfrac{1}{x} + C$." },
+              { label: "(b)", text: "$G(x) = -3\\cos x - 2\\sin x + e^x + C$." },
+              { label: "(c)", text: "Simplify: $h(x) = x^2 - 5$. &nbsp; $H(x) = \\dfrac{x^3}{3} - 5x + C$." }
+            ]
+          },
+          {
+            context: "Context: Initial value problems",
+            stem: "Find the specific antiderivative (particular solution) satisfying each initial condition.",
+            parts: [
+              { label: "(a)", text: "$f'(x) = 6x^2 - 4$, &nbsp; $f(1) = 3$" },
+              { label: "(b)", text: "$g'(x) = \\cos x$, &nbsp; $g(\\pi) = 2$" },
+              { label: "(c)", text: "$h''(x) = 12x$, &nbsp; $h'(0) = -5$, &nbsp; $h(0) = 7$" }
+            ],
+            answers: [
+              { label: "(a)", text: "$f(x) = 2x^3 - 4x + C$. Using $f(1) = 3$: $2-4+C=3 \\Rightarrow C=5$. So $f(x) = 2x^3-4x+5$." },
+              { label: "(b)", text: "$g(x) = \\sin x + C$. Using $g(\\pi) = 2$: $\\sin\\pi + C = 2 \\Rightarrow C=2$. So $g(x) = \\sin x + 2$." },
+              { label: "(c)", text: "$h'(x) = 6x^2 + C_1$. $h'(0) = -5 \\Rightarrow C_1 = -5$. $h'(x) = 6x^2 - 5$. $h(x) = 2x^3-5x+C_2$. $h(0) = 7 \\Rightarrow C_2 = 7$. So $h(x) = 2x^3 - 5x + 7$." }
+            ]
+          },
+          {
+            context: "Context: Recognizing antiderivative patterns",
+            stem: "Each of the following is written to suggest a specific antiderivative form. State the antiderivative and verify by differentiating.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\int \\frac{1}{x}\\,dx$ (for $x > 0$)" },
+              { label: "(b)", text: "$\\displaystyle\\int e^{kx}\\,dx$ for constant $k \\neq 0$" },
+              { label: "(c)", text: "$\\displaystyle\\int \\sec^2 x\\,dx$" }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\ln|x| + C$. Check: $\\frac{d}{dx}[\\ln x] = \\frac{1}{x}$ ✓." },
+              { label: "(b)", text: "$\\dfrac{e^{kx}}{k} + C$. Check: $\\frac{d}{dx}\\left[\\frac{e^{kx}}{k}\\right] = \\frac{ke^{kx}}{k} = e^{kx}$ ✓." },
+              { label: "(c)", text: "$\\tan x + C$. Check: $\\frac{d}{dx}[\\tan x] = \\sec^2 x$ ✓." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 3-B ──────────────────────────────────────────
+      {
+        icon: "🔄",
+        title: "u-Substitution — Indefinite Integrals",
+        sub: "Reversing the Chain Rule with change of variable",
+        topics: "6.9",
+        video: { title: "Determining Indefinite Integrals using u-substitution", url: "https://www.youtube.com/watch?v=xauUMchKGlo" },
+        problems: [
+          {
+            context: "Context: Applying u-substitution",
+            stem: "Evaluate each integral using $u$-substitution. State your choice of $u$ and $du$ explicitly.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\int 2x\\cos(x^2)\\,dx$" },
+              { label: "(b)", text: "$\\displaystyle\\int \\frac{3x^2}{x^3+1}\\,dx$" },
+              { label: "(c)", text: "$\\displaystyle\\int e^{\\sin x}\\cos x\\,dx$" }
+            ],
+            answers: [
+              { label: "(a)", text: "Let $u = x^2$, $du = 2x\\,dx$. $\\displaystyle\\int \\cos u\\,du = \\sin u + C = \\sin(x^2) + C$." },
+              { label: "(b)", text: "Let $u = x^3+1$, $du = 3x^2\\,dx$. $\\displaystyle\\int \\frac{du}{u} = \\ln|u| + C = \\ln|x^3+1| + C$." },
+              { label: "(c)", text: "Let $u = \\sin x$, $du = \\cos x\\,dx$. $\\displaystyle\\int e^u\\,du = e^u + C = e^{\\sin x} + C$." }
+            ]
+          },
+          {
+            context: "Context: u-substitution requiring algebraic manipulation",
+            stem: "Evaluate each integral. These require a non-obvious substitution or algebraic step before substituting.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\int x\\sqrt{x+1}\\,dx$ &nbsp;&nbsp; (let $u = x+1$, then express $x$ in terms of $u$)" },
+              { label: "(b)", text: "$\\displaystyle\\int \\tan x\\,dx$ &nbsp;&nbsp; (write as $\\int \\frac{\\sin x}{\\cos x}\\,dx$, then substitute)" },
+              { label: "(c)", text: "$\\displaystyle\\int \\frac{\\ln x}{x}\\,dx$" }
+            ],
+            answers: [
+              { label: "(a)", text: "Let $u = x+1$, so $x = u-1$, $dx = du$. $\\displaystyle\\int (u-1)\\sqrt{u}\\,du = \\int(u^{3/2}-u^{1/2})\\,du = \\frac{2}{5}u^{5/2} - \\frac{2}{3}u^{3/2} + C = \\frac{2}{5}(x+1)^{5/2}-\\frac{2}{3}(x+1)^{3/2}+C$." },
+              { label: "(b)", text: "Let $u = \\cos x$, $du = -\\sin x\\,dx$. $\\displaystyle\\int \\frac{-du}{u} = -\\ln|u|+C = -\\ln|\\cos x|+C = \\ln|\\sec x|+C$." },
+              { label: "(c)", text: "Let $u = \\ln x$, $du = \\frac{1}{x}\\,dx$. $\\displaystyle\\int u\\,du = \\frac{u^2}{2}+C = \\frac{(\\ln x)^2}{2}+C$." }
+            ]
+          },
+          {
+            context: "Context: Definite integrals with u-substitution",
+            stem: "Evaluate each definite integral using $u$-substitution. Remember to change the limits of integration.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\int_0^1 3x^2 e^{x^3}\\,dx$" },
+              { label: "(b)", text: "$\\displaystyle\\int_0^{\\pi/4}\\sec^2(x)\\tan(x)\\,dx$ &nbsp;&nbsp; (let $u = \\tan x$)" },
+              { label: "(c)", text: "$\\displaystyle\\int_1^e \\frac{(\\ln x)^2}{x}\\,dx$" }
+            ],
+            answers: [
+              { label: "(a)", text: "Let $u=x^3$, $du=3x^2\\,dx$. When $x=0$: $u=0$; when $x=1$: $u=1$. $\\displaystyle\\int_0^1 e^u\\,du = [e^u]_0^1 = e-1$." },
+              { label: "(b)", text: "Let $u=\\tan x$, $du=\\sec^2 x\\,dx$. When $x=0$: $u=0$; when $x=\\pi/4$: $u=1$. $\\displaystyle\\int_0^1 u\\,du = \\frac{1}{2}$." },
+              { label: "(c)", text: "Let $u=\\ln x$, $du=\\frac{1}{x}\\,dx$. When $x=1$: $u=0$; when $x=e$: $u=1$. $\\displaystyle\\int_0^1 u^2\\,du = \\frac{1}{3}$." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 3-C ──────────────────────────────────────────
+      {
+        icon: "📐",
+        title: "Long Division & Completing the Square",
+        sub: "Integration techniques for rational functions (Topic 6.10)",
+        topics: "6.10",
+        video: { title: "Indefinite Integral requiring long division", url: "https://www.youtube.com/watch?v=JIIbmjyrIf8" },
+        problems: [
+          {
+            context: "Context: Polynomial long division",
+            stem: "Evaluate each integral by performing polynomial long division first.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\int \\frac{x^2+1}{x-1}\\,dx$" },
+              { label: "(b)", text: "$\\displaystyle\\int \\frac{x^3}{x+2}\\,dx$" },
+              { label: "(c)", text: "$\\displaystyle\\int_2^4 \\frac{x^2-3x+5}{x-1}\\,dx$" }
+            ],
+            answers: [
+              { label: "(a)", text: "Divide: $\\frac{x^2+1}{x-1} = x+1+\\frac{2}{x-1}$. $\\displaystyle\\int \\left(x+1+\\frac{2}{x-1}\\right)dx = \\frac{x^2}{2}+x+2\\ln|x-1|+C$." },
+              { label: "(b)", text: "Divide $x^3 \\div (x+2)$: $x^3 = (x+2)(x^2-2x+4) - 8$. So $\\frac{x^3}{x+2} = x^2-2x+4-\\frac{8}{x+2}$. $\\displaystyle\\int = \\frac{x^3}{3}-x^2+4x-8\\ln|x+2|+C$." },
+              { label: "(c)", text: "Divide: $\\frac{x^2-3x+5}{x-1} = x-2+\\frac{3}{x-1}$. $\\displaystyle\\int_2^4 = \\left[\\frac{x^2}{2}-2x+3\\ln|x-1|\\right]_2^4 = (8-8+3\\ln 3)-(2-4+0) = 3\\ln 3+2$." }
+            ]
+          },
+          {
+            context: "Context: Completing the square for arctangent form",
+            stem: "Evaluate each integral by completing the square in the denominator.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\int \\frac{dx}{x^2+4x+13}$" },
+              { label: "(b)", text: "$\\displaystyle\\int \\frac{dx}{x^2+6x+10}$" },
+              { label: "(c)", text: "$\\displaystyle\\int_0^1 \\frac{dx}{x^2+2x+2}$ &nbsp;&nbsp; (evaluate the definite integral)" }
+            ],
+            answers: [
+              { label: "(a)", text: "Complete the square: $x^2+4x+13 = (x+2)^2+9$. Let $u=x+2$. $\\displaystyle\\int \\frac{du}{u^2+9} = \\frac{1}{3}\\arctan\\frac{u}{3}+C = \\frac{1}{3}\\arctan\\frac{x+2}{3}+C$." },
+              { label: "(b)", text: "$x^2+6x+10 = (x+3)^2+1$. $\\displaystyle\\int \\frac{du}{u^2+1} = \\arctan(u)+C = \\arctan(x+3)+C$." },
+              { label: "(c)", text: "$x^2+2x+2 = (x+1)^2+1$. $\\displaystyle\\int_0^1 \\frac{dx}{(x+1)^2+1} = [\\arctan(x+1)]_0^1 = \\arctan 2 - \\arctan 1 = \\arctan 2 - \\frac{\\pi}{4}$." }
+            ]
+          },
+          {
+            context: "Context: Selecting the technique",
+            stem: "For each integral, identify the appropriate technique (long division or completing the square), then evaluate.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\int \\frac{2x^2-1}{x+3}\\,dx$" },
+              { label: "(b)", text: "$\\displaystyle\\int \\frac{5}{x^2-4x+8}\\,dx$" },
+              { label: "(c)", text: "$\\displaystyle\\int \\frac{x^2+x+1}{x^2+1}\\,dx$ &nbsp;&nbsp; (split into separate fractions)" }
+            ],
+            answers: [
+              { label: "(a)", text: "Long division: $\\frac{2x^2-1}{x+3} = 2x-6+\\frac{17}{x+3}$. $\\displaystyle\\int = x^2-6x+17\\ln|x+3|+C$." },
+              { label: "(b)", text: "Complete the square: $x^2-4x+8=(x-2)^2+4$. $\\displaystyle\\int \\frac{5\\,du}{u^2+4} = \\frac{5}{2}\\arctan\\frac{u}{2}+C = \\frac{5}{2}\\arctan\\frac{x-2}{2}+C$." },
+              { label: "(c)", text: "Split: $\\frac{x^2+x+1}{x^2+1} = 1 + \\frac{x}{x^2+1}$. $\\displaystyle\\int \\left(1+\\frac{x}{x^2+1}\\right)dx = x + \\frac{1}{2}\\ln(x^2+1)+C$." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 3-D ──────────────────────────────────────────
+      {
+        icon: "🎯",
+        title: "Mixed Practice — Antiderivatives & u-Sub",
+        sub: "AP-style problems combining Topics 6.8–6.10",
+        topics: "6.8 – 6.10",
+        problems: [
+          {
+            context: "Context: Comprehensive antidifferentiation",
+            stem: "Evaluate each integral completely.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\int \\frac{\\cos(\\sqrt{x})}{\\sqrt{x}}\\,dx$" },
+              { label: "(b)", text: "$\\displaystyle\\int x^2 \\cdot e^{x^3+1}\\,dx$" },
+              { label: "(c)", text: "$\\displaystyle\\int \\frac{x^3+1}{x^2+1}\\,dx$ &nbsp;&nbsp; (long division, then split)" }
+            ],
+            answers: [
+              { label: "(a)", text: "Let $u = \\sqrt{x}$, $du = \\frac{1}{2\\sqrt{x}}\\,dx$, so $\\frac{dx}{\\sqrt{x}} = 2\\,du$. $\\displaystyle\\int \\cos u \\cdot 2\\,du = 2\\sin(\\sqrt{x})+C$." },
+              { label: "(b)", text: "Let $u=x^3+1$, $du=3x^2\\,dx$. $\\displaystyle\\int \\frac{e^u}{3}\\,du = \\frac{e^{x^3+1}}{3}+C$." },
+              { label: "(c)", text: "Long division: $\\frac{x^3+1}{x^2+1} = x + \\frac{-x+1}{x^2+1} = x - \\frac{x}{x^2+1}+\\frac{1}{x^2+1}$. $\\displaystyle\\int = \\frac{x^2}{2} - \\frac{1}{2}\\ln(x^2+1)+\\arctan x+C$." }
+            ]
+          },
+          {
+            context: "Context: Definite integral practice",
+            stem: "Evaluate each definite integral exactly.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\int_0^{\\ln 3} e^{2x}\\,dx$" },
+              { label: "(b)", text: "$\\displaystyle\\int_{\\pi/6}^{\\pi/2} \\cos^2 x \\sin x\\,dx$ &nbsp;&nbsp; (let $u = \\cos x$)" },
+              { label: "(c)", text: "$\\displaystyle\\int_0^2 \\frac{4x}{x^2+1}\\,dx$" }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\left[\\frac{e^{2x}}{2}\\right]_0^{\\ln 3} = \\frac{e^{2\\ln 3}}{2} - \\frac{1}{2} = \\frac{9}{2}-\\frac{1}{2} = 4$." },
+              { label: "(b)", text: "Let $u=\\cos x$, $du=-\\sin x\\,dx$. When $x=\\pi/6$: $u=\\frac{\\sqrt{3}}{2}$; when $x=\\pi/2$: $u=0$. $\\displaystyle\\int_{\\sqrt{3}/2}^0 -u^2\\,du = \\int_0^{\\sqrt{3}/2}u^2\\,du = \\left[\\frac{u^3}{3}\\right]_0^{\\sqrt{3}/2} = \\frac{(\\sqrt{3}/2)^3}{3} = \\frac{3\\sqrt{3}/8}{3} = \\frac{\\sqrt{3}}{8}$." },
+              { label: "(c)", text: "Let $u=x^2+1$, $du=2x\\,dx$. When $x=0$: $u=1$; when $x=2$: $u=5$. $\\displaystyle\\int_1^5 \\frac{2}{u}\\,du = 2\\ln 5$." }
+            ]
+          },
+          {
+            context: "Context: Using initial conditions with definite integrals",
+            stem: "Let $F(x) = \\displaystyle\\int_2^x \\frac{t^2-4}{t-2}\\,dt$ for $x \\neq 2$.",
+            parts: [
+              { label: "(a)", text: "Simplify the integrand $\\dfrac{t^2-4}{t-2}$ by factoring. Then find a closed form for $F(x)$." },
+              { label: "(b)", text: "Find $F'(x)$ using both your closed form and FTC. Verify they agree." },
+              { label: "(c)", text: "What is the value of $F(5)$? Interpret in context as a net area." }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\frac{t^2-4}{t-2} = \\frac{(t-2)(t+2)}{t-2} = t+2$ (for $t \\neq 2$). $F(x) = \\displaystyle\\int_2^x (t+2)\\,dt = \\left[\\frac{t^2}{2}+2t\\right]_2^x = \\frac{x^2}{2}+2x - (2+4) = \\frac{x^2}{2}+2x-6$." },
+              { label: "(b)", text: "From closed form: $F'(x) = x+2$. From FTC: $F'(x) = \\frac{x^2-4}{x-2} = x+2$ ✓." },
+              { label: "(c)", text: "$F(5) = \\frac{25}{2}+10-6 = \\frac{25}{2}+4 = \\frac{33}{2} = 16.5$. This represents the net area under the curve $y = t+2$ from $t=2$ to $t=5$, which is a trapezoid with heights $4$ and $7$ and width $3$: area $= \\frac{1}{2}(4+7)(3) = 16.5$ ✓." }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  // ═══════════════════════════════════════════════════════════
+  // COLUMN 4 — BC-Only Integration Techniques
+  //            Topics 6.11 – 6.14
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: "col-4",
+    accentVar: "var(--col4-light)",
+    headerClass: "col-4-header",
+    tileClass: "col-4",
+    label: "Column IV",
+    title: "BC-Only Integration Techniques",
+    topics: "Topics 6.11 – 6.14",
+    tiles: [
+
+      // ── TILE 4-A ──────────────────────────────────────────
+      {
+        icon: "✖️",
+        title: "Integration by Parts",
+        sub: "$\\int u\\,dv = uv - \\int v\\,du$ — choosing $u$ and $dv$ strategically",
+        topics: "6.11",
+        video: { title: "Integration by Parts (twice!)", url: "https://www.youtube.com/watch?v=3sixUIgfa5w" },
+        problems: [
+          {
+            context: "Context: Applying integration by parts",
+            stem: "Evaluate each integral using integration by parts. Identify your choice of $u$ and $dv$.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\int x e^x\\,dx$" },
+              { label: "(b)", text: "$\\displaystyle\\int x\\cos x\\,dx$" },
+              { label: "(c)", text: "$\\displaystyle\\int \\ln x\\,dx$ &nbsp;&nbsp; (let $u = \\ln x$, $dv = dx$)" }
+            ],
+            answers: [
+              { label: "(a)", text: "Let $u=x$, $dv=e^x\\,dx$; then $du=dx$, $v=e^x$. $\\displaystyle\\int xe^x\\,dx = xe^x - \\int e^x\\,dx = xe^x - e^x + C = e^x(x-1)+C$." },
+              { label: "(b)", text: "Let $u=x$, $dv=\\cos x\\,dx$; then $du=dx$, $v=\\sin x$. $\\displaystyle\\int x\\cos x\\,dx = x\\sin x - \\int \\sin x\\,dx = x\\sin x + \\cos x + C$." },
+              { label: "(c)", text: "Let $u=\\ln x$, $dv=dx$; then $du=\\frac{1}{x}\\,dx$, $v=x$. $\\displaystyle\\int \\ln x\\,dx = x\\ln x - \\int x\\cdot\\frac{1}{x}\\,dx = x\\ln x - x + C$." }
+            ]
+          },
+          {
+            context: "Context: Repeated integration by parts",
+            stem: "Evaluate $\\displaystyle\\int x^2 e^x\\,dx$ using integration by parts twice (tabular method or iterated).",
+            parts: [
+              { label: "(a)", text: "Apply parts once with $u = x^2$, $dv = e^x\\,dx$. State the resulting integral." },
+              { label: "(b)", text: "Apply parts again to the remaining integral." },
+              { label: "(c)", text: "Write the final answer and verify by differentiating." }
+            ],
+            answers: [
+              { label: "(a)", text: "$u=x^2$, $du=2x\\,dx$, $v=e^x$. $\\displaystyle\\int x^2 e^x\\,dx = x^2 e^x - 2\\int xe^x\\,dx$." },
+              { label: "(b)", text: "From Tile 4-A (a): $\\displaystyle\\int xe^x\\,dx = e^x(x-1)+C$. So $\\displaystyle\\int x^2 e^x\\,dx = x^2 e^x - 2e^x(x-1) + C = x^2 e^x - 2xe^x + 2e^x + C$." },
+              { label: "(c)", text: "$F(x) = e^x(x^2-2x+2)$. Check: $F'(x) = e^x(x^2-2x+2)+e^x(2x-2) = e^x(x^2-2x+2+2x-2) = e^x \\cdot x^2 = x^2 e^x$ ✓." }
+            ]
+          },
+          {
+            context: "Context: Integration by parts with definite integrals",
+            stem: "Evaluate each definite integral using integration by parts.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\int_0^1 xe^{-x}\\,dx$" },
+              { label: "(b)", text: "$\\displaystyle\\int_1^e x\\ln x\\,dx$" },
+              { label: "(c)", text: "$\\displaystyle\\int_0^{\\pi} x\\sin x\\,dx$" }
+            ],
+            answers: [
+              { label: "(a)", text: "Let $u=x$, $dv=e^{-x}\\,dx$; $du=dx$, $v=-e^{-x}$. $\\left[-xe^{-x}\\right]_0^1 + \\displaystyle\\int_0^1 e^{-x}\\,dx = -e^{-1} + [-e^{-x}]_0^1 = -e^{-1}+(-e^{-1}+1) = 1-2e^{-1}$." },
+              { label: "(b)", text: "Let $u=\\ln x$, $dv=x\\,dx$; $du=\\frac{1}{x}\\,dx$, $v=\\frac{x^2}{2}$. $\\left[\\frac{x^2}{2}\\ln x\\right]_1^e - \\displaystyle\\int_1^e \\frac{x}{2}\\,dx = \\frac{e^2}{2} - 0 - \\frac{1}{2}\\cdot\\frac{e^2-1}{2} = \\frac{e^2}{2} - \\frac{e^2-1}{4} = \\frac{e^2+1}{4}$." },
+              { label: "(c)", text: "Let $u=x$, $dv=\\sin x\\,dx$; $du=dx$, $v=-\\cos x$. $[-x\\cos x]_0^{\\pi} + \\displaystyle\\int_0^{\\pi}\\cos x\\,dx = \\pi - 0 + [\\sin x]_0^{\\pi} = \\pi + 0 = \\pi$." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 4-B ──────────────────────────────────────────
+      {
+        icon: "🧩",
+        title: "Partial Fractions",
+        sub: "Decomposing rational functions for integration",
+        topics: "6.12",
+        video: { title: "Integration with Long Division and Partial Fractions", url: "https://www.youtube.com/watch?v=PjsDXfQ8QwQ" },
+        problems: [
+          {
+            context: "Context: Setting up partial fractions",
+            stem: "Decompose each rational function into partial fractions, then integrate.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\int \\frac{1}{x^2-1}\\,dx$ &nbsp;&nbsp; (factor denominator first)" },
+              { label: "(b)", text: "$\\displaystyle\\int \\frac{3x+5}{(x+1)(x+2)}\\,dx$" },
+              { label: "(c)", text: "$\\displaystyle\\int \\frac{x}{x^2-5x+6}\\,dx$" }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\frac{1}{(x-1)(x+1)} = \\frac{A}{x-1}+\\frac{B}{x+1}$. Setting $x=1$: $A=\\frac{1}{2}$. Setting $x=-1$: $B=-\\frac{1}{2}$. $\\displaystyle\\int = \\frac{1}{2}\\ln|x-1|-\\frac{1}{2}\\ln|x+1|+C = \\frac{1}{2}\\ln\\left|\\frac{x-1}{x+1}\\right|+C$." },
+              { label: "(b)", text: "$\\frac{3x+5}{(x+1)(x+2)} = \\frac{A}{x+1}+\\frac{B}{x+2}$. $x=-1$: $A = \\frac{2}{1} = 2$. $x=-2$: $B = \\frac{-1}{-1} = 1$. $\\displaystyle\\int = 2\\ln|x+1|+\\ln|x+2|+C$." },
+              { label: "(c)", text: "$x^2-5x+6=(x-2)(x-3)$. $\\frac{x}{(x-2)(x-3)} = \\frac{A}{x-2}+\\frac{B}{x-3}$. $x=2$: $A=-2$. $x=3$: $B=3$. $\\displaystyle\\int = -2\\ln|x-2|+3\\ln|x-3|+C$." }
+            ]
+          },
+          {
+            context: "Context: Definite integrals with partial fractions",
+            stem: "Evaluate each definite integral exactly using partial fractions.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\int_2^4 \\frac{1}{x^2-1}\\,dx$" },
+              { label: "(b)", text: "$\\displaystyle\\int_0^1 \\frac{2x+3}{(x+1)(x+3)}\\,dx$" },
+              { label: "(c)", text: "$\\displaystyle\\int_4^6 \\frac{5}{x^2-x-6}\\,dx$" }
+            ],
+            answers: [
+              { label: "(a)", text: "From above: $\\left[\\frac{1}{2}\\ln\\left|\\frac{x-1}{x+1}\\right|\\right]_2^4 = \\frac{1}{2}\\ln\\frac{3}{5} - \\frac{1}{2}\\ln\\frac{1}{3} = \\frac{1}{2}\\left(\\ln\\frac{3}{5}+\\ln 3\\right) = \\frac{1}{2}\\ln\\frac{9}{5}$." },
+              { label: "(b)", text: "$\\frac{2x+3}{(x+1)(x+3)} = \\frac{A}{x+1}+\\frac{B}{x+3}$. $x=-1$: $A = \\frac{1}{2}$. $x=-3$: $B = \\frac{-3}{-2} = \\frac{3}{2}$. $\\left[\\frac{1}{2}\\ln|x+1|+\\frac{3}{2}\\ln|x+3|\\right]_0^1 = (\\frac{1}{2}\\ln 2+\\frac{3}{2}\\ln 4)-(0+\\frac{3}{2}\\ln 3) = \\frac{1}{2}\\ln 2 + 3\\ln 2 - \\frac{3}{2}\\ln 3 = \\frac{7}{2}\\ln 2 - \\frac{3}{2}\\ln 3$." },
+              { label: "(c)", text: "$x^2-x-6=(x-3)(x+2)$. $\\frac{5}{(x-3)(x+2)} = \\frac{A}{x-3}+\\frac{B}{x+2}$. $x=3$: $A=1$. $x=-2$: $B=-1$. $\\left[\\ln|x-3|-\\ln|x+2|\\right]_4^6 = (\\ln 3-\\ln 8)-(\\ln 1-\\ln 6) = \\ln 3 - \\ln 8 + \\ln 6 = \\ln\\frac{18}{8} = \\ln\\frac{9}{4}$." }
+            ]
+          },
+          {
+            context: "Context: Partial fractions in a modeling context",
+            stem: "The logistic growth model leads to the integral $\\displaystyle\\int \\frac{dP}{P(1-P/K)}$, where $K$ is the carrying capacity. Let $K = 100$.",
+            parts: [
+              { label: "(a)", text: "Write $\\dfrac{1}{P(1-P/100)} = \\dfrac{100}{P(100-P)}$ and decompose using partial fractions." },
+              { label: "(b)", text: "Integrate and simplify the result." },
+              { label: "(c)", text: "If $P(0) = 10$ and $\\displaystyle\\int_0^T \\frac{dP}{P(1-P/100)} = 1.5$, use your antiderivative to find $P(T)$ approximately. (Use the solved form $\\ln\\left|\\frac{P}{100-P}\\right| = t + C$.)" }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\frac{100}{P(100-P)} = \\frac{A}{P}+\\frac{B}{100-P}$. $P=0$: $A=1$. $P=100$: $B=1$. So decomposition is $\\frac{1}{P}+\\frac{1}{100-P}$." },
+              { label: "(b)", text: "$\\displaystyle\\int \\left(\\frac{1}{P}+\\frac{1}{100-P}\\right)dP = \\ln|P| - \\ln|100-P| + C = \\ln\\left|\\frac{P}{100-P}\\right|+C$." },
+              { label: "(c)", text: "At $t=0$: $\\ln\\left(\\frac{10}{90}\\right) = C \\Rightarrow C = \\ln\\frac{1}{9} = -\\ln 9$. At $T$: $\\ln\\left(\\frac{P}{100-P}\\right) = 1.5 - \\ln 9$. $\\frac{P}{100-P} = e^{1.5}/9 \\approx 0.497$. Solving: $P = 0.497(100-P) \\Rightarrow P(1.497) = 49.7 \\Rightarrow P \\approx 33.2$." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 4-C ──────────────────────────────────────────
+      {
+        icon: "∞",
+        title: "Improper Integrals",
+        sub: "Infinite limits and unbounded integrands",
+        topics: "6.13",
+        video: { title: "Improper Integral with an infinite interval", url: "https://www.youtube.com/watch?v=qWMJpYajOww" },
+        problems: [
+          {
+            context: "Context: Infinite upper limit",
+            stem: "Evaluate each improper integral or show that it diverges.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\int_1^{\\infty} \\frac{1}{x^2}\\,dx$" },
+              { label: "(b)", text: "$\\displaystyle\\int_1^{\\infty} \\frac{1}{x}\\,dx$" },
+              { label: "(c)", text: "$\\displaystyle\\int_0^{\\infty} e^{-x}\\,dx$" }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\displaystyle\\lim_{b\\to\\infty}\\int_1^b x^{-2}\\,dx = \\lim_{b\\to\\infty}\\left[-\\frac{1}{x}\\right]_1^b = \\lim_{b\\to\\infty}\\left(-\\frac{1}{b}+1\\right) = 1$. Converges to $1$." },
+              { label: "(b)", text: "$\\displaystyle\\lim_{b\\to\\infty}\\int_1^b \\frac{1}{x}\\,dx = \\lim_{b\\to\\infty}[\\ln x]_1^b = \\lim_{b\\to\\infty}\\ln b = \\infty$. Diverges." },
+              { label: "(c)", text: "$\\displaystyle\\lim_{b\\to\\infty}\\int_0^b e^{-x}\\,dx = \\lim_{b\\to\\infty}[-e^{-x}]_0^b = \\lim_{b\\to\\infty}(-e^{-b}+1) = 1$. Converges to $1$." }
+            ]
+          },
+          {
+            context: "Context: Unbounded integrands",
+            stem: "Evaluate each improper integral with a vertical asymptote in $[a,b]$, or show divergence.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\int_0^1 \\frac{1}{\\sqrt{x}}\\,dx$ &nbsp;&nbsp; (unbounded at $x=0$)" },
+              { label: "(b)", text: "$\\displaystyle\\int_0^1 \\frac{1}{x}\\,dx$ &nbsp;&nbsp; (unbounded at $x=0$)" },
+              { label: "(c)", text: "$\\displaystyle\\int_0^2 \\frac{1}{(x-1)^2}\\,dx$ &nbsp;&nbsp; (unbounded at interior point $x=1$)" }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\displaystyle\\lim_{a\\to 0^+}\\int_a^1 x^{-1/2}\\,dx = \\lim_{a\\to 0^+}[2\\sqrt{x}]_a^1 = \\lim_{a\\to 0^+}(2-2\\sqrt{a}) = 2$. Converges to $2$." },
+              { label: "(b)", text: "$\\displaystyle\\lim_{a\\to 0^+}\\int_a^1 \\frac{1}{x}\\,dx = \\lim_{a\\to 0^+}[-\\ln a] = \\infty$. Diverges." },
+              { label: "(c)", text: "Split at $x=1$: $\\displaystyle\\int_0^1 \\frac{dx}{(x-1)^2} = \\lim_{b\\to 1^-}\\left[-\\frac{1}{x-1}\\right]_0^b = \\lim_{b\\to 1^-}\\left(-\\frac{1}{b-1}+1\\right) = \\infty$. Diverges — both halves diverge." }
+            ]
+          },
+          {
+            context: "Context: Comparison test for improper integrals",
+            stem: "Use the Comparison Test to determine convergence or divergence without computing the exact value.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\int_1^{\\infty} \\frac{1}{x^2 + 1}\\,dx$ &nbsp;&nbsp; (compare to $\\int_1^{\\infty} \\frac{1}{x^2}\\,dx$)" },
+              { label: "(b)", text: "$\\displaystyle\\int_1^{\\infty} \\frac{e^x}{e^{2x}+1}\\,dx$ &nbsp;&nbsp; (bound $e^{2x}+1 > e^{2x}$)" },
+              { label: "(c)", text: "$\\displaystyle\\int_1^{\\infty} \\frac{\\sin^2 x}{x^2}\\,dx$ &nbsp;&nbsp; (use $0 \\leq \\sin^2 x \\leq 1$)" }
+            ],
+            answers: [
+              { label: "(a)", text: "Since $x^2+1 > x^2$, we have $\\frac{1}{x^2+1} < \\frac{1}{x^2}$ for all $x \\geq 1$. Since $\\displaystyle\\int_1^{\\infty}\\frac{1}{x^2}\\,dx = 1$ converges and the integrand is bounded below by 0, by the comparison test $\\displaystyle\\int_1^{\\infty}\\frac{1}{x^2+1}\\,dx$ converges." },
+              { label: "(b)", text: "$e^{2x}+1 > e^{2x}$, so $\\frac{e^x}{e^{2x}+1} < \\frac{e^x}{e^{2x}} = e^{-x}$. Since $\\displaystyle\\int_1^{\\infty}e^{-x}\\,dx$ converges, so does the original integral." },
+              { label: "(c)", text: "$0 \\leq \\frac{\\sin^2 x}{x^2} \\leq \\frac{1}{x^2}$ for all $x \\geq 1$. Since $\\displaystyle\\int_1^{\\infty}\\frac{1}{x^2}\\,dx = 1$ converges, by the comparison test $\\displaystyle\\int_1^{\\infty}\\frac{\\sin^2 x}{x^2}\\,dx$ converges." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 4-D ──────────────────────────────────────────
+      {
+        icon: "🔀",
+        title: "Mixed Practice — BC Techniques",
+        sub: "AP-style problems combining 6.11–6.14",
+        topics: "6.11 – 6.14",
+        problems: [
+          {
+            context: "Context: Selecting the technique",
+            stem: "For each integral, identify the best technique (IBP, partial fractions, long division, $u$-sub, or improper), then evaluate.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\int x^2 \\ln x\\,dx$" },
+              { label: "(b)", text: "$\\displaystyle\\int_2^{\\infty} \\frac{1}{x^2-1}\\,dx$" },
+              { label: "(c)", text: "$\\displaystyle\\int \\frac{x^2+3}{x(x^2+1)}\\,dx$ &nbsp;&nbsp; (partial fractions: $A/x + (Bx+C)/(x^2+1)$)" }
+            ],
+            answers: [
+              { label: "(a)", text: "IBP: $u=\\ln x$, $dv=x^2\\,dx$; $du=\\frac{1}{x}\\,dx$, $v=\\frac{x^3}{3}$. $\\displaystyle\\int x^2\\ln x\\,dx = \\frac{x^3}{3}\\ln x - \\int\\frac{x^2}{3}\\,dx = \\frac{x^3}{3}\\ln x - \\frac{x^3}{9}+C = \\frac{x^3}{9}(3\\ln x-1)+C$." },
+              { label: "(b)", text: "Partial fractions: $\\frac{1}{(x-1)(x+1)} = \\frac{1/2}{x-1}-\\frac{1/2}{x+1}$. Improper: $\\displaystyle\\lim_{b\\to\\infty}\\left[\\frac{1}{2}\\ln\\left|\\frac{x-1}{x+1}\\right|\\right]_2^b = 0 - \\frac{1}{2}\\ln\\frac{1}{3} = \\frac{1}{2}\\ln 3 = \\frac{\\ln 3}{2}$." },
+              { label: "(c)", text: "$\\frac{x^2+3}{x(x^2+1)} = \\frac{A}{x}+\\frac{Bx+C}{x^2+1}$. Multiplying: $x^2+3 = A(x^2+1)+(Bx+C)x$. $x=0$: $A=3$. Coeff of $x^2$: $1=A+B \\Rightarrow B=-2$. Coeff of $x$: $C=0$. $\\displaystyle\\int = 3\\ln|x|-\\ln(x^2+1)+C$." }
+            ]
+          },
+          {
+            context: "Context: Integration by parts — looping",
+            stem: "Evaluate $\\displaystyle\\int e^x \\cos x\\,dx$ using the 'looping' technique: integrate by parts twice, then solve for the integral algebraically.",
+            parts: [
+              { label: "(a)", text: "Apply IBP with $u = e^x$, $dv = \\cos x\\,dx$. State the result." },
+              { label: "(b)", text: "Apply IBP again to $\\displaystyle\\int e^x \\sin x\\,dx$ from step (a) with $u = e^x$, $dv = \\sin x\\,dx$." },
+              { label: "(c)", text: "You should see $\\displaystyle\\int e^x \\cos x\\,dx$ appear on both sides. Solve algebraically." }
+            ],
+            answers: [
+              { label: "(a)", text: "$u=e^x$, $dv=\\cos x\\,dx$; $v=\\sin x$. $\\displaystyle\\int e^x\\cos x\\,dx = e^x\\sin x - \\int e^x \\sin x\\,dx$." },
+              { label: "(b)", text: "$u=e^x$, $dv=\\sin x\\,dx$; $v=-\\cos x$. $\\displaystyle\\int e^x\\sin x\\,dx = -e^x\\cos x + \\int e^x\\cos x\\,dx$." },
+              { label: "(c)", text: "Substituting (b) into (a): $\\displaystyle\\int e^x\\cos x\\,dx = e^x\\sin x - \\left(-e^x\\cos x + \\int e^x\\cos x\\,dx\\right) = e^x\\sin x + e^x\\cos x - \\int e^x\\cos x\\,dx$. Let $I = \\displaystyle\\int e^x\\cos x\\,dx$: $2I = e^x(\\sin x+\\cos x) \\Rightarrow I = \\dfrac{e^x(\\sin x+\\cos x)}{2}+C$." }
+            ]
+          },
+          {
+            context: "Context: AP free-response style — comprehensive",
+            stem: "Evaluate $\\displaystyle\\int_0^{\\infty} xe^{-x}\\,dx$ — an improper integral requiring integration by parts.",
+            parts: [
+              { label: "(a)", text: "Rewrite as $\\displaystyle\\lim_{b\\to\\infty}\\int_0^b xe^{-x}\\,dx$ and apply IBP with $u=x$, $dv=e^{-x}\\,dx$." },
+              { label: "(b)", text: "Evaluate the resulting definite integral on $[0,b]$ and simplify." },
+              { label: "(c)", text: "Take the limit as $b\\to\\infty$. You will need $\\displaystyle\\lim_{b\\to\\infty} be^{-b} = 0$. State this limit and explain why it holds (exponential decay dominates polynomial growth)." }
+            ],
+            answers: [
+              { label: "(a)", text: "$u=x$, $dv=e^{-x}\\,dx$; $du=dx$, $v=-e^{-x}$. $\\displaystyle\\int_0^b xe^{-x}\\,dx = \\left[-xe^{-x}\\right]_0^b + \\int_0^b e^{-x}\\,dx = -be^{-b} + [-e^{-x}]_0^b = -be^{-b} - e^{-b}+1$." },
+              { label: "(b)", text: "$\\displaystyle\\int_0^b xe^{-x}\\,dx = 1 - e^{-b}(b+1)$." },
+              { label: "(c)", text: "$\\displaystyle\\lim_{b\\to\\infty}(1-e^{-b}(b+1)) = 1 - 0 = 1$. Since $e^{-b} \\to 0$ exponentially fast while $b+1$ grows only polynomially, $\\lim_{b\\to\\infty}be^{-b} = 0$ by L'Hôpital: $\\frac{b}{e^b} \\to \\frac{1}{e^b} \\to 0$. Therefore $\\displaystyle\\int_0^{\\infty}xe^{-x}\\,dx = 1$." }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+
+]; // end columns
+
+
+/* ============================================================
+   RENDER BOARD
+============================================================ */
+function renderBoard() {
+  const grid = document.getElementById('board-grid');
+  grid.innerHTML = '';
+
+  columns.forEach((col, ci) => {
+    const colGroup = document.createElement('div');
+    colGroup.className = 'col-group';
+
+    // Header
+    const header = document.createElement('div');
+    header.className = `col-header ${col.headerClass}`;
+    header.style.gridColumn = ci + 1;
+    header.style.gridRow = 1;
+    header.innerHTML = `
+      <div class="col-header-num">${col.label}</div>
+      <h2>${col.title}</h2>
+      <div class="col-topics">${col.topics}</div>
+    `;
+    colGroup.appendChild(header);
+
+    // Tiles
+    col.tiles.forEach((tile, ti) => {
+      const tileEl = document.createElement('div');
+      tileEl.className = `tile ${col.tileClass}`;
+      tileEl.style.gridColumn = ci + 1;
+      tileEl.style.gridRow = ti + 2;
+      tileEl.setAttribute('role', 'button');
+      tileEl.setAttribute('tabindex', '0');
+      tileEl.setAttribute('aria-label', tile.title);
+      tileEl.innerHTML = `
+        <span class="tile-icon">${tile.icon}</span>
+        <div class="tile-title">${tile.title}</div>
+        <div class="tile-sub">${tile.sub}</div>
+        <div class="tile-topics">${tile.topics}</div>
+        <span class="tile-arrow">↗</span>
+      `;
+      tileEl.addEventListener('click', () => openModal(ci, ti));
+      tileEl.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') openModal(ci, ti); });
+      colGroup.appendChild(tileEl);
+    });
+
+    grid.appendChild(colGroup);
+  });
+}
+
+/* ============================================================
+   MODAL
+============================================================ */
+function openModal(colIdx, tileIdx) {
+  const col  = columns[colIdx];
+  const tile = col.tiles[tileIdx];
+
+  const accentEl = document.getElementById('modal-accent');
+  accentEl.className = 'modal-header-accent';
+  accentEl.style.background = col.accentVar;
+
+  const labelEl = document.getElementById('modal-col-label');
+  labelEl.style.color = col.accentVar;
+  labelEl.textContent = col.label + ' · ' + col.title;
+
+  document.getElementById('modal-title').textContent = tile.title;
+
+  const body = document.getElementById('modal-body');
+  body.innerHTML = '';
+
+  if (tile.video) {
+    const videoSection = document.createElement('div');
+    videoSection.className = 'video-section';
+    videoSection.innerHTML = `
+      <div class="video-label">📹 Watch First</div>
+      <a href="${tile.video.url}" target="_blank" rel="noopener" class="video-link">
+        ${tile.video.title} — mathispower4u
+        <span class="video-icon">▶</span>
+      </a>
+    `;
+    body.appendChild(videoSection);
+  }
+
+  tile.problems.forEach((prob, pi) => {
+    const block = document.createElement('div');
+    block.className = 'problem-block';
+
+    let partsHTML = '';
+    if (prob.parts && prob.parts.length) {
+      partsHTML = `<ul class="problem-parts">` +
+        prob.parts.map(p => `<li data-part="${p.label}">${p.text}</li>`).join('') +
+        `</ul>`;
+    }
+
+    let answersHTML = '';
+    if (prob.answers && prob.answers.length) {
+      answersHTML = prob.answers.map(a =>
+        `<div class="answer-part"><span class="answer-part-label">${a.label}</span>${a.text}</div>`
+      ).join('');
+    }
+
+    const answerId = `ans-${colIdx}-${tileIdx}-${pi}`;
+    const toggleId = `tog-${colIdx}-${tileIdx}-${pi}`;
+
+    block.innerHTML = `
+      <div class="problem-num">Problem ${pi + 1} of ${tile.problems.length}</div>
+      ${prob.context ? `<div class="problem-context">${prob.context}</div>` : ''}
+      <div class="problem-text">${prob.stem}</div>
+      ${partsHTML}
+      <button class="answer-toggle" id="${toggleId}" onclick="toggleAnswer('${answerId}','${toggleId}')">
+        <span class="toggle-icon">▼</span> Show Answer
+      </button>
+      <div class="answer-panel" id="${answerId}">${answersHTML}</div>
+    `;
+    body.appendChild(block);
+  });
+
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('desmos-fab').classList.add('visible');
+
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([body]).catch(err => console.log(err));
+  }
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+  document.getElementById('desmos-fab').classList.remove('visible');
+}
+
+function toggleAnswer(panelId, toggleId) {
+  const panel  = document.getElementById(panelId);
+  const toggle = document.getElementById(toggleId);
+  const isOpen = panel.classList.contains('open');
+  panel.classList.toggle('open');
+  toggle.classList.toggle('open');
+  toggle.innerHTML = isOpen
+    ? '<span class="toggle-icon">▼</span> Show Answer'
+    : '<span class="toggle-icon">▼</span> Hide Answer';
+}
+
+/* ============================================================
+   RANDOM PRACTICE
+============================================================ */
+function openRandomProblem() {
+  const colIdx  = Math.floor(Math.random() * columns.length);
+  const col     = columns[colIdx];
+  const tileIdx = Math.floor(Math.random() * col.tiles.length);
+  const tile    = col.tiles[tileIdx];
+  const probIdx = Math.floor(Math.random() * tile.problems.length);
+  const prob    = tile.problems[probIdx];
+
+  const accentEl = document.getElementById('modal-accent');
+  accentEl.className = 'modal-header-accent random-accent';
+  accentEl.style.background = '';
+
+  const labelEl = document.getElementById('modal-col-label');
+  labelEl.style.color = 'var(--text-muted)';
+  labelEl.innerHTML = 'BC Calculus · Unit 6: Integration &amp; Accumulation of Change';
+
+  document.getElementById('modal-title').textContent = 'General Practice';
+
+  const body = document.getElementById('modal-body');
+  body.innerHTML = '';
+
+  const block = document.createElement('div');
+  block.className = 'problem-block';
+  block.style.borderBottom = 'none';
+  block.style.marginBottom = '0';
+  block.style.paddingBottom = '0';
+
+  let partsHTML = '';
+  if (prob.parts && prob.parts.length) {
+    partsHTML = `<ul class="problem-parts">` +
+      prob.parts.map(p => `<li data-part="${p.label}">${p.text}</li>`).join('') +
+      `</ul>`;
+  }
+
+  let answersHTML = '';
+  if (prob.answers && prob.answers.length) {
+    answersHTML = prob.answers.map(a =>
+      `<div class="answer-part"><span class="answer-part-label">${a.label}</span>${a.text}</div>`
+    ).join('');
+  }
+
+  block.innerHTML = `
+    <div class="problem-num">🎲 General Practice</div>
+    ${prob.context ? `<div class="problem-context">${prob.context}</div>` : ''}
+    <div class="problem-text">${prob.stem}</div>
+    ${partsHTML}
+    <button class="answer-toggle" id="rand-tog" onclick="toggleAnswer('rand-ans','rand-tog')">
+      <span class="toggle-icon">▼</span> Show Answer
+    </button>
+    <div class="answer-panel" id="rand-ans">${answersHTML}</div>
+  `;
+
+  body.appendChild(block);
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('desmos-fab').classList.add('visible');
+
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([body]).catch(err => console.log(err));
+  }
+}
+
+document.getElementById('random-btn').addEventListener('click', openRandomProblem);
+
+/* ============================================================
+   DESMOS
+============================================================ */
+document.getElementById('desmos-fab').addEventListener('click', () => {
+  window.open('https://www.desmos.com/calculator', '_blank', 'width=1000,height=700,noopener,noreferrer');
+});
+
+/* ============================================================
+   EVENT LISTENERS
+============================================================ */
+document.getElementById('modal-close').addEventListener('click', closeModal);
+document.getElementById('modal-overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+</script>
+</body>
+</html>
