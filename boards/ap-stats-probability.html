@@ -1,0 +1,2066 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AP Statistics — Probability & Random Variables | Middlesex School</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet" />
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+    startup: {
+      typeset: false,
+      ready() {
+        MathJax.startup.defaultReady();
+        renderBoard();
+        MathJax.typesetPromise([document.getElementById('board-grid')])
+          .catch(err => console.log(err));
+      }
+    }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+<style>
+  /* ============================================================
+     TOKENS & RESET
+  ============================================================ */
+  :root {
+    --crimson:     #cf003d;
+    --crimson-dim: #8a0028;
+    --crimson-glow:#ff1a55;
+    --black:       #0d0d0d;
+    --surface:     #151515;
+    --surface2:    #1e1e1e;
+    --surface3:    #252525;
+    --border:      #2e2e2e;
+    --border-light:#3a3a3a;
+    --text:        #f0ece6;
+    --text-muted:  #9e9e9e;
+    --text-dim:    #666666;
+
+    --col1: #cf003d;
+    --col2: #1a6b5a;
+    --col3: #4a5568;
+    --col4: #7c4a1e;
+
+    --col1-light: #ff4d75;
+    --col2-light: #2dd4bf;
+    --col3-light: #94a3b8;
+    --col4-light: #f59e0b;
+
+    --radius: 10px;
+    --radius-lg: 16px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.5);
+    --shadow-hover: 0 8px 40px rgba(0,0,0,0.7);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 16px;
+    line-height: 1.65;
+    min-height: 100vh;
+  }
+
+  /* ============================================================
+     HEADER
+  ============================================================ */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 32px 40px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--crimson), var(--crimson-glow), var(--crimson));
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(207,0,61,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .header-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+  }
+
+  .school-tag {
+    font-family: 'Source Serif 4', serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--crimson-glow);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .school-tag::before,
+  .school-tag::after {
+    content: '';
+    display: inline-block;
+    width: 28px;
+    height: 1px;
+    background: var(--crimson-glow);
+  }
+
+  h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    margin-top: 4px;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--crimson-glow);
+  }
+
+  .header-meta {
+    margin-top: 4px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .meta-pill {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 3px 12px;
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+  }
+
+  /* ============================================================
+     INSTRUCTIONS BAR
+  ============================================================ */
+  .instructions {
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 40px;
+    font-size: 13px;
+    color: var(--text-muted);
+    text-align: center;
+    letter-spacing: 0.03em;
+  }
+
+  .instructions strong { color: var(--crimson-glow); font-weight: 600; }
+
+  /* ============================================================
+     BOARD GRID
+  ============================================================ */
+  .board-wrap {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 36px 24px 60px;
+  }
+
+  .board-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto repeat(4, 1fr);
+    gap: 20px;
+  }
+
+  .col-group {
+    display: contents;
+  }
+
+  .col-header {
+    border-radius: var(--radius) var(--radius) 0 0;
+    padding: 16px 18px 14px;
+    position: relative;
+    overflow: hidden;
+    align-self: start;
+  }
+
+  .col-header::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .col-1-header { background: color-mix(in srgb, var(--col1) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col1) 40%, transparent); }
+  .col-2-header { background: color-mix(in srgb, var(--col2) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col2) 40%, transparent); }
+  .col-3-header { background: color-mix(in srgb, var(--col3) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col3) 40%, transparent); }
+  .col-4-header { background: color-mix(in srgb, var(--col4) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col4) 40%, transparent); }
+
+  .col-header-num {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    opacity: 0.7;
+  }
+
+  .col-1-header .col-header-num { color: var(--col1-light); }
+  .col-2-header .col-header-num { color: var(--col2-light); }
+  .col-3-header .col-header-num { color: var(--col3-light); }
+  .col-4-header .col-header-num { color: var(--col4-light); }
+
+  .col-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.25;
+  }
+
+  .col-header .col-topics {
+    margin-top: 6px;
+    font-size: 10.5px;
+    color: var(--text-dim);
+    letter-spacing: 0.04em;
+  }
+
+  /* ============================================================
+     TILES
+  ============================================================ */
+  .tile {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 18px 28px;
+    cursor: pointer;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+    position: relative;
+    overflow: hidden;
+    user-select: none;
+  }
+
+  .tile::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+    border-radius: var(--radius) 0 0 var(--radius);
+    transition: opacity 0.2s;
+  }
+
+  .col-1 .tile::before { background: var(--col1-light); }
+  .col-2 .tile::before { background: var(--col2-light); }
+  .col-3 .tile::before { background: var(--col3-light); }
+  .col-4 .tile::before { background: var(--col4-light); }
+
+  .tile:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-hover);
+    background: var(--surface3);
+  }
+
+  .col-1 .tile:hover { border-color: color-mix(in srgb, var(--col1) 60%, transparent); }
+  .col-2 .tile:hover { border-color: color-mix(in srgb, var(--col2) 60%, transparent); }
+  .col-3 .tile:hover { border-color: color-mix(in srgb, var(--col3) 60%, transparent); }
+  .col-4 .tile:hover { border-color: color-mix(in srgb, var(--col4) 60%, transparent); }
+
+  .tile-icon {
+    font-size: 18px;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .tile-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+    margin-bottom: 5px;
+  }
+
+  .tile-sub {
+    font-size: 11.5px;
+    color: var(--text-muted);
+    line-height: 1.4;
+  }
+
+  .tile-topics {
+    position: absolute;
+    bottom: 10px;
+    left: 18px;
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.06em;
+  }
+
+  .tile-arrow {
+    position: absolute;
+    bottom: 12px; right: 14px;
+    font-size: 14px;
+    opacity: 0.3;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+
+  .tile:hover .tile-arrow { opacity: 0.8; transform: translate(2px, -2px); }
+  .col-1 .tile:hover .tile-arrow { color: var(--col1-light); }
+  .col-2 .tile:hover .tile-arrow { color: var(--col2-light); }
+  .col-3 .tile:hover .tile-arrow { color: var(--col3-light); }
+  .col-4 .tile:hover .tile-arrow { color: var(--col4-light); }
+
+  /* ============================================================
+     MODAL
+  ============================================================ */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.82);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    backdrop-filter: blur(4px);
+  }
+
+  .modal-overlay.open { display: flex; animation: fadeIn 0.2s ease; }
+
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    width: 100%;
+    max-width: 760px;
+    max-height: 88vh;
+    overflow-y: auto;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.8);
+    animation: slideUp 0.22s ease;
+    position: relative;
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .modal-header {
+    padding: 24px 28px 20px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .modal-header-accent {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  }
+
+  .modal-col-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+  }
+
+  .modal-close {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.15s, color 0.15s;
+  }
+
+  .modal-close:hover { background: var(--crimson); color: white; border-color: var(--crimson); }
+
+  .modal-body { padding: 24px 28px 32px; }
+
+  /* Video section */
+  .video-section {
+    background: var(--surface2);
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 24px;
+  }
+
+  .video-label {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+
+  .video-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    color: var(--crimson-glow);
+    text-decoration: none;
+    font-size: 13.5px;
+    font-family: 'Source Serif 4', serif;
+    transition: color 0.15s;
+  }
+
+  .video-link:hover { color: #fff; }
+
+  .video-icon {
+    font-size: 12px;
+    opacity: 0.7;
+  }
+
+  /* Problems */
+  .problem-block {
+    margin-bottom: 28px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .problem-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+  .problem-num {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+  }
+
+  .problem-context {
+    font-size: 14px;
+    font-style: italic;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    padding-left: 12px;
+    border-left: 2px solid var(--border-light);
+  }
+
+  .problem-text {
+    font-size: 14.5px;
+    color: var(--text);
+    line-height: 1.7;
+    margin-bottom: 14px;
+  }
+
+  .problem-img {
+    display: block;
+    width: 360px;
+    max-width: 100%;
+    border-radius: 6px;
+    margin: 10px 0 6px;
+  }
+
+  .problem-parts { margin-left: 0; list-style: none; }
+
+  .problem-parts li {
+    font-size: 14px;
+    color: var(--text);
+    margin-bottom: 8px;
+    padding-left: 24px;
+    position: relative;
+    line-height: 1.6;
+  }
+
+  .problem-parts li::before {
+    content: attr(data-part);
+    position: absolute;
+    left: 0;
+    font-weight: 700;
+    color: var(--text-muted);
+  }
+
+  .answer-toggle {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 9px 16px;
+    color: var(--text-muted);
+    font-family: 'Source Serif 4', serif;
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.15s;
+    margin-top: 4px;
+  }
+
+  .answer-toggle:hover { background: var(--surface3); border-color: var(--border-light); color: var(--text); }
+  .answer-toggle .toggle-icon { font-size: 10px; transition: transform 0.2s; }
+  .answer-toggle.open .toggle-icon { transform: rotate(180deg); }
+
+  .answer-panel {
+    display: none;
+    margin-top: 14px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-size: 13.5px;
+    line-height: 1.75;
+    color: var(--text);
+    animation: expandIn 0.18s ease;
+  }
+
+  @keyframes expandIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .answer-panel.open { display: block; }
+
+  .answer-part { margin-bottom: 10px; padding-left: 20px; position: relative; }
+  .answer-part:last-child { margin-bottom: 0; }
+  .answer-part-label { position: absolute; left: 0; font-weight: 700; color: var(--text-muted); }
+
+  /* ============================================================
+     RESPONSIVE
+  ============================================================ */
+  @media (max-width: 1000px) {
+    .board-grid {
+      display: flex !important;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .col-group {
+      display: flex !important;
+      flex-direction: column;
+      gap: 10px;
+      width: calc(50% - 10px);
+    }
+    .col-header {
+      border-radius: var(--radius);
+    }
+    .tile {
+      grid-column: unset !important;
+      grid-row: unset !important;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .board-grid { flex-direction: column; }
+    .col-group { width: 100%; }
+    header { padding: 20px; }
+    .board-wrap { padding: 20px 12px 40px; }
+    .modal { border-radius: var(--radius); }
+    .modal-header, .modal-body { padding: 18px; }
+  }
+
+  .modal::-webkit-scrollbar { width: 6px; }
+  .modal::-webkit-scrollbar-track { background: var(--surface); }
+  .modal::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
+
+  /* ============================================================
+     RANDOM PRACTICE BAR
+  ============================================================ */
+  .random-wrap {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 24px 48px;
+  }
+
+  .random-btn {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border-light);
+    border-radius: 14px;
+    padding: 0 36px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.2s ease, background 0.2s ease;
+    font-family: 'Source Serif 4', serif;
+  }
+
+  .random-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(207,0,61,0.06) 30%, rgba(207,0,61,0.10) 50%, rgba(207,0,61,0.06) 70%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .random-btn:hover::before { opacity: 1; }
+
+  .random-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(207,0,61,0.18), 0 2px 8px rgba(0,0,0,0.4);
+    border-color: color-mix(in srgb, var(--crimson) 55%, transparent);
+    background: var(--surface3);
+  }
+
+  .random-btn:active { transform: translateY(0) scale(0.995); box-shadow: 0 2px 8px rgba(0,0,0,0.4); }
+
+  .random-btn-left-notch, .random-btn-right-notch {
+    position: absolute;
+    bottom: 0;
+    width: 28px; height: 5px;
+    background: var(--border);
+    border-radius: 3px 3px 0 0;
+    transition: background 0.2s;
+  }
+  .random-btn-left-notch  { left: 60px; }
+  .random-btn-right-notch { right: 60px; }
+  .random-btn:hover .random-btn-left-notch,
+  .random-btn:hover .random-btn-right-notch { background: color-mix(in srgb, var(--crimson) 40%, var(--border)); }
+
+  .random-btn-icon { font-size: 22px; flex-shrink: 0; transition: transform 0.3s ease; }
+  .random-btn:hover .random-btn-icon { transform: rotate(20deg) scale(1.15); }
+
+  .random-btn-label { display: flex; flex-direction: column; align-items: center; gap: 1px; }
+  .random-btn-title { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; color: var(--text); letter-spacing: 0.01em; line-height: 1.2; }
+  .random-btn-sub { font-size: 11.5px; color: var(--text-muted); letter-spacing: 0.07em; text-transform: uppercase; }
+
+  .random-btn-badge {
+    position: absolute;
+    right: 28px;
+    background: var(--surface3);
+    border: 1px solid var(--border-light);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-family: 'Source Serif 4', serif;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+
+  .random-btn:hover .random-btn-badge {
+    background: color-mix(in srgb, var(--crimson) 15%, var(--surface3));
+    color: var(--crimson-glow);
+    border-color: color-mix(in srgb, var(--crimson) 40%, transparent);
+  }
+
+  .random-accent {
+    background: linear-gradient(90deg, var(--col1-light), var(--col2-light), var(--col3-light), var(--col4-light));
+    background-size: 300% 100%;
+    animation: accentShift 4s ease infinite;
+  }
+
+  @keyframes accentShift {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  @media (max-width: 600px) {
+    .random-wrap { padding: 0 12px 36px; }
+    .random-btn { height: 64px; border-radius: 10px; }
+    .random-btn-badge, .random-btn-left-notch, .random-btn-right-notch { display: none; }
+  }
+
+  /* ============================================================
+     DESMOS FLOATING BUTTON
+  ============================================================ */
+  .desmos-fab {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    z-index: 1050;
+    background: var(--surface2);
+    border: 1px solid var(--border-light);
+    border-radius: 50px;
+    padding: 0 20px 0 14px;
+    height: 52px;
+    display: none;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    font-family: 'Source Serif 4', serif;
+  }
+
+  .desmos-fab.visible {
+    display: flex;
+    animation: fadeIn 0.18s ease;
+  }
+
+  .desmos-fab:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(207,0,61,0.25), 0 2px 8px rgba(0,0,0,0.5);
+    border-color: color-mix(in srgb, var(--crimson) 60%, transparent);
+    background: var(--surface3);
+  }
+
+  .desmos-fab:active { transform: translateY(0) scale(0.97); }
+
+  .desmos-fab-icon { font-size: 20px; line-height: 1; flex-shrink: 0; transition: transform 0.2s ease; }
+  .desmos-fab:hover .desmos-fab-icon { transform: rotate(-8deg) scale(1.1); }
+
+  .desmos-fab-title { font-family: 'Playfair Display', serif; font-size: 0.82rem; font-weight: 700; color: var(--text); letter-spacing: 0.01em; white-space: nowrap; display: block; line-height: 1.25; }
+  .desmos-fab-sub { font-size: 9.5px; color: var(--text-muted); letter-spacing: 0.08em; text-transform: uppercase; white-space: nowrap; display: block; }
+
+  @media (max-width: 600px) {
+    .desmos-fab { bottom: 20px; right: 16px; padding: 0 14px; }
+    .desmos-fab-sub { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="school-tag">Middlesex School · mxschool.edu</div>
+    <h1>AP Statistics — <em>Probability &amp; Random Variables</em></h1>
+    <div class="header-meta">
+      <span class="meta-pill">🎲 Sampling &amp; Probability</span>
+      <span class="meta-pill">📊 Discrete Random Variables</span>
+      <span class="meta-pill">〰️ Continuous Random Variables</span>
+      <span class="meta-pill">🔀 Synthesis &amp; Mixed Practice</span>
+    </div>
+  </div>
+</header>
+
+<div class="instructions">
+  Click any tile to open practice problems. Use <strong>Show Answer</strong> to check your work after attempting each part.
+</div>
+
+<div class="board-wrap">
+  <div class="board-grid" id="board-grid"></div>
+</div>
+
+<div class="random-wrap">
+  <button class="random-btn" id="random-btn" aria-label="Random Practice">
+    <div class="random-btn-left-notch"></div>
+    <div class="random-btn-right-notch"></div>
+    <span class="random-btn-icon">🎲</span>
+    <div class="random-btn-label">
+      <span class="random-btn-title">Random Practice</span>
+      <span class="random-btn-sub">Any topic · Any tile · Any problem</span>
+    </div>
+    <span class="random-btn-badge">48 problems</span>
+  </button>
+</div>
+
+<button class="desmos-fab" id="desmos-fab" aria-label="Open Desmos Graphing Calculator">
+  <span class="desmos-fab-icon">📈</span>
+  <span>
+    <span class="desmos-fab-title">Graphing Calculator</span>
+    <span class="desmos-fab-sub">Opens Desmos in a new tab</span>
+  </span>
+</button>
+
+<div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div class="modal-header-accent" id="modal-accent"></div>
+      <div>
+        <div class="modal-col-label" id="modal-col-label"></div>
+        <div class="modal-title" id="modal-title"></div>
+      </div>
+      <button class="modal-close" id="modal-close" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   DATA
+============================================================ */
+const columns = [
+
+  // ═══════════════════════════════════════════════════════════
+  // COLUMN 1 — Sampling & Probability Foundations
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: "col-1",
+    accentVar: "var(--col1-light)",
+    headerClass: "col-1-header",
+    tileClass: "col-1",
+    label: "Column I",
+    title: "Sampling & Probability Foundations",
+    topics: "Basic Rules · Conditional · Tables · Trees",
+    tiles: [
+
+      // ── TILE 1-A ──────────────────────────────────────────
+      {
+        icon: "🎲",
+        title: "Basic Probability Rules",
+        sub: "Complement, addition, and multiplication rules",
+        topics: "Basic Rules",
+        problems: [
+          {
+            context: "Context: Survey data",
+            stem: "In a survey of 200 students, 120 play a sport, 80 play an instrument, and 40 do both.",
+            parts: [
+              { label: "(a)", text: "Find $P(\\text{sport or instrument})$ using the general addition rule." },
+              { label: "(b)", text: "Find $P(\\text{neither sport nor instrument})$." },
+              { label: "(c)", text: "Are playing a sport and playing an instrument mutually exclusive? Justify." }
+            ],
+            answers: [
+              { label: "(a)", text: "$P(S \\cup I) = P(S) + P(I) - P(S \\cap I) = \\frac{120}{200} + \\frac{80}{200} - \\frac{40}{200} = \\frac{160}{200} = 0.80$." },
+              { label: "(b)", text: "$P(\\text{neither}) = 1 - P(S \\cup I) = 1 - 0.80 = 0.20$." },
+              { label: "(c)", text: "No. Mutually exclusive events cannot occur simultaneously. Since $P(S \\cap I) = 0.20 \\neq 0$, they can occur together." }
+            ]
+          },
+          {
+            context: "Context: Drawing cards",
+            stem: "A card is drawn at random from a standard 52-card deck.",
+            parts: [
+              { label: "(a)", text: "Find $P(\\text{king or heart})$." },
+              { label: "(b)", text: "Find $P(\\text{not a face card})$. (Face cards: J, Q, K — 12 total.)" },
+              { label: "(c)", text: "Two cards are drawn without replacement. Find $P(\\text{both aces})$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$P(K \\cup H) = \\frac{4}{52} + \\frac{13}{52} - \\frac{1}{52} = \\frac{16}{52} = \\frac{4}{13} \\approx 0.308$." },
+              { label: "(b)", text: "$P(\\text{not face}) = 1 - \\frac{12}{52} = \\frac{40}{52} = \\frac{10}{13} \\approx 0.769$." },
+              { label: "(c)", text: "$P(\\text{both aces}) = \\frac{4}{52} \\cdot \\frac{3}{51} = \\frac{12}{2652} = \\frac{1}{221} \\approx 0.0045$." }
+            ]
+          },
+          {
+            context: "Context: Multiple-choice test",
+            stem: "A multiple-choice test has 5 questions, each with 4 choices. A student guesses randomly on every question.",
+            parts: [
+              { label: "(a)", text: "What is the probability of getting the first question correct?" },
+              { label: "(b)", text: "What is the probability of getting all 5 questions correct?" },
+              { label: "(c)", text: "What is the probability of getting at least one question correct? (Use the complement.)" }
+            ],
+            answers: [
+              { label: "(a)", text: "$P(\\text{correct}) = \\frac{1}{4} = 0.25$." },
+              { label: "(b)", text: "Since guesses are independent: $P(\\text{all 5 correct}) = \\left(\\frac{1}{4}\\right)^5 = \\frac{1}{1024} \\approx 0.00098$." },
+              { label: "(c)", text: "$P(\\text{at least one correct}) = 1 - P(\\text{all wrong}) = 1 - \\left(\\frac{3}{4}\\right)^5 = 1 - \\frac{243}{1024} \\approx 1 - 0.237 = 0.763$." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 1-B ──────────────────────────────────────────
+      {
+        icon: "🔗",
+        title: "Conditional Probability & Independence",
+        sub: "$P(A|B)$, independence, and the multiplication rule",
+        topics: "Conditional · Independence",
+        problems: [
+          {
+            context: "Context: Medical testing",
+            stem: "A disease affects 1% of a population. A test is 95% accurate for those with the disease and 90% accurate for those without it (i.e., 10% false positive rate). A randomly selected person tests positive.",
+            parts: [
+              { label: "(a)", text: "Write out $P(\\text{disease})$, $P(+|\\text{disease})$, and $P(+|\\text{no disease})$." },
+              { label: "(b)", text: "Find $P(\\text{positive test})$ using the law of total probability." },
+              { label: "(c)", text: "Find $P(\\text{disease}|\\text{positive})$ using Bayes' Theorem. Are you surprised by this answer?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$P(D) = 0.01$, $\\; P(+|D) = 0.95$, $\\; P(+|D^c) = 0.10$." },
+              { label: "(b)", text: "$P(+) = P(+|D)P(D) + P(+|D^c)P(D^c) = (0.95)(0.01) + (0.10)(0.99) = 0.0095 + 0.099 = 0.1085$." },
+              { label: "(c)", text: "$P(D|+) = \\frac{P(+|D)P(D)}{P(+)} = \\frac{0.0095}{0.1085} \\approx 0.0876$. Despite the test being 95% accurate, a positive result only indicates about an 8.76% chance of having the disease. This is because the disease is rare — most positives are false positives." }
+            ]
+          },
+          {
+            context: "Context: Checking independence",
+            stem: "Events $A$ and $B$ satisfy $P(A) = 0.4$, $P(B) = 0.3$, and $P(A \\cap B) = 0.12$.",
+            parts: [
+              { label: "(a)", text: "Find $P(A|B)$." },
+              { label: "(b)", text: "Are $A$ and $B$ independent? Show two different ways to verify." },
+              { label: "(c)", text: "Find $P(A \\cup B)$ and $P(A^c \\cap B^c)$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$P(A|B) = \\frac{P(A \\cap B)}{P(B)} = \\frac{0.12}{0.30} = 0.40$." },
+              { label: "(b)", text: "Method 1: $P(A|B) = 0.40 = P(A)$ ✓. &nbsp; Method 2: $P(A) \\cdot P(B) = (0.4)(0.3) = 0.12 = P(A \\cap B)$ ✓. Both confirm independence." },
+              { label: "(c)", text: "$P(A \\cup B) = 0.4 + 0.3 - 0.12 = 0.58$. &nbsp; $P(A^c \\cap B^c) = 1 - P(A \\cup B) = 0.42$. (De Morgan's Law: complement of union = intersection of complements.)" }
+            ]
+          },
+          {
+            context: "Context: Selecting students",
+            stem: "In a class of 30 students, 18 are seniors and 12 are juniors. 10 of the seniors and 4 of the juniors are in AP Calculus. A student is selected at random.",
+            parts: [
+              { label: "(a)", text: "Find $P(\\text{AP Calculus} | \\text{senior})$." },
+              { label: "(b)", text: "Find $P(\\text{senior} | \\text{AP Calculus})$." },
+              { label: "(c)", text: "Are being a senior and being in AP Calculus independent? Justify using probability." }
+            ],
+            answers: [
+              { label: "(a)", text: "$P(\\text{Calc}|\\text{Sr}) = \\frac{10}{18} = \\frac{5}{9} \\approx 0.556$." },
+              { label: "(b)", text: "$P(\\text{Sr}|\\text{Calc}) = \\frac{10}{14} = \\frac{5}{7} \\approx 0.714$. (14 total in AP Calc: 10 seniors + 4 juniors.)" },
+              { label: "(c)", text: "$P(\\text{Sr}) = \\frac{18}{30} = 0.60$. &nbsp; $P(\\text{Calc}|\\text{Sr}) \\approx 0.556 \\neq 0.60$. Since $P(\\text{Calc}|\\text{Sr}) \\neq P(\\text{Calc})$ (where $P(\\text{Calc}) = \\frac{14}{30} \\approx 0.467$), being a senior and taking AP Calc are not independent." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 1-C ──────────────────────────────────────────
+      {
+        icon: "📋",
+        title: "Two-Way Tables",
+        sub: "Joint, marginal, and conditional probabilities from tables",
+        topics: "Two-Way Tables",
+        problems: [
+          {
+            context: "Context: School survey",
+            stem: "A survey of 400 students asked about exercise habits and sleep quality. Results:<br><br><table style='border-collapse:collapse;font-size:13px;margin:8px 0 10px'><thead><tr><th style='border:1px solid #3a3a3a;padding:6px 12px;background:#252525;color:#f0ece6'></th><th style='border:1px solid #3a3a3a;padding:6px 12px;background:#252525;color:#f0ece6'>Good Sleep</th><th style='border:1px solid #3a3a3a;padding:6px 12px;background:#252525;color:#f0ece6'>Poor Sleep</th><th style='border:1px solid #3a3a3a;padding:6px 12px;background:#252525;color:#f0ece6'>Total</th></tr></thead><tbody><tr><td style='border:1px solid #3a3a3a;padding:6px 12px;background:#1e1e1e;color:#f0ece6'>Exercises Regularly</td><td style='border:1px solid #3a3a3a;padding:6px 12px;background:#1e1e1e;color:#f0ece6;text-align:center'>140</td><td style='border:1px solid #3a3a3a;padding:6px 12px;background:#1e1e1e;color:#f0ece6;text-align:center'>60</td><td style='border:1px solid #3a3a3a;padding:6px 12px;background:#1e1e1e;color:#f0ece6;text-align:center'>200</td></tr><tr><td style='border:1px solid #3a3a3a;padding:6px 12px;background:#1e1e1e;color:#f0ece6'>Does Not Exercise</td><td style='border:1px solid #3a3a3a;padding:6px 12px;background:#1e1e1e;color:#f0ece6;text-align:center'>80</td><td style='border:1px solid #3a3a3a;padding:6px 12px;background:#1e1e1e;color:#f0ece6;text-align:center'>120</td><td style='border:1px solid #3a3a3a;padding:6px 12px;background:#1e1e1e;color:#f0ece6;text-align:center'>200</td></tr><tr><td style='border:1px solid #3a3a3a;padding:6px 12px;background:#252525;color:#f0ece6'>Total</td><td style='border:1px solid #3a3a3a;padding:6px 12px;background:#252525;color:#f0ece6;text-align:center'>220</td><td style='border:1px solid #3a3a3a;padding:6px 12px;background:#252525;color:#f0ece6;text-align:center'>180</td><td style='border:1px solid #3a3a3a;padding:6px 12px;background:#252525;color:#f0ece6;text-align:center'>400</td></tr></tbody></table>",
+            parts: [
+              { label: "(a)", text: "Find $P(\\text{good sleep})$ and $P(\\text{exercises regularly})$. What type of probabilities are these?" },
+              { label: "(b)", text: "Find $P(\\text{good sleep} | \\text{exercises regularly})$ and $P(\\text{good sleep} | \\text{does not exercise})$." },
+              { label: "(c)", text: "Based on part (b), does exercising appear to be associated with good sleep? Justify." }
+            ],
+            answers: [
+              { label: "(a)", text: "$P(\\text{good sleep}) = \\frac{220}{400} = 0.55$. $\\; P(\\text{exercises}) = \\frac{200}{400} = 0.50$. These are marginal probabilities — found in the margins (totals) of the table." },
+              { label: "(b)", text: "$P(\\text{good sleep}|\\text{exercises}) = \\frac{140}{200} = 0.70$. &nbsp; $P(\\text{good sleep}|\\text{no exercise}) = \\frac{80}{200} = 0.40$." },
+              { label: "(c)", text: "Yes. Students who exercise regularly have a 70% rate of good sleep, compared to 40% for those who don't. The conditional probabilities differ substantially, indicating an association between exercise and sleep quality. (This is observational, so causation cannot be claimed.)" }
+            ]
+          },
+          {
+            context: "Context: Computing missing values",
+            stem: "A two-way table records 500 people by political affiliation (Liberal/Conservative) and opinion on a policy (Support/Oppose). You know: 300 are Liberal, 250 Support the policy, 180 Liberals Support the policy.",
+            parts: [
+              { label: "(a)", text: "Complete the full two-way table (4 cells + 4 marginal totals)." },
+              { label: "(b)", text: "Find $P(\\text{Support} | \\text{Conservative})$." },
+              { label: "(c)", text: "Is political affiliation independent of policy opinion? Justify using probabilities." }
+            ],
+            answers: [
+              { label: "(a)", text: "Liberal/Support: 180; Liberal/Oppose: 120; Conservative/Support: 70; Conservative/Oppose: 130. Totals: Liberal 300, Conservative 200, Support 250, Oppose 250, Grand total 500." },
+              { label: "(b)", text: "$P(\\text{Support}|\\text{Conservative}) = \\frac{70}{200} = 0.35$." },
+              { label: "(c)", text: "$P(\\text{Support}) = \\frac{250}{500} = 0.50$. $P(\\text{Support}|\\text{Liberal}) = \\frac{180}{300} = 0.60 \\neq 0.50$. Since the conditional probability differs from the marginal, affiliation and opinion are not independent — they are associated." }
+            ]
+          },
+          {
+            context: "Context: Segmented bar charts",
+            stem: "A two-way table compares grade level (Freshman, Senior) and whether a student has a job. Of 150 Freshmen, 30 have a job. Of 100 Seniors, 60 have a job.",
+            parts: [
+              { label: "(a)", text: "Construct a two-way table with all values." },
+              { label: "(b)", text: "Find the conditional distribution of job status given grade level (as percentages). Set up both conditional distributions." },
+              { label: "(c)", text: "Describe what a segmented bar chart would look like for this data. What would it reveal?" }
+            ],
+            answers: [
+              { label: "(a)", text: "Freshman/Job: 30; Freshman/No Job: 120; Senior/Job: 60; Senior/No Job: 40. Totals: Freshman 150, Senior 100, Job 90, No Job 160, Grand total 250." },
+              { label: "(b)", text: "Freshmen: 20% have job, 80% don't. Seniors: 60% have job, 40% don't." },
+              { label: "(c)", text: "Each bar (one per grade) would be divided into two segments — 'Job' and 'No Job' — proportional to the conditional distributions. The Freshman bar would be 20% shaded for 'Job' and the Senior bar 60%. The very different heights of the shaded segments would visually confirm that seniors are much more likely to have a job — revealing a clear association between grade level and employment." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 1-D ──────────────────────────────────────────
+      {
+        icon: "🌳",
+        title: "Tree Diagrams & Multi-Stage Probability",
+        sub: "Sequential events, branches, and total probability",
+        topics: "Tree Diagrams",
+        problems: [
+          {
+            context: "Context: Two-stage selection",
+            stem: "A bag contains 4 red and 6 blue marbles. Two marbles are drawn without replacement.",
+            parts: [
+              { label: "(a)", text: "Draw and label a complete probability tree for the two draws." },
+              { label: "(b)", text: "Find $P(\\text{both same color})$." },
+              { label: "(c)", text: "Find $P(\\text{second marble is red})$ using the total probability law (sum over branches)." }
+            ],
+            answers: [
+              { label: "(a)", text: `<svg viewBox="0 0 500 250" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;max-width:480px;margin:4px 0 8px;font-family:'Source Serif 4',serif">
+  <!-- Root node -->
+  <circle cx="55" cy="125" r="6" fill="#9e9e9e"/>
+  <!-- Branch to R1 -->
+  <line x1="61" y1="122" x2="179" y2="72" stroke="#9e9e9e" stroke-width="1.5"/>
+  <!-- Branch to B1 -->
+  <line x1="61" y1="128" x2="179" y2="178" stroke="#9e9e9e" stroke-width="1.5"/>
+  <!-- R1 label above, node -->
+  <text x="185" y="56" fill="#ff4d75" font-size="13" font-weight="600" text-anchor="middle">R&#x2081;</text>
+  <circle cx="185" cy="70" r="6" fill="#ff4d75"/>
+  <text x="110" y="82" fill="#9e9e9e" font-size="11" font-style="italic" text-anchor="middle">4/10</text>
+  <!-- B1 label above, node -->
+  <text x="185" y="163" fill="#94a3b8" font-size="13" font-weight="600" text-anchor="middle">B&#x2081;</text>
+  <circle cx="185" cy="178" r="6" fill="#94a3b8"/>
+  <text x="110" y="168" fill="#9e9e9e" font-size="11" font-style="italic" text-anchor="middle">6/10</text>
+  <!-- From R1: R2 -->
+  <line x1="191" y1="67" x2="334" y2="37" stroke="#9e9e9e" stroke-width="1.5"/>
+  <text x="340" y="22" fill="#ff4d75" font-size="12" font-weight="600" text-anchor="middle">R&#x2082;</text>
+  <circle cx="340" cy="35" r="5" fill="#ff4d75"/>
+  <text x="262" y="38" fill="#9e9e9e" font-size="11" font-style="italic" text-anchor="middle">3/9</text>
+  <text x="420" y="32" fill="#f0ece6" font-size="11" text-anchor="middle">4/10 · 3/9 = 12/90</text>
+  <!-- From R1: B2 -->
+  <line x1="191" y1="73" x2="334" y2="98" stroke="#9e9e9e" stroke-width="1.5"/>
+  <text x="340" y="87" fill="#94a3b8" font-size="12" font-weight="600" text-anchor="middle">B&#x2082;</text>
+  <circle cx="340" cy="100" r="5" fill="#94a3b8"/>
+  <text x="262" y="78" fill="#9e9e9e" font-size="11" font-style="italic" text-anchor="middle">6/9</text>
+  <text x="420" y="97" fill="#f0ece6" font-size="11" text-anchor="middle">4/10 · 6/9 = 24/90</text>
+  <!-- From B1: R2 -->
+  <line x1="191" y1="175" x2="334" y2="150" stroke="#9e9e9e" stroke-width="1.5"/>
+  <text x="340" y="139" fill="#ff4d75" font-size="12" font-weight="600" text-anchor="middle">R&#x2082;</text>
+  <circle cx="340" cy="152" r="5" fill="#ff4d75"/>
+  <text x="262" y="152" fill="#9e9e9e" font-size="11" font-style="italic" text-anchor="middle">4/9</text>
+  <text x="420" y="149" fill="#f0ece6" font-size="11" text-anchor="middle">6/10 · 4/9 = 24/90</text>
+  <!-- From B1: B2 -->
+  <line x1="191" y1="181" x2="334" y2="211" stroke="#9e9e9e" stroke-width="1.5"/>
+  <text x="340" y="200" fill="#94a3b8" font-size="12" font-weight="600" text-anchor="middle">B&#x2082;</text>
+  <circle cx="340" cy="213" r="5" fill="#94a3b8"/>
+  <text x="262" y="208" fill="#9e9e9e" font-size="11" font-style="italic" text-anchor="middle">5/9</text>
+  <text x="420" y="210" fill="#f0ece6" font-size="11" text-anchor="middle">6/10 · 5/9 = 30/90</text>
+</svg>` },
+              { label: "(b)", text: "$P(RR) = \\frac{4}{10}\\cdot\\frac{3}{9} = \\frac{12}{90}$. $P(BB) = \\frac{6}{10}\\cdot\\frac{5}{9} = \\frac{30}{90}$. $P(\\text{same}) = \\frac{42}{90} = \\frac{7}{15} \\approx 0.467$." },
+              { label: "(c)", text: "$P(\\text{2nd Red}) = P(R_1)P(R_2|R_1) + P(B_1)P(R_2|B_1) = \\frac{4}{10}\\cdot\\frac{3}{9} + \\frac{6}{10}\\cdot\\frac{4}{9} = \\frac{12}{90} + \\frac{24}{90} = \\frac{36}{90} = 0.40$. Note this equals the marginal $P(\\text{Red}) = 4/10$, as expected." }
+            ]
+          },
+          {
+            context: "Context: Quality control",
+            stem: `A factory has two machines. Machine A produces 60% of items; Machine B produces 40%. Machine A produces 3% defectives; Machine B produces 5% defectives. An item is selected at random.<br><br><svg viewBox="0 0 520 240" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;max-width:500px;margin:8px 0 4px;font-family:'Source Serif 4',serif">
+  <!-- Root node -->
+  <circle cx="60" cy="120" r="6" fill="#9e9e9e"/>
+  <!-- Branch to Machine A -->
+  <line x1="66" y1="117" x2="194" y2="67" stroke="#9e9e9e" stroke-width="1.5"/>
+  <!-- Branch to Machine B -->
+  <line x1="66" y1="123" x2="194" y2="173" stroke="#9e9e9e" stroke-width="1.5"/>
+  <!-- Machine A node label (above) -->
+  <text x="200" y="48" fill="#f0ece6" font-size="13" font-weight="600" text-anchor="middle">Machine A</text>
+  <circle cx="200" cy="65" r="6" fill="#2dd4bf"/>
+  <!-- Machine A branch label -->
+  <text x="118" y="78" fill="#9e9e9e" font-size="11" font-style="italic" text-anchor="middle">0.60</text>
+  <!-- Machine B node label (above) -->
+  <text x="200" y="158" fill="#f0ece6" font-size="13" font-weight="600" text-anchor="middle">Machine B</text>
+  <circle cx="200" cy="175" r="6" fill="#f59e0b"/>
+  <!-- Machine B branch label -->
+  <text x="118" y="162" fill="#9e9e9e" font-size="11" font-style="italic" text-anchor="middle">0.40</text>
+  <!-- From Machine A: Defective -->
+  <line x1="206" y1="62" x2="354" y2="32" stroke="#9e9e9e" stroke-width="1.5"/>
+  <!-- Defective (from A) label above node -->
+  <text x="360" y="18" fill="#f0ece6" font-size="12" text-anchor="middle">Defective</text>
+  <circle cx="360" cy="30" r="5" fill="#ff4d75"/>
+  <text x="280" y="36" fill="#9e9e9e" font-size="11" font-style="italic" text-anchor="middle">0.03</text>
+  <!-- From Machine A: Not Defective -->
+  <line x1="206" y1="68" x2="354" y2="93" stroke="#9e9e9e" stroke-width="1.5"/>
+  <!-- Not Defective (from A) label above node -->
+  <text x="360" y="82" fill="#f0ece6" font-size="12" text-anchor="middle">Not Defective</text>
+  <circle cx="360" cy="95" r="5" fill="#4a5568"/>
+  <text x="283" y="72" fill="#9e9e9e" font-size="11" font-style="italic" text-anchor="middle">0.97</text>
+  <!-- From Machine B: Defective -->
+  <line x1="206" y1="172" x2="354" y2="147" stroke="#9e9e9e" stroke-width="1.5"/>
+  <!-- Defective (from B) label above node -->
+  <text x="360" y="136" fill="#f0ece6" font-size="12" text-anchor="middle">Defective</text>
+  <circle cx="360" cy="148" r="5" fill="#ff4d75"/>
+  <text x="280" y="152" fill="#9e9e9e" font-size="11" font-style="italic" text-anchor="middle">0.05</text>
+  <!-- From Machine B: Not Defective -->
+  <line x1="206" y1="178" x2="354" y2="203" stroke="#9e9e9e" stroke-width="1.5"/>
+  <!-- Not Defective (from B) label above node -->
+  <text x="360" y="192" fill="#f0ece6" font-size="12" text-anchor="middle">Not Defective</text>
+  <circle cx="360" cy="205" r="5" fill="#4a5568"/>
+  <text x="283" y="185" fill="#9e9e9e" font-size="11" font-style="italic" text-anchor="middle">0.95</text>
+</svg>`,
+            parts: [
+              { label: "(a)", text: "Find $P(\\text{defective})$ using a tree diagram." },
+              { label: "(b)", text: "Given the item is defective, find $P(\\text{Machine A} | \\text{defective})$." },
+              { label: "(c)", text: "Interpret your answer to (b) in context." }
+            ],
+            answers: [
+              { label: "(a)", text: "$P(\\text{def}) = P(A)P(D|A) + P(B)P(D|B) = (0.60)(0.03) + (0.40)(0.05) = 0.018 + 0.020 = 0.038$." },
+              { label: "(b)", text: "$P(A|D) = \\frac{P(A)P(D|A)}{P(D)} = \\frac{0.018}{0.038} \\approx 0.474$." },
+              { label: "(c)", text: "If a defective item is found, there is about a 47.4% chance it came from Machine A (and a 52.6% chance from Machine B). Despite Machine A producing more items overall, Machine B's higher defect rate makes it slightly more likely to be the source of a defective item." }
+            ]
+          },
+          {
+            context: "Context: Genetics",
+            stem: "In a genetics experiment, a parent with genotype $Aa$ (carrier) is crossed with another $Aa$ carrier. Each offspring independently receives one allele from each parent. Let $A$ = dominant, $a$ = recessive. A trait only appears if the genotype is $aa$.",
+            parts: [
+              { label: "(a)", text: "Use a tree diagram to find all possible genotypes and their probabilities." },
+              { label: "(b)", text: "Find the probability that an offspring displays the recessive trait (genotype $aa$)." },
+              { label: "(c)", text: "Two offspring are independently born from this cross. Find the probability that exactly one displays the recessive trait." }
+            ],
+            answers: [
+              { label: "(a)", text: `<svg viewBox="0 0 480 230" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;max-width:460px;margin:4px 0 8px;font-family:'Source Serif 4',serif">
+  <!-- Root node (Parent 1 contributes allele) -->
+  <circle cx="55" cy="115" r="6" fill="#9e9e9e"/>
+  <text x="55" y="106" fill="#9e9e9e" font-size="10" text-anchor="middle" font-style="italic">Parent 1</text>
+  <!-- Branch to A (parent 1) -->
+  <line x1="61" y1="112" x2="174" y2="67" stroke="#9e9e9e" stroke-width="1.5"/>
+  <!-- Branch to a (parent 1) -->
+  <line x1="61" y1="118" x2="174" y2="163" stroke="#9e9e9e" stroke-width="1.5"/>
+  <!-- A node (P1) label above -->
+  <text x="180" y="53" fill="#2dd4bf" font-size="14" font-weight="600" text-anchor="middle">A</text>
+  <circle cx="180" cy="65" r="6" fill="#2dd4bf"/>
+  <text x="108" y="78" fill="#9e9e9e" font-size="11" font-style="italic" text-anchor="middle">1/2</text>
+  <!-- a node (P1) label above -->
+  <text x="180" y="149" fill="#f59e0b" font-size="14" font-weight="600" text-anchor="middle">a</text>
+  <circle cx="180" cy="163" r="6" fill="#f59e0b"/>
+  <text x="108" y="153" fill="#9e9e9e" font-size="11" font-style="italic" text-anchor="middle">1/2</text>
+  <!-- From A(P1): A(P2) -->
+  <line x1="186" y1="62" x2="319" y2="37" stroke="#9e9e9e" stroke-width="1.5"/>
+  <text x="325" y="23" fill="#2dd4bf" font-size="14" font-weight="600" text-anchor="middle">A</text>
+  <circle cx="325" cy="35" r="5" fill="#2dd4bf"/>
+  <text x="250" y="36" fill="#9e9e9e" font-size="11" font-style="italic" text-anchor="middle">1/2</text>
+  <text x="410" y="32" fill="#f0ece6" font-size="12" font-weight="600" text-anchor="middle">AA — 1/4</text>
+  <!-- From A(P1): a(P2) -->
+  <line x1="186" y1="68" x2="319" y2="93" stroke="#9e9e9e" stroke-width="1.5"/>
+  <text x="325" y="82" fill="#f59e0b" font-size="14" font-weight="600" text-anchor="middle">a</text>
+  <circle cx="325" cy="95" r="5" fill="#f59e0b"/>
+  <text x="250" y="73" fill="#9e9e9e" font-size="11" font-style="italic" text-anchor="middle">1/2</text>
+  <text x="410" y="92" fill="#f0ece6" font-size="12" font-weight="600" text-anchor="middle">Aa — 1/4</text>
+  <!-- From a(P1): A(P2) -->
+  <line x1="186" y1="160" x2="319" y2="140" stroke="#9e9e9e" stroke-width="1.5"/>
+  <text x="325" y="129" fill="#2dd4bf" font-size="14" font-weight="600" text-anchor="middle">A</text>
+  <circle cx="325" cy="142" r="5" fill="#2dd4bf"/>
+  <text x="250" y="144" fill="#9e9e9e" font-size="11" font-style="italic" text-anchor="middle">1/2</text>
+  <text x="410" y="139" fill="#f0ece6" font-size="12" font-weight="600" text-anchor="middle">aA — 1/4</text>
+  <!-- From a(P1): a(P2) — highlight aa -->
+  <line x1="186" y1="166" x2="319" y2="196" stroke="#ff4d75" stroke-width="1.5"/>
+  <text x="325" y="185" fill="#ff4d75" font-size="14" font-weight="600" text-anchor="middle">a</text>
+  <circle cx="325" cy="198" r="5" fill="#ff4d75"/>
+  <text x="250" y="189" fill="#9e9e9e" font-size="11" font-style="italic" text-anchor="middle">1/2</text>
+  <text x="410" y="195" fill="#ff4d75" font-size="12" font-weight="700" text-anchor="middle">aa — 1/4 ★</text>
+  <!-- Parent 2 label -->
+  <text x="325" y="216" fill="#9e9e9e" font-size="10" text-anchor="middle" font-style="italic">Parent 2 allele</text>
+</svg>` },
+              { label: "(b)", text: "$P(aa) = \\frac{1}{4} = 0.25$." },
+              { label: "(c)", text: "Let $p = 0.25$. $P(\\text{exactly 1 of 2 shows trait}) = \\binom{2}{1}(0.25)^1(0.75)^1 = 2(0.25)(0.75) = 0.375$." }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  // ═══════════════════════════════════════════════════════════
+  // COLUMN 2 — Discrete Random Variables
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: "col-2",
+    accentVar: "var(--col2-light)",
+    headerClass: "col-2-header",
+    tileClass: "col-2",
+    label: "Column II",
+    title: "Discrete Random Variables",
+    topics: "Distributions · E(X) · Var(X) · Binomial · Geometric",
+    tiles: [
+
+      // ── TILE 2-A ──────────────────────────────────────────
+      {
+        icon: "📊",
+        title: "Probability Distributions & Expected Value",
+        sub: "Valid distributions, $E(X)$, and interpretation",
+        topics: "Distributions · E(X)",
+        problems: [
+          {
+            context: "Context: Raffle tickets",
+            stem: "A raffle sells 500 tickets at \\$2 each. One grand prize of \\$200 and two second prizes of \\$50 each are awarded. Let $X$ be the net gain for a ticket holder.",
+            parts: [
+              { label: "(a)", text: "Construct the probability distribution table for $X$ (net gain = prize $-$ cost)." },
+              { label: "(b)", text: "Find $E(X)$. Interpret this value." },
+              { label: "(c)", text: "Is this raffle fair? What ticket price would make it fair?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$X$ values: $+198$ (win \\$200, paid \\$2), prob $\\frac{1}{500}$; $+48$ (win \\$50, paid \\$2), prob $\\frac{2}{500}$; $-2$ (win nothing), prob $\\frac{497}{500}$." },
+              { label: "(b)", text: "$E(X) = 198\\cdot\\frac{1}{500} + 48\\cdot\\frac{2}{500} + (-2)\\cdot\\frac{497}{500} = \\frac{198 + 96 - 994}{500} = \\frac{-700}{500} = -\\$1.40$. On average, a ticket holder loses \\$1.40 per ticket purchased." },
+              { label: "(c)", text: "Not fair — expected gain is negative for the buyer. A fair game has $E(X) = 0$. Fair price $p$ satisfies: $(200-p)\\cdot\\frac{1}{500} + (50-p)\\cdot\\frac{2}{500} + (0-p)\\cdot\\frac{497}{500} = 0$, giving $300 - 500p = 0$, so $p = \\$0.60$." }
+            ]
+          },
+          {
+            context: "Context: Number of heads",
+            stem: "A fair coin is flipped 3 times. Let $X$ = number of heads.",
+            parts: [
+              { label: "(a)", text: "List all outcomes and construct the probability distribution for $X$." },
+              { label: "(b)", text: "Find $E(X)$ and verify it using the formula $E(X) = np$ for a binomial." },
+              { label: "(c)", text: "Find $P(X \\geq 2)$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$P(X=0) = \\frac{1}{8}$, $P(X=1) = \\frac{3}{8}$, $P(X=2) = \\frac{3}{8}$, $P(X=3) = \\frac{1}{8}$." },
+              { label: "(b)", text: "$E(X) = 0\\cdot\\frac{1}{8} + 1\\cdot\\frac{3}{8} + 2\\cdot\\frac{3}{8} + 3\\cdot\\frac{1}{8} = \\frac{12}{8} = 1.5$. Binomial check: $E(X) = np = 3(0.5) = 1.5$ ✓." },
+              { label: "(c)", text: "$P(X \\geq 2) = P(X=2) + P(X=3) = \\frac{3}{8} + \\frac{1}{8} = \\frac{4}{8} = 0.50$." }
+            ]
+          },
+          {
+            context: "Context: AP-style table problem",
+            stem: "The distribution of $X$ is partially given: $P(X=1) = 0.15$, $P(X=2) = 0.30$, $P(X=3) = k$, $P(X=4) = 0.20$, $P(X=5) = 0.10$.",
+            parts: [
+              { label: "(a)", text: "Find $k$. Verify this is a valid probability distribution." },
+              { label: "(b)", text: "Find $E(X)$." },
+              { label: "(c)", text: "Find $P(X > 3)$ and $P(X \\leq 2 \\text{ or } X = 5)$." }
+            ],
+            answers: [
+              { label: "(a)", text: "All probabilities must sum to 1: $0.15 + 0.30 + k + 0.20 + 0.10 = 1 \\Rightarrow k = 0.25$. Valid: all values between 0 and 1, sum = 1 ✓." },
+              { label: "(b)", text: "$E(X) = 1(0.15)+2(0.30)+3(0.25)+4(0.20)+5(0.10) = 0.15+0.60+0.75+0.80+0.50 = 2.80$." },
+              { label: "(c)", text: "$P(X > 3) = P(X=4)+P(X=5) = 0.30$. &nbsp; $P(X \\leq 2 \\text{ or } X=5) = P(X=1)+P(X=2)+P(X=5) = 0.15+0.30+0.10 = 0.55$." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 2-B ──────────────────────────────────────────
+      {
+        icon: "📐",
+        title: "Variance & Standard Deviation of a DRV",
+        sub: "$\\text{Var}(X)$, $\\sigma_X$, and linear transformations",
+        topics: "Var(X) · SD · Transformations",
+        problems: [
+          {
+            context: "Context: Computing variance",
+            stem: "A random variable $X$ has the distribution: $P(X=0) = 0.2$, $P(X=2) = 0.5$, $P(X=4) = 0.3$.",
+            parts: [
+              { label: "(a)", text: "Find $E(X)$ and $E(X^2)$." },
+              { label: "(b)", text: "Find $\\text{Var}(X) = E(X^2) - [E(X)]^2$ and $\\sigma_X$." },
+              { label: "(c)", text: "Let $Y = 3X + 1$. Find $E(Y)$ and $\\text{Var}(Y)$ using the linear transformation rules." }
+            ],
+            answers: [
+              { label: "(a)", text: "$E(X) = 0(0.2)+2(0.5)+4(0.3) = 0+1+1.2 = 2.2$. &nbsp; $E(X^2) = 0(0.2)+4(0.5)+16(0.3) = 0+2+4.8 = 6.8$." },
+              { label: "(b)", text: "$\\text{Var}(X) = 6.8 - (2.2)^2 = 6.8 - 4.84 = 1.96$. &nbsp; $\\sigma_X = \\sqrt{1.96} = 1.4$." },
+              { label: "(c)", text: "$E(Y) = 3E(X)+1 = 3(2.2)+1 = 7.6$. &nbsp; $\\text{Var}(Y) = 3^2 \\cdot \\text{Var}(X) = 9(1.96) = 17.64$. &nbsp; $\\sigma_Y = 3\\sigma_X = 4.2$." }
+            ]
+          },
+          {
+            context: "Context: Combining independent random variables",
+            stem: "Independent random variables $X$ and $Y$ have $E(X) = 5$, $\\text{Var}(X) = 4$, $E(Y) = 3$, $\\text{Var}(Y) = 9$.",
+            parts: [
+              { label: "(a)", text: "Find $E(X + Y)$ and $E(X - Y)$." },
+              { label: "(b)", text: "Find $\\text{Var}(X + Y)$ and $\\sigma_{X+Y}$." },
+              { label: "(c)", text: "Find $\\text{Var}(X - Y)$ and $\\sigma_{X-Y}$. Why do both $X + Y$ and $X - Y$ have the same variance?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$E(X+Y) = 5+3 = 8$. &nbsp; $E(X-Y) = 5-3 = 2$." },
+              { label: "(b)", text: "$\\text{Var}(X+Y) = \\text{Var}(X)+\\text{Var}(Y) = 4+9 = 13$. &nbsp; $\\sigma_{X+Y} = \\sqrt{13} \\approx 3.61$." },
+              { label: "(c)", text: "$\\text{Var}(X-Y) = \\text{Var}(X) + (-1)^2\\text{Var}(Y) = 4+9 = 13$. The variance is the same because variance measures spread (always non-negative), and subtracting $Y$ is equivalent to adding $-Y$; since $\\text{Var}(-Y) = (-1)^2\\text{Var}(Y) = \\text{Var}(Y)$, both combinations have the same variability." }
+            ]
+          },
+          {
+            context: "Context: Interpreting standard deviation",
+            stem: "The number of cars $X$ sold per day at a dealership has $E(X) = 4.2$ and $\\sigma_X = 1.5$.",
+            parts: [
+              { label: "(a)", text: "Interpret $E(X) = 4.2$ and $\\sigma_X = 1.5$ in context." },
+              { label: "(b)", text: "The dealership earns \\$800 profit per car. Let $P$ = daily profit. Find $E(P)$ and $\\sigma_P$." },
+              { label: "(c)", text: "There is also a fixed daily overhead cost of \\$500. Let $N$ = net daily income $= P - 500$. Find $E(N)$ and $\\sigma_N$. Does the overhead affect the standard deviation? Explain." }
+            ],
+            answers: [
+              { label: "(a)", text: "On average, the dealership sells 4.2 cars per day. The number of daily sales typically varies from the mean by about 1.5 cars." },
+              { label: "(b)", text: "$E(P) = 800 \\cdot E(X) = 800(4.2) = \\$3360$ per day. &nbsp; $\\sigma_P = 800 \\cdot \\sigma_X = 800(1.5) = \\$1200$." },
+              { label: "(c)", text: "$E(N) = E(P) - 500 = 3360 - 500 = \\$2860$. &nbsp; $\\sigma_N = \\sigma_P = \\$1200$. Subtracting a constant (overhead) shifts the distribution down but does not change its spread — the standard deviation is unaffected." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 2-C ──────────────────────────────────────────
+      {
+        icon: "🔢",
+        title: "Binomial Distribution",
+        sub: "Conditions, probabilities, mean, and standard deviation",
+        topics: "Binomial",
+        problems: [
+          {
+            context: "Context: Checking BINS conditions",
+            stem: "For each scenario, determine whether the binomial distribution is an appropriate model. If not, explain which condition is violated.",
+            parts: [
+              { label: "(a)", text: "A fair die is rolled 10 times. $X$ = number of 6's." },
+              { label: "(b)", text: "Cards are drawn without replacement from a deck until a heart appears. $X$ = number of draws." },
+              { label: "(c)", text: "A student randomly guesses on 20 true/false questions. $X$ = number correct." }
+            ],
+            answers: [
+              { label: "(a)", text: "Yes — Binomial is appropriate. B: 2 outcomes (6 or not); I: rolls are independent; N: fixed $n = 10$; S: $p = 1/6$ constant. $X \\sim B(10, 1/6)$." },
+              { label: "(b)", text: "No — not binomial. There is no fixed number of trials $n$; the number of draws varies. Also, draws are not independent (without replacement). This is better modeled by a geometric distribution." },
+              { label: "(c)", text: "Yes — Binomial is appropriate. B: correct/incorrect; I: questions are independent; N: fixed $n = 20$; S: $p = 0.5$ constant. $X \\sim B(20, 0.5)$." }
+            ]
+          },
+          {
+            context: "Context: Computing binomial probabilities",
+            stem: "It is known that 30% of a certain plant species blooms in a given season. A botanist randomly selects 8 plants. Let $X$ = number that bloom.",
+            parts: [
+              { label: "(a)", text: "Find $P(X = 3)$ using the binomial formula." },
+              { label: "(b)", text: "Find $P(X \\leq 2)$." },
+              { label: "(c)", text: "Find $\\mu_X$ and $\\sigma_X$. Interpret each in context." }
+            ],
+            answers: [
+              { label: "(a)", text: "$P(X=3) = \\binom{8}{3}(0.3)^3(0.7)^5 = 56 \\cdot 0.027 \\cdot 0.16807 \\approx 56(0.004538) \\approx 0.2541$." },
+              { label: "(b)", text: "$P(X \\leq 2) = P(0)+P(1)+P(2)$. $P(0) = (0.7)^8 \\approx 0.0576$; $P(1) = 8(0.3)(0.7)^7 \\approx 0.1977$; $P(2) = 28(0.09)(0.7)^6 \\approx 0.2965$. Total $\\approx 0.5518$." },
+              { label: "(c)", text: "$\\mu_X = np = 8(0.3) = 2.4$ plants. On average, 2.4 of the 8 selected plants will bloom. &nbsp; $\\sigma_X = \\sqrt{np(1-p)} = \\sqrt{8(0.3)(0.7)} = \\sqrt{1.68} \\approx 1.30$ plants. The number of blooming plants typically varies from the mean by about 1.3." }
+            ]
+          },
+          {
+            context: "Context: AP-style binomial",
+            stem: "A large school reports that 40% of students take the bus. A random sample of 15 students is selected.",
+            parts: [
+              { label: "(a)", text: "Find $P(X \\geq 8)$ where $X$ = number who take the bus. (Use complement or sum.)" },
+              { label: "(b)", text: "Find the probability that more than half the sample takes the bus." },
+              { label: "(c)", text: "The sample size is increased to 100. Using the mean and standard deviation of $X$, describe the distribution of the proportion $\\hat{p} = X/100$ of bus riders." }
+            ],
+            answers: [
+              { label: "(a)", text: "$P(X \\geq 8) = 1 - P(X \\leq 7)$. Using binomial tables or calculator: $P(X \\leq 7) \\approx 0.7869$, so $P(X \\geq 8) \\approx 0.2131$." },
+              { label: "(b)", text: "$P(X > 7.5) = P(X \\geq 8) \\approx 0.2131$. (More than half of 15 means at least 8.)" },
+              { label: "(c)", text: "$\\mu_X = 100(0.4) = 40$, $\\sigma_X = \\sqrt{100(0.4)(0.6)} = \\sqrt{24} \\approx 4.9$. For $\\hat{p} = X/100$: $\\mu_{\\hat{p}} = 0.40$, $\\sigma_{\\hat{p}} = \\sqrt{\\frac{0.4(0.6)}{100}} = 0.049$. Since $np = 40 \\geq 10$ and $n(1-p) = 60 \\geq 10$, the distribution of $\\hat{p}$ is approximately Normal$(0.40, 0.049)$." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 2-D ──────────────────────────────────────────
+      {
+        icon: "⏳",
+        title: "Geometric Distribution",
+        sub: "First success, $E(X) = 1/p$, and cumulative probability",
+        topics: "Geometric",
+        problems: [
+          {
+            context: "Context: Free throws",
+            stem: "A basketball player makes free throws with probability 0.70. Let $X$ = the number of free throws until the first miss (including the miss).",
+            parts: [
+              { label: "(a)", text: "Find $P(X = 4)$ — the first miss occurs on the 4th attempt." },
+              { label: "(b)", text: "Find $P(X \\leq 3)$ — the first miss occurs within the first 3 attempts." },
+              { label: "(c)", text: "Find $E(X)$ and interpret in context. Note: here $p = P(\\text{miss}) = 0.30$." }
+            ],
+            answers: [
+              { label: "(a)", text: "The first 3 are hits (prob 0.70 each), the 4th is a miss (prob 0.30): $P(X=4) = (0.70)^3(0.30) = 0.343 \\cdot 0.30 \\approx 0.1029$." },
+              { label: "(b)", text: "$P(X \\leq 3) = P(X=1)+P(X=2)+P(X=3) = 0.30 + (0.70)(0.30) + (0.70)^2(0.30) = 0.30+0.21+0.147 = 0.657$." },
+              { label: "(c)", text: "$E(X) = \\frac{1}{p} = \\frac{1}{0.30} \\approx 3.33$. On average, it takes about 3.33 free throw attempts until the first miss." }
+            ]
+          },
+          {
+            context: "Context: Geometric vs. binomial",
+            stem: "A quality inspector examines items one at a time. Each item is defective with probability 0.05, independently.",
+            parts: [
+              { label: "(a)", text: "Let $X$ = number of items inspected until the first defective (geometric). Find $P(X > 10)$." },
+              { label: "(b)", text: "Now suppose the inspector examines exactly 20 items. Let $Y$ = number of defectives (binomial). Find $P(Y = 0)$." },
+              { label: "(c)", text: "Compare these two models. What is the key structural difference between a geometric and a binomial random variable?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$P(X > 10) = P(\\text{first 10 all non-defective}) = (0.95)^{10} \\approx 0.5987$. (About 60% of the time, the first defective appears after the 10th item.)" },
+              { label: "(b)", text: "$P(Y=0) = (0.95)^{20} \\approx 0.3585$." },
+              { label: "(c)", text: "Key difference: Geometric has no fixed number of trials — it counts trials until the first success. Binomial has a fixed number of trials $n$ and counts total successes. Geometric asks 'how long until success?' while binomial asks 'how many successes in $n$ tries?'" }
+            ]
+          },
+          {
+            context: "Context: The memoryless property",
+            stem: "A game show contestant keeps spinning a wheel. The probability of winning on any spin is $\\frac{1}{5}$, and spins are independent. Let $X$ = spin number of first win.",
+            parts: [
+              { label: "(a)", text: "Find $P(X = 1)$, $P(X = 2)$, $P(X = 3)$. Do they form a geometric sequence?" },
+              { label: "(b)", text: "Find $E(X)$ and $\\sigma_X$. (Recall: $\\sigma_X = \\frac{\\sqrt{1-p}}{p}$.)" },
+              { label: "(c)", text: "The contestant has already lost on spins 1 and 2. What is the probability of winning on spin 3? Does past failure affect future probability? What property does this illustrate?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$P(X=1) = 0.2$. $P(X=2) = (0.8)(0.2) = 0.16$. $P(X=3) = (0.8)^2(0.2) = 0.128$. Yes — each is $\\frac{4}{5}$ times the previous one: they form a geometric sequence with ratio $0.8$." },
+              { label: "(b)", text: "$E(X) = \\frac{1}{0.2} = 5$ spins. &nbsp; $\\sigma_X = \\frac{\\sqrt{0.8}}{0.2} = \\frac{0.894}{0.2} \\approx 4.47$ spins." },
+              { label: "(c)", text: "$P(\\text{win on spin 3} | \\text{lost spins 1 and 2}) = P(\\text{win on any spin}) = 0.2$. Past failures do not change the probability of winning on the next spin. This is the memoryless property of the geometric distribution — each trial starts fresh." }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  // ═══════════════════════════════════════════════════════════
+  // COLUMN 3 — Continuous Random Variables
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: "col-3",
+    accentVar: "var(--col3-light)",
+    headerClass: "col-3-header",
+    tileClass: "col-3",
+    label: "Column III",
+    title: "Continuous Random Variables",
+    topics: "Uniform · Normal · z-Scores · Normality",
+    tiles: [
+
+      // ── TILE 3-A ──────────────────────────────────────────
+      {
+        icon: "▭",
+        title: "Uniform Distributions",
+        sub: "Rectangular density curves and area = probability",
+        topics: "Uniform",
+        problems: [
+          {
+            context: "Context: Bus arrival",
+            stem: "A bus arrives uniformly at random between 8:00 and 8:20 AM. Let $X$ = minutes after 8:00 that the bus arrives, so $X \\sim \\text{Uniform}(0, 20)$.",
+            parts: [
+              { label: "(a)", text: "Find $P(X < 5)$ and interpret in context." },
+              { label: "(b)", text: "Find $P(8 \\leq X \\leq 14)$." },
+              { label: "(c)", text: "Find $E(X)$ and $\\sigma_X$. (Recall: for $\\text{Uniform}(a,b)$: $E(X) = \\frac{a+b}{2}$, $\\sigma_X = \\frac{b-a}{\\sqrt{12}}$.)" }
+            ],
+            answers: [
+              { label: "(a)", text: "Height of density curve: $f(x) = \\frac{1}{20}$. $P(X < 5) = \\frac{5}{20} = 0.25$. There is a 25% chance the bus arrives in the first 5 minutes after 8:00." },
+              { label: "(b)", text: "$P(8 \\leq X \\leq 14) = \\frac{14-8}{20} = \\frac{6}{20} = 0.30$." },
+              { label: "(c)", text: "$E(X) = \\frac{0+20}{2} = 10$ minutes after 8:00. $\\sigma_X = \\frac{20-0}{\\sqrt{12}} = \\frac{20}{3.464} \\approx 5.77$ minutes." }
+            ]
+          },
+          {
+            context: "Context: Spinner",
+            stem: "A spinner lands at a uniformly random angle $\\theta \\in [0°, 360°)$.",
+            parts: [
+              { label: "(a)", text: "What is the probability the spinner lands between 90° and 180°?" },
+              { label: "(b)", text: "Find $P(\\theta < 45° \\text{ or } \\theta > 315°)$." },
+              { label: "(c)", text: "The spinner is spun twice. Find $P(\\text{both land in upper half: }\\theta < 180°)$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$P(90 < \\theta < 180) = \\frac{90}{360} = 0.25$." },
+              { label: "(b)", text: "$P(\\theta < 45 \\text{ or } \\theta > 315) = \\frac{45}{360} + \\frac{45}{360} = \\frac{90}{360} = 0.25$. (These are mutually exclusive events covering a 90° arc.)" },
+              { label: "(c)", text: "$P(\\text{upper half}) = \\frac{180}{360} = 0.5$. Since spins are independent: $P(\\text{both upper}) = (0.5)(0.5) = 0.25$." }
+            ]
+          },
+          {
+            context: "Context: Continuous vs. discrete",
+            stem: "Let $X \\sim \\text{Uniform}(2, 8)$.",
+            parts: [
+              { label: "(a)", text: "Find $P(X = 5)$. Explain why this is different from a discrete distribution." },
+              { label: "(b)", text: "Find $P(X > 6)$ and $P(X \\leq 4)$." },
+              { label: "(c)", text: "Find the value $c$ such that $P(X > c) = 0.40$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$P(X = 5) = 0$. For continuous random variables, the probability of any single exact value is 0 — only intervals have positive probability. Unlike discrete distributions, individual outcomes don't accumulate probability mass." },
+              { label: "(b)", text: "$P(X > 6) = \\frac{8-6}{8-2} = \\frac{2}{6} = \\frac{1}{3} \\approx 0.333$. &nbsp; $P(X \\leq 4) = \\frac{4-2}{6} = \\frac{2}{6} = \\frac{1}{3}$." },
+              { label: "(c)", text: "$P(X > c) = \\frac{8-c}{6} = 0.40 \\Rightarrow 8-c = 2.4 \\Rightarrow c = 5.6$." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 3-B ──────────────────────────────────────────
+      {
+        icon: "🔔",
+        title: "Normal Distributions & z-Scores",
+        sub: "Standardizing, the 68-95-99.7 rule, and z-scores",
+        topics: "Normal · z-Scores",
+        problems: [
+          {
+            context: "Context: SAT scores",
+            stem: "SAT scores are approximately normally distributed with mean $\\mu = 1060$ and standard deviation $\\sigma = 195$.",
+            parts: [
+              { label: "(a)", text: "Find the $z$-score for a student who scored 1350. Interpret this score." },
+              { label: "(b)", text: "Using the 68-95-99.7 rule, what percent of students score between 865 and 1255?" },
+              { label: "(c)", text: "A score in the 84th percentile corresponds to what raw score? (Hint: $z = 1.00$ is the 84th percentile.)" }
+            ],
+            answers: [
+              { label: "(a)", text: "$z = \\frac{1350-1060}{195} = \\frac{290}{195} \\approx 1.49$. This student scored about 1.49 standard deviations above the mean." },
+              { label: "(b)", text: "$865 = 1060 - 1(195)$ and $1255 = 1060 + 1(195)$, so this is $\\mu \\pm 1\\sigma$. By the 68-95-99.7 rule, approximately 68% of students score in this range." },
+              { label: "(c)", text: "$x = \\mu + z\\sigma = 1060 + 1.00(195) = 1255$." }
+            ]
+          },
+          {
+            context: "Context: Comparing distributions",
+            stem: "Heights of adult men are $N(70, 3)$ inches and heights of adult women are $N(64.5, 2.5)$ inches.",
+            parts: [
+              { label: "(a)", text: "A man is 76 inches tall. A woman is 70 inches tall. Compute the $z$-score for each. Who is taller relative to their group?" },
+              { label: "(b)", text: "What height corresponds to $z = -1.5$ for women?" },
+              { label: "(c)", text: "What percent of men are between 64 and 76 inches? (Use the 68-95-99.7 rule and note $64 = 70 - 2(3)$ and $76 = 70 + 2(3)$.)" }
+            ],
+            answers: [
+              { label: "(a)", text: "Man: $z = \\frac{76-70}{3} = 2.00$. Woman: $z = \\frac{70-64.5}{2.5} = 2.20$. The woman is taller relative to her group (her $z$-score is larger)." },
+              { label: "(b)", text: "$x = 64.5 + (-1.5)(2.5) = 64.5 - 3.75 = 60.75$ inches." },
+              { label: "(c)", text: "$64 = 70-2(3)$ and $76 = 70+2(3)$: this is $\\mu \\pm 2\\sigma$. By the 68-95-99.7 rule, approximately 95% of men are between 64 and 76 inches tall." }
+            ]
+          },
+          {
+            context: "Context: Properties of z-scores",
+            stem: "A class of 30 students takes a test. The scores are approximately normally distributed with $\\mu = 74$ and $\\sigma = 8$.",
+            parts: [
+              { label: "(a)", text: "The teacher adds 5 points to every score (a constant added to $X$). How does this affect $\\mu$ and $\\sigma$?" },
+              { label: "(b)", text: "Instead, the teacher multiplies every score by 1.1. How does this affect $\\mu$ and $\\sigma$?" },
+              { label: "(c)", text: "A student had $z = -0.5$ on the original test. After the teacher adds 5 points, does the student's $z$-score change? Explain." }
+            ],
+            answers: [
+              { label: "(a)", text: "Adding a constant shifts the distribution: new $\\mu = 74+5 = 79$, $\\sigma$ unchanged at 8. The shape doesn't change — only the center shifts." },
+              { label: "(b)", text: "Multiplying scales the distribution: new $\\mu = 1.1(74) = 81.4$, new $\\sigma = 1.1(8) = 8.8$. Both mean and spread increase." },
+              { label: "(c)", text: "The student's $z$-score changes. Original score: $x = 74 + (-0.5)(8) = 70$. After adding 5: new score $= 75$, new $\\mu = 79$, new $\\sigma = 8$. New $z = \\frac{75-79}{8} = -0.5$. Wait — it is the same! Adding a constant to all scores shifts both $x$ and $\\mu$ equally, so $z = \\frac{(x+c)-(\\mu+c)}{\\sigma} = \\frac{x-\\mu}{\\sigma}$. $z$-scores are unchanged by adding a constant." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 3-C ──────────────────────────────────────────
+      {
+        icon: "📉",
+        title: "Normal Probability Calculations",
+        sub: "Using $z$-table or calculator to find areas and percentiles",
+        topics: "Normal Calculations",
+        problems: [
+          {
+            context: "Context: Lightbulb lifetimes",
+            stem: "The lifetime of a brand of lightbulb is normally distributed with mean 1200 hours and standard deviation 150 hours.",
+            parts: [
+              { label: "(a)", text: "Find $P(X > 1400)$." },
+              { label: "(b)", text: "Find $P(900 < X < 1350)$." },
+              { label: "(c)", text: "The manufacturer wants to guarantee bulbs for a certain number of hours such that only 5% fail before the guarantee period. Find this guarantee length." }
+            ],
+            answers: [
+              { label: "(a)", text: "$z = \\frac{1400-1200}{150} = 1.33$. $P(X > 1400) = P(Z > 1.33) = 1 - 0.9082 = 0.0918 \\approx 9.2\\%$." },
+              { label: "(b)", text: "$z_1 = \\frac{900-1200}{150} = -2.00$; $z_2 = \\frac{1350-1200}{150} = 1.00$. $P(-2.00 < Z < 1.00) = 0.8413 - 0.0228 = 0.8185 \\approx 81.9\\%$." },
+              { label: "(c)", text: "Need 5th percentile: $z = -1.645$. $x = 1200 + (-1.645)(150) = 1200 - 246.75 \\approx 953$ hours." }
+            ]
+          },
+          {
+            context: "Context: Finding percentiles",
+            stem: "The weights of bags of apples are normally distributed with $\\mu = 3.2$ lbs and $\\sigma = 0.4$ lbs.",
+            parts: [
+              { label: "(a)", text: "Find the 90th percentile weight." },
+              { label: "(b)", text: "Find the weight cutoffs for the middle 80% of bags." },
+              { label: "(c)", text: "A bag is chosen at random. Find $P(X < 2.6 \\text{ or } X > 3.8)$." }
+            ],
+            answers: [
+              { label: "(a)", text: "90th percentile: $z = 1.282$. $x = 3.2 + 1.282(0.4) = 3.2 + 0.513 = 3.713$ lbs." },
+              { label: "(b)", text: "Middle 80% leaves 10% in each tail: $z = \\pm 1.282$. Lower: $3.2 - 1.282(0.4) = 2.687$ lbs. Upper: $3.2 + 1.282(0.4) = 3.713$ lbs." },
+              { label: "(c)", text: "$z_1 = \\frac{2.6-3.2}{0.4} = -1.50$; $z_2 = \\frac{3.8-3.2}{0.4} = 1.50$. $P(X < 2.6) = P(Z < -1.5) = 0.0668$. $P(X > 3.8) = P(Z > 1.5) = 0.0668$. $P(\\text{outside}) = 2(0.0668) = 0.1336 \\approx 13.4\\%$." }
+            ]
+          },
+          {
+            context: "Context: Backwards normal problems",
+            stem: "Exam scores are normally distributed. The 25th percentile is 68 and the 75th percentile is 82.",
+            parts: [
+              { label: "(a)", text: "Use the fact that $z_{0.25} = -0.674$ and $z_{0.75} = 0.674$ to write two equations and solve for $\\mu$ and $\\sigma$." },
+              { label: "(b)", text: "Find $P(X > 90)$ using your values of $\\mu$ and $\\sigma$." },
+              { label: "(c)", text: "What score corresponds to the top 10% of students?" }
+            ],
+            answers: [
+              { label: "(a)", text: "System: $68 = \\mu - 0.674\\sigma$ and $82 = \\mu + 0.674\\sigma$. Adding: $150 = 2\\mu \\Rightarrow \\mu = 75$. Subtracting: $14 = 1.348\\sigma \\Rightarrow \\sigma \\approx 10.4$." },
+              { label: "(b)", text: "$z = \\frac{90-75}{10.4} \\approx 1.44$. $P(X > 90) = P(Z > 1.44) = 1 - 0.9251 \\approx 0.075$. About 7.5% of students score above 90." },
+              { label: "(c)", text: "Top 10% means 90th percentile: $z = 1.282$. $x = 75 + 1.282(10.4) \\approx 75 + 13.3 = 88.3$ points." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 3-D ──────────────────────────────────────────
+      {
+        icon: "📏",
+        title: "Assessing Normality",
+        sub: "Histograms, boxplots, and normal probability plots",
+        topics: "Assessing Normality",
+        problems: [
+          {
+            context: "Context: Interpreting a normal probability plot",
+            stem: "A normal probability plot (NPP) is constructed for a dataset of 50 observations.",
+            parts: [
+              { label: "(a)", text: "Describe what a NPP would look like for data that is approximately normal. What feature are you looking for?" },
+              { label: "(b)", text: "Describe what the plot would look like if the data were right-skewed." },
+              { label: "(c)", text: "Why do we use a normal probability plot rather than just a histogram to assess normality, especially for small datasets?" }
+            ],
+            answers: [
+              { label: "(a)", text: "For approximately normal data, the points should fall roughly along a straight diagonal line. Small deviations are expected; you're looking for the overall linear pattern." },
+              { label: "(b)", text: "Right-skewed data has a few very large values. On a NPP, the right tail curves upward — the largest observations are higher than a straight line would predict, producing a concave-upward curve on the right side." },
+              { label: "(c)", text: "Histograms depend heavily on the number of bins and can appear non-normal just due to binning choices, especially with small $n$. A NPP is more sensitive to departures from normality — particularly in the tails — and doesn't require choosing bin widths, making it more reliable for small samples." }
+            ]
+          },
+          {
+            context: "Context: Using summary statistics",
+            stem: "A dataset has $\\min = 10$, $Q_1 = 18$, median $= 22$, $Q_3 = 26$, $\\max = 34$.",
+            parts: [
+              { label: "(a)", text: "Compute the IQR and check for outliers using the 1.5×IQR rule." },
+              { label: "(b)", text: "Is the data symmetric? Compare $(\\text{median} - Q_1)$ to $(Q_3 - \\text{median})$ to assess skewness." },
+              { label: "(c)", text: "Based on your boxplot analysis, is this dataset consistent with normality? What else would you want to see?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\text{IQR} = 26-18 = 8$. Lower fence: $18 - 1.5(8) = 6$. Upper fence: $26 + 1.5(8) = 38$. No outliers (min = 10 > 6, max = 34 < 38)." },
+              { label: "(b)", text: "$(\\text{median} - Q_1) = 22 - 18 = 4$. $(Q_3 - \\text{median}) = 26-22 = 4$. The median is centered within the box, suggesting rough symmetry. Also, $\\text{median} - \\min = 12$ and $\\max - \\text{median} = 12$: symmetric whiskers too." },
+              { label: "(c)", text: "The boxplot is consistent with approximate normality (symmetric, no outliers). To more confidently assess normality, you would also want to see: (1) a roughly bell-shaped histogram, and (2) a normal probability plot with points close to a straight line." }
+            ]
+          },
+          {
+            context: "Context: Real data decision",
+            stem: "A researcher records the annual salaries (in thousands) of 30 employees at a small firm: most earn between \\$40K–\\$80K, but the CEO earns \\$950K.",
+            parts: [
+              { label: "(a)", text: "Explain why this distribution is very unlikely to be normal. What shape do you expect?" },
+              { label: "(b)", text: "What would a histogram and a normal probability plot show?" },
+              { label: "(c)", text: "The researcher wants to use a normal model for these salaries. What transformation might help, and why?" }
+            ],
+            answers: [
+              { label: "(a)", text: "The CEO's \\$950K salary is a severe outlier — far above the typical range. This creates strong right skew. The normal distribution is symmetric, so this data is clearly inconsistent with normality." },
+              { label: "(b)", text: "The histogram would show a large cluster near \\$40K–\\$80K with a long right tail and one bar far to the right near \\$950K. The NPP would show a strong upward curve at the right end — the extreme value far above the straight line." },
+              { label: "(c)", text: "A log transformation ($\\ln(\\text{salary})$ or $\\log_{10}(\\text{salary})$) often works for right-skewed salary/income data. After logging, \\$950K becomes $\\ln(950) \\approx 6.86$ while \\$60K becomes $\\ln(60) \\approx 4.09$ — the outlier is much less extreme. If the logged data is approximately linear on a NPP, a normal model is appropriate for $\\ln(\\text{salary})$." }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  // ═══════════════════════════════════════════════════════════
+  // COLUMN 4 — Synthesis & Mixed Practice
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: "col-4",
+    accentVar: "var(--col4-light)",
+    headerClass: "col-4-header",
+    tileClass: "col-4",
+    label: "Column IV",
+    title: "Synthesis & Mixed Practice",
+    topics: "AP-Style · Mixed Topics · Full Problems",
+    tiles: [
+
+      // ── TILE 4-A ──────────────────────────────────────────
+      {
+        icon: "⚖️",
+        title: "Probability Meets Expected Value",
+        sub: "Combining probability rules with $E(X)$ and $\\text{Var}(X)$",
+        topics: "Probability · E(X) · Var(X)",
+        problems: [
+          {
+            context: "Context: Insurance",
+            stem: "An insurance company sells a policy for \\$500/year. Based on historical data: 1% of policyholders file a \\$50{,}000 claim, 4% file a \\$10{,}000 claim, and 95% file no claim. Let $X$ = claim amount.",
+            parts: [
+              { label: "(a)", text: "Find $E(X)$ — the expected claim per policyholder." },
+              { label: "(b)", text: "Find the expected profit per policyholder for the company." },
+              { label: "(c)", text: "Find $\\text{Var}(X)$ and $\\sigma_X$. Why does the company care about $\\sigma_X$ even though its expected profit is positive?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$E(X) = 50000(0.01)+10000(0.04)+0(0.95) = 500+400+0 = \\$900$." },
+              { label: "(b)", text: "Expected profit $= \\$500 - E(X) = 500 - 900 = -\\$400$ per policyholder. The company loses \\$400 on average per policy — it needs to charge more (at least \\$900) or pool many policies to profit." },
+              { label: "(c)", text: "$E(X^2) = 50000^2(0.01)+10000^2(0.04)+0 = 25{,}000{,}000 + 4{,}000{,}000 = 29{,}000{,}000$. $\\text{Var}(X) = 29{,}000{,}000 - 900^2 = 29{,}000{,}000 - 810{,}000 = 28{,}190{,}000$. $\\sigma_X \\approx \\$5309$. High $\\sigma_X$ means individual outcomes vary wildly — some years the company pays huge claims. Even with favorable expected values in aggregate, high variance means significant risk of large losses in any single year." }
+            ]
+          },
+          {
+            context: "Context: Combining random variables",
+            stem: "Let $X$ = score on a math quiz ($E(X) = 72$, $\\sigma_X = 8$) and $Y$ = score on an English quiz ($E(Y) = 68$, $\\sigma_Y = 10$). The quizzes are independent.",
+            parts: [
+              { label: "(a)", text: "Find $E(X + Y)$ and $\\sigma_{X+Y}$." },
+              { label: "(b)", text: "The combined score is $C = 0.6X + 0.4Y$ (math is weighted 60%). Find $E(C)$ and $\\sigma_C$." },
+              { label: "(c)", text: "A student needs $C \\geq 70$ to pass. Assuming the combined score is approximately normal, find $P(C \\geq 70)$ using your results from (b)." }
+            ],
+            answers: [
+              { label: "(a)", text: "$E(X+Y) = 72+68 = 140$. $\\sigma_{X+Y} = \\sqrt{8^2+10^2} = \\sqrt{164} \\approx 12.81$." },
+              { label: "(b)", text: "$E(C) = 0.6(72)+0.4(68) = 43.2+27.2 = 70.4$. $\\sigma_C = \\sqrt{(0.6)^2(64)+(0.4)^2(100)} = \\sqrt{23.04+16} = \\sqrt{39.04} \\approx 6.25$." },
+              { label: "(c)", text: "$z = \\frac{70-70.4}{6.25} \\approx -0.064$. $P(C \\geq 70) = P(Z \\geq -0.064) \\approx 1 - 0.4745 = 0.5255$. About 52.6% of students pass." }
+            ]
+          },
+          {
+            context: "Context: AP-style expected value",
+            stem: "A carnival game costs \\$3 to play. You draw one card from a 10-card deck (cards labeled 1–10). If the card is 9 or 10, you win \\$10. If it's 7 or 8, you win \\$5. Otherwise, you win nothing.",
+            parts: [
+              { label: "(a)", text: "Construct the probability distribution for net winnings $W$." },
+              { label: "(b)", text: "Find $E(W)$. Is this game favorable for the player?" },
+              { label: "(c)", text: "How many times would you expect to play before winning any prize for the first time? (Treat winning any prize as a geometric trial.)" }
+            ],
+            answers: [
+              { label: "(a)", text: "$W = +7$ (win \\$10, paid \\$3): $P = 2/10$. $W = +2$ (win \\$5, paid \\$3): $P = 2/10$. $W = -3$ (win nothing): $P = 6/10$." },
+              { label: "(b)", text: "$E(W) = 7(0.2)+2(0.2)+(-3)(0.6) = 1.4+0.4-1.8 = 0$. $E(W) = 0$, so this is a fair game — neither the player nor the carnival has a long-run advantage." },
+              { label: "(c)", text: "$P(\\text{win a prize}) = P(W = +7 \\text{ or } W = +2) = 0.4$. Expected number of plays until first prize: $E = \\frac{1}{0.4} = 2.5$ plays." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 4-B ──────────────────────────────────────────
+      {
+        icon: "🔀",
+        title: "Combining Discrete & Continuous RVs",
+        sub: "Bridging binomial, geometric, and normal models",
+        topics: "Binomial · Geometric · Normal",
+        problems: [
+          {
+            context: "Context: Sampling and probability",
+            stem: "A production process produces 8% defective items. An inspector randomly samples items.",
+            parts: [
+              { label: "(a)", text: "In a sample of 20 items, let $X$ = number defective. Find $P(X \\geq 3)$." },
+              { label: "(b)", text: "Let $Y$ = number of items inspected until the first defective. Find $E(Y)$ and $P(Y > 5)$." },
+              { label: "(c)", text: "In a large sample of $n = 200$ items, use the normal approximation to the binomial to find $P(X \\leq 20)$ where $X$ = number defective." }
+            ],
+            answers: [
+              { label: "(a)", text: "$X \\sim B(20, 0.08)$. $P(X \\geq 3) = 1 - P(X \\leq 2)$. $P(0) = (0.92)^{20} \\approx 0.1887$; $P(1) = 20(0.08)(0.92)^{19} \\approx 0.3282$; $P(2) = 190(0.08)^2(0.92)^{18} \\approx 0.2711$. $P(X \\leq 2) \\approx 0.7880$. $P(X \\geq 3) \\approx 0.2120$." },
+              { label: "(b)", text: "$E(Y) = 1/0.08 = 12.5$ items. $P(Y > 5) = (0.92)^5 \\approx 0.6591$." },
+              { label: "(c)", text: "$\\mu = 200(0.08) = 16$; $\\sigma = \\sqrt{200(0.08)(0.92)} \\approx 3.84$. Check: $np = 16 \\geq 10$ ✓, $n(1-p) = 184 \\geq 10$ ✓. $z = \\frac{20-16}{3.84} \\approx 1.04$. $P(X \\leq 20) \\approx P(Z \\leq 1.04) \\approx 0.8508$." }
+            ]
+          },
+          {
+            context: "Context: Normal and binomial connection",
+            stem: "The proportion of left-handed people is approximately 0.10. A classroom of 30 students is randomly selected.",
+            parts: [
+              { label: "(a)", text: "Let $X$ = number of left-handed students. Find $\\mu_X$, $\\sigma_X$, and $P(X = 0)$." },
+              { label: "(b)", text: "Find $P(X \\geq 5)$ using the exact binomial." },
+              { label: "(c)", text: "Is the normal approximation appropriate here? Check conditions and explain." }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\mu_X = 30(0.10) = 3$. $\\sigma_X = \\sqrt{30(0.10)(0.90)} \\approx 1.643$. $P(X=0) = (0.90)^{30} \\approx 0.0424$." },
+              { label: "(b)", text: "$P(X \\geq 5) = 1 - P(X \\leq 4)$. Using binomial: $P(X \\leq 4) \\approx 0.8245$. $P(X \\geq 5) \\approx 0.1755$." },
+              { label: "(c)", text: "$np = 3 < 10$ — condition not met. The normal approximation is NOT appropriate here. With $p = 0.10$ and $n = 30$, the distribution is noticeably right-skewed (most students won't be left-handed), so the symmetric normal curve is a poor approximation. Use exact binomial calculations instead." }
+            ]
+          },
+          {
+            context: "Context: Continuous to discrete bridge",
+            stem: "A machine fills juice bottles. Fill volume is $N(16.1 \\text{ oz}, 0.3 \\text{ oz})$. A bottle is 'underfilled' if it contains less than 16 oz. 12 bottles are randomly selected.",
+            parts: [
+              { label: "(a)", text: "Find $p = P(\\text{underfilled})$ for a single bottle." },
+              { label: "(b)", text: "Let $X$ = number of underfilled bottles in the sample of 12. Find $E(X)$ and $P(X = 0)$." },
+              { label: "(c)", text: "Find $P(X \\geq 2)$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$z = \\frac{16-16.1}{0.3} = -0.333$. $p = P(Z < -0.333) \\approx 0.3696 \\approx 0.370$." },
+              { label: "(b)", text: "$E(X) = 12(0.370) = 4.44$ bottles. $P(X=0) = (1-0.370)^{12} = (0.630)^{12} \\approx 0.00219$." },
+              { label: "(c)", text: "$P(X \\geq 2) = 1 - P(X=0) - P(X=1)$. $P(X=1) = 12(0.370)(0.630)^{11} \\approx 12(0.370)(0.00347) \\approx 0.0154$. $P(X \\geq 2) \\approx 1 - 0.00219 - 0.0154 \\approx 0.9824$." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 4-C ──────────────────────────────────────────
+      {
+        icon: "🎓",
+        title: "AP-Style Mixed Problems",
+        sub: "Multi-part problems in AP free-response format",
+        topics: "AP Free Response Style",
+        problems: [
+          {
+            context: "Context: AP Free Response — Probability",
+            stem: "According to a national survey, 55% of teenagers own a smartphone, 40% own a gaming console, and 25% own both.",
+            parts: [
+              { label: "(a)", text: "Find $P(\\text{smartphone or gaming console})$." },
+              { label: "(b)", text: "Given a teenager owns a gaming console, what is the probability they also own a smartphone?" },
+              { label: "(c)", text: "Are owning a smartphone and owning a gaming console independent? Justify using probability." }
+            ],
+            answers: [
+              { label: "(a)", text: "$P(S \\cup G) = 0.55 + 0.40 - 0.25 = 0.70$." },
+              { label: "(b)", text: "$P(S|G) = \\frac{P(S \\cap G)}{P(G)} = \\frac{0.25}{0.40} = 0.625$." },
+              { label: "(c)", text: "If independent: $P(S \\cap G) = P(S) \\cdot P(G) = 0.55 \\times 0.40 = 0.22$. But $P(S \\cap G) = 0.25 \\neq 0.22$. Therefore, owning a smartphone and owning a gaming console are NOT independent — teenagers who own one are more likely to own the other." }
+            ]
+          },
+          {
+            context: "Context: AP Free Response — Random Variable",
+            stem: "A student randomly selects one of 5 equally likely test questions. If it's a multiple-choice question (3 of the 5 are), the student gets it right with probability 0.8. If it's a free-response question (2 of the 5), the student gets it right with probability 0.5.",
+            parts: [
+              { label: "(a)", text: "Using a tree diagram, find $P(\\text{correct})$." },
+              { label: "(b)", text: "Given the student got the question correct, find $P(\\text{it was multiple choice})$." },
+              { label: "(c)", text: "Let $X = 1$ if correct, $X = 0$ if incorrect. Find $E(X)$ and interpret. (This is called the Bernoulli distribution.)" }
+            ],
+            answers: [
+              { label: "(a)", text: "$P(\\text{correct}) = P(MC) \\cdot P(C|MC) + P(FR) \\cdot P(C|FR) = \\frac{3}{5}(0.8) + \\frac{2}{5}(0.5) = 0.48 + 0.20 = 0.68$." },
+              { label: "(b)", text: "$P(MC|C) = \\frac{P(MC \\cap C)}{P(C)} = \\frac{0.48}{0.68} = \\frac{12}{17} \\approx 0.706$." },
+              { label: "(c)", text: "$E(X) = 1(0.68)+0(0.32) = 0.68$. The expected value of a Bernoulli random variable equals $p$, the probability of success. In context: the student is expected to get the question right about 68% of the time." }
+            ]
+          },
+          {
+            context: "Context: AP Free Response — Normal",
+            stem: "The times students spend studying for an AP Statistics exam are normally distributed with mean 8.5 hours and standard deviation 2.1 hours.",
+            parts: [
+              { label: "(a)", text: "What proportion of students study more than 12 hours?" },
+              { label: "(b)", text: "The school wants to identify the top 15% of studiers for a special program. What is the minimum study time to qualify?" },
+              { label: "(c)", text: "10 students are randomly selected. Let $X$ = number who study more than 12 hours. Using your answer from (a), find $P(X = 0)$ and $E(X)$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$z = \\frac{12-8.5}{2.1} \\approx 1.667$. $P(X > 12) = P(Z > 1.667) \\approx 1 - 0.9525 = 0.0475$. About 4.75% of students study more than 12 hours." },
+              { label: "(b)", text: "Top 15%: 85th percentile. $z = 1.036$. $x = 8.5 + 1.036(2.1) \\approx 8.5 + 2.18 \\approx 10.68$ hours." },
+              { label: "(c)", text: "With $p = 0.0475$ and $n = 10$: $P(X=0) = (1-0.0475)^{10} = (0.9525)^{10} \\approx 0.619$. $E(X) = np = 10(0.0475) = 0.475$ students." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 4-D ──────────────────────────────────────────
+      {
+        icon: "🏆",
+        title: "Full Mixed Practice",
+        sub: "Comprehensive problems spanning all three topics",
+        topics: "All Topics",
+        problems: [
+          {
+            context: "Context: Full synthesis problem",
+            stem: "A disease is present in 2% of a population. A diagnostic test has sensitivity 90% ($P(+|\\text{disease}) = 0.90$) and specificity 95% ($P(-|\\text{no disease}) = 0.95$). A random person is tested.",
+            parts: [
+              { label: "(a)", text: "Find $P(\\text{positive test})$." },
+              { label: "(b)", text: "Find $P(\\text{disease} | \\text{positive})$. Explain why this value might surprise a physician." },
+              { label: "(c)", text: "In a hospital that tests 500 patients, let $X$ = number of true positives (has disease and tests positive). Find $E(X)$ and $\\sigma_X$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$P(+) = P(+|D)P(D) + P(+|D^c)P(D^c) = 0.90(0.02) + 0.05(0.98) = 0.018 + 0.049 = 0.067$." },
+              { label: "(b)", text: "$P(D|+) = \\frac{0.018}{0.067} \\approx 0.269$. Only about 27% of positive tests are true positives. A physician might expect a positive test to mean the patient likely has the disease, but because the disease is rare (2%), most positives are false alarms. The rarity of the disease overwhelms the test's accuracy." },
+              { label: "(c)", text: "$P(\\text{true positive}) = P(D \\cap +) = P(+|D) \\cdot P(D) = 0.90(0.02) = 0.018$. $X \\sim B(500, 0.018)$. $E(X) = 500(0.018) = 9$ patients. $\\sigma_X = \\sqrt{500(0.018)(0.982)} \\approx \\sqrt{8.838} \\approx 2.97$ patients." }
+            ]
+          },
+          {
+            context: "Context: Random variable and normal together",
+            stem: "The number of calls a customer service center receives per minute, $X$, has $E(X) = 4$ and $\\text{Var}(X) = 4$. In a busy 60-minute period, calls arrive independently each minute. Let $T = X_1 + X_2 + \\cdots + X_{60}$ be the total calls.",
+            parts: [
+              { label: "(a)", text: "Find $E(T)$ and $\\text{Var}(T)$, then $\\sigma_T$." },
+              { label: "(b)", text: "By the Central Limit Theorem, $T$ is approximately normal. Find $P(T > 260)$." },
+              { label: "(c)", text: "Management wants to staff enough to handle the 95th percentile of total calls. How many calls should they staff for?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$E(T) = 60 \\cdot E(X) = 60(4) = 240$. $\\text{Var}(T) = 60 \\cdot \\text{Var}(X) = 60(4) = 240$ (by independence). $\\sigma_T = \\sqrt{240} \\approx 15.49$." },
+              { label: "(b)", text: "$z = \\frac{260-240}{15.49} \\approx 1.29$. $P(T > 260) = P(Z > 1.29) \\approx 1 - 0.9015 = 0.0985$. About 9.9% of 60-minute periods will have more than 260 calls." },
+              { label: "(c)", text: "95th percentile: $z = 1.645$. $t = 240 + 1.645(15.49) \\approx 240 + 25.5 \\approx 265.5$. Staff for at least 266 calls." }
+            ]
+          },
+          {
+            context: "Context: Comprehensive review",
+            stem: "A student takes a 10-question true/false quiz by guessing randomly. Let $X$ = number correct.",
+            parts: [
+              { label: "(a)", text: "Name the distribution of $X$, identify all parameters, and find $P(X \\geq 8)$." },
+              { label: "(b)", text: "Find $E(X)$ and $\\sigma_X$. If the passing score is 7 or more, what is $P(\\text{pass})$?" },
+              { label: "(c)", text: "The student takes the quiz 4 times (independently). Let $Y$ = number of times the student passes. Identify the distribution of $Y$ and find $P(Y \\geq 1)$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$X \\sim \\text{Binomial}(n=10, p=0.5)$. $P(X \\geq 8) = P(8)+P(9)+P(10) = \\binom{10}{8}(0.5)^{10}+\\binom{10}{9}(0.5)^{10}+\\binom{10}{10}(0.5)^{10} = \\frac{45+10+1}{1024} = \\frac{56}{1024} \\approx 0.0547$." },
+              { label: "(b)", text: "$E(X) = 10(0.5) = 5$. $\\sigma_X = \\sqrt{10(0.5)(0.5)} = \\sqrt{2.5} \\approx 1.58$. $P(\\text{pass}) = P(X \\geq 7) = P(7)+P(8)+P(9)+P(10) = \\frac{120+45+10+1}{1024} = \\frac{176}{1024} \\approx 0.172$." },
+              { label: "(c)", text: "$Y \\sim \\text{Binomial}(n=4, p\\approx0.172)$. $P(Y \\geq 1) = 1 - P(Y=0) = 1-(1-0.172)^4 = 1-(0.828)^4 \\approx 1 - 0.470 = 0.530$. There is about a 53% chance of passing at least once in 4 attempts." }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+
+]; // end columns
+
+
+/* ============================================================
+   RENDER BOARD
+============================================================ */
+function renderBoard() {
+  const grid = document.getElementById('board-grid');
+  grid.innerHTML = '';
+
+  columns.forEach((col, ci) => {
+    const colGroup = document.createElement('div');
+    colGroup.className = 'col-group';
+
+    // Header
+    const header = document.createElement('div');
+    header.className = `col-header ${col.headerClass}`;
+    header.style.gridColumn = ci + 1;
+    header.style.gridRow = 1;
+    header.innerHTML = `
+      <div class="col-header-num">${col.label}</div>
+      <h2>${col.title}</h2>
+      <div class="col-topics">${col.topics}</div>
+    `;
+    colGroup.appendChild(header);
+
+    // Tiles
+    col.tiles.forEach((tile, ti) => {
+      const tileEl = document.createElement('div');
+      tileEl.className = `tile ${col.tileClass}`;
+      tileEl.style.gridColumn = ci + 1;
+      tileEl.style.gridRow = ti + 2;
+      tileEl.setAttribute('role', 'button');
+      tileEl.setAttribute('tabindex', '0');
+      tileEl.setAttribute('aria-label', tile.title);
+      tileEl.innerHTML = `
+        <span class="tile-icon">${tile.icon}</span>
+        <div class="tile-title">${tile.title}</div>
+        <div class="tile-sub">${tile.sub}</div>
+        <div class="tile-topics">${tile.topics}</div>
+        <span class="tile-arrow">↗</span>
+      `;
+      tileEl.addEventListener('click', () => openModal(ci, ti));
+      tileEl.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') openModal(ci, ti); });
+      colGroup.appendChild(tileEl);
+    });
+
+    grid.appendChild(colGroup);
+  });
+}
+
+/* ============================================================
+   MODAL
+============================================================ */
+function openModal(colIdx, tileIdx) {
+  const col  = columns[colIdx];
+  const tile = col.tiles[tileIdx];
+
+  const accentEl = document.getElementById('modal-accent');
+  accentEl.className = 'modal-header-accent';
+  accentEl.style.background = col.accentVar;
+
+  const labelEl = document.getElementById('modal-col-label');
+  labelEl.style.color = col.accentVar;
+  labelEl.textContent = col.label + ' · ' + col.title;
+
+  document.getElementById('modal-title').textContent = tile.title;
+
+  const body = document.getElementById('modal-body');
+  body.innerHTML = '';
+
+  // Optional video section
+  if (tile.video) {
+    const videoSection = document.createElement('div');
+    videoSection.className = 'video-section';
+    videoSection.innerHTML = `
+      <div class="video-label">📹 Watch First</div>
+      <a href="${tile.video.url}" target="_blank" rel="noopener" class="video-link">
+        ${tile.video.title} — mathispower4u
+        <span class="video-icon">▶</span>
+      </a>
+    `;
+    body.appendChild(videoSection);
+  }
+
+  tile.problems.forEach((prob, pi) => {
+    const block = document.createElement('div');
+    block.className = 'problem-block';
+
+    let partsHTML = '';
+    if (prob.parts && prob.parts.length) {
+      partsHTML = `<ul class="problem-parts">` +
+        prob.parts.map(p => `<li data-part="${p.label}">${p.text}</li>`).join('') +
+        `</ul>`;
+    }
+
+    let answersHTML = '';
+    if (prob.answers && prob.answers.length) {
+      answersHTML = prob.answers.map(a =>
+        `<div class="answer-part"><span class="answer-part-label">${a.label}</span>${a.text}</div>`
+      ).join('');
+    }
+
+    const answerId = `ans-${colIdx}-${tileIdx}-${pi}`;
+    const toggleId = `tog-${colIdx}-${tileIdx}-${pi}`;
+
+    block.innerHTML = `
+      <div class="problem-num">Problem ${pi + 1} of ${tile.problems.length}</div>
+      ${prob.context ? `<div class="problem-context">${prob.context}</div>` : ''}
+      <div class="problem-text">${prob.stem}</div>
+      ${partsHTML}
+      <button class="answer-toggle" id="${toggleId}" onclick="toggleAnswer('${answerId}','${toggleId}')">
+        <span class="toggle-icon">▼</span> Show Answer
+      </button>
+      <div class="answer-panel" id="${answerId}">
+        ${answersHTML}
+      </div>
+    `;
+    body.appendChild(block);
+  });
+
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('desmos-fab').classList.add('visible');
+
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([body]).catch(err => console.log(err));
+  }
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+  document.getElementById('desmos-fab').classList.remove('visible');
+}
+
+function toggleAnswer(panelId, toggleId) {
+  const panel  = document.getElementById(panelId);
+  const toggle = document.getElementById(toggleId);
+  const isOpen = panel.classList.contains('open');
+  panel.classList.toggle('open');
+  toggle.classList.toggle('open');
+  toggle.innerHTML = isOpen
+    ? '<span class="toggle-icon">▼</span> Show Answer'
+    : '<span class="toggle-icon">▼</span> Hide Answer';
+}
+
+/* ============================================================
+   RANDOM PRACTICE
+============================================================ */
+function openRandomProblem() {
+  const colIdx  = Math.floor(Math.random() * columns.length);
+  const col     = columns[colIdx];
+  const tileIdx = Math.floor(Math.random() * col.tiles.length);
+  const tile    = col.tiles[tileIdx];
+  const probIdx = Math.floor(Math.random() * tile.problems.length);
+  const prob    = tile.problems[probIdx];
+
+  const accentEl = document.getElementById('modal-accent');
+  accentEl.className = 'modal-header-accent random-accent';
+  accentEl.style.background = '';
+
+  const labelEl = document.getElementById('modal-col-label');
+  labelEl.style.color = 'var(--text-muted)';
+  labelEl.innerHTML = 'AP Statistics · Probability &amp; Random Variables';
+
+  document.getElementById('modal-title').textContent = 'General Practice';
+
+  const body = document.getElementById('modal-body');
+  body.innerHTML = '';
+
+  const block = document.createElement('div');
+  block.className = 'problem-block';
+  block.style.borderBottom = 'none';
+  block.style.marginBottom = '0';
+  block.style.paddingBottom = '0';
+
+  let partsHTML = '';
+  if (prob.parts && prob.parts.length) {
+    partsHTML = `<ul class="problem-parts">` +
+      prob.parts.map(p => `<li data-part="${p.label}">${p.text}</li>`).join('') +
+      `</ul>`;
+  }
+
+  let answersHTML = '';
+  if (prob.answers && prob.answers.length) {
+    answersHTML = prob.answers.map(a =>
+      `<div class="answer-part"><span class="answer-part-label">${a.label}</span>${a.text}</div>`
+    ).join('');
+  }
+
+  block.innerHTML = `
+    <div class="problem-num">🎲 General Practice</div>
+    ${prob.context ? `<div class="problem-context">${prob.context}</div>` : ''}
+    <div class="problem-text">${prob.stem}</div>
+    ${partsHTML}
+    <button class="answer-toggle" id="rand-tog" onclick="toggleAnswer('rand-ans','rand-tog')">
+      <span class="toggle-icon">▼</span> Show Answer
+    </button>
+    <div class="answer-panel" id="rand-ans">
+      ${answersHTML}
+    </div>
+  `;
+
+  body.appendChild(block);
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('desmos-fab').classList.add('visible');
+
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([body]).catch(err => console.log(err));
+  }
+}
+
+document.getElementById('random-btn').addEventListener('click', openRandomProblem);
+
+/* ============================================================
+   DESMOS BUTTON
+============================================================ */
+document.getElementById('desmos-fab').addEventListener('click', () => {
+  window.open('https://www.desmos.com/calculator', '_blank', 'width=1000,height=700,noopener,noreferrer');
+});
+
+/* ============================================================
+   EVENT LISTENERS
+============================================================ */
+document.getElementById('modal-close').addEventListener('click', closeModal);
+document.getElementById('modal-overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+</script>
+</body>
+</html>
