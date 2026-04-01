@@ -1,0 +1,1994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AP Statistics — Units 8 &amp; 9: Chi-Square &amp; Inference for Slopes | Middlesex School</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet" />
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+    startup: {
+      typeset: false,
+      ready() {
+        MathJax.startup.defaultReady();
+        renderBoard();
+        MathJax.typesetPromise([document.getElementById('board-grid')])
+          .catch(err => console.log(err));
+      }
+    }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+<style>
+  /* ============================================================
+     TOKENS & RESET
+  ============================================================ */
+  :root {
+    --crimson:     #cf003d;
+    --crimson-dim: #8a0028;
+    --crimson-glow:#ff1a55;
+    --black:       #0d0d0d;
+    --surface:     #151515;
+    --surface2:    #1e1e1e;
+    --surface3:    #252525;
+    --border:      #2e2e2e;
+    --border-light:#3a3a3a;
+    --text:        #f0ece6;
+    --text-muted:  #9e9e9e;
+    --text-dim:    #666666;
+
+    --col1: #cf003d;
+    --col2: #1a6b5a;
+    --col3: #4a5568;
+    --col4: #7c4a1e;
+
+    --col1-light: #ff4d75;
+    --col2-light: #2dd4bf;
+    --col3-light: #94a3b8;
+    --col4-light: #f59e0b;
+
+    --radius: 10px;
+    --radius-lg: 16px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.5);
+    --shadow-hover: 0 8px 40px rgba(0,0,0,0.7);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 16px;
+    line-height: 1.65;
+    min-height: 100vh;
+  }
+
+  /* ============================================================
+     HEADER
+  ============================================================ */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 32px 40px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--crimson), var(--crimson-glow), var(--crimson));
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(207,0,61,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .header-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+  }
+
+  .school-tag {
+    font-family: 'Source Serif 4', serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--crimson-glow);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .school-tag::before,
+  .school-tag::after {
+    content: '';
+    display: inline-block;
+    width: 28px;
+    height: 1px;
+    background: var(--crimson-glow);
+  }
+
+  h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    margin-top: 4px;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--crimson-glow);
+  }
+
+  .header-meta {
+    margin-top: 4px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .meta-pill {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 3px 12px;
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+  }
+
+  /* ============================================================
+     INSTRUCTIONS BAR
+  ============================================================ */
+  .instructions {
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 40px;
+    font-size: 13px;
+    color: var(--text-muted);
+    text-align: center;
+    letter-spacing: 0.03em;
+  }
+
+  .instructions strong { color: var(--crimson-glow); font-weight: 600; }
+
+  /* ============================================================
+     BOARD GRID
+  ============================================================ */
+  .board-wrap {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 36px 24px 60px;
+  }
+
+  .board-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto repeat(4, 1fr);
+    gap: 20px;
+  }
+
+  .col-group {
+    display: contents;
+  }
+
+  /* Column headers */
+  .col-header {
+    border-radius: var(--radius) var(--radius) 0 0;
+    padding: 16px 18px 14px;
+    position: relative;
+    overflow: hidden;
+    align-self: start;
+  }
+
+  .col-header::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .col-1-header { background: color-mix(in srgb, var(--col1) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col1) 40%, transparent); }
+  .col-2-header { background: color-mix(in srgb, var(--col2) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col2) 40%, transparent); }
+  .col-3-header { background: color-mix(in srgb, var(--col3) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col3) 40%, transparent); }
+  .col-4-header { background: color-mix(in srgb, var(--col4) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col4) 40%, transparent); }
+
+  .col-header-num {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    opacity: 0.7;
+  }
+
+  .col-1-header .col-header-num { color: var(--col1-light); }
+  .col-2-header .col-header-num { color: var(--col2-light); }
+  .col-3-header .col-header-num { color: var(--col3-light); }
+  .col-4-header .col-header-num { color: var(--col4-light); }
+
+  .col-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.25;
+  }
+
+  .col-header .col-topics {
+    margin-top: 6px;
+    font-size: 10.5px;
+    color: var(--text-dim);
+    letter-spacing: 0.04em;
+  }
+
+  /* ============================================================
+     TILES
+  ============================================================ */
+  .tile {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 18px 28px;
+    cursor: pointer;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+    position: relative;
+    overflow: hidden;
+    user-select: none;
+  }
+
+  .tile::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+    border-radius: var(--radius) 0 0 var(--radius);
+    transition: opacity 0.2s;
+  }
+
+  .col-1 .tile::before { background: var(--col1-light); }
+  .col-2 .tile::before { background: var(--col2-light); }
+  .col-3 .tile::before { background: var(--col3-light); }
+  .col-4 .tile::before { background: var(--col4-light); }
+
+  .tile:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-hover);
+    background: var(--surface3);
+  }
+
+  .col-1 .tile:hover { border-color: color-mix(in srgb, var(--col1) 60%, transparent); }
+  .col-2 .tile:hover { border-color: color-mix(in srgb, var(--col2) 60%, transparent); }
+  .col-3 .tile:hover { border-color: color-mix(in srgb, var(--col3) 60%, transparent); }
+  .col-4 .tile:hover { border-color: color-mix(in srgb, var(--col4) 60%, transparent); }
+
+  .tile-icon {
+    font-size: 18px;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .tile-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+    margin-bottom: 5px;
+  }
+
+  .tile-sub {
+    font-size: 11.5px;
+    color: var(--text-muted);
+    line-height: 1.4;
+  }
+
+  .tile-topics {
+    position: absolute;
+    bottom: 10px;
+    left: 18px;
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.06em;
+  }
+
+  .tile-arrow {
+    position: absolute;
+    bottom: 12px; right: 14px;
+    font-size: 14px;
+    opacity: 0.3;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+
+  .tile:hover .tile-arrow { opacity: 0.8; transform: translate(2px, -2px); }
+  .col-1 .tile:hover .tile-arrow { color: var(--col1-light); }
+  .col-2 .tile:hover .tile-arrow { color: var(--col2-light); }
+  .col-3 .tile:hover .tile-arrow { color: var(--col3-light); }
+  .col-4 .tile:hover .tile-arrow { color: var(--col4-light); }
+
+  /* ============================================================
+     MODAL
+  ============================================================ */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.82);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    backdrop-filter: blur(4px);
+  }
+
+  .modal-overlay.open { display: flex; animation: fadeIn 0.2s ease; }
+
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    width: 100%;
+    max-width: 760px;
+    max-height: 88vh;
+    overflow-y: auto;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.8);
+    animation: slideUp 0.22s ease;
+    position: relative;
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .modal-header {
+    padding: 24px 28px 20px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .modal-header-accent {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  }
+
+  .modal-col-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+  }
+
+  .modal-close {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.15s, color 0.15s;
+  }
+
+  .modal-close:hover { background: var(--crimson); color: white; border-color: var(--crimson); }
+
+  .modal-body { padding: 24px 28px 32px; }
+
+  /* Video section */
+  .video-section {
+    background: var(--surface2);
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 24px;
+  }
+
+  .video-label {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+
+  .video-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    color: var(--crimson-glow);
+    text-decoration: none;
+    font-size: 13.5px;
+    font-family: 'Source Serif 4', serif;
+    transition: color 0.15s;
+  }
+
+  .video-link:hover { color: #fff; }
+  .video-icon { font-size: 12px; opacity: 0.7; }
+
+  /* Computer output blocks */
+  .computer-output {
+    background: #0a0a0a;
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+    padding: 14px 16px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12.5px;
+    color: #c8d6e5;
+    line-height: 1.6;
+    overflow-x: auto;
+    margin: 10px 0 8px;
+    white-space: pre;
+  }
+
+  /* Problems */
+  .problem-block {
+    margin-bottom: 28px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .problem-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+  .problem-num {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+  }
+
+  .problem-context {
+    font-size: 14px;
+    font-style: italic;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    padding-left: 12px;
+    border-left: 2px solid var(--border-light);
+  }
+
+  .problem-text {
+    font-size: 14.5px;
+    color: var(--text);
+    line-height: 1.7;
+    margin-bottom: 14px;
+  }
+
+  .problem-parts { margin-left: 0; list-style: none; }
+
+  .problem-parts li {
+    font-size: 14px;
+    color: var(--text);
+    margin-bottom: 8px;
+    padding-left: 24px;
+    position: relative;
+    line-height: 1.6;
+  }
+
+  .problem-parts li::before {
+    content: attr(data-part);
+    position: absolute;
+    left: 0;
+    font-weight: 700;
+    color: var(--text-muted);
+  }
+
+  .problem-img {
+    display: block;
+    width: 360px;
+    max-width: 100%;
+    border-radius: 6px;
+    margin: 10px 0 6px;
+  }
+
+  .answer-toggle {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 9px 16px;
+    color: var(--text-muted);
+    font-family: 'Source Serif 4', serif;
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.15s;
+    margin-top: 4px;
+  }
+
+  .answer-toggle:hover { background: var(--surface3); border-color: var(--border-light); color: var(--text); }
+  .answer-toggle .toggle-icon { font-size: 10px; transition: transform 0.2s; }
+  .answer-toggle.open .toggle-icon { transform: rotate(180deg); }
+
+  .answer-panel {
+    display: none;
+    margin-top: 14px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-size: 13.5px;
+    line-height: 1.75;
+    color: var(--text);
+    animation: expandIn 0.18s ease;
+  }
+
+  @keyframes expandIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .answer-panel.open { display: block; }
+
+  .answer-part { margin-bottom: 10px; padding-left: 20px; position: relative; }
+  .answer-part:last-child { margin-bottom: 0; }
+  .answer-part-label { position: absolute; left: 0; font-weight: 700; color: var(--text-muted); }
+
+  /* ============================================================
+     RESPONSIVE
+  ============================================================ */
+  @media (max-width: 1000px) {
+    .board-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .col-group {
+      display: flex !important;
+      flex-direction: column;
+      gap: 10px;
+      width: calc(50% - 10px);
+    }
+    .col-header { border-radius: var(--radius); }
+    .tile {
+      grid-column: unset !important;
+      grid-row: unset !important;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .board-grid { flex-direction: column; }
+    .col-group { width: 100%; }
+    header { padding: 20px; }
+    .board-wrap { padding: 20px 12px 40px; }
+    .modal { border-radius: var(--radius); }
+    .modal-header, .modal-body { padding: 18px; }
+  }
+
+  .modal::-webkit-scrollbar { width: 6px; }
+  .modal::-webkit-scrollbar-track { background: var(--surface); }
+  .modal::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
+
+  /* ============================================================
+     RANDOM PRACTICE BAR
+  ============================================================ */
+  .random-wrap {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 24px 48px;
+  }
+
+  .random-btn {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border-light);
+    border-radius: 14px;
+    padding: 0 36px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.2s ease, background 0.2s ease;
+    font-family: 'Source Serif 4', serif;
+  }
+
+  .random-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(207,0,61,0.06) 30%, rgba(207,0,61,0.10) 50%, rgba(207,0,61,0.06) 70%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .random-btn:hover::before { opacity: 1; }
+
+  .random-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(207,0,61,0.18), 0 2px 8px rgba(0,0,0,0.4);
+    border-color: color-mix(in srgb, var(--crimson) 55%, transparent);
+    background: var(--surface3);
+  }
+
+  .random-btn:active { transform: translateY(0) scale(0.995); box-shadow: 0 2px 8px rgba(0,0,0,0.4); }
+
+  .random-btn-left-notch, .random-btn-right-notch {
+    position: absolute;
+    bottom: 0;
+    width: 28px; height: 5px;
+    background: var(--border);
+    border-radius: 3px 3px 0 0;
+    transition: background 0.2s;
+  }
+  .random-btn-left-notch  { left: 60px; }
+  .random-btn-right-notch { right: 60px; }
+  .random-btn:hover .random-btn-left-notch,
+  .random-btn:hover .random-btn-right-notch { background: color-mix(in srgb, var(--crimson) 40%, var(--border)); }
+
+  .random-btn-icon { font-size: 22px; flex-shrink: 0; transition: transform 0.3s ease; }
+  .random-btn:hover .random-btn-icon { transform: rotate(20deg) scale(1.15); }
+
+  .random-btn-label { display: flex; flex-direction: column; align-items: center; gap: 1px; }
+  .random-btn-title { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; color: var(--text); letter-spacing: 0.01em; line-height: 1.2; }
+  .random-btn-sub { font-size: 11.5px; color: var(--text-muted); letter-spacing: 0.07em; text-transform: uppercase; }
+
+  .random-btn-badge {
+    position: absolute;
+    right: 28px;
+    background: var(--surface3);
+    border: 1px solid var(--border-light);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-family: 'Source Serif 4', serif;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+
+  .random-btn:hover .random-btn-badge {
+    background: color-mix(in srgb, var(--crimson) 15%, var(--surface3));
+    color: var(--crimson-glow);
+    border-color: color-mix(in srgb, var(--crimson) 40%, transparent);
+  }
+
+  .random-accent {
+    background: linear-gradient(90deg, var(--col1-light), var(--col2-light), var(--col3-light), var(--col4-light));
+    background-size: 300% 100%;
+    animation: accentShift 4s ease infinite;
+  }
+
+  @keyframes accentShift {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  @media (max-width: 600px) {
+    .random-wrap { padding: 0 12px 36px; }
+    .random-btn { height: 64px; border-radius: 10px; }
+    .random-btn-badge, .random-btn-left-notch, .random-btn-right-notch { display: none; }
+  }
+
+  /* ============================================================
+     DESMOS FLOATING BUTTON
+  ============================================================ */
+  .desmos-fab {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    z-index: 1050;
+    background: var(--surface2);
+    border: 1px solid var(--border-light);
+    border-radius: 50px;
+    padding: 0 20px 0 14px;
+    height: 52px;
+    display: none;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    font-family: 'Source Serif 4', serif;
+  }
+
+  .desmos-fab.visible { display: flex; animation: fadeIn 0.18s ease; }
+
+  .desmos-fab:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(207,0,61,0.25), 0 2px 8px rgba(0,0,0,0.5);
+    border-color: color-mix(in srgb, var(--crimson) 60%, transparent);
+    background: var(--surface3);
+  }
+
+  .desmos-fab:active { transform: translateY(0) scale(0.97); }
+
+  .desmos-fab-icon { font-size: 20px; line-height: 1; flex-shrink: 0; transition: transform 0.2s ease; }
+  .desmos-fab:hover .desmos-fab-icon { transform: rotate(-8deg) scale(1.1); }
+
+  .desmos-fab-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    display: block;
+    line-height: 1.25;
+  }
+
+  .desmos-fab-sub {
+    font-size: 9.5px;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    display: block;
+  }
+
+  @media (max-width: 600px) {
+    .desmos-fab { bottom: 20px; right: 16px; padding: 0 14px; }
+    .desmos-fab-sub { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     HEADER
+============================================================ -->
+<header>
+  <div class="header-inner">
+    <div class="school-tag">Middlesex School · mxschool.edu</div>
+    <h1>AP Statistics — Units 8 &amp; 9: <em>Chi-Square &amp; Inference for Slopes</em></h1>
+    <div class="header-meta">
+      <span class="meta-pill">χ² Goodness of Fit</span>
+      <span class="meta-pill">χ² Homogeneity &amp; Independence</span>
+      <span class="meta-pill">📈 Confidence Intervals for Slope</span>
+      <span class="meta-pill">🔬 Significance Tests for Slope</span>
+      <span class="meta-pill">Topics 8.1 – 9.6</span>
+    </div>
+  </div>
+</header>
+
+<div class="instructions">
+  Click any tile to open practice problems. Use <strong>Show Answer</strong> to check your work after attempting each part.
+</div>
+
+<!-- ============================================================
+     BOARD
+============================================================ -->
+<div class="board-wrap">
+  <div class="board-grid" id="board-grid"></div>
+</div>
+
+<!-- ============================================================
+     RANDOM PRACTICE BAR
+============================================================ -->
+<div class="random-wrap">
+  <button class="random-btn" id="random-btn" aria-label="Random Practice">
+    <div class="random-btn-left-notch"></div>
+    <div class="random-btn-right-notch"></div>
+    <span class="random-btn-icon">🎲</span>
+    <div class="random-btn-label">
+      <span class="random-btn-title">Random Practice</span>
+      <span class="random-btn-sub">Any topic · Any tile · Any problem</span>
+    </div>
+    <span class="random-btn-badge">48 problems</span>
+  </button>
+</div>
+
+<!-- ============================================================
+     DESMOS FLOATING BUTTON
+============================================================ -->
+<button class="desmos-fab" id="desmos-fab" aria-label="Open Desmos Graphing Calculator">
+  <span class="desmos-fab-icon">📈</span>
+  <span>
+    <span class="desmos-fab-title">Graphing Calculator</span>
+    <span class="desmos-fab-sub">Opens Desmos in a new tab</span>
+  </span>
+</button>
+
+<!-- ============================================================
+     MODAL
+============================================================ -->
+<div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div class="modal-header-accent" id="modal-accent"></div>
+      <div>
+        <div class="modal-col-label" id="modal-col-label"></div>
+        <div class="modal-title" id="modal-title"></div>
+      </div>
+      <button class="modal-close" id="modal-close" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   DATA
+   Each tile: icon, title, sub, topics, problems[]
+   Each problem: context, stem, parts[], answers[]
+   Optional: video: { title, url }
+   Graph placeholders: <!-- GRAPH NEEDED: description -->
+============================================================ */
+
+const columns = [
+
+  // ═══════════════════════════════════════════════════════════
+  // COLUMN 1 — Chi-Square: GOF & Setup
+  //            Unit 8, Topics 8.1 – 8.3
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: "col-1",
+    accentVar: "var(--col1-light)",
+    headerClass: "col-1-header",
+    tileClass: "col-1",
+    label: "Column I",
+    title: "Chi-Square: Goodness of Fit",
+    topics: "Unit 8 · Topics 8.1 – 8.3",
+    tiles: [
+
+      // ── TILE 1-A ─────────────────────────────────────────
+      {
+        icon: "📊",
+        title: "The Chi-Square Distribution",
+        sub: "Shape, degrees of freedom, and the $\\chi^2$ statistic",
+        topics: "8.1",
+        problems: [
+          {
+            context: "Context: Understanding the distribution",
+            stem: "The chi-square distribution is a family of right-skewed distributions indexed by degrees of freedom $df$.<br><br><img src='img/u81a1p.png' alt='Chi-square distributions for df=2, df=5, and df=10 showing right-skewed shape becoming more symmetric as df increases' class='problem-img'>",
+            parts: [
+              { label: "(a)", text: "Describe how the shape, center, and spread of a chi-square distribution change as the degrees of freedom increase. Reference the graph above." },
+              { label: "(b)", text: "Explain why chi-square values can never be negative. Connect your answer to the formula $\\chi^2 = \\sum \\frac{(O - E)^2}{E}$." },
+              { label: "(c)", text: "For a goodness-of-fit test with 5 categories, state the degrees of freedom and explain how you determined it." }
+            ],
+            answers: [
+              { label: "(a)", text: "As $df$ increases: the distribution becomes less skewed (more symmetric, approaching Normal for large $df$); the center (mean) shifts right — specifically, the mean of a $\\chi^2$ distribution equals $df$; and the spread increases (variance $= 2 \\cdot df$)." },
+              { label: "(b)", text: "Every term in $\\chi^2 = \\sum \\frac{(O-E)^2}{E}$ involves $(O-E)^2$ in the numerator (a square, always $\\geq 0$) and $E > 0$ in the denominator. So every term is non-negative, and their sum must be non-negative. A $\\chi^2$ value of 0 would mean every observed count exactly equals its expected count." },
+              { label: "(c)", text: "$df = \\text{number of categories} - 1 = 5 - 1 = 4$. We subtract 1 because the expected counts must sum to the same total as the observed counts — that constraint \"uses up\" one degree of freedom." }
+            ]
+          },
+          {
+            context: "Context: Computing the test statistic",
+            stem: "A bag of colored candies is claimed by the manufacturer to contain 20% red, 20% orange, 20% yellow, 20% green, and 20% blue. A student randomly selects 100 candies and records the counts below.<br><br><table style='border-collapse:collapse;font-size:13.5px;margin:8px 0'><thead><tr><th style='border:1px solid #3a3a3a;padding:5px 12px;background:#252525;color:#f0ece6'>Color</th><th style='border:1px solid #3a3a3a;padding:5px 12px;background:#252525;color:#f0ece6'>Red</th><th style='border:1px solid #3a3a3a;padding:5px 12px;background:#252525;color:#f0ece6'>Orange</th><th style='border:1px solid #3a3a3a;padding:5px 12px;background:#252525;color:#f0ece6'>Yellow</th><th style='border:1px solid #3a3a3a;padding:5px 12px;background:#252525;color:#f0ece6'>Green</th><th style='border:1px solid #3a3a3a;padding:5px 12px;background:#252525;color:#f0ece6'>Blue</th></tr></thead><tbody><tr><td style='border:1px solid #3a3a3a;padding:5px 12px;background:#1e1e1e;color:#f0ece6'>Observed</td><td style='border:1px solid #3a3a3a;padding:5px 12px;background:#1e1e1e;color:#f0ece6;text-align:center'>28</td><td style='border:1px solid #3a3a3a;padding:5px 12px;background:#1e1e1e;color:#f0ece6;text-align:center'>15</td><td style='border:1px solid #3a3a3a;padding:5px 12px;background:#1e1e1e;color:#f0ece6;text-align:center'>22</td><td style='border:1px solid #3a3a3a;padding:5px 12px;background:#1e1e1e;color:#f0ece6;text-align:center'>18</td><td style='border:1px solid #3a3a3a;padding:5px 12px;background:#1e1e1e;color:#f0ece6;text-align:center'>17</td></tr></tbody></table>",
+            parts: [
+              { label: "(a)", text: "State the expected count for each color. Verify they sum correctly." },
+              { label: "(b)", text: "Compute the $\\chi^2$ test statistic. Show each term." },
+              { label: "(c)", text: "Which color contributed most to the test statistic? What does a large contribution indicate?" }
+            ],
+            answers: [
+              { label: "(a)", text: "Each expected count $= 100 \\times 0.20 = 20$. Sum $= 5 \\times 20 = 100$ ✓." },
+              { label: "(b)", text: "$\\chi^2 = \\frac{(28-20)^2}{20} + \\frac{(15-20)^2}{20} + \\frac{(22-20)^2}{20} + \\frac{(18-20)^2}{20} + \\frac{(17-20)^2}{20}$<br>$= \\frac{64}{20} + \\frac{25}{20} + \\frac{4}{20} + \\frac{4}{20} + \\frac{9}{20} = 3.20 + 1.25 + 0.20 + 0.20 + 0.45 = 5.30$." },
+              { label: "(c)", text: "Red contributed the most ($3.20$ out of $5.30$). A large contribution means the observed count for that category was far from its expected count — red candies were observed much more often than the claimed 20% would predict." }
+            ]
+          },
+          {
+            context: "Context: Degrees of freedom in context",
+            stem: "A researcher rolls a standard six-sided die 120 times and records how often each face appears. She wants to test whether the die is fair.",
+            parts: [
+              { label: "(a)", text: "State the expected count for each face under the null hypothesis." },
+              { label: "(b)", text: "State the degrees of freedom for this test and explain." },
+              { label: "(c)", text: "The researcher calculates $\\chi^2 = 8.42$. Using the fact that for $df = 5$, the critical value at $\\alpha = 0.05$ is $11.07$, state the conclusion of the test. Do not just say \"reject\" or \"fail to reject\" — write a full sentence in context." }
+            ],
+            answers: [
+              { label: "(a)", text: "Expected count per face $= 120/6 = 20$." },
+              { label: "(b)", text: "$df = 6 - 1 = 5$. With 6 categories and the constraint that all expected counts must sum to 120, only 5 counts are free to vary." },
+              { label: "(c)", text: "Since $\\chi^2 = 8.42 < 11.07$, the p-value is greater than $0.05$. We fail to reject $H_0$. The data do not provide convincing evidence that the die is unfair — the observed frequencies are consistent with what we'd expect from a fair die." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 1-B ─────────────────────────────────────────
+      {
+        icon: "🎯",
+        title: "Setting Up a GOF Test",
+        sub: "Hypotheses, expected counts, and conditions",
+        topics: "8.2",
+        problems: [
+          {
+            context: "Context: Writing hypotheses correctly",
+            stem: "A genetics textbook claims that when two heterozygous parents are crossed for a single trait, the offspring should appear in a 3:1 ratio of dominant to recessive phenotype. A biology class crosses 200 pea plants and observes 142 dominant and 58 recessive offspring.",
+            parts: [
+              { label: "(a)", text: "State the null and alternative hypotheses for a goodness-of-fit test. Write $H_0$ in terms of the claimed proportions, not just as 'the distribution fits.'" },
+              { label: "(b)", text: "Calculate the expected counts under $H_0$ and verify the large counts condition." },
+              { label: "(c)", text: "State all conditions required for this test and assess whether each is met, given that the 200 plants were randomly selected from a large greenhouse population." }
+            ],
+            answers: [
+              { label: "(a)", text: "$H_0$: The true distribution of offspring phenotypes is 75% dominant and 25% recessive (consistent with a 3:1 ratio). $H_a$: The true distribution of offspring phenotypes is not 75% dominant and 25% recessive." },
+              { label: "(b)", text: "Expected dominant: $200 \\times 0.75 = 150$. Expected recessive: $200 \\times 0.25 = 50$. Both expected counts $\\geq 5$ ✓ — the large counts condition is met." },
+              { label: "(c)", text: "<strong>Random:</strong> Plants were randomly selected — met ✓. <strong>Large counts:</strong> All expected counts ($150$ and $50$) are at least $5$ — met ✓. Note: we check expected counts, not observed counts. The sample of 200 is less than 10% of the large greenhouse population, so independence is reasonable." }
+            ]
+          },
+          {
+            context: "Context: Non-uniform expected proportions",
+            stem: "According to census data, a city's population is 55% White, 22% Black, 15% Hispanic, and 8% Asian. A random sample of 200 jurors selected in that city over the past year showed the following: 122 White, 36 Black, 28 Hispanic, and 14 Asian.",
+            parts: [
+              { label: "(a)", text: "State appropriate hypotheses for testing whether the jury selection process reflects the city's population." },
+              { label: "(b)", text: "Compute the expected count for each racial group. Show your work." },
+              { label: "(c)", text: "Identify the category that contributes most to the $\\chi^2$ statistic (you do not need to compute the full statistic). Interpret what that means in context." }
+            ],
+            answers: [
+              { label: "(a)", text: "$H_0$: The racial distribution of jurors selected reflects the city's population distribution (55% White, 22% Black, 15% Hispanic, 8% Asian). $H_a$: The racial distribution of selected jurors differs from the city's population distribution." },
+              { label: "(b)", text: "White: $200 \\times 0.55 = 110$. Black: $200 \\times 0.22 = 44$. Hispanic: $200 \\times 0.15 = 30$. Asian: $200 \\times 0.08 = 16$. Sum: $110 + 44 + 30 + 16 = 200$ ✓." },
+              { label: "(c)", text: "Black: $\\frac{(36-44)^2}{44} = \\frac{64}{44} \\approx 1.45$. Hispanic: $\\frac{(28-30)^2}{30} \\approx 0.13$. White: $\\frac{(122-110)^2}{110} \\approx 1.31$. Asian: $\\frac{(14-16)^2}{16} = 0.25$. Black contributes most. In context: Black jurors were selected at a lower rate than their population share — the deviation is most pronounced for this group." }
+            ]
+          },
+          {
+            context: "Context: Designing the test from scratch",
+            stem: "A student surveys a random sample of 150 high school students and asks which day of the week they prefer to have a test. The results: Monday 18, Tuesday 32, Wednesday 41, Thursday 27, Friday 32.",
+            parts: [
+              { label: "(a)", text: "The student wants to test whether students are equally likely to prefer any day. State $H_0$ and $H_a$." },
+              { label: "(b)", text: "Compute the expected count for each day and verify the large counts condition." },
+              { label: "(c)", text: "The student's friend argues: 'We already know students prefer Wednesday — we should test whether Wednesday is preferred more than 40% of the time using a one-proportion $z$-test.' Explain why the chi-square GOF test is more appropriate here." }
+            ],
+            answers: [
+              { label: "(a)", text: "$H_0$: Students are equally likely to prefer each day of the week — that is, each day is preferred by $\\frac{1}{5} = 20\\%$ of students. $H_a$: Students are not equally likely to prefer each day (at least one proportion differs)." },
+              { label: "(b)", text: "Expected count for each day: $150 \\times 0.20 = 30$. All five expected counts equal $30 \\geq 5$ ✓." },
+              { label: "(c)", text: "The one-proportion $z$-test addresses only one category (Wednesday vs. not-Wednesday). The chi-square GOF test simultaneously assesses all five categories to determine whether the entire distribution differs from uniform — it answers the broader question of whether any pattern exists across all days. Reducing to a single proportion would discard information and introduces bias by selecting the category post-hoc." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 1-C ─────────────────────────────────────────
+      {
+        icon: "🧮",
+        title: "Carrying Out a GOF Test",
+        sub: "Full significance test procedure, p-values, and conclusions",
+        topics: "8.3",
+        problems: [
+          {
+            context: "Context: Full four-step test",
+            stem: "A spinner has four sections labeled A, B, C, and D. The manufacturer claims the spinner lands on each section with probabilities 0.40, 0.30, 0.20, and 0.10, respectively. In 200 spins, it lands: A: 72, B: 65, C: 48, D: 15.<br><br><img src='img/u81c1p.png' alt='Chi-square distribution with df=3 showing right-tail p-value region shaded beyond the test statistic' class='problem-img'>",
+            parts: [
+              { label: "(a)", text: "<strong>State:</strong> Write $H_0$, $H_a$, and name the test." },
+              { label: "(b)", text: "<strong>Plan:</strong> Identify conditions and verify them." },
+              { label: "(c)", text: "<strong>Do:</strong> Compute expected counts and the $\\chi^2$ statistic. <strong>Conclude:</strong> Given $p$-value $\\approx 0.254$, write a conclusion in context at $\\alpha = 0.05$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$H_0$: The true proportions of spins landing on A, B, C, D are 0.40, 0.30, 0.20, 0.10. $H_a$: At least one true proportion differs from the claimed values. Test: chi-square goodness-of-fit test." },
+              { label: "(b)", text: "<strong>Random:</strong> Assume the 200 spins are a random process ✓. <strong>Large counts:</strong> Expected counts: A = $200(0.40)=80$, B = $200(0.30)=60$, C = $200(0.20)=40$, D = $200(0.10)=20$. All $\\geq 5$ ✓." },
+              { label: "(c)", text: "$\\chi^2 = \\frac{(72-80)^2}{80}+\\frac{(65-60)^2}{60}+\\frac{(48-40)^2}{40}+\\frac{(15-20)^2}{20} = 0.80+0.417+1.60+1.25 = 4.067$. With $df=3$ and $p \\approx 0.254 > 0.05$: We fail to reject $H_0$. The data do not provide convincing evidence that the spinner lands on each section with proportions different from the claimed values." }
+            ]
+          },
+          {
+            context: "Context: Interpreting a large p-value",
+            stem: "A teacher claims that grades in her class follow a distribution of 15% A, 35% B, 35% C, and 15% D/F. In a random sample of 80 students' grades: A: 10, B: 30, C: 26, D/F: 14. The chi-square test yields $\\chi^2 = 2.48$, $df = 3$, $p$-value $= 0.479$.",
+            parts: [
+              { label: "(a)", text: "Write a conclusion in context at $\\alpha = 0.05$. Use nondeterministic language." },
+              { label: "(b)", text: "A student writes: 'The p-value of 0.479 proves the grade distribution is exactly as the teacher claimed.' Identify the error in this statement." },
+              { label: "(c)", text: "The teacher says, 'My test shows there are no problems with the grade distribution.' Is this a valid statistical conclusion? Explain." }
+            ],
+            answers: [
+              { label: "(a)", text: "Since $p = 0.479 > 0.05$, we fail to reject $H_0$. The data do not provide convincing evidence that the grade distribution differs from the teacher's claimed distribution. The observed grades are consistent with the claimed percentages." },
+              { label: "(b)", text: "A large p-value does not prove $H_0$ is true — it only means we lack sufficient evidence to reject it. The test cannot 'prove' any hypothesis; it only assesses whether the data are consistent with $H_0$. The correct language is that the data are consistent with the claimed distribution, not that the distribution is exactly as claimed." },
+              { label: "(c)", text: "No. Failing to reject $H_0$ does not confirm that the grade distribution is appropriate or problem-free — it only indicates insufficient statistical evidence of a deviation from the claimed proportions in this sample. There could still be practical concerns (e.g., too many D/F grades) that a significance test is not designed to address." }
+            ]
+          },
+          {
+            context: "Context: Choosing $\\alpha$ and Type I/II errors",
+            stem: "Researchers are testing whether the distribution of blood types (A, B, AB, O) in a rural county matches national proportions of 40%, 11%, 4%, 45%. They take a random sample of 500 residents.",
+            parts: [
+              { label: "(a)", text: "If the researchers use $\\alpha = 0.01$ instead of $\\alpha = 0.05$, how does this affect the probability of a Type I error? A Type II error?" },
+              { label: "(b)", text: "Suppose the p-value is $0.038$. Write two different conclusions — one for $\\alpha = 0.05$ and one for $\\alpha = 0.01$ — each in context." },
+              { label: "(c)", text: "Which significance level is more appropriate for this study if incorrect conclusions could affect how blood banks allocate resources? Justify." }
+            ],
+            answers: [
+              { label: "(a)", text: "Using $\\alpha = 0.01$ reduces the probability of a Type I error (falsely concluding the distribution differs from national proportions) from 5% to 1%. However, it increases the probability of a Type II error (failing to detect a real difference in the distribution)." },
+              { label: "(b)", text: "At $\\alpha = 0.05$: Since $p = 0.038 < 0.05$, we reject $H_0$. The data provide convincing evidence that the blood type distribution in this county differs from national proportions.<br>At $\\alpha = 0.01$: Since $p = 0.038 > 0.01$, we fail to reject $H_0$. The data do not provide convincing evidence at the 1% significance level that the distribution differs from national proportions." },
+              { label: "(c)", text: "A case can be made for either, but $\\alpha = 0.05$ is reasonable here. A Type I error (unnecessarily reallocating blood bank resources based on a false alarm) has real costs, but so does a Type II error (missing a true difference and under-supplying certain blood types). If resource misallocation is very costly, $\\alpha = 0.01$ is more conservative. The key is to choose $\\alpha$ before collecting data and to justify the choice based on the relative costs of each error type." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 1-D ─────────────────────────────────────────
+      {
+        icon: "✅",
+        title: "Conditions for Chi-Square Inference",
+        sub: "Random, large counts, and when conditions fail",
+        topics: "8.2 – 8.3",
+        problems: [
+          {
+            context: "Context: Checking all conditions carefully",
+            stem: "A researcher wants to test whether the distribution of favorite music genres among teenagers matches a claimed national distribution. She surveys 40 students from a single high school homeroom and obtains the following expected counts (after applying the claimed proportions): Pop: 14, Hip-hop: 10, Rock: 6, Country: 4, Other: 6.",
+            parts: [
+              { label: "(a)", text: "Check the random condition. Is it met? Explain." },
+              { label: "(b)", text: "Check the large counts condition. Is it met? Which categories, if any, are problematic?" },
+              { label: "(c)", text: "The researcher says she can fix the large counts issue by combining Country and Other into one category. Evaluate this strategy — does it resolve the problem?" }
+            ],
+            answers: [
+              { label: "(a)", text: "The random condition is not met. Students in a single homeroom are not a random sample of teenagers — they share a classroom, school, and geographic location, which may make them more similar to each other than to the broader population. The results cannot be generalized to all teenagers." },
+              { label: "(b)", text: "The large counts condition requires all expected counts to be at least 5. Country has an expected count of 4, which fails this condition. All other categories meet the requirement." },
+              { label: "(c)", text: "Combining Country and Other gives an expected count of $4 + 6 = 10 \\geq 5$, which resolves the large counts issue. However, this changes the hypotheses — the test no longer assesses the five original categories. The random condition remains unmet regardless, so the inference is still not valid for generalizing to all teenagers." }
+            ]
+          },
+          {
+            context: "Context: When is a chi-square GOF not appropriate?",
+            stem: "For each scenario, state whether a chi-square GOF test is appropriate. If not, explain what is wrong.",
+            parts: [
+              { label: "(a)", text: "A teacher selects all 120 students in the senior class (not a sample) and records their college plans (4-year college, 2-year college, work, other) to test if the distribution matches a national survey." },
+              { label: "(b)", text: "A company surveys 200 randomly selected customers and tests whether the proportion choosing each of 3 products matches the company's claimed market shares. One product is rarely chosen and has expected count 2." },
+              { label: "(c)", text: "A researcher uses a random sample of 300 adults to test whether income category (Low, Middle, High) follows a claimed national distribution." }
+            ],
+            answers: [
+              { label: "(a)", text: "Not appropriate as a significance test. When all members of the population (the entire senior class) are measured, there is no sampling variability — any deviation from the expected distribution is the truth about that population, not a sample estimate. Inference is not needed; just describe the actual distribution." },
+              { label: "(b)", text: "Not appropriate. The large counts condition fails because one expected count is 2 < 5. The researcher should consider collecting more data or combining categories before proceeding with the test." },
+              { label: "(c)", text: "Appropriate. The sample is random ✓ and with $n = 300$ and three categories, the expected counts are likely all $\\geq 5$ ✓ (verify using the claimed proportions). The chi-square GOF test can be applied." }
+            ]
+          },
+          {
+            context: "Context: Sample size and power",
+            stem: "Two researchers both want to test whether a six-sided die is fair. Researcher A rolls the die 60 times; Researcher B rolls it 600 times. Both observe proportions consistent with a slightly unfair die.",
+            parts: [
+              { label: "(a)", text: "Are the large counts conditions met for both researchers? Show the expected counts." },
+              { label: "(b)", text: "Researcher A gets $p = 0.21$; Researcher B gets $p = 0.031$. Both used $\\alpha = 0.05$. State each researcher's conclusion." },
+              { label: "(c)", text: "Explain why the two researchers reached different conclusions even though they observed similar proportions. Use the concept of statistical power in your explanation." }
+            ],
+            answers: [
+              { label: "(a)", text: "Researcher A: expected count per face $= 60/6 = 10 \\geq 5$ ✓. Researcher B: expected count per face $= 600/6 = 100 \\geq 5$ ✓. Both conditions are met." },
+              { label: "(b)", text: "Researcher A: $p = 0.21 > 0.05$ — fail to reject $H_0$. The data do not provide convincing evidence the die is unfair. Researcher B: $p = 0.031 < 0.05$ — reject $H_0$. The data provide convincing evidence the die is unfair." },
+              { label: "(c)", text: "With a larger sample, a test has greater statistical power — it is better able to detect a real deviation from $H_0$, even a small one. Researcher A's small sample produced too much sampling variability relative to the signal, so the test lacked the power to detect the unfairness. Researcher B's larger sample reduced variability enough that the same proportional deviation produced a statistically significant result." }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  // ═══════════════════════════════════════════════════════════
+  // COLUMN 2 — Chi-Square: Two-Way Tables
+  //            Unit 8, Topics 8.4 – 8.7
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: "col-2",
+    accentVar: "var(--col2-light)",
+    headerClass: "col-2-header",
+    tileClass: "col-2",
+    label: "Column II",
+    title: "Chi-Square: Two-Way Tables",
+    topics: "Unit 8 · Topics 8.4 – 8.7",
+    tiles: [
+
+      // ── TILE 2-A ─────────────────────────────────────────
+      {
+        icon: "📋",
+        title: "Expected Counts in Two-Way Tables",
+        sub: "Computing expected counts and reading two-way tables",
+        topics: "8.4",
+        problems: [
+          {
+            context: "Context: Computing expected counts from a two-way table",
+            stem: "A random sample of 300 adults is classified by age group and whether they exercise regularly. The two-way table of observed counts is shown.<br><br><table style='border-collapse:collapse;font-size:13px;margin:8px 0'><thead><tr><th style='border:1px solid #3a3a3a;padding:5px 10px;background:#252525;color:#f0ece6'></th><th style='border:1px solid #3a3a3a;padding:5px 10px;background:#252525;color:#f0ece6'>Exercises Regularly</th><th style='border:1px solid #3a3a3a;padding:5px 10px;background:#252525;color:#f0ece6'>Does Not Exercise</th><th style='border:1px solid #3a3a3a;padding:5px 10px;background:#252525;color:#f0ece6'>Total</th></tr></thead><tbody><tr><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6'>Under 40</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>72</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>48</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>120</td></tr><tr><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6'>40 and Over</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>78</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>102</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>180</td></tr><tr><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#252525;color:#f0ece6'><strong>Total</strong></td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#252525;color:#f0ece6;text-align:center'><strong>150</strong></td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#252525;color:#f0ece6;text-align:center'><strong>150</strong></td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#252525;color:#f0ece6;text-align:center'><strong>300</strong></td></tr></tbody></table>",
+            parts: [
+              { label: "(a)", text: "State the formula for an expected count in a two-way table and compute the expected count for the (Under 40, Exercises Regularly) cell." },
+              { label: "(b)", text: "Compute all four expected counts. Verify they sum to 300." },
+              { label: "(c)", text: "Compare the observed and expected counts for the Under 40 row. What do the differences suggest about the relationship between age and exercise?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$E = \\dfrac{(\\text{row total}) \\times (\\text{column total})}{\\text{table total}}$. For (Under 40, Exercises): $E = \\dfrac{120 \\times 150}{300} = 60$." },
+              { label: "(b)", text: "(Under 40, Exercises): $60$. (Under 40, Does Not): $\\frac{120 \\times 150}{300} = 60$. (40+, Exercises): $\\frac{180 \\times 150}{300} = 90$. (40+, Does Not): $\\frac{180 \\times 150}{300} = 90$. Sum: $60+60+90+90=300$ ✓." },
+              { label: "(c)", text: "For Under 40: observed exercisers (72) exceed expected (60); observed non-exercisers (48) are below expected (60). This suggests adults under 40 exercise more than would be expected if age and exercise were independent — i.e., younger adults in this sample appear more likely to exercise regularly." }
+            ]
+          },
+          {
+            context: "Context: Expected counts encode the null hypothesis",
+            stem: "Explain in your own words why the formula $E = \\frac{(\\text{row total})(\\text{column total})}{n}$ gives the count we would expect if the two variables are independent.",
+            parts: [
+              { label: "(a)", text: "If age and exercise status are independent, what should the proportion of exercisers be within each age group? Express this using marginal proportions from the table above." },
+              { label: "(b)", text: "Using your answer to (a), compute the expected count of exercisers in the Under 40 group directly from the independence condition. Show it matches the formula." },
+              { label: "(c)", text: "A student says: 'The expected counts are what we hope to see.' Correct this misconception." }
+            ],
+            answers: [
+              { label: "(a)", text: "If independent, the proportion of exercisers within each age group should equal the overall proportion of exercisers: $\\frac{150}{300} = 0.50$. So 50% of each age group should exercise." },
+              { label: "(b)", text: "Expected exercisers in Under 40: $120 \\times 0.50 = 60$. Using the formula: $\\frac{120 \\times 150}{300} = 60$ ✓. The formula is just multiplying the row total by the marginal proportion — which is what independence requires." },
+              { label: "(c)", text: "Expected counts are not what we 'hope' to see — they represent what we would expect to observe if the null hypothesis of independence (or the claimed distribution) were true. The chi-square statistic measures how far the actual observed counts deviate from these expected counts under $H_0$." }
+            ]
+          },
+          {
+            context: "Context: Reading and interpreting two-way tables",
+            stem: "The following two-way table shows political affiliation and opinion on a ballot measure for a random sample of 400 registered voters.<br><br><table style='border-collapse:collapse;font-size:13px;margin:8px 0'><thead><tr><th style='border:1px solid #3a3a3a;padding:5px 10px;background:#252525;color:#f0ece6'></th><th style='border:1px solid #3a3a3a;padding:5px 10px;background:#252525;color:#f0ece6'>Support</th><th style='border:1px solid #3a3a3a;padding:5px 10px;background:#252525;color:#f0ece6'>Oppose</th><th style='border:1px solid #3a3a3a;padding:5px 10px;background:#252525;color:#f0ece6'>No Opinion</th><th style='border:1px solid #3a3a3a;padding:5px 10px;background:#252525;color:#f0ece6'>Total</th></tr></thead><tbody><tr><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6'>Democrat</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>110</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>30</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>20</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>160</td></tr><tr><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6'>Republican</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>40</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>100</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>20</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>160</td></tr><tr><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6'>Independent</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>50</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>30</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>0</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>80</td></tr><tr><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#252525;color:#f0ece6'><strong>Total</strong></td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#252525;color:#f0ece6;text-align:center'><strong>200</strong></td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#252525;color:#f0ece6;text-align:center'><strong>160</strong></td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#252525;color:#f0ece6;text-align:center'><strong>40</strong></td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#252525;color:#f0ece6;text-align:center'><strong>400</strong></td></tr></tbody></table>",
+            parts: [
+              { label: "(a)", text: "Compute the expected count for the (Independent, No Opinion) cell. Then note that the observed count is 0. Does this violate the large counts condition?" },
+              { label: "(b)", text: "Compute the conditional distribution of opinion for Democrats. Compare it to the conditional distribution for Republicans." },
+              { label: "(c)", text: "Based on your comparison in (b), does it appear that party affiliation and opinion are associated? What would the test confirm?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$E = \\frac{80 \\times 40}{400} = 8$. The expected count is 8 ≥ 5, so the large counts condition is met ✓. We check expected counts, not observed counts — an observed count of 0 is fine as long as the expected count is at least 5." },
+              { label: "(b)", text: "Democrats: Support $= 110/160 \\approx 68.8\\%$, Oppose $= 30/160 \\approx 18.8\\%$, No Opinion $= 20/160 \\approx 12.5\\%$. Republicans: Support $= 40/160 = 25\\%$, Oppose $= 100/160 = 62.5\\%$, No Opinion $= 20/160 = 12.5\\%$." },
+              { label: "(c)", text: "Yes — Democrats support the measure at a much higher rate (68.8%) than Republicans (25%), while Republicans oppose it at a much higher rate (62.5% vs 18.8%). These dramatically different conditional distributions suggest a strong association between party affiliation and opinion. The chi-square test would formalize this with a test statistic and p-value to determine whether such differences are unlikely under independence." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 2-B ─────────────────────────────────────────
+      {
+        icon: "🔀",
+        title: "Test for Homogeneity",
+        sub: "Comparing distributions across groups or treatments",
+        topics: "8.5 – 8.6",
+        problems: [
+          {
+            context: "Context: Full homogeneity test",
+            stem: "A pharmaceutical company conducts a randomized experiment. Participants with insomnia are randomly assigned to one of three treatments: a new drug, an existing drug, or a placebo. After 4 weeks, outcomes are classified as Improved, No Change, or Worsened.<br><br><table style='border-collapse:collapse;font-size:13px;margin:8px 0'><thead><tr><th style='border:1px solid #3a3a3a;padding:5px 10px;background:#252525;color:#f0ece6'></th><th style='border:1px solid #3a3a3a;padding:5px 10px;background:#252525;color:#f0ece6'>New Drug</th><th style='border:1px solid #3a3a3a;padding:5px 10px;background:#252525;color:#f0ece6'>Existing Drug</th><th style='border:1px solid #3a3a3a;padding:5px 10px;background:#252525;color:#f0ece6'>Placebo</th></tr></thead><tbody><tr><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6'>Improved</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>42</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>31</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>22</td></tr><tr><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6'>No Change</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>10</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>14</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>19</td></tr><tr><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6'>Worsened</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>8</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>5</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>9</td></tr></tbody></table>",
+            parts: [
+              { label: "(a)", text: "<strong>State:</strong> Write appropriate hypotheses for a test of homogeneity." },
+              { label: "(b)", text: "<strong>Plan:</strong> Name the test, state degrees of freedom, and verify conditions. (Row totals: New Drug = 60, Existing = 50, Placebo = 50. Column totals: Improved = 95, No Change = 43, Worsened = 22. Grand total = 160.)" },
+              { label: "(c)", text: "<strong>Conclude:</strong> The test yields $\\chi^2 = 9.22$, $df = 4$, $p = 0.056$. Write a conclusion at $\\alpha = 0.05$ and interpret." }
+            ],
+            answers: [
+              { label: "(a)", text: "$H_0$: The distribution of outcomes (Improved, No Change, Worsened) is the same for all three treatment groups. $H_a$: At least one treatment group has a different distribution of outcomes." },
+              { label: "(b)", text: "Chi-square test for homogeneity. $df = (\\text{rows}-1)(\\text{cols}-1) = (3-1)(3-1) = 4$. <strong>Random:</strong> Participants were randomly assigned to treatments ✓. <strong>Large counts:</strong> Check all expected counts: e.g., $E(\\text{New Drug, Improved}) = \\frac{60 \\times 95}{160} = 35.6$. All expected counts are at least 5 ✓." },
+              { label: "(c)", text: "Since $p = 0.056 > 0.05$, we fail to reject $H_0$ at $\\alpha = 0.05$. The data do not provide convincing evidence at the 5% significance level that the distribution of outcomes differs among the three treatments. However, the p-value is close to $0.05$, and a researcher might note this borderline result warrants further investigation." }
+            ]
+          },
+          {
+            context: "Context: Identifying the design",
+            stem: "Determine whether each study calls for a test of homogeneity or a test of independence. Explain your reasoning.",
+            parts: [
+              { label: "(a)", text: "A researcher takes one random sample of 500 college students and records both their year in school (First-year, Sophomore, Junior, Senior) and their preferred study location (Library, Dorm, Café, Other)." },
+              { label: "(b)", text: "A researcher takes separate random samples of 150 students from each of three different universities and records their preferred study location (Library, Dorm, Café, Other) for each sample." },
+              { label: "(c)", text: "Although the tests differ in design, a student notes that 'the calculations and the chi-square statistic formula are identical.' Is this correct? What does differ?" }
+            ],
+            answers: [
+              { label: "(a)", text: "Test of independence. One random sample from a single population; both variables are measured on the same individuals. We are asking whether year in school and study location preference are associated within the college student population." },
+              { label: "(b)", text: "Test of homogeneity. Separate random samples are drawn from three distinct populations (the three universities). We are comparing the distribution of study location preference across these groups." },
+              { label: "(c)", text: "Yes — the $\\chi^2$ statistic formula, expected count formula, degrees of freedom, and mechanics are identical. What differs is the study design and therefore the hypotheses and conclusions: homogeneity compares distributions across populations; independence tests for association within a single population." }
+            ]
+          },
+          {
+            context: "Context: Causation and experimental design",
+            stem: "Researchers randomly assign 300 participants to either a mindfulness training program or a control group (150 each). After 8 weeks, they classify participants as Reduced Stress, No Change, or Increased Stress.",
+            parts: [
+              { label: "(a)", text: "State the hypotheses for this study." },
+              { label: "(b)", text: "The chi-square test yields $p = 0.003$. Write a conclusion in context." },
+              { label: "(c)", text: "Because this was a randomized experiment (not an observational study), can the researchers conclude that the mindfulness program caused a difference in stress outcomes? Explain." }
+            ],
+            answers: [
+              { label: "(a)", text: "$H_0$: The distribution of stress outcomes is the same for the mindfulness group and the control group. $H_a$: The distribution of stress outcomes differs between the mindfulness group and the control group." },
+              { label: "(b)", text: "Since $p = 0.003 < 0.05$, we reject $H_0$. The data provide convincing evidence that the distribution of stress outcomes differs between the mindfulness group and the control group." },
+              { label: "(c)", text: "Yes — because participants were randomly assigned to treatments, the groups should be roughly equivalent in all other variables. Any difference in outcomes can be attributed to the treatment itself (mindfulness vs. control). Random assignment allows causal conclusions, unlike observational studies where confounding variables could explain the difference." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 2-C ─────────────────────────────────────────
+      {
+        icon: "🔗",
+        title: "Test for Independence",
+        sub: "Assessing association between two categorical variables",
+        topics: "8.5 – 8.6",
+        problems: [
+          {
+            context: "Context: Full independence test",
+            stem: "A random sample of 250 adults is surveyed about their coffee consumption (Never, Occasionally, Daily) and their self-reported sleep quality (Poor, Fair, Good). Results below.<br><br><table style='border-collapse:collapse;font-size:13px;margin:8px 0'><thead><tr><th style='border:1px solid #3a3a3a;padding:5px 10px;background:#252525;color:#f0ece6'></th><th style='border:1px solid #3a3a3a;padding:5px 10px;background:#252525;color:#f0ece6'>Poor Sleep</th><th style='border:1px solid #3a3a3a;padding:5px 10px;background:#252525;color:#f0ece6'>Fair Sleep</th><th style='border:1px solid #3a3a3a;padding:5px 10px;background:#252525;color:#f0ece6'>Good Sleep</th><th style='border:1px solid #3a3a3a;padding:5px 10px;background:#252525;color:#f0ece6'>Total</th></tr></thead><tbody><tr><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6'>Never</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>12</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>18</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>30</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>60</td></tr><tr><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6'>Occasionally</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>20</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>35</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>45</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>100</td></tr><tr><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6'>Daily</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>28</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>42</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>20</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>90</td></tr><tr><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#252525;color:#f0ece6'><strong>Total</strong></td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#252525;color:#f0ece6;text-align:center'><strong>60</strong></td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#252525;color:#f0ece6;text-align:center'><strong>95</strong></td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#252525;color:#f0ece6;text-align:center'><strong>95</strong></td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#252525;color:#f0ece6;text-align:center'><strong>250</strong></td></tr></tbody></table>",
+            parts: [
+              { label: "(a)", text: "<strong>State:</strong> Write hypotheses for a chi-square test of independence. Name the test." },
+              { label: "(b)", text: "<strong>Plan:</strong> State $df$ and compute the expected count for the (Daily, Good Sleep) cell. Verify the large counts condition for this cell." },
+              { label: "(c)", text: "<strong>Conclude:</strong> The test yields $\\chi^2 = 14.38$, $df = 4$, $p = 0.006$. Write a full conclusion and comment on whether causation can be established." }
+            ],
+            answers: [
+              { label: "(a)", text: "$H_0$: Coffee consumption and sleep quality are independent in the population of adults. $H_a$: Coffee consumption and sleep quality are not independent (there is an association) in the population of adults. Test: chi-square test of independence." },
+              { label: "(b)", text: "$df = (3-1)(3-1) = 4$. $E(\\text{Daily, Good}) = \\frac{90 \\times 95}{250} = 34.2 \\geq 5$ ✓." },
+              { label: "(c)", text: "Since $p = 0.006 < 0.05$, we reject $H_0$. The data provide convincing evidence of an association between coffee consumption and sleep quality in the adult population. However, because this is an observational study (not a randomized experiment), we cannot conclude that coffee consumption causes changes in sleep quality — confounding variables (e.g., stress, age) may explain the association." }
+            ]
+          },
+          {
+            context: "Context: Conclusions and language precision",
+            stem: "A chi-square test of independence is conducted on gender and preference for remote vs. in-person work. The result is $\\chi^2 = 6.12$, $df = 1$, $p = 0.013$.",
+            parts: [
+              { label: "(a)", text: "Write a correct conclusion at $\\alpha = 0.05$." },
+              { label: "(b)", text: "A newspaper headline reads: 'Study Proves Men and Women Have Different Work Preferences.' Identify two statistical errors in this headline." },
+              { label: "(c)", text: "A colleague says: 'Since the p-value is less than 0.05, we know gender determines work preferences.' Explain what the test actually tells us." }
+            ],
+            answers: [
+              { label: "(a)", text: "Since $p = 0.013 < 0.05$, we reject $H_0$. The data provide convincing evidence of an association between gender and work preference (remote vs. in-person) in the population from which this sample was drawn." },
+              { label: "(b)", text: "Error 1: 'Proves' — significance tests never prove anything; they provide evidence. A small p-value means the data are inconsistent with $H_0$, not that the alternative is proven. Error 2: 'Determines' — a chi-square test of independence from an observational study cannot establish that one variable determines or causes the other. Association ≠ causation." },
+              { label: "(c)", text: "The test tells us that the observed association between gender and work preference is unlikely to be due to chance alone (if the variables were truly independent, seeing data this extreme has only a 1.3% probability). It does not tell us that gender determines or causes work preference — only that the two variables appear to be associated in this sample. Other variables could be driving the association." }
+            ]
+          },
+          {
+            context: "Context: Residuals and follow-up",
+            stem: "After a significant chi-square test, statisticians often examine standardized residuals $\\frac{O - E}{\\sqrt{E}}$ to identify which cells drove the result. A test of independence between smoking status and cancer type yields $\\chi^2 = 22.4$, $p < 0.001$. Selected standardized residuals: (Smoker, Lung Cancer): $+3.8$; (Non-smoker, Lung Cancer): $-2.9$; (Smoker, Skin Cancer): $-1.1$; (Non-smoker, Skin Cancer): $+0.8$.",
+            parts: [
+              { label: "(a)", text: "Interpret the standardized residual of $+3.8$ for (Smoker, Lung Cancer) in context." },
+              { label: "(b)", text: "Which cells appear to have driven the significant chi-square result? How do you know?" },
+              { label: "(c)", text: "Based on the residuals, describe the nature of the association between smoking and cancer type." }
+            ],
+            answers: [
+              { label: "(a)", text: "A standardized residual of $+3.8$ means the observed count of smokers with lung cancer was $3.8$ standard deviations above the expected count (under independence). This is a very large positive residual — smokers had far more lung cancer cases than we would expect if smoking and cancer type were unrelated." },
+              { label: "(b)", text: "Cells with standardized residuals with absolute value $> 2$ are typically flagged as influential. (Smoker, Lung Cancer) at $+3.8$ and (Non-smoker, Lung Cancer) at $-2.9$ are both large in magnitude. These two cells drove most of the chi-square statistic. The skin cancer cells have smaller residuals ($|{-1.1}|$ and $|{+0.8}|$) and contributed less." },
+              { label: "(c)", text: "Smokers appear to have lung cancer at higher rates than expected under independence, while non-smokers have lung cancer at lower rates than expected. The association between smoking and skin cancer is weaker (residuals near zero). Overall, the association is primarily driven by the relationship between smoking and lung cancer specifically." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 2-D ─────────────────────────────────────────
+      {
+        icon: "🗂️",
+        title: "Selecting the Right Chi-Square Test",
+        sub: "GOF vs. homogeneity vs. independence — AP Skills Focus 8.7",
+        topics: "8.7",
+        problems: [
+          {
+            context: "Context: Identifying the correct test",
+            stem: "For each scenario, identify whether a chi-square goodness-of-fit test, test for homogeneity, or test for independence is appropriate. Explain your reasoning.",
+            parts: [
+              { label: "(a)", text: "A random sample of 200 voters is asked which of four candidates they prefer. The researcher wants to test whether voters are equally split among the candidates." },
+              { label: "(b)", text: "Separate random samples of 100 students from urban, suburban, and rural schools are asked whether they have access to high-speed internet (Yes or No). The researcher tests whether internet access rates differ by school location." },
+              { label: "(c)", text: "A single random sample of 400 adults records both their marital status (Single, Married, Divorced, Widowed) and their reported happiness level (Low, Medium, High). The researcher tests whether these variables are related." }
+            ],
+            answers: [
+              { label: "(a)", text: "Chi-square goodness-of-fit test. There is one categorical variable (candidate preference) measured on one sample. The null hypothesis specifies a distribution (equal proportions = 25% each), and we test whether the observed distribution matches it." },
+              { label: "(b)", text: "Chi-square test for homogeneity. Separate samples are drawn from three distinct populations (urban, suburban, rural schools). We compare the distribution of one categorical variable (internet access) across these groups." },
+              { label: "(c)", text: "Chi-square test for independence. One random sample from a single population; two categorical variables are measured on each individual. We test whether marital status and happiness level are associated." }
+            ]
+          },
+          {
+            context: "Context: Mixed practice — write full hypotheses",
+            stem: "For each scenario, write the null and alternative hypotheses in words. Be specific about the population and variables.",
+            parts: [
+              { label: "(a)", text: "<strong>GOF:</strong> A manufacturer claims that the colors of a product are distributed 30% Red, 30% Blue, 25% Green, 15% Yellow. A quality control analyst tests a random sample of 400 units." },
+              { label: "(b)", text: "<strong>Homogeneity:</strong> Three regional offices of a company each provide a random sample of employees. Employees are classified as Highly Satisfied, Satisfied, or Dissatisfied." },
+              { label: "(c)", text: "<strong>Independence:</strong> A random sample of 500 hospital patients records their insurance type (Private, Medicare, Medicaid, Uninsured) and the quality of care rating they give (Poor, Fair, Good, Excellent)." }
+            ],
+            answers: [
+              { label: "(a)", text: "$H_0$: The true distribution of product colors is 30% Red, 30% Blue, 25% Green, and 15% Yellow. $H_a$: The true distribution of product colors differs from the claimed proportions." },
+              { label: "(b)", text: "$H_0$: The distribution of employee satisfaction (Highly Satisfied, Satisfied, Dissatisfied) is the same across all three regional offices. $H_a$: At least one office has a different distribution of employee satisfaction." },
+              { label: "(c)", text: "$H_0$: Insurance type and quality of care rating are independent in the population of hospital patients. $H_a$: Insurance type and quality of care rating are not independent — there is an association between them in the population of hospital patients." }
+            ]
+          },
+          {
+            context: "Context: AP exam decision tree",
+            stem: "A student is trying to determine which chi-square test to use. Answer the following diagnostic questions to build a decision framework.",
+            parts: [
+              { label: "(a)", text: "What is the key question that distinguishes a GOF test from both two-way table tests (homogeneity and independence)?" },
+              { label: "(b)", text: "What is the key question that distinguishes a test for homogeneity from a test for independence?" },
+              { label: "(c)", text: "A problem states: 'A random sample of 300 students is surveyed. For each student, researchers record both grade level (9th–12th) and preferred extracurricular activity.' A classmate says this calls for a test for homogeneity because grade level has four groups. Correct this reasoning." }
+            ],
+            answers: [
+              { label: "(a)", text: "GOF: Is there one categorical variable being compared to a specific claimed distribution? If yes — GOF. If two categorical variables are involved (a two-way table) — proceed to the next question." },
+              { label: "(b)", text: "Homogeneity: Were separate samples drawn from distinct populations or treatment groups? Independence: Was one sample drawn from a single population with two variables recorded for each individual? The design (not just the number of groups) determines the test." },
+              { label: "(c)", text: "The classmate's reasoning is incorrect. The design specifies one random sample from a single population (300 students), with two categorical variables recorded per student (grade level and extracurricular preference). This calls for a test of independence. A test of homogeneity would require separate random samples drawn from each grade level independently — that is not what happened here." }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  // ═══════════════════════════════════════════════════════════
+  // COLUMN 3 — Inference for Slopes: Foundations
+  //            Unit 9, Topics 9.1 – 9.3
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: "col-3",
+    accentVar: "var(--col3-light)",
+    headerClass: "col-3-header",
+    tileClass: "col-3",
+    label: "Column III",
+    title: "Inference for Slopes: Foundations",
+    topics: "Unit 9 · Topics 9.1 – 9.3",
+    tiles: [
+
+      // ── TILE 3-A ─────────────────────────────────────────
+      {
+        icon: "💻",
+        title: "Reading Computer Output",
+        sub: "Slope $b$, intercept, $s$, $r^2$, and $SE_b$",
+        topics: "9.1 – 9.2",
+        problems: [
+          {
+            context: "Context: Interpreting regression output",
+            stem: "A study examines the relationship between hours of sleep per night ($x$) and reaction time in milliseconds ($y$) for a random sample of 24 adults. Computer output is shown below.<br><br><img src='img/u93a1p.png' alt='Scatterplot of sleep hours versus reaction time with LSRL showing negative linear trend' class='problem-img'><br><br><div class='computer-output'>Predictor      Coef    SE Coef      T        P\nConstant     412.3     28.4      14.52   0.000\nSleep        -18.6      3.1      -6.00   0.000\n\nS = 24.8      R-Sq = 62.4%      R-Sq(adj) = 60.7%</div>",
+            parts: [
+              { label: "(a)", text: "Write the equation of the least-squares regression line. Define all variables." },
+              { label: "(b)", text: "Interpret the slope in context using appropriate statistical language (predicted, not deterministic)." },
+              { label: "(c)", text: "Interpret $S = 24.8$ and $R^2 = 62.4\\%$ in context." }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\hat{y} = 412.3 - 18.6x$, where $\\hat{y}$ is the predicted reaction time (ms) and $x$ is the number of hours of sleep per night." },
+              { label: "(b)", text: "For each additional hour of sleep per night, the predicted reaction time decreases by $18.6$ milliseconds, on average." },
+              { label: "(c)", text: "$S = 24.8$ ms is the standard deviation of the residuals — the typical distance between an observed reaction time and the reaction time predicted by the regression line. $R^2 = 62.4\\%$: about 62.4% of the variability in reaction times is explained by the linear relationship with hours of sleep." }
+            ]
+          },
+          {
+            context: "Context: Standard error of the slope",
+            stem: "Using the same output as Problem 1, the standard error of the slope is $SE_b = 3.1$.",
+            parts: [
+              { label: "(a)", text: "Explain what $SE_b = 3.1$ means in context. What is it measuring?" },
+              { label: "(b)", text: "The $t$-statistic for the slope is shown as $-6.00$. Verify this using $t = \\frac{b}{SE_b}$." },
+              { label: "(c)", text: "If a second study used a much larger sample and found a similar slope of $-18.4$, would you expect $SE_b$ to be larger or smaller than 3.1? Explain." }
+            ],
+            answers: [
+              { label: "(a)", text: "$SE_b = 3.1$ ms/hour is the standard error of the sample slope — it measures the typical amount by which the sample slope $b$ would vary from the true population slope $\\beta$ across repeated random samples. Smaller $SE_b$ means more precise estimation of the true slope." },
+              { label: "(b)", text: "$t = \\frac{b}{SE_b} = \\frac{-18.6}{3.1} \\approx -6.00$ ✓." },
+              { label: "(c)", text: "Smaller. With a larger sample size, there is less sampling variability — sample slopes cluster more tightly around the true population slope. $SE_b$ decreases as sample size increases (roughly proportional to $\\frac{1}{\\sqrt{n}}$)." }
+            ]
+          },
+          {
+            context: "Context: Identifying quantities from output",
+            stem: "A regression is fit to predict salary ($y$, in thousands of dollars) from years of experience ($x$) for a random sample of 50 employees. Output below.<br><br><div class='computer-output'>Predictor      Coef    SE Coef      T        P\nConstant      38.4      4.2       9.14   0.000\nYears          2.85     0.43      6.63   0.000\n\nS = 8.72      R-Sq = 47.3%</div>",
+            parts: [
+              { label: "(a)", text: "Interpret the $y$-intercept in context. Is this a meaningful value to interpret here? Explain." },
+              { label: "(b)", text: "What is the predicted salary for an employee with 10 years of experience?" },
+              { label: "(c)", text: "An employee with 10 years of experience actually earns $\\$67{,}000$. Compute and interpret the residual." }
+            ],
+            answers: [
+              { label: "(a)", text: "The predicted salary for an employee with 0 years of experience is $\\$38{,}400$. This intercept is somewhat meaningful — it estimates the starting salary for a new hire. However, if no employees in the sample had 0 years of experience, this is an extrapolation and should be interpreted cautiously." },
+              { label: "(b)", text: "$\\hat{y} = 38.4 + 2.85(10) = 38.4 + 28.5 = 66.9$ thousand dollars, or $\\$66{,}900$." },
+              { label: "(c)", text: "Residual $= y - \\hat{y} = 67 - 66.9 = 0.1$ thousand dollars $= \\$100$. The employee earns $\\$100$ more than the regression model predicts for someone with 10 years of experience — a very small positive residual." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 3-B ─────────────────────────────────────────
+      {
+        icon: "📏",
+        title: "Confidence Intervals for Slope",
+        sub: "Constructing and interpreting $t$-intervals for $\\beta$",
+        topics: "9.2 – 9.3",
+        problems: [
+          {
+            context: "Context: Constructing a CI for slope",
+            stem: "Using the sleep/reaction time study from Tile A (slope $b = -18.6$, $SE_b = 3.1$, $n = 24$, $df = 22$), construct a 95% confidence interval for the true slope $\\beta$.<br><br><img src='img/u93b1p.png' alt='Scatterplot of study hours versus exam score with LSRL showing positive linear trend' class='problem-img'>",
+            parts: [
+              { label: "(a)", text: "State the formula for a $t$-interval for slope and identify all components." },
+              { label: "(b)", text: "The critical value $t^* = 2.074$ for $df = 22$ at 95% confidence. Construct the interval. Show all work." },
+              { label: "(c)", text: "Interpret the interval in context. Use language appropriate for inference about a population parameter." }
+            ],
+            answers: [
+              { label: "(a)", text: "CI: $b \\pm t^* \\cdot SE_b$, where $b$ is the sample slope, $t^*$ is the critical value from the $t$-distribution with $df = n - 2$, and $SE_b$ is the standard error of the slope." },
+              { label: "(b)", text: "$-18.6 \\pm 2.074(3.1) = -18.6 \\pm 6.43$. Interval: $(-25.03, \\; -12.17)$." },
+              { label: "(c)", text: "We are 95% confident that the true slope of the population regression line relating sleep hours to reaction time is between $-25.03$ and $-12.17$ milliseconds per hour. That is, for each additional hour of sleep, the true mean reaction time in the population decreases by somewhere between approximately 12.2 and 25.0 milliseconds." }
+            ]
+          },
+          {
+            context: "Context: Justifying a claim using a CI",
+            stem: "A researcher claims that each additional year of experience increases average salary by more than $\\$2{,}000$. Using the salary/experience study (slope $b = 2.85$, $SE_b = 0.43$, $n = 50$), a 95% CI for $\\beta$ is $(1.99, 3.71)$ (in thousands of dollars).",
+            parts: [
+              { label: "(a)", text: "Does the confidence interval support the researcher's claim? Explain precisely." },
+              { label: "(b)", text: "A student says: 'The interval contains 2, so we can't say the slope exceeds 2.' Evaluate this statement." },
+              { label: "(c)", text: "If you wanted to more rigorously test the claim that $\\beta > 2$, what significance test would you perform, and what would $H_0$ and $H_a$ be?" }
+            ],
+            answers: [
+              { label: "(a)", text: "The interval $(1.99, 3.71)$ barely contains values just below $2.00$ (the lower bound is $1.99$). Since the entire interval is not above $2$, the CI does not provide unambiguous support for the claim that $\\beta > 2$. However, the lower bound of $1.99$ is very close to $2$, and most of the interval is above $2$, so the evidence is suggestive but not definitive at 95% confidence." },
+              { label: "(b)", text: "The student is making a common error. A confidence interval is used to estimate a range of plausible values for the parameter. Saying 'the interval contains 2' is true, but the correct interpretation of the CI for testing a claim is whether the entire interval lies above (or below) the claimed value. Since $1.99 < 2$, the claim that $\\beta > 2$ is not fully supported — but just barely." },
+              { label: "(c)", text: "$H_0: \\beta = 2$ (the slope is exactly 2 thousand dollars per year). $H_a: \\beta > 2$ (the slope exceeds 2 thousand dollars per year). This would be a one-sided $t$-test for the slope using $t = \\frac{b - 2}{SE_b} = \\frac{2.85 - 2}{0.43} \\approx 1.98$ with $df = 48$." }
+            ]
+          },
+          {
+            context: "Context: Effect of conditions on CI validity",
+            stem: "State and check all conditions required for a confidence interval for slope. Then assess each condition for this scenario: A researcher fits a regression line to predict plant growth (cm) from sunlight exposure (hours/day) using a convenience sample of 30 plants from a university greenhouse. A residual plot shows a megaphone-shaped (fan-shaped) spread.",
+            parts: [
+              { label: "(a)", text: "List the four conditions for inference on slope and explain what each requires." },
+              { label: "(b)", text: "Which conditions are clearly met, and which are problematic for this study?" },
+              { label: "(c)", text: "What is the consequence of proceeding with inference when conditions are not met?" }
+            ],
+            answers: [
+              { label: "(a)", text: "<strong>1. Linear:</strong> The true relationship between $x$ and $y$ is linear (check scatterplot and residual plot for no curved pattern). <strong>2. Independent:</strong> Individual observations are independent (random sample; $n < 10\\%$ of population if sampling without replacement). <strong>3. Normal:</strong> The responses $y$ are Normally distributed for each value of $x$ (check residual plot for roughly symmetric, bell-shaped distribution; more important for small $n$). <strong>4. Equal variance (constant $\\sigma$):</strong> The standard deviation of $y$ is the same for all values of $x$ (check residual plot for constant spread — no fan shape)." },
+              { label: "(b)", text: "<strong>Linear:</strong> Cannot assess without the scatterplot/residual plot for curvature — assume met for now. <strong>Independent:</strong> Not met — a convenience sample from one greenhouse is not random, and plants in the same greenhouse may be correlated (shared conditions). <strong>Normal:</strong> With $n=30$, this is less critical, but cannot verify without residual plot shape. <strong>Equal variance:</strong> Not met — the fan-shaped residual plot indicates increasing variance, violating the equal variance condition." },
+              { label: "(c)", text: "Proceeding despite violated conditions means the $t$-distribution used to compute critical values and p-values is not appropriate. The stated confidence level (e.g., 95%) may not be accurate — the interval may be too narrow (overconfident) or too wide. Conclusions drawn from an invalid CI could mislead decisions. The most appropriate response is to address the violations (transform variables, use a different model, or collect a proper random sample) before proceeding." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 3-C ─────────────────────────────────────────
+      {
+        icon: "📐",
+        title: "Interpreting & Justifying Claims from CIs",
+        sub: "What a CI for slope does and does not tell us",
+        topics: "9.3",
+        problems: [
+          {
+            context: "Context: What does 'associated' really mean statistically?",
+            stem: "A 95% CI for the slope of the regression of test score ($y$) on study hours ($x$) is $(3.2, 8.9)$ points per hour, based on a random sample of 40 students.",
+            parts: [
+              { label: "(a)", text: "Does the CI provide evidence that study hours and test scores are associated in the population? Explain using the interval." },
+              { label: "(b)", text: "Does the CI indicate whether study hours cause higher test scores? Explain." },
+              { label: "(c)", text: "A student argues: 'The interval is wide, so the slope must not be significant.' Correct this misconception." }
+            ],
+            answers: [
+              { label: "(a)", text: "Yes. The entire interval $(3.2, 8.9)$ is above zero, meaning zero is not a plausible value for $\\beta$ at 95% confidence. If $\\beta = 0$, there would be no linear association. Since 0 is excluded, the data provide convincing evidence of a positive linear association between study hours and test scores in the population." },
+              { label: "(b)", text: "No. This is an observational study — students were not randomly assigned to different amounts of studying. A positive association (and a CI that excludes 0) indicates a relationship exists, but cannot establish that studying causes higher scores. Confounding variables (e.g., student ability, motivation) could explain the association." },
+              { label: "(c)", text: "The width of a CI reflects precision, not significance. A wide interval means we have an imprecise estimate of $\\beta$, but significance is determined by whether the interval contains 0. The interval $(3.2, 8.9)$ does not contain 0, so the slope is statistically significant regardless of the interval's width." }
+            ]
+          },
+          {
+            context: "Context: Interval contains zero",
+            stem: "A regression of commute time (minutes) on coffee intake (oz) yields a 95% CI for slope of $(-1.4, 3.8)$ based on $n = 28$ commuters.",
+            parts: [
+              { label: "(a)", text: "Does this interval provide evidence of a linear association between coffee intake and commute time? Explain." },
+              { label: "(b)", text: "Write a conclusion in context using nondeterministic language." },
+              { label: "(c)", text: "If the researcher increased the sample size to 200, how would you expect the CI to change? Would 0 necessarily be excluded?" }
+            ],
+            answers: [
+              { label: "(a)", text: "No. The interval $(-1.4, 3.8)$ contains 0, so a slope of 0 (no linear association) is a plausible value for $\\beta$ at 95% confidence. The data do not provide convincing evidence of a linear relationship between coffee intake and commute time." },
+              { label: "(b)", text: "Based on this sample, we are 95% confident that the true slope of the population regression line relating coffee intake to commute time is between $-1.4$ and $3.8$ minutes per ounce. Since this interval contains 0, the data do not provide convincing evidence of a linear association between these variables." },
+              { label: "(c)", text: "With a larger sample, $SE_b$ would decrease, making the CI narrower (more precise). However, whether 0 is excluded depends on the true value of $\\beta$. If the true slope is very close to 0 (or exactly 0), even a narrow CI would contain 0. Only if there is a real non-zero relationship would a larger sample reliably exclude 0 from the interval." }
+            ]
+          },
+          {
+            context: "Context: Connecting CIs to significance tests",
+            stem: "A researcher builds a 95% CI for the slope of a regression line and obtains $(0.12, 0.88)$. A student conducts a two-sided $t$-test of $H_0: \\beta = 0$ and reports a p-value of $0.018$.",
+            parts: [
+              { label: "(a)", text: "Are the CI and the $t$-test consistent with each other? Explain." },
+              { label: "(b)", text: "Without computing anything, can you determine whether the p-value for a two-sided test of $H_0: \\beta = 1$ would be greater than or less than $0.05$? Explain." },
+              { label: "(c)", text: "A researcher uses a 99% CI instead of 95% and finds the interval now includes 0. What does this tell you about the p-value relative to $\\alpha = 0.01$?" }
+            ],
+            answers: [
+              { label: "(a)", text: "Yes — they are consistent. The 95% CI $(0.12, 0.88)$ does not contain 0, which corresponds to rejecting $H_0: \\beta = 0$ at $\\alpha = 0.05$. The p-value of $0.018 < 0.05$ also leads to rejecting $H_0$. Both methods give the same conclusion: there is convincing evidence of a non-zero slope." },
+              { label: "(b)", text: "The value $\\beta = 1$ is outside the 95% CI $(0.12, 0.88)$, which means a two-sided test of $H_0: \\beta = 1$ would also reject at $\\alpha = 0.05$, giving $p < 0.05$." },
+              { label: "(c)", text: "If the 99% CI contains 0, then 0 is a plausible value for $\\beta$ at the 99% confidence level, which corresponds to failing to reject $H_0: \\beta = 0$ at $\\alpha = 0.01$. This means the p-value is greater than $0.01$. Since $p < 0.05$ (from the 95% CI excluding 0), we know $0.01 < p < 0.05$." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 3-D ─────────────────────────────────────────
+      {
+        icon: "✅",
+        title: "Conditions for Slope Inference",
+        sub: "LINEAR, INDEPENDENT, NORMAL, EQUAL VARIANCE (LINE)",
+        topics: "9.2",
+        problems: [
+          {
+            context: "Context: Using residual plots to check conditions",
+            stem: "A researcher fits a regression line to predict crop yield (bushels/acre) from rainfall (inches) using 35 randomly selected farms. The residual plot (residuals vs. fitted values) shows randomly scattered points with no pattern and roughly constant spread. A histogram of residuals is approximately bell-shaped.",
+            parts: [
+              { label: "(a)", text: "Use the mnemonic LINE to list all four conditions and state whether each is met based on the description above." },
+              { label: "(b)", text: "The researcher confirms the 35 farms were selected randomly from a large state registry. Does this satisfy the independence condition? Are there any remaining concerns?" },
+              { label: "(c)", text: "If the residual plot instead showed a clear curved pattern (U-shape), which condition would be violated, and what should the researcher do?" }
+            ],
+            answers: [
+              { label: "(a)", text: "<strong>L (Linear):</strong> No curved pattern in residual plot ✓. <strong>I (Independent):</strong> Random sample from a large population; $35 < 10\\%$ of all farms ✓. <strong>N (Normal):</strong> Histogram of residuals is approximately bell-shaped ✓. <strong>E (Equal variance):</strong> Roughly constant spread in residual plot ✓. All conditions appear met." },
+              { label: "(b)", text: "Yes — random selection from a large registry establishes independence. A potential remaining concern: if some farms share irrigation systems or are geographically clustered, they might not be truly independent despite random selection from the registry. This is worth noting but unlikely to be a major issue with a well-conducted random sample." },
+              { label: "(c)", text: "The Linearity condition (L) would be violated — the relationship between rainfall and yield is not linear (a curve would fit better). The researcher should try a transformation (e.g., $\\sqrt{x}$, $\\ln x$, or $x^2$) to linearize the relationship before fitting a regression line and conducting inference." }
+            ]
+          },
+          {
+            context: "Context: When conditions are partially met",
+            stem: "A study predicts house price from square footage using a random sample of 45 homes sold last year. The residual plot shows a mild fan shape (slightly increasing spread as fitted values increase). The histogram of residuals is roughly symmetric.",
+            parts: [
+              { label: "(a)", text: "Which condition is most clearly violated? What does this fan shape indicate?" },
+              { label: "(b)", text: "A student argues: 'The violation is mild, so we can proceed with inference anyway.' Is this a reasonable position? What factors should guide this decision?" },
+              { label: "(c)", text: "Suggest a remedy for the violated condition and explain why it might help." }
+            ],
+            answers: [
+              { label: "(a)", text: "The Equal Variance condition (E) is most clearly violated. The fan shape indicates that the variability in house prices increases as the predicted price (and presumably square footage) increases — larger homes have more variable prices than smaller homes." },
+              { label: "(b)", text: "This is a judgment call. Mild violations of equal variance in larger samples (like $n = 45$) often do not severely distort the $t$-interval or $p$-value. A reasonable position is to proceed while noting the limitation and interpreting results cautiously. However, if the fan shape is pronounced, the resulting CI may be too narrow (underestimating true uncertainty), leading to overconfidence." },
+              { label: "(c)", text: "A log transformation of the response ($y' = \\ln(\\text{price})$) often stabilizes variance in economic data where larger values are more variable. After the transformation, the residual plot should be checked again. If the fan shape disappears, inference on the transformed regression is more valid — though the slope interpretation changes (it now describes the predicted percent change in price per unit increase in square footage)." }
+            ]
+          },
+          {
+            context: "Context: The population model for slope",
+            stem: "The inference conditions for slope are based on an underlying population model: $y = \\alpha + \\beta x + \\varepsilon$, where $\\varepsilon \\sim N(0, \\sigma)$ independently.",
+            parts: [
+              { label: "(a)", text: "Identify which part of the model each LINE condition corresponds to." },
+              { label: "(b)", text: "In this model, what does $\\beta$ represent? How does it differ from the sample slope $b$?" },
+              { label: "(c)", text: "The standard error of the slope is approximately $SE_b \\approx \\frac{s}{s_x \\sqrt{n-1}}$ where $s$ is the residual standard deviation and $s_x$ is the standard deviation of the $x$-values. Explain intuitively why a larger spread in $x$-values leads to a smaller $SE_b$ and a more precise estimate of $\\beta$." }
+            ],
+            answers: [
+              { label: "(a)", text: "<strong>L:</strong> The $\\alpha + \\beta x$ part — the mean of $y$ is a linear function of $x$. <strong>I:</strong> The 'independently' condition — each $\\varepsilon_i$ is independent of the others. <strong>N:</strong> $\\varepsilon \\sim N(\\cdot)$ — the errors are Normally distributed. <strong>E:</strong> $N(0, \\sigma)$ — the standard deviation $\\sigma$ is constant (does not change with $x$)." },
+              { label: "(b)", text: "$\\beta$ is the true population slope — the actual rate of change in the mean of $y$ per unit increase in $x$ in the population. It is a fixed (unknown) parameter. The sample slope $b$ is a statistic computed from a sample; it estimates $\\beta$ but varies from sample to sample. Inference uses $b$ to make conclusions about the unknown $\\beta$." },
+              { label: "(c)", text: "When $x$-values are spread out widely, each additional unit increase in $x$ is well-represented in the data, giving the regression line more 'leverage' to pin down the slope accurately. A narrow range of $x$-values means slight changes in the data could shift the slope dramatically. More spread in $x$ $\\Rightarrow$ the denominator $s_x\\sqrt{n-1}$ is larger $\\Rightarrow$ $SE_b$ is smaller $\\Rightarrow$ more precise estimate of $\\beta$." }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  // ═══════════════════════════════════════════════════════════
+  // COLUMN 4 — Inference for Slopes: Significance Tests
+  //            Unit 9, Topics 9.4 – 9.6
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: "col-4",
+    accentVar: "var(--col4-light)",
+    headerClass: "col-4-header",
+    tileClass: "col-4",
+    label: "Column IV",
+    title: "Significance Tests for Slope",
+    topics: "Unit 9 · Topics 9.4 – 9.6",
+    tiles: [
+
+      // ── TILE 4-A ─────────────────────────────────────────
+      {
+        icon: "🔬",
+        title: "Setting Up a Test for Slope",
+        sub: "Hypotheses, conditions, and $H_0: \\beta = 0$",
+        topics: "9.4",
+        problems: [
+          {
+            context: "Context: Why $H_0: \\beta = 0$?",
+            stem: "When testing whether a linear relationship exists between two quantitative variables, the default null hypothesis is $H_0: \\beta = 0$.",
+            parts: [
+              { label: "(a)", text: "Explain in words what $\\beta = 0$ means about the relationship between $x$ and $y$ in the population. What would the regression line look like?" },
+              { label: "(b)", text: "A researcher wants to test whether temperature ($x$, in °C) predicts ice cream sales ($y$, in units). Write $H_0$ and $H_a$ for a two-sided test. Then rewrite $H_a$ for a one-sided test appropriate to this context." },
+              { label: "(c)", text: "When would you test $H_0: \\beta = k$ for some value $k \\neq 0$? Give an example." }
+            ],
+            answers: [
+              { label: "(a)", text: "If $\\beta = 0$, there is no linear relationship between $x$ and $y$ in the population — knowing $x$ does not help predict $y$. The population regression line would be horizontal (slope = 0), and the best prediction of $y$ for any value of $x$ would simply be the mean $\\mu_y$." },
+              { label: "(b)", text: "Two-sided: $H_0: \\beta = 0$ (temperature is not linearly associated with ice cream sales). $H_a: \\beta \\neq 0$ (there is a linear association). One-sided (more appropriate): $H_a: \\beta > 0$ — since we have prior reason to believe warmer temperatures increase sales, a one-sided test in the positive direction is justified." },
+              { label: "(c)", text: "We test $H_0: \\beta = k$ when comparing the observed slope to a specific non-zero benchmark. Example: an economist believes a 1% increase in advertising spend increases sales by exactly 5 units ($\\beta = 5$). A test of $H_0: \\beta = 5$ would assess whether the data are consistent with this specific theory. This is analogous to testing a one-proportion $z$-test with $p_0 \\neq 0.5$." }
+            ]
+          },
+          {
+            context: "Context: Writing hypotheses in context",
+            stem: "For each scenario, write appropriate hypotheses for a $t$-test for slope. Use proper notation ($\\beta$) and define the variables.",
+            parts: [
+              { label: "(a)", text: "A public health researcher tests whether the number of hours of screen time per day ($x$) is linearly associated with BMI ($y$) in the population of teenagers." },
+              { label: "(b)", text: "An education researcher believes that class size ($x$) negatively impacts student test scores ($y$). She designs a one-sided test." },
+              { label: "(c)", text: "A sports analyst tests whether a pitcher's average fastball speed in mph ($x$) predicts strikeout rate ($y$, strikeouts per 9 innings). Write hypotheses for a two-sided test and explain why two-sided might be preferred here even if you expect a positive relationship." }
+            ],
+            answers: [
+              { label: "(a)", text: "$H_0: \\beta = 0$ — there is no linear relationship between daily screen time and BMI in the population of teenagers. $H_a: \\beta \\neq 0$ — there is a linear relationship between daily screen time and BMI in the population of teenagers." },
+              { label: "(b)", text: "$H_0: \\beta = 0$ — class size is not linearly associated with student test scores in the population. $H_a: \\beta < 0$ — there is a negative linear association between class size and student test scores (larger classes predict lower scores)." },
+              { label: "(c)", text: "$H_0: \\beta = 0$ — fastball speed is not linearly associated with strikeout rate. $H_a: \\beta \\neq 0$ — there is a linear association between fastball speed and strikeout rate. Two-sided is often preferred even when a direction is expected, because it guards against unexpected negative results and is more conservative — if we had specified $H_a: \\beta > 0$ and the data showed a strong negative association, we would miss that finding." }
+            ]
+          },
+          {
+            context: "Context: Conditions for the $t$-test",
+            stem: "A researcher uses a random sample of 32 cities to predict violent crime rate ($y$) from poverty rate ($x$). A scatterplot shows a positive linear trend with no obvious curvature. The residual plot shows random scatter with roughly constant spread. A normal probability plot of residuals is approximately linear.",
+            parts: [
+              { label: "(a)", text: "Verify all LINE conditions using the information provided." },
+              { label: "(b)", text: "State the degrees of freedom for the $t$-test and explain." },
+              { label: "(c)", text: "Explain why the researcher must use a $t$-distribution rather than a $z$-distribution for this test, even with $n = 32$." }
+            ],
+            answers: [
+              { label: "(a)", text: "<strong>L:</strong> Scatterplot shows linear trend, residual plot shows no curvature ✓. <strong>I:</strong> Random sample of 32 cities; assuming 32 < 10% of all cities ✓. <strong>N:</strong> Normal probability plot of residuals is approximately linear ✓. <strong>E:</strong> Residual plot shows roughly constant spread ✓. All conditions met." },
+              { label: "(b)", text: "$df = n - 2 = 32 - 2 = 30$. We lose 2 degrees of freedom because two parameters ($\\alpha$ and $\\beta$) must be estimated from the data to compute the residuals." },
+              { label: "(c)", text: "The $z$-distribution requires knowing the population standard deviation $\\sigma$ (the true standard deviation of the residuals around the population regression line). Since $\\sigma$ is unknown and must be estimated from the data using $s$, we use the $t$-distribution, which accounts for the additional uncertainty from estimating $\\sigma$. This is exactly parallel to why we use $t$ instead of $z$ for inference about means when $\\sigma$ is unknown." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 4-B ─────────────────────────────────────────
+      {
+        icon: "📉",
+        title: "Carrying Out a $t$-Test for Slope",
+        sub: "Test statistic, p-value, and conclusion",
+        topics: "9.5",
+        problems: [
+          {
+            context: "Context: Full four-step test for slope",
+            stem: "A random sample of 20 students records hours spent on social media per day ($x$) and GPA ($y$). Computer output below.<br><br><div class='computer-output'>Predictor      Coef    SE Coef      T        P\nConstant      3.82      0.21      18.19   0.000\nSocMedia     -0.14      0.06      -2.33   0.031\n\nS = 0.38      R-Sq = 23.1%</div>",
+            parts: [
+              { label: "(a)", text: "<strong>State:</strong> Write $H_0$, $H_a$, and name the test. Use $\\alpha = 0.05$." },
+              { label: "(b)", text: "<strong>Plan & Do:</strong> State $df$, identify the test statistic and p-value from the output, and verify they are consistent ($t = b / SE_b$)." },
+              { label: "(c)", text: "<strong>Conclude:</strong> Write a conclusion in context. Also comment on the $R^2$ value — does a significant result imply a strong relationship?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$H_0: \\beta = 0$ — there is no linear relationship between daily social media use and GPA in the population of students. $H_a: \\beta \\neq 0$ — there is a linear relationship between daily social media use and GPA. Test: $t$-test for slope. $\\alpha = 0.05$." },
+              { label: "(b)", text: "$df = 20 - 2 = 18$. From output: $t = -2.33$, $p = 0.031$. Verify: $t = \\frac{-0.14}{0.06} \\approx -2.33$ ✓." },
+              { label: "(c)", text: "Since $p = 0.031 < 0.05$, we reject $H_0$. The data provide convincing evidence of a negative linear association between daily social media use and GPA in the student population. However, $R^2 = 23.1\\%$ indicates that only about 23% of the variability in GPA is explained by social media use — the relationship, while statistically significant, is relatively weak in practical terms. Statistical significance does not imply practical importance." }
+            ]
+          },
+          {
+            context: "Context: Reading p-values from computer output",
+            stem: "Computer output for a regression of weight (lbs) on height (inches) using 50 randomly selected adults is shown.<br><br><div class='computer-output'>Predictor      Coef    SE Coef      T        P\nConstant    -115.4     38.2      -3.02   0.004\nHeight         4.12     0.56       7.36   0.000\n\nS = 22.6      R-Sq = 52.8%</div>",
+            parts: [
+              { label: "(a)", text: "A student wants to test $H_0: \\beta = 0$ vs. $H_a: \\beta > 0$ at $\\alpha = 0.05$. The output shows $p = 0.000$ for a two-sided test. What is the p-value for this one-sided test, and what is the conclusion?" },
+              { label: "(b)", text: "Interpret the $t$-statistic of $7.36$ for the slope in terms of standard errors." },
+              { label: "(c)", text: "The p-value for the constant (intercept) is $0.004$. Should we interpret this as evidence that the intercept is important? Explain why testing $H_0: \\alpha = 0$ is often not meaningful." }
+            ],
+            answers: [
+              { label: "(a)", text: "For a one-sided test in the direction consistent with the data (and the two-sided p-value is essentially 0), the one-sided p-value $\\approx 0.000/2 \\approx 0.000$. Since $p < 0.05$, we reject $H_0$. The data provide convincing evidence of a positive linear association between height and weight in the adult population." },
+              { label: "(b)", text: "The sample slope $b = 4.12$ is $7.36$ standard errors above 0. A $t$-statistic this large is extremely unlikely if the true slope were 0 — it falls far into the tail of the $t$-distribution, producing a p-value near 0." },
+              { label: "(c)", text: "Testing $H_0: \\alpha = 0$ asks whether the $y$-intercept is 0 — i.e., whether a person of height 0 inches would weigh 0 lbs. This is a physically meaningless question (no person has height 0), so the test of the intercept is rarely interpretable. The intercept is included to correctly position the line, but its significance test is typically not relevant to the research question." }
+            ]
+          },
+          {
+            context: "Context: Connecting the test statistic to the sampling distribution",
+            stem: "Suppose the true slope of the population regression of $y$ on $x$ is $\\beta = 0$. A researcher takes many random samples of size $n = 25$ and computes the sample slope $b$ each time.",
+            parts: [
+              { label: "(a)", text: "Describe the sampling distribution of $b$ when $\\beta = 0$. What is its shape, center, and spread (in terms of $SE_b$)?" },
+              { label: "(b)", text: "If a researcher observes $b = 0.42$ with $SE_b = 0.18$, compute $t$ and explain what this value means in terms of the sampling distribution." },
+              { label: "(c)", text: "Sketch (describe) what the sampling distribution of $b$ looks like when $\\beta = 0$ and indicate where $b = 0.42$ would fall. Explain how this leads to a p-value." }
+            ],
+            answers: [
+              { label: "(a)", text: "When LINE conditions are met and $\\beta = 0$: $b$ is approximately Normally distributed with mean $0$ (since $\\beta = 0$) and standard deviation $SE_b$ (the standard error of the slope). The standardized statistic $t = b/SE_b$ follows a $t$-distribution with $df = n - 2 = 23$." },
+              { label: "(b)", text: "$t = \\frac{0.42}{0.18} \\approx 2.33$. This means the observed slope is $2.33$ standard errors above 0. Under $H_0: \\beta = 0$, the sampling distribution is centered at 0, so $b = 0.42$ lies in the right tail of that distribution." },
+              { label: "(c)", text: "The sampling distribution is a $t$-curve centered at 0. The value $b = 0.42$ ($t = 2.33$) lies in the right tail. For a two-sided test, the p-value is the probability of observing $|t| \\geq 2.33$ — the combined area in both tails beyond $\\pm 2.33$. For $df = 23$, this gives $p \\approx 0.029$, providing convincing evidence against $H_0$ at $\\alpha = 0.05$." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 4-C ─────────────────────────────────────────
+      {
+        icon: "📊",
+        title: "Interpreting Full Computer Output",
+        sub: "AP free-response style: reading and using all quantities",
+        topics: "9.5",
+        problems: [
+          {
+            context: "Context: AP-style full output problem",
+            stem: "A random sample of 28 college athletes records average weekly training hours ($x$) and finishing time in a 5K race ($y$, in minutes). Computer output and a partially completed ANOVA table are shown.<br><br><div class='computer-output'>Predictor      Coef    SE Coef      T        P\nConstant      32.14     2.88      11.16   0.000\nTraining      -0.48     0.09      -5.33   0.000\n\nS = 1.94      R-Sq = 53.2%      R-Sq(adj) = 51.5%</div>",
+            parts: [
+              { label: "(a)", text: "Write the equation of the LSRL, interpret the slope in context, and construct a 95% CI for $\\beta$ using $t^* = 2.056$ for $df = 26$." },
+              { label: "(b)", text: "Conduct a $t$-test of $H_0: \\beta = 0$ vs. $H_a: \\beta < 0$ at $\\alpha = 0.05$. State the test statistic, p-value (halved from the two-sided value in the output), and conclusion." },
+              { label: "(c)", text: "A coach claims that each additional hour of weekly training reduces 5K time by more than 30 seconds (0.5 minutes). Does your CI from (a) support or refute this claim? Explain." }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\hat{y} = 32.14 - 0.48x$, where $\\hat{y}$ is the predicted 5K finishing time (minutes) and $x$ is weekly training hours. Slope: for each additional hour of weekly training, the predicted 5K time decreases by $0.48$ minutes (about 29 seconds), on average. 95% CI: $-0.48 \\pm 2.056(0.09) = -0.48 \\pm 0.185 = (-0.665, -0.295)$." },
+              { label: "(b)", text: "$t = -5.33$ (from output), $df = 26$. For the one-sided test $H_a: \\beta < 0$, p-value $= 0.000/2 \\approx 0.000 < 0.05$. Reject $H_0$. The data provide convincing evidence that the true slope is negative — training hours are negatively associated with 5K finishing time." },
+              { label: "(c)", text: "The coach claims $\\beta < -0.5$ (a decrease of more than 0.5 minutes per hour). The 95% CI is $(-0.665, -0.295)$. The value $-0.5$ falls inside this interval, meaning $\\beta = -0.5$ is a plausible value. The CI does not provide convincing evidence that the true decrease exceeds 0.5 minutes per hour — the coach's claim is neither clearly supported nor refuted by this interval at the 95% level." }
+            ]
+          },
+          {
+            context: "Context: Distinguishing quantities in output",
+            stem: "A researcher fits a regression of income ($y$, in \\$1000s) on education level ($x$, in years) for a random sample of 60 working adults. A classmate reads the output and makes several interpretive claims. Evaluate each.",
+            parts: [
+              { label: "(a)", text: "The output shows $b = 4.2$. The classmate says: 'Each additional year of education increases income by $\\$4{,}200$.' Identify the statistical error in this statement." },
+              { label: "(b)", text: "The output shows $S = 9.8$. The classmate says: 'The regression model makes predictions that are off by $\\$9{,}800$ on average.' Evaluate this statement." },
+              { label: "(c)", text: "The p-value for the slope is $0.001$. The classmate says: 'There is only a 0.1% chance that education and income are not related.' Correct this misinterpretation." }
+            ],
+            answers: [
+              { label: "(a)", text: "The error is using deterministic language. The slope $b = 4.2$ describes the predicted (average) change in income per additional year of education across the population, not a guaranteed change for any individual. The correct language: 'For each additional year of education, the predicted income increases by $\\$4{,}200$, on average.' No individual's income necessarily changes by exactly this amount." },
+              { label: "(b)", text: "This statement is roughly correct in spirit. $S = 9.8$ (in \\$1000s) is the standard deviation of the residuals — a typical residual is about $\\$9{,}800$. A more precise statement: $S$ is the typical distance between an observed income and the income predicted by the regression line. 'On average' is slightly imprecise because the mean of residuals is exactly 0 — $S$ measures typical absolute deviation, not the mean." },
+              { label: "(c)", text: "The p-value of $0.001$ is NOT the probability that education and income are unrelated. The correct interpretation: if the true slope were $0$ (no linear relationship), the probability of observing a sample slope as extreme as ours is $0.1\\%$. The p-value is a conditional probability about data, not a probability about the hypothesis being true." }
+            ]
+          },
+          {
+            context: "Context: Putting it all together — investigative task style",
+            stem: "A random sample of 35 cities records average daily temperature in July (°F) and per-capita water usage (gallons/day). Computer output below.<br><br><div class='computer-output'>Predictor      Coef    SE Coef      T        P\nConstant      -42.8     18.6      -2.30   0.028\nTemp            1.85     0.24       7.71   0.000\n\nS = 12.4      R-Sq = 64.7%</div>",
+            parts: [
+              { label: "(a)", text: "A city has an average July temperature of 90°F. Find the predicted water usage and compute a 'rough' margin of error for a single prediction using $\\pm 2S$. Interpret." },
+              { label: "(b)", text: "Build a 99% CI for $\\beta$ using $t^* = 2.728$ for $df = 33$. Use the interval to test $H_0: \\beta = 0$ at $\\alpha = 0.01$." },
+              { label: "(c)", text: "An environmental agency claims water usage increases by at least 2 gallons per day per degree of temperature. Assess this claim using the 99% CI from (b)." }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\hat{y} = -42.8 + 1.85(90) = -42.8 + 166.5 = 123.7$ gallons/day. Rough prediction interval: $123.7 \\pm 2(12.4) = 123.7 \\pm 24.8 = (98.9, 148.5)$ gallons/day. We predict that a city with a 90°F average July temperature uses between approximately 99 and 149 gallons per capita per day." },
+              { label: "(b)", text: "99% CI: $1.85 \\pm 2.728(0.24) = 1.85 \\pm 0.655 = (1.195, 2.505)$. Since 0 is not in this interval, we reject $H_0: \\beta = 0$ at $\\alpha = 0.01$. The data provide convincing evidence of a positive linear association between temperature and water usage." },
+              { label: "(c)", text: "The agency claims $\\beta \\geq 2$ (at least 2 gallons/day/°F). The 99% CI is $(1.195, 2.505)$. Since the interval contains values below 2 (e.g., 1.2), $\\beta < 2$ is plausible at the 99% confidence level. The CI does not provide convincing evidence that the true slope is at least 2 — the agency's claim is not fully supported. However, the upper bound of 2.505 shows the true slope could be above 2, so the claim is not ruled out either." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 4-D ─────────────────────────────────────────
+      {
+        icon: "🏆",
+        title: "Mixed Practice — Selecting Inference Procedures",
+        sub: "Units 8 & 9 combined — AP Skills Focus 9.6",
+        topics: "8.1 – 9.6",
+        problems: [
+          {
+            context: "Context: Choosing the right test — Units 8 & 9",
+            stem: "For each scenario, identify the most appropriate inference procedure from Units 8–9. Justify your choice.",
+            parts: [
+              { label: "(a)", text: "A researcher takes one random sample of 400 adults and records both preferred social media platform (Instagram, TikTok, Facebook, Other) and age group (18–29, 30–49, 50+). She wants to test for an association." },
+              { label: "(b)", text: "A biologist collects a random sample of 45 fish and measures body length ($x$, cm) and mass ($y$, g). She wants to estimate how much mass increases per centimeter of length in the population." },
+              { label: "(c)", text: "Random samples of 200 customers are drawn separately from three store locations. Each customer is categorized as Satisfied, Neutral, or Dissatisfied. A manager tests whether satisfaction levels differ by location." }
+            ],
+            answers: [
+              { label: "(a)", text: "Chi-square test of independence. One random sample from a single population; two categorical variables measured on each individual (platform and age group). The goal is to test for association within the population." },
+              { label: "(b)", text: "$t$-interval for the slope of a regression line (or $t$-test for slope if she is testing $\\beta = 0$). Two quantitative variables; she wants to estimate (or test) a linear relationship and make inference about the population slope $\\beta$." },
+              { label: "(c)", text: "Chi-square test for homogeneity. Separate samples drawn from three distinct populations (store locations). The goal is to compare the distribution of one categorical variable (satisfaction) across these groups." }
+            ]
+          },
+          {
+            context: "Context: AP free-response — full procedure selection and execution",
+            stem: "A marketing analyst randomly selects 55 products and records advertising spend ($x$, thousands of dollars) and units sold ($y$, thousands). She wants to determine if advertising spend is useful for predicting sales.<br><br><div class='computer-output'>Predictor      Coef    SE Coef      T        P\nConstant      12.3      3.4        3.62   0.001\nAdSpend        2.91     0.52       5.60   0.000\n\nS = 8.6      R-Sq = 37.4%</div>",
+            parts: [
+              { label: "(a)", text: "Name the appropriate procedure and state $H_0$ and $H_a$ in words." },
+              { label: "(b)", text: "State the test statistic and p-value. Write a conclusion at $\\alpha = 0.05$." },
+              { label: "(c)", text: "Construct a 95% CI for $\\beta$ using $t^* = 2.005$ for $df = 53$. Interpret in context. Is the relationship between advertising spend and sales practically strong? Use $R^2$ in your answer." }
+            ],
+            answers: [
+              { label: "(a)", text: "$t$-test for slope of a regression line. $H_0: \\beta = 0$ — advertising spend is not linearly associated with units sold in the population. $H_a: \\beta \\neq 0$ — advertising spend is linearly associated with units sold." },
+              { label: "(b)", text: "From output: $t = 5.60$, $p = 0.000$. Since $p < 0.05$, we reject $H_0$. The data provide convincing evidence of a positive linear association between advertising spend and units sold in the population of products." },
+              { label: "(c)", text: "95% CI: $2.91 \\pm 2.005(0.52) = 2.91 \\pm 1.043 = (1.867, 3.953)$ thousand units per thousand dollars. We are 95% confident the true slope is between approximately 1.87 and 3.95. While the association is statistically significant, $R^2 = 37.4\\%$ indicates that only about 37% of the variability in sales is explained by advertising spend — a moderate relationship, leaving over 60% of variability unexplained. The relationship is real but not practically dominant." }
+            ]
+          },
+          {
+            context: "Context: Comparing across all Units 6–9 inference procedures",
+            stem: "Match each research question to the correct inference procedure and state the key distinguishing feature that led to your choice.",
+            parts: [
+              { label: "(a)", text: "A researcher takes a random sample of 120 high school students and asks each student: Do you prefer morning or evening study sessions? She wants a 95% CI for the proportion of all high school students who prefer mornings." },
+              { label: "(b)", text: "A researcher randomly selects 80 college students and records both their daily steps (quantitative) and their self-reported stress level (Low, Medium, High). She tests whether daily steps are associated with stress level." },
+              { label: "(c)", text: "A nutritionist randomly assigns 60 participants to one of three diets and records whether each participant lost weight (Yes or No) after 12 weeks. She tests whether weight loss rates differ by diet." }
+            ],
+            answers: [
+              { label: "(a)", text: "One-proportion $z$-interval (Unit 6). Key feature: one categorical variable with two outcomes (morning/evening), one random sample, estimating a single proportion. No two-way table or regression involved." },
+              { label: "(b)", text: "Chi-square test of independence (Unit 8). Key feature: two categorical variables — wait, daily steps is quantitative and stress is categorical. If stress has 3 ordered levels and steps is quantitative, a better approach might be ANOVA or regression. However, on the AP exam, if steps is treated as quantitative and stress as the response, the $t$-test for slope is appropriate with stress recoded. As written with stress as categorical and steps as quantitative predictor, this is most naturally a one-way ANOVA context (not in AP Stats scope). On the AP exam, this would likely be framed differently — both variables would be categorical for a chi-square test or both quantitative for regression." },
+              { label: "(c)", text: "Chi-square test for homogeneity (Unit 8). Key feature: separate random assignments to three groups (diets), comparing the distribution of a categorical outcome (Yes/No weight loss) across the three groups. Random assignment allows a causal conclusion if significant." }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+
+]; // end columns
+
+
+/* ============================================================
+   RENDER BOARD
+============================================================ */
+function renderBoard() {
+  const grid = document.getElementById('board-grid');
+  grid.innerHTML = '';
+
+  columns.forEach((col, ci) => {
+    const colGroup = document.createElement('div');
+    colGroup.className = 'col-group';
+
+    // Header
+    const header = document.createElement('div');
+    header.className = `col-header ${col.headerClass}`;
+    header.style.gridColumn = ci + 1;
+    header.style.gridRow = 1;
+    header.innerHTML = `
+      <div class="col-header-num">${col.label}</div>
+      <h2>${col.title}</h2>
+      <div class="col-topics">${col.topics}</div>
+    `;
+    colGroup.appendChild(header);
+
+    // Tiles
+    col.tiles.forEach((tile, ti) => {
+      const tileEl = document.createElement('div');
+      tileEl.className = `tile ${col.tileClass}`;
+      tileEl.style.gridColumn = ci + 1;
+      tileEl.style.gridRow = ti + 2;
+      tileEl.setAttribute('role', 'button');
+      tileEl.setAttribute('tabindex', '0');
+      tileEl.setAttribute('aria-label', tile.title);
+      tileEl.innerHTML = `
+        <span class="tile-icon">${tile.icon}</span>
+        <div class="tile-title">${tile.title}</div>
+        <div class="tile-sub">${tile.sub}</div>
+        <div class="tile-topics">${tile.topics}</div>
+        <span class="tile-arrow">↗</span>
+      `;
+      tileEl.addEventListener('click', () => openModal(ci, ti));
+      tileEl.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') openModal(ci, ti); });
+      colGroup.appendChild(tileEl);
+    });
+
+    grid.appendChild(colGroup);
+  });
+}
+
+/* ============================================================
+   MODAL
+============================================================ */
+function openModal(colIdx, tileIdx) {
+  const col  = columns[colIdx];
+  const tile = col.tiles[tileIdx];
+
+  const accentEl = document.getElementById('modal-accent');
+  accentEl.className = 'modal-header-accent';
+  accentEl.style.background = col.accentVar;
+
+  const labelEl = document.getElementById('modal-col-label');
+  labelEl.style.color = col.accentVar;
+  labelEl.textContent = col.label + ' · ' + col.title;
+
+  document.getElementById('modal-title').textContent = tile.title;
+
+  const body = document.getElementById('modal-body');
+  body.innerHTML = '';
+
+  // Optional video section
+  if (tile.video) {
+    const videoSection = document.createElement('div');
+    videoSection.className = 'video-section';
+    videoSection.innerHTML = `
+      <div class="video-label">📹 Watch First</div>
+      <a href="${tile.video.url}" target="_blank" rel="noopener" class="video-link">
+        ${tile.video.title} — mathispower4u
+        <span class="video-icon">▶</span>
+      </a>
+    `;
+    body.appendChild(videoSection);
+  }
+
+  tile.problems.forEach((prob, pi) => {
+    const block = document.createElement('div');
+    block.className = 'problem-block';
+
+    let partsHTML = '';
+    if (prob.parts && prob.parts.length) {
+      partsHTML = `<ul class="problem-parts">` +
+        prob.parts.map(p => `<li data-part="${p.label}">${p.text}</li>`).join('') +
+        `</ul>`;
+    }
+
+    let answersHTML = '';
+    if (prob.answers && prob.answers.length) {
+      answersHTML = prob.answers.map(a =>
+        `<div class="answer-part"><span class="answer-part-label">${a.label}</span>${a.text}</div>`
+      ).join('');
+    }
+
+    const answerId = `ans-${colIdx}-${tileIdx}-${pi}`;
+    const toggleId = `tog-${colIdx}-${tileIdx}-${pi}`;
+
+    block.innerHTML = `
+      <div class="problem-num">Problem ${pi + 1} of ${tile.problems.length}</div>
+      ${prob.context ? `<div class="problem-context">${prob.context}</div>` : ''}
+      <div class="problem-text">${prob.stem}</div>
+      ${partsHTML}
+      <button class="answer-toggle" id="${toggleId}" onclick="toggleAnswer('${answerId}','${toggleId}')">
+        <span class="toggle-icon">▼</span> Show Answer
+      </button>
+      <div class="answer-panel" id="${answerId}">
+        ${answersHTML}
+      </div>
+    `;
+    body.appendChild(block);
+  });
+
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('desmos-fab').classList.add('visible');
+
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([body]).catch(err => console.log(err));
+  }
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+  document.getElementById('desmos-fab').classList.remove('visible');
+}
+
+function toggleAnswer(panelId, toggleId) {
+  const panel  = document.getElementById(panelId);
+  const toggle = document.getElementById(toggleId);
+  const isOpen = panel.classList.contains('open');
+  panel.classList.toggle('open');
+  toggle.classList.toggle('open');
+  toggle.innerHTML = isOpen
+    ? '<span class="toggle-icon">▼</span> Show Answer'
+    : '<span class="toggle-icon">▼</span> Hide Answer';
+}
+
+/* ============================================================
+   RANDOM PRACTICE
+============================================================ */
+function openRandomProblem() {
+  const colIdx  = Math.floor(Math.random() * columns.length);
+  const col     = columns[colIdx];
+  const tileIdx = Math.floor(Math.random() * col.tiles.length);
+  const tile    = col.tiles[tileIdx];
+  const probIdx = Math.floor(Math.random() * tile.problems.length);
+  const prob    = tile.problems[probIdx];
+
+  const accentEl = document.getElementById('modal-accent');
+  accentEl.className = 'modal-header-accent random-accent';
+  accentEl.style.background = '';
+
+  const labelEl = document.getElementById('modal-col-label');
+  labelEl.style.color = 'var(--text-muted)';
+  labelEl.textContent = 'AP Statistics · Units 8 & 9';
+
+  document.getElementById('modal-title').textContent = 'General Practice';
+
+  const body = document.getElementById('modal-body');
+  body.innerHTML = '';
+
+  const block = document.createElement('div');
+  block.className = 'problem-block';
+  block.style.borderBottom = 'none';
+  block.style.marginBottom = '0';
+  block.style.paddingBottom = '0';
+
+  let partsHTML = '';
+  if (prob.parts && prob.parts.length) {
+    partsHTML = `<ul class="problem-parts">` +
+      prob.parts.map(p => `<li data-part="${p.label}">${p.text}</li>`).join('') +
+      `</ul>`;
+  }
+
+  let answersHTML = '';
+  if (prob.answers && prob.answers.length) {
+    answersHTML = prob.answers.map(a =>
+      `<div class="answer-part"><span class="answer-part-label">${a.label}</span>${a.text}</div>`
+    ).join('');
+  }
+
+  block.innerHTML = `
+    <div class="problem-num">🎲 General Practice</div>
+    ${prob.context ? `<div class="problem-context">${prob.context}</div>` : ''}
+    <div class="problem-text">${prob.stem}</div>
+    ${partsHTML}
+    <button class="answer-toggle" id="rand-tog" onclick="toggleAnswer('rand-ans','rand-tog')">
+      <span class="toggle-icon">▼</span> Show Answer
+    </button>
+    <div class="answer-panel" id="rand-ans">
+      ${answersHTML}
+    </div>
+  `;
+
+  body.appendChild(block);
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('desmos-fab').classList.add('visible');
+
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([body]).catch(err => console.log(err));
+  }
+}
+
+document.getElementById('random-btn').addEventListener('click', openRandomProblem);
+
+/* ============================================================
+   DESMOS BUTTON
+============================================================ */
+document.getElementById('desmos-fab').addEventListener('click', () => {
+  window.open('https://www.desmos.com/calculator', '_blank', 'width=1000,height=700,noopener,noreferrer');
+});
+
+/* ============================================================
+   EVENT LISTENERS
+============================================================ */
+document.getElementById('modal-close').addEventListener('click', closeModal);
+document.getElementById('modal-overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+</script>
+</body>
+</html>
