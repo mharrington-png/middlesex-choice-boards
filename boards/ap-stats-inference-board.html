@@ -968,7 +968,7 @@ const columns = [
               { label: "(c)", text: "What minimum sample size would be needed to achieve the desired margin of error? Use $\\hat{p} = 0.62$ as a planning estimate." }
             ],
             answers: [
-              { label: "(a)", text: "$\\hat{p} = 310/500 = 0.62$. $\\text{SE} = \\sqrt{(0.62)(0.38)/500} \\approx 0.02170$. Interval: $0.62 \\pm 1.96(0.02170) = (0.577, 0.663)$." },
+              { label: "(a)", text: "<strong>Random:</strong> Random sample stated ✓. <strong>Large Counts:</strong> $n\\hat{p} = 310 \\geq 10$ and $n(1-\\hat{p}) = 190 \\geq 10$ ✓. <strong>Independence:</strong> 500 < 10% of all adults in a large city ✓. $\\hat{p} = 310/500 = 0.62$. $\\text{SE} = \\sqrt{(0.62)(0.38)/500} \\approx 0.02170$. Interval: $0.62 \\pm 1.96(0.02170) = (0.577, 0.663)$." },
               { label: "(b)", text: "We are 95% confident that the true proportion of adults in this city who received the flu vaccine last season is between 57.7% and 66.3%." },
               { label: "(c)", text: "$n \\geq \\left(\\dfrac{z^*}{ME}\\right)^2 \\hat{p}(1-\\hat{p}) = \\left(\\dfrac{1.96}{0.03}\\right)^2(0.62)(0.38) \\approx 1006.0$. Round up: $n = 1007$." }
             ]
@@ -1006,7 +1006,7 @@ const columns = [
             ],
             answers: [
               { label: "(a)", text: "$H_0: p = 0.72$ vs. $H_a: p > 0.72$, where $p$ is the true proportion of students who pass on the first attempt after the tutoring program." },
-              { label: "(b)", text: "$\\hat{p} = 198/250 = 0.792$. $z = \\dfrac{0.792 - 0.72}{\\sqrt{(0.72)(0.28)/250}} \\approx \\dfrac{0.072}{0.02839} \\approx 2.54$. p-value $= P(Z > 2.54) \\approx 0.006$." },
+              { label: "(b)", text: "<strong>Conditions:</strong> Random ✓ (random sample stated). Large Counts: $np_0 = 250(0.72) = 180 \\geq 10$ and $n(1-p_0) = 250(0.28) = 70 \\geq 10$ ✓. Independence: 250 < 10% of all students ✓. $\\hat{p} = 198/250 = 0.792$. $z = \\dfrac{0.792 - 0.72}{\\sqrt{(0.72)(0.28)/250}} \\approx \\dfrac{0.072}{0.02839} \\approx 2.54$. p-value $= P(Z > 2.54) \\approx 0.006$." },
               { label: "(c)", text: "Since p-value $0.006 < \\alpha = 0.05$, we reject $H_0$. We have convincing evidence that the tutoring program increased the proportion of students passing the math proficiency exam on the first attempt." }
             ]
           },
@@ -1117,7 +1117,7 @@ const columns = [
               { label: "(c)", text: "If the farmer wants the margin of error to be at most 2.5%, what sample size should she use?" }
             ],
             answers: [
-              { label: "(a)", text: "$\\hat{p} = 126/150 = 0.84$. $\\text{SE} = \\sqrt{(0.84)(0.16)/150} \\approx 0.02988$. Interval: $0.84 \\pm 1.96(0.02988) = (0.781, 0.899)$." },
+              { label: "(a)", text: "<strong>Conditions:</strong> Random ✓ (random sample stated). Large Counts: $n\\hat{p} = 126 \\geq 10$ and $n(1-\\hat{p}) = 24 \\geq 10$ ✓. Independence: 150 < 10% of all seeds ✓. $\\hat{p} = 126/150 = 0.84$. $\\text{SE} = \\sqrt{(0.84)(0.16)/150} \\approx 0.02988$. Interval: $0.84 \\pm 1.96(0.02988) = (0.781, 0.899)$." },
               { label: "(b)", text: "Yes. The claimed germination rate of 0.90 falls outside the confidence interval $(0.781, 0.899)$, providing evidence that the true germination rate is lower than 90% for this company's seeds." },
               { label: "(c)", text: "Using $\\hat{p} = 0.84$: $n \\geq \\left(\\dfrac{1.96}{0.025}\\right)^2(0.84)(0.16) = (78.4)^2(0.1344) \\approx 826.1$. Round up: $n = 827$." }
             ]
@@ -1166,7 +1166,7 @@ const columns = [
               { label: "(c)", text: "Based on your interval, is there convincing evidence that the proficiency rates differ? Explain." }
             ],
             answers: [
-              { label: "(a)", text: "$\\hat{p}_A = 78/120 = 0.65$, $\\hat{p}_B = 52/95 \\approx 0.547$. Difference: $0.103$. $\\text{SE} = \\sqrt{\\dfrac{0.65(0.35)}{120} + \\dfrac{0.547(0.453)}{95}} \\approx 0.06374$. $z^* = 1.645$. Interval: $0.103 \\pm 1.645(0.06374) = (-0.002, 0.208)$." },
+              { label: "(a)", text: "<strong>Conditions:</strong> Random ✓ (both random samples). Large Counts: $120(0.65)=78 \\geq 10$, $120(0.35)=42 \\geq 10$, $95(0.547)\\approx52 \\geq 10$, $95(0.453)\\approx43 \\geq 10$ ✓. Independence: both samples < 10% of their populations ✓. $\\hat{p}_A = 78/120 = 0.65$, $\\hat{p}_B = 52/95 \\approx 0.547$. Difference: $0.103$. $\\text{SE} = \\sqrt{\\dfrac{0.65(0.35)}{120} + \\dfrac{0.547(0.453)}{95}} \\approx 0.06374$. $z^* = 1.645$. Interval: $0.103 \\pm 1.645(0.06374) = (-0.002, 0.208)$." },
               { label: "(b)", text: "We are 90% confident that the difference in proficiency rates (School A minus School B) is between −0.2 and 20.8 percentage points." },
               { label: "(c)", text: "No — the interval includes 0, which means a difference of zero is plausible. We do not have convincing evidence at the 90% level that the proficiency rates differ between the two schools." }
             ]
@@ -1180,7 +1180,7 @@ const columns = [
               { label: "(c)", text: "Should the retailer adopt Version A? Justify using your interval." }
             ],
             answers: [
-              { label: "(a)", text: "$\\hat{p}_A = 112/400 = 0.28$, $\\hat{p}_B = 84/350 = 0.24$. Difference: $0.04$. $\\text{SE} = \\sqrt{\\dfrac{0.28(0.72)}{400} + \\dfrac{0.24(0.76)}{350}} \\approx 0.03202$. $z^* = 2.576$. Interval: $0.04 \\pm 2.576(0.03202) = (-0.042, 0.122)$." },
+              { label: "(a)", text: "<strong>Conditions:</strong> Random ✓ (both randomly selected). Large Counts: $400(0.28)=112 \\geq 10$, $400(0.72)=288 \\geq 10$, $350(0.24)=84 \\geq 10$, $350(0.76)=266 \\geq 10$ ✓. Independence: both samples < 10% of all visitors ✓. $\\hat{p}_A = 112/400 = 0.28$, $\\hat{p}_B = 84/350 = 0.24$. Difference: $0.04$. $\\text{SE} = \\sqrt{\\dfrac{0.28(0.72)}{400} + \\dfrac{0.24(0.76)}{350}} \\approx 0.03202$. $z^* = 2.576$. Interval: $0.04 \\pm 2.576(0.03202) = (-0.042, 0.122)$." },
               { label: "(b)", text: "We are 99% confident that the difference in purchase rates (Version A minus Version B) is between −4.2 and 12.2 percentage points." },
               { label: "(c)", text: "The interval includes 0, so we cannot conclude Version A has a higher purchase rate at the 99% level. The retailer does not yet have sufficient statistical evidence to adopt Version A over Version B." }
             ]
@@ -1203,7 +1203,7 @@ const columns = [
             ],
             answers: [
               { label: "(a)", text: "$H_0: p_1 - p_2 = 0$ vs. $H_a: p_1 - p_2 < 0$, where $p_1$ = true proportion who get flu (vaccine group), $p_2$ = true proportion who get flu (placebo group)." },
-              { label: "(b)", text: "Random ✓ (volunteers randomly assigned). Large Counts: $240(0.075)=18 \\geq 10$, $240(0.925)=222 \\geq 10$, $210(0.148)=31 \\geq 10$, $210(0.852)=179 \\geq 10$ ✓. Independence ✓." },
+              { label: "(b)", text: "Random ✓ (volunteers randomly assigned). Large Counts using $\\hat{p}_c = 49/450 \\approx 0.1089$: $240(0.1089)\\approx 26 \\geq 10$, $240(0.8911)\\approx 214 \\geq 10$, $210(0.1089)\\approx 23 \\geq 10$, $210(0.8911)\\approx 187 \\geq 10$ ✓. Independence ✓: Random assignment of treatments creates independent groups." },
               { label: "(c)", text: "$\\hat{p}_c = \\dfrac{18+31}{240+210} = \\dfrac{49}{450} \\approx 0.1089$. $z = \\dfrac{(0.075 - 0.1476)}{\\sqrt{0.1089(0.8911)\\left(\\frac{1}{240}+\\frac{1}{210}\\right)}} \\approx \\dfrac{-0.0726}{0.02999} \\approx -2.42$. p-value $= P(Z < -2.42) \\approx 0.008$." },
               { label: "(d)", text: "Since p-value $0.008 < \\alpha = 0.05$, we reject $H_0$. We have convincing evidence that the vaccine reduces the true proportion of people who contract the flu compared to the placebo." }
             ]
@@ -1218,7 +1218,7 @@ const columns = [
             ],
             answers: [
               { label: "(a)", text: "$H_0: p_1 - p_2 = 0$ vs. $H_a: p_1 - p_2 \\neq 0$, where $p_1$ = true strikeout rate in first half, $p_2$ = true strikeout rate in second half." },
-              { label: "(b)", text: "$\\hat{p}_1 = 84/200 = 0.42$, $\\hat{p}_2 = 51/140 \\approx 0.364$. $\\hat{p}_c = 135/340 \\approx 0.397$. $z = \\dfrac{0.42 - 0.364}{\\sqrt{0.397(0.603)\\left(\\frac{1}{200}+\\frac{1}{140}\\right)}} \\approx \\dfrac{0.056}{0.05283} \\approx 1.06$." },
+              { label: "(b)", text: "<strong>Conditions:</strong> Random ✓ (reasonable to treat as representative at-bats). Large Counts using $\\hat{p}_c$: $\\hat{p}_c = 135/340 \\approx 0.397$. $200(0.397)\\approx79 \\geq 10$, $200(0.603)\\approx121 \\geq 10$, $140(0.397)\\approx56 \\geq 10$, $140(0.603)\\approx84 \\geq 10$ ✓. Independence ✓. $\\hat{p}_1 = 84/200 = 0.42$, $\\hat{p}_2 = 51/140 \\approx 0.364$. $\\hat{p}_c = 135/340 \\approx 0.397$. $z = \\dfrac{0.42 - 0.364}{\\sqrt{0.397(0.603)\\left(\\frac{1}{200}+\\frac{1}{140}\\right)}} \\approx \\dfrac{0.056}{0.05283} \\approx 1.06$." },
               { label: "(c)", text: "p-value $= 2 \\cdot P(Z > 1.06) \\approx 2(0.145) = 0.290$. Since $0.290 > 0.05$, we fail to reject $H_0$. We do not have convincing evidence that the pitcher's strikeout rate changed between the first and second halves of the season." }
             ]
           },
@@ -1232,7 +1232,7 @@ const columns = [
             ],
             answers: [
               { label: "(a)", text: "$H_0: p_T - p_A = 0$ vs. $H_a: p_T - p_A > 0$, where $p_T$ = true proportion of teens and $p_A$ = true proportion of adults who check their phone within 5 minutes of waking." },
-              { label: "(b)", text: "Large Counts: all four counts ($278, 42, 196, 84$) $\\geq 10$ ✓. Random ✓. Independence ✓. $\\hat{p}_T = 278/320 = 0.869$, $\\hat{p}_A = 196/280 = 0.700$. $\\hat{p}_c = 474/600 = 0.790$. $z = \\dfrac{0.169}{\\sqrt{0.790(0.210)\\left(\\frac{1}{320}+\\frac{1}{280}\\right)}} \\approx \\dfrac{0.169}{0.03289} \\approx 5.14$. p-value $\\approx 0.000$." },
+              { label: "(b)", text: "Large Counts: Using $\\hat{p}_c$, $[320(0.790),320(0.210),280(0.790),(280(0.210)] \\geq 10$ ✓. Independent Random Samples ✓. $320< 10\\%$ of teens and $280< 10\\%$ of adults ✓. $\\hat{p}_T = 278/320 = 0.869$, $\\hat{p}_A = 196/280 = 0.700$. $\\hat{p}_c = 474/600 = 0.790$. $z = \\dfrac{0.169}{\\sqrt{0.790(0.210)\\left(\\frac{1}{320}+\\frac{1}{280}\\right)}} \\approx \\dfrac{0.169}{0.03289} \\approx 5.14$. p-value $\\approx 0.000$." },
               { label: "(c)", text: "Since p-value $< 0.01$, we reject $H_0$. We have very convincing evidence that teens check their phones within 5 minutes of waking at a higher rate than adults." }
             ]
           }
@@ -1294,7 +1294,7 @@ const columns = [
         problems: [
           {
             context: "Context: Agriculture & genetics",
-            stem: "A geneticist believes a new strain of corn should produce yellow kernels 75% of the time. She plants 400 seeds and observes 288 yellow kernels. She also compares two fields: Field A (n=200, 156 yellow) and Field B (n=180, 126 yellow).",
+            stem: "A geneticist believes a new strain of corn should produce yellow kernels 75% of the time. She plants 400 seeds and observes 288 yellow kernels. She also compares two fields: Field A (n=200, 156 yellow) and Field B (n=180, 126 yellow). Assume all conditions for inference are met.",
             parts: [
               { label: "(a)", text: "Test whether the proportion of yellow kernels differs from 75%. Use $\\alpha = 0.05$ and show all steps." },
               { label: "(b)", text: "Construct a 95% CI for the difference in yellow kernel proportions between Field A and Field B." },
@@ -1308,7 +1308,7 @@ const columns = [
           },
           {
             context: "Context: Online learning",
-            stem: "An education researcher compares completion rates for an online course between students who receive weekly coaching check-ins and those who do not. Of 150 coached students, 108 completed the course. Of 170 uncoached students, 102 completed.",
+            stem: "An education researcher compares completion rates for an online course between students who receive weekly coaching check-ins and those who do not. Of 150 coached students, 108 completed the course. Of 170 uncoached students, 102 completed the course. Assume all conditions for inference are met.",
             parts: [
               { label: "(a)", text: "Conduct a two-proportion significance test. Use $\\alpha = 0.05$. Show all steps." },
               { label: "(b)", text: "Also construct a 95% CI for the difference in completion rates." },
@@ -1322,7 +1322,7 @@ const columns = [
           },
           {
             context: "Context: Political science",
-            stem: "A pollster surveys voters in two states about support for a proposed federal tax policy. In State 1, 340 of 600 surveyed support it. In State 2, 280 of 500 surveyed support it.",
+            stem: "A pollster surveys voters in two states about support for a proposed federal tax policy. In State 1, 340 of 600 surveyed support it. In State 2, 280 of 500 surveyed support it. Assume all conditoins for inference are met.",
             parts: [
               { label: "(a)", text: "Construct a 99% CI for $p_1 - p_2$." },
               { label: "(b)", text: "Interpret the interval." },
@@ -1428,7 +1428,7 @@ const columns = [
             ],
             answers: [
               { label: "(a)", text: "$H_0: \\mu = 5.00$ vs. $H_a: \\mu \\neq 5.00$, where $\\mu$ = true mean diameter of rods produced by the factory." },
-              { label: "(b)", text: "$t = \\dfrac{5.04 - 5.00}{0.12/\\sqrt{40}} = \\dfrac{0.04}{0.01897} \\approx 2.108$ with df = 39. For a two-sided test, p-value is between $2(0.02) = 0.04$ and $2(0.025) = 0.05$ — approximately $0.042$." },
+              { label: "(b)", text: "<strong>Conditions:</strong> Random ✓ (inspector samples rods). Normal/Large Sample: $n = 40 \\geq 30$, CLT applies ✓. Independence: 40 < 10% of all rods produced ✓. $t = \\dfrac{5.04 - 5.00}{0.12/\\sqrt{40}} = \\dfrac{0.04}{0.01897} \\approx 2.108$ with df = 39. For a two-sided test, p-value is between $2(0.02) = 0.04$ and $2(0.025) = 0.05$ — approximately $0.042$." },
               { label: "(c)", text: "Since p-value $\\approx 0.042 > \\alpha = 0.01$, we fail to reject $H_0$. We do not have sufficient evidence at the 1% level to conclude the mean rod diameter differs from 5.00 cm." }
             ]
           },
@@ -1442,7 +1442,7 @@ const columns = [
             ],
             answers: [
               { label: "(a)", text: "$H_0: \\mu = 12$ vs. $H_a: \\mu > 12$, where $\\mu$ = true mean number of words recalled by participants after the training program." },
-              { label: "(b)", text: "$t = \\dfrac{14.3 - 12}{3.6/\\sqrt{20}} = \\dfrac{2.3}{0.8050} \\approx 2.857$. df = 19. p-value $= P(t_{19} > 2.857) \\approx 0.005$." },
+              { label: "(b)", text: "<strong>Conditions:</strong> Random ✓ (random sample). Normal: $n = 20 < 30$, but scores stated approximately Normal ✓. Independence: 20 < 10% of all potential participants ✓. $t = \\dfrac{14.3 - 12}{3.6/\\sqrt{20}} = \\dfrac{2.3}{0.8050} \\approx 2.857$. df = 19. p-value $= P(t_{19} > 2.857) \\approx 0.005$." },
               { label: "(c)", text: "Since p-value $0.005 < 0.05$, we reject $H_0$. We have convincing evidence that the true mean recall improved after training. We could be making a <strong>Type I error</strong> — concluding the program works when in fact it doesn't." }
             ]
           }
@@ -1539,7 +1539,7 @@ const columns = [
               { label: "(c)", text: "Show that the conclusion from the CI is consistent with the conclusion from the test." }
             ],
             answers: [
-              { label: "(a)", text: "$H_0: \\mu = 45$ vs. $H_a: \\mu \\neq 45$. $t = \\dfrac{42.6 - 45}{8.9/\\sqrt{20}} = \\dfrac{-2.4}{1.9905} \\approx -1.206$. df=19. p-value $= 2P(t_{19} < -1.206) \\approx 0.243$. Since $0.243 > 0.05$, fail to reject $H_0$." },
+              { label: "(a)", text: "$H_0: \\mu = 45$ vs. $H_a: \\mu \\neq 45$. <strong>Conditions:</strong> Random ✓ (randomly selected patients). Normal: $n = 20 < 30$ — we must assume peak concentration times are approximately Normally distributed ✓. Independence: 20 < 10% of all patients ✓. $t = \\dfrac{42.6 - 45}{8.9/\\sqrt{20}} = \\dfrac{-2.4}{1.9905} \\approx -1.206$. df=19. p-value $= 2P(t_{19} < -1.206) \\approx 0.243$. Since $0.243 > 0.05$, fail to reject $H_0$." },
               { label: "(b)", text: "$t^* = 2.093$ (df=19, 95%). Interval: $42.6 \\pm 2.093(1.9905) = (38.43, 46.77)$." },
               { label: "(c)", text: "The CI $(38.43, 46.77)$ contains 45, which means the manufacturer's claimed value is plausible — consistent with failing to reject $H_0$ in the test. Whenever a two-sided test fails to reject $H_0$ at $\\alpha$, the corresponding $(1-\\alpha)$ CI will contain the null value." }
             ]
@@ -1588,7 +1588,7 @@ const columns = [
               { label: "(c)", text: "Based on the interval, can we conclude Variety A is more productive? Explain." }
             ],
             answers: [
-              { label: "(a)", text: "Difference: $6.8$. $\\text{SE} = \\sqrt{\\dfrac{14.3^2}{30} + \\dfrac{17.1^2}{28}} = \\sqrt{6.820 + 10.436} \\approx 4.154$. $t^* \\approx 1.674$ (df=53, 90%). Interval: $6.8 \\pm 1.674(4.154) = (-0.15, 13.75)$." },
+              { label: "(a)", text: "<strong>Conditions:</strong> Random ✓ (implied random sampling). Normal/Large Sample: $n_A = 30 \\geq 30$ and $n_B = 28$ — just below 30, but close; proceed with caution or assume approximately Normal ✓. Independence: samples are independent of each other and each < 10% of all possible plots ✓. Difference: $6.8$. $\\text{SE} = \\sqrt{\\dfrac{14.3^2}{30} + \\dfrac{17.1^2}{28}} = \\sqrt{6.820 + 10.436} \\approx 4.154$. $t^* \\approx 1.674$ (df=53, 90%). Interval: $6.8 \\pm 1.674(4.154) = (-0.15, 13.75)$." },
               { label: "(b)", text: "We are 90% confident that the true mean yield difference (Variety A minus Variety B) is between $-0.15$ and $13.75$ bushels per acre." },
               { label: "(c)", text: "We cannot conclude with 90% confidence that Variety A is more productive — the interval just barely includes 0. There is plausible evidence A yields more, but the result is not statistically significant at the 10% level." }
             ]
@@ -1602,7 +1602,7 @@ const columns = [
               { label: "(c)", text: "What does the interval suggest about the effect of sleep deprivation on reaction time?" }
             ],
             answers: [
-              { label: "(a)", text: "Difference: $312 - 368 = -56$ ms. $\\text{SE} = \\sqrt{\\dfrac{42^2}{25}+\\dfrac{55^2}{25}} = \\sqrt{70.56 + 121} \\approx 13.842$. $t^* \\approx 2.690$ (df=44, 99%). Interval: $-56 \\pm 2.690(13.842) = (-93.2, -18.8)$." },
+              { label: "(a)", text: "<strong>Conditions:</strong> Random ✓ (implied random assignment to sleep groups). Normal: both populations stated approximately Normal ✓. Independence: the two groups are independent of each other ✓, and each $n < 10\\%$ of their respective populations ✓. Difference: $312 - 368 = -56$ ms. $\\text{SE} = \\sqrt{\\dfrac{42^2}{25}+\\dfrac{55^2}{25}} = \\sqrt{70.56 + 121} \\approx 13.842$. $t^* \\approx 2.690$ (df=44, 99%). Interval: $-56 \\pm 2.690(13.842) = (-93.2, -18.8)$." },
               { label: "(b)", text: "We are 99% confident that those who slept 8 hours have a true mean reaction time that is between 18.8 and 93.2 ms lower than those who slept 5 hours." },
               { label: "(c)", text: "The interval lies entirely below 0, providing strong evidence that adequate sleep is associated with meaningfully faster reaction times. Even at the 99% confidence level, the difference is significant — sleep deprivation appears to substantially impair reaction speed." }
             ]
@@ -1637,7 +1637,7 @@ const columns = [
               { label: "(c)", text: "What type of error might you be making? What would it mean in this medical context?" }
             ],
             answers: [
-              { label: "(a)", text: "$H_0: \\mu_A = \\mu_B$ vs. $H_a: \\mu_A \\neq \\mu_B$. $\\text{SE} = \\sqrt{\\dfrac{2.1^2}{20}+\\dfrac{2.8^2}{20}} = \\sqrt{0.2205+0.392} \\approx 0.7744$. $t = \\dfrac{1.4}{0.7744} \\approx 1.808$. df=36. p-value $= 2P(t_{36}>1.808) \\approx 2(0.039) = 0.078$. Since $0.078 > 0.05$, fail to reject $H_0$." },
+              { label: "(a)", text: "$H_0: \\mu_A = \\mu_B$ vs. $H_a: \\mu_A \\neq \\mu_B$. <strong>Conditions:</strong> Random ✓ (clinical trial). Normal: both $n = 20 < 30$, but pain reduction scores stated approximately Normal in both groups ✓. Independence: the two groups are independent ✓. $\\text{SE} = \\sqrt{\\dfrac{2.1^2}{20}+\\dfrac{2.8^2}{20}} = \\sqrt{0.2205+0.392} \\approx 0.7744$. $t = \\dfrac{1.4}{0.7744} \\approx 1.808$. df=36. p-value $= 2P(t_{36}>1.808) \\approx 2(0.039) = 0.078$. Since $0.078 > 0.05$, fail to reject $H_0$." },
               { label: "(b)", text: "We do not have convincing evidence at the 5% level that the two drugs differ in mean pain reduction." },
               { label: "(c)", text: "We may be making a <strong>Type II error</strong> — failing to detect a real difference between the drugs. Medically, this could mean patients continue using a less effective drug when a better alternative exists." }
             ]
@@ -1651,7 +1651,7 @@ const columns = [
               { label: "(c)", text: "State your conclusion in context." }
             ],
             answers: [
-              { label: "(a)", text: "$H_0: \\mu_1 - \\mu_2 = 0$ vs. $H_a: \\mu_1 - \\mu_2 > 0$, where $\\mu_1, \\mu_2$ are true mean wingspans of Species 1 and 2." },
+              { label: "(a)", text: "$H_0: \\mu_1 - \\mu_2 = 0$ vs. $H_a: \\mu_1 - \\mu_2 > 0$, where $\\mu_1, \\mu_2$ are true mean wingspans of Species 1 and 2. <strong>Conditions:</strong> Random ✓ (random samples). Normal: both $n < 30$, but both populations stated approximately Normal ✓. Independence: the two species samples are independent ✓, and each $n < 10\\%$ of population ✓." },
               { label: "(b)", text: "$\\text{SE} = \\sqrt{\\dfrac{5.4^2}{15}+\\dfrac{4.8^2}{18}} = \\sqrt{1.944+1.280} \\approx 1.795$. $t = \\dfrac{47.3-44.1}{1.795} \\approx 1.783$. p-value $= P(t_{28} > 1.783) \\approx 0.043$." },
               { label: "(c)", text: "Since p-value $0.043 > \\alpha = 0.01$, we fail to reject $H_0$. At the 1% significance level, we do not have sufficient evidence that Species 1 has a greater mean wingspan than Species 2." }
             ]
@@ -1723,7 +1723,7 @@ const columns = [
             ],
             answers: [
               { label: "(a)", text: "$H_0: \\mu_N - \\mu_S = 0$ vs. $H_a: \\mu_N - \\mu_S < 0$, where $\\mu_N$ and $\\mu_S$ are the true mean recovery days under the new and standard protocols." },
-              { label: "(b)", text: "$\\text{SE} = \\sqrt{\\dfrac{4.2^2}{25}+\\dfrac{5.1^2}{28}} = \\sqrt{0.7056+0.9289} \\approx 1.2784$. $t = \\dfrac{-3.3}{1.2784} \\approx -2.582$. p-value $= P(t_{47} < -2.582) \\approx 0.006$. Since $0.006 < 0.05$, reject $H_0$. Convincing evidence the new protocol reduces recovery time." },
+              { label: "(b)", text: "<strong>Conditions:</strong> Random ✓ (patients randomly assigned). Normal: both $n < 30$, but both distributions stated approximately Normal ✓. Independence: random assignment ensures groups are independent ✓. $\\text{SE} = \\sqrt{\\dfrac{4.2^2}{25}+\\dfrac{5.1^2}{28}} = \\sqrt{0.7056+0.9289} \\approx 1.2784$. $t = \\dfrac{-3.3}{1.2784} \\approx -2.582$. p-value $= P(t_{47} < -2.582) \\approx 0.006$. Since $0.006 < 0.05$, reject $H_0$. Convincing evidence the new protocol reduces recovery time." },
               { label: "(c)", text: "$t^* \\approx 2.012$ (df=47, 95%). Interval: $-3.3 \\pm 2.012(1.2784) = (-5.87, -0.73)$. We are 95% confident the new protocol reduces true mean recovery time by between 0.73 and 5.87 days compared to the standard protocol." },
               { label: "(d)", text: "This is a <strong>randomized experiment</strong> (patients were randomly assigned). This matters because randomization controls for confounding variables, allowing us to conclude that the new protocol <em>caused</em> the reduction in recovery time — not just that it is associated with it." }
             ]
@@ -1737,7 +1737,7 @@ const columns = [
               { label: "(c)", text: "Verify that the test and interval conclusions are consistent." }
             ],
             answers: [
-              { label: "(a)", text: "$H_0: \\mu_u - \\mu_r = 0$ vs. $H_a: \\mu_u - \\mu_r \\neq 0$. $\\text{SE} = \\sqrt{\\dfrac{88^2}{40}+\\dfrac{74^2}{35}} = \\sqrt{193.6+156.5} \\approx 18.716$. $t = \\dfrac{71}{18.716} \\approx 3.794$. p-value $\\approx 2(0.0002) = 0.0004$. Since $0.0004 < 0.01$, reject $H_0$." },
+              { label: "(a)", text: "$H_0: \\mu_u - \\mu_r = 0$ vs. $H_a: \\mu_u - \\mu_r \\neq 0$. <strong>Conditions:</strong> Random ✓ (both randomly sampled). Normal/Large Sample: $n_u = 40 \\geq 30$ and $n_r = 35 \\geq 30$, CLT applies ✓. Independence: samples are independent of each other and each < 10% of their populations ✓. $\\text{SE} = \\sqrt{\\dfrac{88^2}{40}+\\dfrac{74^2}{35}} = \\sqrt{193.6+156.5} \\approx 18.716$. $t = \\dfrac{71}{18.716} \\approx 3.794$. p-value $\\approx 2(0.0002) = 0.0004$. Since $0.0004 < 0.01$, reject $H_0$." },
               { label: "(b)", text: "$t^* \\approx 2.650$ (df=68, 99%). Interval: $71 \\pm 2.650(18.716) = (21.4, 120.6)$. We are 99% confident the true mean monthly food expenditure is between $\\$21.40$ and $\\$120.60$ higher for urban households than rural households." },
               { label: "(c)", text: "Consistent. The test rejected $H_0$ at $\\alpha = 0.01$, and the CI does not contain 0 (both bounds positive), indicating a statistically significant difference at the 99% level. Both lead to the same conclusion: urban households spend significantly more on food." }
             ]
@@ -1752,7 +1752,7 @@ const columns = [
             ],
             answers: [
               { label: "(a)", text: "Two-sample $t$-test. The two groups are separate and independent — Group 1 and Group 2 each have their own score gains, and we're comparing means across two distinct groups. A paired $t$-test would be appropriate if the same individuals were measured twice without comparison to a separate control group." },
-              { label: "(b)", text: "$\\text{SE} = \\sqrt{\\dfrac{6.3^2}{20}+\\dfrac{5.7^2}{20}} = \\sqrt{1.9845+1.6245} \\approx 1.8997$. $t = \\dfrac{4.8}{1.8997} \\approx 2.527$. p-value $= P(t_{37} > 2.527) \\approx 0.008$. Since $0.008 < 0.05$, reject $H_0$. Convincing evidence the app group showed greater mean improvement." },
+              { label: "(b)", text: "<strong>Conditions:</strong> Random ✓ (volunteers randomly split). Normal: $n = 20 < 30$ for each group — with no information about the score distributions, we must assume score gains are approximately Normal ✓. Independence: random assignment ensures the two groups are independent ✓. $\\text{SE} = \\sqrt{\\dfrac{6.3^2}{20}+\\dfrac{5.7^2}{20}} = \\sqrt{1.9845+1.6245} \\approx 1.8997$. $t = \\dfrac{4.8}{1.8997} \\approx 2.527$. p-value $= P(t_{37} > 2.527) \\approx 0.008$. Since $0.008 < 0.05$, reject $H_0$. Convincing evidence the app group showed greater mean improvement." },
               { label: "(c)", text: "Yes — because this was a <strong>randomized experiment</strong> (volunteers randomly assigned), we can conclude the app likely <em>caused</em> the greater improvement, not just that it is associated with it. Random assignment balances confounding variables between the two groups." }
             ]
           }
