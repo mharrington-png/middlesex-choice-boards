@@ -1714,7 +1714,7 @@ const columns = [
         problems: [
           {
             context: "Context: Medicine",
-            stem: "A hospital researcher wants to determine whether a new physical therapy protocol reduces recovery time after knee surgery compared to the standard protocol. Patients were randomly assigned: New protocol ($n=25$, $\\bar{x}=18.4$ days, $s=4.2$ days) vs. Standard ($n=28$, $\\bar{x}=21.7$ days, $s=5.1$ days). Both distributions are approximately Normal.",
+            stem: "A hospital researcher wants to determine whether a new physical therapy protocol reduces recovery time after knee surgery compared to the standard protocol. Patients were randomly assigned: New protocol ($n=25$, $\\bar{x}=18.4$ days, $s=4.2$ days) vs. Standard ($n=28$, $\\bar{x}=21.7$ days, $s=5.1$ days). Both sample distributions are approximately Normal.",
             parts: [
               { label: "(a)", text: "State hypotheses and define parameters." },
               { label: "(b)", text: "Conduct the test at $\\alpha = 0.05$ using df = 47. Show all work." },
@@ -1744,7 +1744,7 @@ const columns = [
           },
           {
             context: "Context: Cognitive training",
-            stem: "Forty volunteers are randomly split into two groups of 20. Group 1 uses a brain-training app for 6 weeks. Group 2 does not. Pre- and post-test scores exist for both groups; researchers compare the mean score gain. Group 1: $\\bar{x}_1 = 14.6$, $s_1 = 6.3$. Group 2: $\\bar{x}_2 = 9.8$, $s_2 = 5.7$.",
+            stem: "Forty volunteers are randomly split into two groups of 20. Group 1 uses a brain-training app for 6 weeks. Group 2 does not. Pre- and post-test scores exist for both groups; researchers compare the mean score gain. Group 1: $\\bar{x}_1 = 14.6$, $s_1 = 6.3$. Group 2: $\\bar{x}_2 = 9.8$, $s_2 = 5.7$. The score gain data for both groups was roughly symmetric with no outliers.",
             parts: [
               { label: "(a)", text: "Should researchers use a one-sample or two-sample procedure? Explain." },
               { label: "(b)", text: "Conduct a test at $\\alpha = 0.05$ (df = 37)." },
@@ -1752,7 +1752,7 @@ const columns = [
             ],
             answers: [
               { label: "(a)", text: "Two-sample $t$-test. The two groups are separate and independent — Group 1 and Group 2 each have their own score gains, and we're comparing means across two distinct groups. A paired $t$-test would be appropriate if the same individuals were measured twice without comparison to a separate control group." },
-              { label: "(b)", text: "<strong>Conditions:</strong> Random ✓ (volunteers randomly split). Normal: $n = 20 < 30$ for each group — with no information about the score distributions, we must assume score gains are approximately Normal ✓. Independence: random assignment ensures the two groups are independent ✓. $\\text{SE} = \\sqrt{\\dfrac{6.3^2}{20}+\\dfrac{5.7^2}{20}} = \\sqrt{1.9845+1.6245} \\approx 1.8997$. $t = \\dfrac{4.8}{1.8997} \\approx 2.527$. p-value $= P(t_{37} > 2.527) \\approx 0.008$. Since $0.008 < 0.05$, reject $H_0$. Convincing evidence the app group showed greater mean improvement." },
+              { label: "(b)", text: "<strong>Conditions:</strong> Random ✓ (volunteers randomly split). Normal: $n = 20 < 30$ for each group — but sample data is roughly symmetric with no outliers ✓. Independence: random assignment ensures the two groups are independent ✓. $\\text{SE} = \\sqrt{\\dfrac{6.3^2}{20}+\\dfrac{5.7^2}{20}} = \\sqrt{1.9845+1.6245} \\approx 1.8997$. $t = \\dfrac{4.8}{1.8997} \\approx 2.527$. p-value $= P(t_{37} > 2.527) \\approx 0.008$. Since $0.008 < 0.05$, reject $H_0$. Convincing evidence the app group showed greater mean improvement." },
               { label: "(c)", text: "Yes — because this was a <strong>randomized experiment</strong> (volunteers randomly assigned), we can conclude the app likely <em>caused</em> the greater improvement, not just that it is associated with it. Random assignment balances confounding variables between the two groups." }
             ]
           }
