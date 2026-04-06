@@ -1335,12 +1335,12 @@ const columns = [
             stem: "Use known power series to evaluate exact sums.",
             parts: [
               { label: "(a)", text: "$\\displaystyle\\sum_{n=0}^{\\infty} \\frac{(-1)^n}{2^n(n+1)}$" },
-              { label: "(b)", text: "$\\displaystyle\\sum_{n=0}^{\\infty} \\frac{\\pi^{2n}}{(2n)!}$" },
+              { label: "(b)", text: "$\\displaystyle\\sum_{n=0}^{\\infty} \\frac{(-1)^{n}\\pi^{2n}}{(2n)!}$" },
               { label: "(c)", text: "$\\displaystyle\\sum_{n=1}^{\\infty} \\frac{(-1)^{n+1}}{n \\cdot 2^n}$" }
             ],
             answers: [
               { label: "(a)", text: "$\\dfrac{1}{n+1}x^n$ integrates to $\\dfrac{x^{n+1}}{n+1}$. We have $\\displaystyle\\sum \\dfrac{(-1)^n}{2^n(n+1)} = \\displaystyle\\sum \\dfrac{1}{n+1}\\left(-\\dfrac{1}{2}\\right)^n = \\dfrac{1}{-1/2}\\ln\\left(1-\\dfrac{1}{2}\\right) \\cdot (-1)$... Use $\\ln(1+x) = \\sum(-1)^n x^{n+1}/(n+1)$ at $x=1/2$: $= \\dfrac{\\ln(3/2)}{1/2} \\cdot \\dfrac{1}{1} = 2\\ln(3/2)$." },
-              { label: "(b)", text: "Recall $\\cos(x) = \\displaystyle\\sum_{n=0}^{\\infty}\\dfrac{(-1)^n x^{2n}}{(2n)!}$. Here all terms are positive: compare to $\\cosh(x) = \\displaystyle\\sum_{n=0}^{\\infty}\\dfrac{x^{2n}}{(2n)!} = \\dfrac{e^x+e^{-x}}{2}$. At $x = \\pi$: $\\displaystyle\\sum_{n=0}^{\\infty}\\dfrac{\\pi^{2n}}{(2n)!} = \\cosh(\\pi) = \\dfrac{e^\\pi + e^{-\\pi}}{2}$." },
+              { label: "(b)", text: "Recall $\\cos(x) = \\displaystyle\\sum_{n=0}^{\\infty}\\dfrac{(-1)^n x^{2n}}{(2n)!}$. At $x = \\pi$: $\\displaystyle\\sum_{n=0}^{\\infty}\\dfrac{(-1)^n \\pi^{2n}}{(2n)!} = \\cos(\\pi) = -1$" },
               { label: "(c)", text: "Using $\\ln(1+x) = \\displaystyle\\sum_{n=1}^{\\infty}\\dfrac{(-1)^{n+1}x^n}{n}$ at $x = 1/2$: $\\ln(3/2) = \\displaystyle\\sum_{n=1}^{\\infty}\\dfrac{(-1)^{n+1}}{n \\cdot 2^n}$." }
             ]
           }
