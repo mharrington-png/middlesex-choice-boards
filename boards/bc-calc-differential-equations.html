@@ -54,6 +54,94 @@
     --shadow-hover: 0 8px 40px rgba(0,0,0,0.7);
   }
 
+  /* ============================================================
+     LIGHT MODE TOKEN OVERRIDES
+  ============================================================ */
+  body.light {
+    --black:       #f5f4f2;
+    --surface:     #ffffff;
+    --surface2:    #f0eeeb;
+    --surface3:    #e6e3df;
+    --border:      #d4d0cb;
+    --border-light:#c0bbb4;
+    --text:        #1a1a1a;
+    --text-muted:  #555555;
+    --text-dim:    #888888;
+    --crimson-glow:#b8002f;
+    --shadow: 0 4px 24px rgba(0,0,0,0.12);
+    --shadow-hover: 0 8px 40px rgba(0,0,0,0.18);
+  }
+
+  /* Light mode: modal overlay slightly lighter */
+  body.light .modal-overlay { background: rgba(80,60,50,0.55); }
+  /* Light mode: modal shadow */
+  body.light .modal { box-shadow: 0 24px 80px rgba(0,0,0,0.22); }
+  /* Light mode: video link hover to dark instead of white */
+  body.light .video-link:hover { color: #111; }
+  /* Light mode: col header tint adjustments */
+  body.light .col-1-header { background: color-mix(in srgb, var(--col1) 12%, var(--surface2)); }
+  body.light .col-2-header { background: color-mix(in srgb, var(--col2) 12%, var(--surface2)); }
+  body.light .col-3-header { background: color-mix(in srgb, var(--col3) 12%, var(--surface2)); }
+  body.light .col-4-header { background: color-mix(in srgb, var(--col4) 12%, var(--surface2)); }
+  /* Light mode: col accent labels darken slightly for contrast */
+  body.light .col-1-header .col-header-num { color: #c0003a; }
+  body.light .col-2-header .col-header-num { color: #145a4a; }
+  body.light .col-3-header .col-header-num { color: #3d4a5c; }
+  body.light .col-4-header .col-header-num { color: #7c4a1e; }
+  /* Light mode: school tag decorative lines */
+  body.light .school-tag { color: var(--crimson); }
+  body.light .school-tag::before,
+  body.light .school-tag::after { background: var(--crimson); }
+  /* Light mode: h1 em */
+  body.light h1 em { color: var(--crimson); }
+  /* Light mode: instructions strong */
+  body.light .instructions strong { color: var(--crimson); }
+
+  /* ============================================================
+     THEME TOGGLE BUTTON
+  ============================================================ */
+  .theme-toggle {
+    position: absolute;
+    top: 18px;
+    right: 24px;
+    background: var(--surface2);
+    border: 1px solid var(--border-light);
+    border-radius: 50px;
+    padding: 0 14px 0 10px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    cursor: pointer;
+    font-family: 'Source Serif 4', serif;
+    font-size: 11.5px;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+    transition: background 0.2s, border-color 0.2s, color 0.2s, box-shadow 0.2s;
+    z-index: 10;
+    white-space: nowrap;
+  }
+
+  .theme-toggle:hover {
+    background: var(--surface3);
+    border-color: color-mix(in srgb, var(--crimson) 50%, transparent);
+    color: var(--text);
+    box-shadow: 0 2px 12px rgba(207,0,61,0.15);
+  }
+
+  .theme-toggle-icon {
+    font-size: 15px;
+    line-height: 1;
+    transition: transform 0.35s ease;
+  }
+
+  .theme-toggle:hover .theme-toggle-icon { transform: rotate(20deg); }
+
+  @media (max-width: 600px) {
+    .theme-toggle { top: 12px; right: 12px; padding: 0 10px; }
+    .theme-toggle-label { display: none; }
+  }
+
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
 
@@ -785,6 +873,10 @@
      HEADER
 ============================================================ -->
 <header>
+  <button class="theme-toggle" id="theme-toggle" aria-label="Toggle light/dark mode">
+    <span class="theme-toggle-icon" id="theme-icon">☀️</span>
+    <span class="theme-toggle-label" id="theme-label">Light Mode</span>
+  </button>
   <div class="header-inner">
     <div class="school-tag">Middlesex School · mxschool.edu</div>
     <h1>BC Calculus — Unit 7: <em>Differential Equations</em></h1>
@@ -1987,6 +2079,23 @@ document.getElementById('modal-overlay').addEventListener('click', e => {
   if (e.target === document.getElementById('modal-overlay')) closeModal();
 });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+/* ============================================================
+   THEME TOGGLE
+============================================================ */
+(function() {
+  const btn   = document.getElementById('theme-toggle');
+  const icon  = document.getElementById('theme-icon');
+  const label = document.getElementById('theme-label');
+  let isLight = false;
+
+  btn.addEventListener('click', () => {
+    isLight = !isLight;
+    document.body.classList.toggle('light', isLight);
+    icon.textContent  = isLight ? '🌙' : '☀️';
+    label.textContent = isLight ? 'Dark Mode' : 'Light Mode';
+  });
+})();
 </script>
 </body>
 </html>
