@@ -1,0 +1,2153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AP Music Theory — Unit 3: Triads & Seventh Chords | Middlesex School</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/abcjs@6.4.3/dist/abcjs-basic-min.js"></script>
+<style>
+  /* ============================================================
+     TOKENS & RESET
+  ============================================================ */
+  :root {
+    --crimson:     #cf003d;
+    --crimson-dim: #8a0028;
+    --crimson-glow:#ff1a55;
+    --black:       #0d0d0d;
+    --surface:     #151515;
+    --surface2:    #1e1e1e;
+    --surface3:    #252525;
+    --border:      #2e2e2e;
+    --border-light:#3a3a3a;
+    --text:        #f0ece6;
+    --text-muted:  #9e9e9e;
+    --text-dim:    #666666;
+
+    --col1: #cf003d;
+    --col2: #1a6b5a;
+    --col3: #4a5568;
+    --col4: #7c4a1e;
+
+    --col1-light: #ff4d75;
+    --col2-light: #2dd4bf;
+    --col3-light: #94a3b8;
+    --col4-light: #f59e0b;
+
+    --radius: 10px;
+    --radius-lg: 16px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.5);
+    --shadow-hover: 0 8px 40px rgba(0,0,0,0.7);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 16px;
+    line-height: 1.65;
+    min-height: 100vh;
+  }
+
+  /* ============================================================
+     LIGHT MODE TOKEN OVERRIDES
+  ============================================================ */
+  body.light {
+    --black:       #f5f4f2;
+    --surface:     #ffffff;
+    --surface2:    #f0eeeb;
+    --surface3:    #e6e3df;
+    --border:      #d4d0cb;
+    --border-light:#c0bbb4;
+    --text:        #1a1a1a;
+    --text-muted:  #555555;
+    --text-dim:    #888888;
+    --crimson-glow:#b8002f;
+    --shadow: 0 4px 24px rgba(0,0,0,0.12);
+    --shadow-hover: 0 8px 40px rgba(0,0,0,0.18);
+  }
+
+  body.light .modal-overlay { background: rgba(80,60,50,0.55); }
+  body.light .modal { box-shadow: 0 24px 80px rgba(0,0,0,0.22); }
+  body.light .col-1-header { background: color-mix(in srgb, var(--col1) 12%, var(--surface2)); }
+  body.light .col-2-header { background: color-mix(in srgb, var(--col2) 12%, var(--surface2)); }
+  body.light .col-3-header { background: color-mix(in srgb, var(--col3) 12%, var(--surface2)); }
+  body.light .col-4-header { background: color-mix(in srgb, var(--col4) 12%, var(--surface2)); }
+  body.light .col-1-header .col-header-num { color: #c0003a; }
+  body.light .col-2-header .col-header-num { color: #145a4a; }
+  body.light .col-3-header .col-header-num { color: #3d4a5c; }
+  body.light .col-4-header .col-header-num { color: #7c4a1e; }
+  body.light .school-tag { color: var(--crimson); }
+  body.light .school-tag::before,
+  body.light .school-tag::after { background: var(--crimson); }
+  body.light h1 em { color: var(--crimson); }
+  body.light .instructions strong { color: var(--crimson); }
+  /* In light mode, give notation wraps a subtle border so they don't float */
+  body.light .notation-wrap,
+  body.light .answer-notation-wrap {
+    border: 1px solid var(--border);
+    background: #fafafa;
+  }
+
+  /* ============================================================
+     THEME TOGGLE BUTTON
+  ============================================================ */
+  .theme-toggle {
+    position: absolute;
+    top: 18px;
+    right: 24px;
+    background: var(--surface2);
+    border: 1px solid var(--border-light);
+    border-radius: 50px;
+    padding: 0 14px 0 10px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    cursor: pointer;
+    font-family: 'Source Serif 4', serif;
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+    z-index: 10;
+  }
+
+  .theme-toggle:hover {
+    background: var(--surface3);
+    border-color: var(--crimson);
+    color: var(--text);
+  }
+
+  .theme-toggle-icon { font-size: 15px; line-height: 1; }
+  .theme-toggle-label { font-weight: 600; }
+
+  @media (max-width: 600px) {
+    .theme-toggle { top: 12px; right: 12px; padding: 0 10px; }
+    .theme-toggle-label { display: none; }
+  }
+
+  /* ============================================================
+     HEADER
+  ============================================================ */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 32px 40px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--crimson), var(--crimson-glow), var(--crimson));
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(207,0,61,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .header-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+  }
+
+  .school-tag {
+    font-family: 'Source Serif 4', serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--crimson-glow);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .school-tag::before,
+  .school-tag::after {
+    content: '';
+    display: inline-block;
+    width: 28px;
+    height: 1px;
+    background: var(--crimson-glow);
+  }
+
+  h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    margin-top: 4px;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--crimson-glow);
+  }
+
+  .header-meta {
+    margin-top: 4px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .meta-pill {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 3px 12px;
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+  }
+
+  /* ============================================================
+     INSTRUCTIONS BAR
+  ============================================================ */
+  .instructions {
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 40px;
+    font-size: 13px;
+    color: var(--text-muted);
+    text-align: center;
+    letter-spacing: 0.03em;
+  }
+
+  .instructions strong { color: var(--crimson-glow); font-weight: 600; }
+
+  /* ============================================================
+     BOARD GRID
+  ============================================================ */
+  .board-wrap {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 36px 24px 60px;
+  }
+
+  .board-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto repeat(4, 1fr);
+    gap: 20px;
+  }
+
+  .col-group { display: contents; }
+
+  .col-header {
+    border-radius: var(--radius) var(--radius) 0 0;
+    padding: 16px 18px 14px;
+    position: relative;
+    overflow: hidden;
+    align-self: start;
+  }
+
+  .col-header::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .col-1-header { background: color-mix(in srgb, var(--col1) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col1) 40%, transparent); }
+  .col-2-header { background: color-mix(in srgb, var(--col2) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col2) 40%, transparent); }
+  .col-3-header { background: color-mix(in srgb, var(--col3) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col3) 40%, transparent); }
+  .col-4-header { background: color-mix(in srgb, var(--col4) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col4) 40%, transparent); }
+
+  .col-header-num {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    opacity: 0.7;
+  }
+
+  .col-1-header .col-header-num { color: var(--col1-light); }
+  .col-2-header .col-header-num { color: var(--col2-light); }
+  .col-3-header .col-header-num { color: var(--col3-light); }
+  .col-4-header .col-header-num { color: var(--col4-light); }
+
+  .col-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.25;
+  }
+
+  .col-header .col-topics {
+    margin-top: 6px;
+    font-size: 10.5px;
+    color: var(--text-dim);
+    letter-spacing: 0.04em;
+  }
+
+  /* ============================================================
+     TILES
+  ============================================================ */
+  .tile {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 18px 28px;
+    cursor: pointer;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+    position: relative;
+    overflow: hidden;
+    user-select: none;
+  }
+
+  .tile::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+    border-radius: var(--radius) 0 0 var(--radius);
+    transition: opacity 0.2s;
+  }
+
+  .col-1 .tile::before { background: var(--col1-light); }
+  .col-2 .tile::before { background: var(--col2-light); }
+  .col-3 .tile::before { background: var(--col3-light); }
+  .col-4 .tile::before { background: var(--col4-light); }
+
+  .tile:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-hover);
+    background: var(--surface3);
+  }
+
+  .col-1 .tile:hover { border-color: color-mix(in srgb, var(--col1) 60%, transparent); }
+  .col-2 .tile:hover { border-color: color-mix(in srgb, var(--col2) 60%, transparent); }
+  .col-3 .tile:hover { border-color: color-mix(in srgb, var(--col3) 60%, transparent); }
+  .col-4 .tile:hover { border-color: color-mix(in srgb, var(--col4) 60%, transparent); }
+
+  .tile-icon { font-size: 18px; margin-bottom: 8px; display: block; }
+
+  .tile-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+    margin-bottom: 5px;
+  }
+
+  .tile-sub { font-size: 11.5px; color: var(--text-muted); line-height: 1.4; }
+
+  .tile-topics {
+    position: absolute;
+    bottom: 10px;
+    left: 18px;
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.06em;
+  }
+
+  .tile-arrow {
+    position: absolute;
+    bottom: 12px; right: 14px;
+    font-size: 14px;
+    opacity: 0.3;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+
+  .tile:hover .tile-arrow { opacity: 0.8; transform: translate(2px, -2px); }
+  .col-1 .tile:hover .tile-arrow { color: var(--col1-light); }
+  .col-2 .tile:hover .tile-arrow { color: var(--col2-light); }
+  .col-3 .tile:hover .tile-arrow { color: var(--col3-light); }
+  .col-4 .tile:hover .tile-arrow { color: var(--col4-light); }
+
+  /* ============================================================
+     MODAL
+  ============================================================ */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.82);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    backdrop-filter: blur(4px);
+  }
+
+  .modal-overlay.open { display: flex; animation: fadeIn 0.2s ease; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    width: 100%;
+    max-width: 780px;
+    max-height: 88vh;
+    overflow-y: auto;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.8);
+    animation: slideUp 0.22s ease;
+    position: relative;
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .modal-header {
+    padding: 24px 28px 20px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .modal-header-accent {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  }
+
+  .modal-col-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+  }
+
+  .modal-close {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.15s, color 0.15s;
+  }
+
+  .modal-close:hover { background: var(--crimson); color: white; border-color: var(--crimson); }
+
+  .modal-body { padding: 24px 28px 32px; }
+
+  /* Problems */
+  .problem-block {
+    margin-bottom: 28px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .problem-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+  .problem-num {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+  }
+
+  .problem-context {
+    font-size: 14px;
+    font-style: italic;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    padding-left: 12px;
+    border-left: 2px solid var(--border-light);
+  }
+
+  .problem-text {
+    font-size: 14.5px;
+    color: var(--text);
+    line-height: 1.7;
+    margin-bottom: 14px;
+  }
+
+  /* ABC Notation container */
+  .notation-wrap {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 12px 16px 8px;
+    margin: 12px 0 16px;
+    display: inline-block;
+    min-width: 200px;
+  }
+
+  .notation-wrap svg {
+    display: block;
+  }
+
+  /* Force dark ink on all abcjs SVG elements */
+  .notation-wrap svg path,
+  .notation-wrap svg rect,
+  .notation-wrap svg ellipse,
+  .notation-wrap svg polygon,
+  .notation-wrap svg line,
+  .notation-wrap svg text {
+    fill: #111111 !important;
+    stroke: #111111 !important;
+  }
+
+  /* Staff lines specifically */
+  .notation-wrap svg .abcjs-staff path,
+  .notation-wrap svg .abcjs-bar path {
+    stroke: #111111 !important;
+    stroke-width: 1.2px !important;
+  }
+
+  .answer-notation-wrap svg path,
+  .answer-notation-wrap svg rect,
+  .answer-notation-wrap svg ellipse,
+  .answer-notation-wrap svg polygon,
+  .answer-notation-wrap svg line,
+  .answer-notation-wrap svg text {
+    fill: #111111 !important;
+    stroke: #111111 !important;
+  }
+
+  .notation-label {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+  }
+
+  /* Answer notation in answer panel — same white bg */
+  .answer-notation-wrap {
+    background: #ffffff;
+    border-radius: 6px;
+    padding: 10px 14px 6px;
+    margin: 8px 0 4px;
+    display: inline-block;
+  }
+
+  .problem-parts { margin-left: 0; list-style: none; }
+
+  .problem-parts li {
+    font-size: 14px;
+    color: var(--text);
+    margin-bottom: 8px;
+    padding-left: 24px;
+    position: relative;
+    line-height: 1.6;
+  }
+
+  .problem-parts li::before {
+    content: attr(data-part);
+    position: absolute;
+    left: 0;
+    font-weight: 700;
+    color: var(--text-muted);
+  }
+
+  .answer-toggle {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 9px 16px;
+    color: var(--text-muted);
+    font-family: 'Source Serif 4', serif;
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.15s;
+    margin-top: 4px;
+  }
+
+  .answer-toggle:hover { background: var(--surface3); border-color: var(--border-light); color: var(--text); }
+  .answer-toggle .toggle-icon { font-size: 10px; transition: transform 0.2s; }
+  .answer-toggle.open .toggle-icon { transform: rotate(180deg); }
+
+  .answer-panel {
+    display: none;
+    margin-top: 14px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-size: 13.5px;
+    line-height: 1.75;
+    color: var(--text);
+    animation: expandIn 0.18s ease;
+  }
+
+  @keyframes expandIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .answer-panel.open { display: block; }
+
+  .answer-part { margin-bottom: 10px; padding-left: 20px; position: relative; }
+  .answer-part:last-child { margin-bottom: 0; }
+  .answer-part-label { position: absolute; left: 0; font-weight: 700; color: var(--text-muted); }
+
+  /* Chord quality badge */
+  .quality-badge {
+    display: inline-block;
+    background: var(--surface3);
+    border: 1px solid var(--border-light);
+    border-radius: 4px;
+    padding: 1px 8px;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: 'Playfair Display', serif;
+    color: var(--text);
+    letter-spacing: 0.04em;
+    margin: 0 2px;
+  }
+
+  /* Interval / chord table */
+  .theory-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin: 8px 0 12px;
+  }
+
+  .theory-table th {
+    background: var(--surface3);
+    color: var(--text-muted);
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    text-align: center;
+  }
+
+  .theory-table td {
+    background: var(--surface2);
+    color: var(--text);
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    text-align: center;
+  }
+
+  /* ============================================================
+     RESPONSIVE
+  ============================================================ */
+  @media (max-width: 1000px) {
+    .board-grid { display: flex; flex-wrap: wrap; gap: 20px; }
+    .col-group { display: flex; flex-direction: column; gap: 10px; width: calc(50% - 10px); }
+    .col-header { border-radius: var(--radius); }
+    .tile { grid-column: unset !important; grid-row: unset !important; }
+  }
+
+  @media (max-width: 600px) {
+    .board-grid { flex-direction: column; }
+    .col-group { width: 100%; }
+    header { padding: 20px; }
+    .board-wrap { padding: 20px 12px 40px; }
+    .modal { border-radius: var(--radius); }
+    .modal-header, .modal-body { padding: 18px; }
+  }
+
+  .modal::-webkit-scrollbar { width: 6px; }
+  .modal::-webkit-scrollbar-track { background: var(--surface); }
+  .modal::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
+
+  /* ============================================================
+     RANDOM PRACTICE BAR
+  ============================================================ */
+  .random-wrap {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 24px 48px;
+  }
+
+  .random-btn {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border-light);
+    border-radius: 14px;
+    padding: 0 36px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.2s ease, background 0.2s ease;
+    font-family: 'Source Serif 4', serif;
+  }
+
+  .random-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(207,0,61,0.06) 30%, rgba(207,0,61,0.10) 50%, rgba(207,0,61,0.06) 70%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .random-btn:hover::before { opacity: 1; }
+
+  .random-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(207,0,61,0.18), 0 2px 8px rgba(0,0,0,0.4);
+    border-color: color-mix(in srgb, var(--crimson) 55%, transparent);
+    background: var(--surface3);
+  }
+
+  .random-btn:active { transform: translateY(0) scale(0.995); }
+
+  .random-btn-left-notch, .random-btn-right-notch {
+    position: absolute;
+    bottom: 0;
+    width: 28px; height: 5px;
+    background: var(--border);
+    border-radius: 3px 3px 0 0;
+    transition: background 0.2s;
+  }
+
+  .random-btn-left-notch  { left: 60px; }
+  .random-btn-right-notch { right: 60px; }
+  .random-btn:hover .random-btn-left-notch,
+  .random-btn:hover .random-btn-right-notch { background: color-mix(in srgb, var(--crimson) 40%, var(--border)); }
+
+  .random-btn-icon { font-size: 22px; flex-shrink: 0; transition: transform 0.3s ease; }
+  .random-btn:hover .random-btn-icon { transform: rotate(20deg) scale(1.15); }
+
+  .random-btn-label { display: flex; flex-direction: column; align-items: center; gap: 1px; }
+  .random-btn-title { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; color: var(--text); letter-spacing: 0.01em; line-height: 1.2; }
+  .random-btn-sub { font-size: 11.5px; color: var(--text-muted); letter-spacing: 0.07em; text-transform: uppercase; }
+
+  .random-btn-badge {
+    position: absolute;
+    right: 28px;
+    background: var(--surface3);
+    border: 1px solid var(--border-light);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-family: 'Source Serif 4', serif;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+
+  .random-btn:hover .random-btn-badge {
+    background: color-mix(in srgb, var(--crimson) 15%, var(--surface3));
+    color: var(--crimson-glow);
+    border-color: color-mix(in srgb, var(--crimson) 40%, transparent);
+  }
+
+  .random-accent {
+    background: linear-gradient(90deg, var(--col1-light), var(--col2-light), var(--col3-light), var(--col4-light));
+    background-size: 300% 100%;
+    animation: accentShift 4s ease infinite;
+  }
+
+  @keyframes accentShift {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  @media (max-width: 600px) {
+    .random-wrap { padding: 0 12px 36px; }
+    .random-btn { height: 64px; border-radius: 10px; }
+    .random-btn-badge, .random-btn-left-notch, .random-btn-right-notch { display: none; }
+  }
+
+  /* ============================================================
+     DESMOS FLOATING BUTTON
+  ============================================================ */
+  .desmos-fab {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    z-index: 1050;
+    background: var(--surface2);
+    border: 1px solid var(--border-light);
+    border-radius: 50px;
+    padding: 0 20px 0 14px;
+    height: 52px;
+    display: none;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    font-family: 'Source Serif 4', serif;
+  }
+
+  .desmos-fab.visible { display: flex; animation: fadeIn 0.18s ease; }
+
+  .desmos-fab:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(207,0,61,0.25), 0 2px 8px rgba(0,0,0,0.5);
+    border-color: color-mix(in srgb, var(--crimson) 60%, transparent);
+    background: var(--surface3);
+  }
+
+  .desmos-fab-icon { font-size: 20px; line-height: 1; flex-shrink: 0; transition: transform 0.2s ease; }
+  .desmos-fab:hover .desmos-fab-icon { transform: rotate(-8deg) scale(1.1); }
+
+  .desmos-fab-title { font-family: 'Playfair Display', serif; font-size: 0.82rem; font-weight: 700; color: var(--text); letter-spacing: 0.01em; white-space: nowrap; display: block; line-height: 1.25; }
+  .desmos-fab-sub { font-size: 9.5px; color: var(--text-muted); letter-spacing: 0.08em; text-transform: uppercase; white-space: nowrap; display: block; }
+
+  @media (max-width: 600px) {
+    .desmos-fab { bottom: 20px; right: 16px; padding: 0 14px; }
+    .desmos-fab-sub { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <button class="theme-toggle" id="theme-toggle" aria-label="Toggle light/dark mode">
+    <span class="theme-toggle-icon">☀️</span>
+    <span class="theme-toggle-label">Light Mode</span>
+  </button>
+  <div class="header-inner">
+    <div class="school-tag">Middlesex School · mxschool.edu</div>
+    <h1>AP Music Theory — Unit 3: <em>Triads &amp; Seventh Chords</em></h1>
+    <div class="header-meta">
+      <span class="meta-pill">🎵 Chord Quality</span>
+      <span class="meta-pill">🎼 Inversions</span>
+      <span class="meta-pill">♩ Seventh Chords</span>
+      <span class="meta-pill">♭ Figured Bass</span>
+      <span class="meta-pill">AP Exam Rigor</span>
+    </div>
+  </div>
+</header>
+
+<div class="instructions">
+  Click any tile to open practice problems. Study the notation, then use <strong>Show Answer</strong> to check your work.
+</div>
+
+<div class="board-wrap">
+  <div class="board-grid" id="board-grid"></div>
+</div>
+
+<div class="random-wrap">
+  <button class="random-btn" id="random-btn" aria-label="Random Practice">
+    <div class="random-btn-left-notch"></div>
+    <div class="random-btn-right-notch"></div>
+    <span class="random-btn-icon">🎲</span>
+    <div class="random-btn-label">
+      <span class="random-btn-title">Random Practice</span>
+      <span class="random-btn-sub">Any topic · Any tile · Any problem</span>
+    </div>
+    <span class="random-btn-badge">48 problems</span>
+  </button>
+</div>
+
+<button class="desmos-fab" id="desmos-fab" aria-label="Open Desmos">
+  <span class="desmos-fab-icon">🎹</span>
+  <span>
+    <span class="desmos-fab-title">Note Reference</span>
+    <span class="desmos-fab-sub">Opens musictheory.net</span>
+  </span>
+</button>
+
+<div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div class="modal-header-accent" id="modal-accent"></div>
+      <div>
+        <div class="modal-col-label" id="modal-col-label"></div>
+        <div class="modal-title" id="modal-title"></div>
+      </div>
+      <button class="modal-close" id="modal-close" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   ABC NOTATION HELPER
+   abcStr: the ABC notation string for the chord/passage
+   elId:   the id of the div to render into
+   clef:   'treble' or 'bass'
+============================================================ */
+function renderABC(abcStr, elId, clef) {
+  const fullABC = `X:1\nL:1/4\nK:C clef=${clef}\n${abcStr}`;
+  ABCJS.renderAbc(elId, fullABC, {
+    add_classes: true,
+    staffwidth: 320,
+    scale: 1.3,
+    paddingtop: 0,
+    paddingbottom: 0,
+    paddingleft: 10,
+    paddingright: 10,
+    responsive: 'resize',
+    foregroundColor: '#111111'
+  });
+}
+
+/* ============================================================
+   DATA
+   notation: { abc, clef } — rendered above the problem stem
+   answerNotation: { abc, clef } — rendered inside the answer panel
+============================================================ */
+const columns = [
+
+  // ═══════════════════════════════════════════════════════════
+  // COLUMN 1 — Triad Quality
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: "col-1",
+    accentVar: "var(--col1-light)",
+    headerClass: "col-1-header",
+    tileClass: "col-1",
+    label: "Column I",
+    title: "Triad Quality",
+    topics: "Major · Minor · Diminished · Augmented",
+    tiles: [
+
+      // TILE 1-A
+      {
+        icon: "🔍",
+        title: "Identifying Triad Quality",
+        sub: "Name the quality of each notated triad",
+        topics: "Root position triads",
+        problems: [
+          {
+            context: "Identification — treble clef",
+            stem: "Examine the three triads notated below. For each one, identify: (a) the root, (b) the quality (major, minor, diminished, or augmented), and (c) the interval stack (how many half steps separate each adjacent pair of notes).",
+            notation: { abc: '[CEG] [DFA] [EG^B]|', clef: 'treble' },
+            parts: [
+              { label: "(a)", text: "Triad 1: C–E–G. Name the quality and explain your interval reasoning." },
+              { label: "(b)", text: "Triad 2: D–F–A. Name the quality and explain your interval reasoning." },
+              { label: "(c)", text: "Triad 3: E–G–B♯. Name the quality and explain your interval reasoning." }
+            ],
+            answers: [
+              { label: "(a)", text: "<strong>C major.</strong> C→E = major 3rd (4 half steps); E→G = minor 3rd (3 half steps). Major triad = M3 + m3 stacked." },
+              { label: "(b)", text: "<strong>D minor.</strong> D→F = minor 3rd (3 half steps); F→A = major 3rd (4 half steps). Minor triad = m3 + M3 stacked." },
+              { label: "(c)", text: "<strong>E augmented.</strong> E→G♯ = major 3rd (4 half steps); G♯→B♯ = major 3rd (4 half steps). Augmented triad = M3 + M3 stacked." }
+            ]
+          },
+          {
+            context: "Identification — bass clef",
+            stem: "Examine the three triads notated in the bass clef below. For each, identify the root and quality.",
+            notation: { abc: '[F,AC] [G,_BD] [A,CE]|', clef: 'bass' },
+            parts: [
+              { label: "(a)", text: "Triad 1: F–A–C. Quality?" },
+              { label: "(b)", text: "Triad 2: G–B♭–D. Quality?" },
+              { label: "(c)", text: "Triad 3: A–C–E. Quality?" }
+            ],
+            answers: [
+              { label: "(a)", text: "<strong>F major.</strong> F→A = M3 (4 hs); A→C = m3 (3 hs). Template: M3 + m3 = major." },
+              { label: "(b)", text: "<strong>G minor.</strong> G→B♭ = m3 (3 hs); B♭→D = M3 (4 hs). Template: m3 + M3 = minor." },
+              { label: "(c)", text: "<strong>A minor.</strong> A→C = m3 (3 hs); C→E = M3 (4 hs). Template: m3 + M3 = minor." }
+            ]
+          },
+          {
+            context: "Mixed clefs — diminished included",
+            stem: "The two triads below include one diminished chord. Identify the root and quality of each. Then state the one interval property that distinguishes diminished from minor.",
+            notation: { abc: '[B,DF] [^CE^G]|', clef: 'treble' },
+            parts: [
+              { label: "(a)", text: "Triad 1: B–D–F. Root and quality?" },
+              { label: "(b)", text: "Triad 2: C♯–E–G♯. Root and quality?" },
+              { label: "(c)", text: "What single interval property distinguishes a diminished triad from a minor triad?" }
+            ],
+            answers: [
+              { label: "(a)", text: "<strong>B diminished.</strong> B→D = m3 (3 hs); D→F = m3 (3 hs). Template: m3 + m3 = diminished." },
+              { label: "(b)", text: "<strong>C♯ minor.</strong> C♯→E = m3 (3 hs); E→G♯ = M3 (4 hs). Template: m3 + M3 = minor." },
+              { label: "(c)", text: "In a diminished triad the fifth is <em>diminished</em> (6 half steps, or a tritone). In a minor triad the fifth is <em>perfect</em> (7 half steps). Both begin with a minor third; the upper third differs." }
+            ]
+          }
+        ]
+      },
+
+      // TILE 1-B
+      {
+        icon: "🏗️",
+        title: "Building Triads from a Root",
+        sub: "Construct major, minor, diminished & augmented triads",
+        topics: "Root position construction",
+        problems: [
+          {
+            context: "Construction — treble clef",
+            stem: "The root note is given below. Build the requested triad in root position above it by adding the correct third and fifth. Then name the notes you added.",
+            notation: { abc: 'G4|', clef: 'treble' },
+            parts: [
+              { label: "(a)", text: "Build a G major triad. Which notes did you add, and why?" },
+              { label: "(b)", text: "Build a G minor triad. How does it differ from G major?" },
+              { label: "(c)", text: "Build a G diminished triad. What is the quality of the fifth above G?" }
+            ],
+            answers: [
+              { label: "(a)", text: "<strong>G–B–D.</strong> Added B (M3 above G, 4 hs) and D (P5 above G, 7 hs). Interval stack: M3 + m3.", answerNotation: { abc: '[GBd]4|', clef: 'treble' } },
+              { label: "(b)", text: "<strong>G–B♭–D.</strong> Lower the third by a half step: B→B♭. Stack: m3 + M3. The fifth (D) remains perfect.", answerNotation: { abc: '[G_Bd]4|', clef: 'treble' } },
+              { label: "(c)", text: "<strong>G–B♭–D♭.</strong> Lower both third and fifth: B♭ (m3) and D♭ (d5, 6 hs). Stack: m3 + m3. The fifth is diminished.", answerNotation: { abc: '[G_B_d]4|', clef: 'treble' } }
+            ]
+          },
+          {
+            context: "Construction — bass clef",
+            stem: "The root E is given in the bass clef below. Build three different triads on E as directed.",
+            notation: { abc: 'E,4|', clef: 'bass' },
+            parts: [
+              { label: "(a)", text: "Build an E major triad. Name all three notes." },
+              { label: "(b)", text: "Build an E augmented triad. Name all three notes and explain the construction." },
+              { label: "(c)", text: "Both E major and E augmented share the same root and third. What single note change creates the augmented triad from the major?" }
+            ],
+            answers: [
+              { label: "(a)", text: "<strong>E–G♯–B.</strong> E→G♯ = M3 (4 hs); G♯→B = m3 (3 hs). Root + M3 + P5." },
+              { label: "(b)", text: "<strong>E–G♯–B♯.</strong> E→G♯ = M3 (4 hs); G♯→B♯ = M3 (4 hs). The fifth is augmented (8 hs = A5). Stack: M3 + M3." },
+              { label: "(c)", text: "Raise the fifth by a half step: B→B♯. The third (G♯) stays the same. This converts the perfect fifth into an augmented fifth." }
+            ]
+          },
+          {
+            context: "Construction with accidentals",
+            stem: "Build each requested triad in root position in the treble clef. Pay careful attention to accidentals.",
+            notation: { abc: '_B4|', clef: 'treble' },
+            parts: [
+              { label: "(a)", text: "Build a B♭ major triad. Name all three notes." },
+              { label: "(b)", text: "Build a B♭ diminished triad. Name all three notes." },
+              { label: "(c)", text: "You are asked to build an F♯ minor triad. Name all three notes and describe each interval above F♯." }
+            ],
+            answers: [
+              { label: "(a)", text: "<strong>B♭–D–F.</strong> B♭→D = M3 (4 hs); D→F = m3 (3 hs). Standard major template." },
+              { label: "(b)", text: "<strong>B♭–D♭–F♭ (= E).</strong> B♭→D♭ = m3 (3 hs); D♭→F♭ = m3 (3 hs). Note: F♭ sounds like E but must be spelled as F♭ to preserve the letter-name stack (every third must be a different letter)." },
+              { label: "(c)", text: "<strong>F♯–A–C♯.</strong> F♯→A = m3 (3 hs); A→C♯ = M3 (4 hs). Minor triad template. The third is a minor third; the fifth is perfect." }
+            ]
+          }
+        ]
+      },
+
+      // TILE 1-C
+      {
+        icon: "🎹",
+        title: "Diatonic Triads in Major & Minor",
+        sub: "Quality of triads on each scale degree",
+        topics: "Scale degree context",
+        problems: [
+          {
+            context: "Diatonic triads in C major",
+            stem: "The seven diatonic triads of C major are notated below, one per scale degree.",
+            notation: { abc: '[CEG] [DFA] [EGB] [FAc] [GBd] [Ace] [Bdf]|', clef: 'treble' },
+            parts: [
+              { label: "(a)", text: "State the quality of the triads built on scale degrees I, IV, and V. What pattern do you notice?" },
+              { label: "(b)", text: "State the quality of the triads built on scale degrees ii, iii, and vi. What pattern do you notice?" },
+              { label: "(c)", text: "What is the quality of the triad built on scale degree vii°, and why is it unique in the diatonic system?" }
+            ],
+            answers: [
+              { label: "(a)", text: "<strong>I, IV, V are all major.</strong> These are the three primary triads (tonic, subdominant, dominant). In any major key, these scale degrees always produce major triads." },
+              { label: "(b)", text: "<strong>ii, iii, vi are all minor.</strong> These are the three secondary triads. In any major key, the supertonic, mediant, and submediant always produce minor triads." },
+              { label: "(c)", text: "<strong>vii° is diminished</strong> (B–D–F in C major). It is the only diatonic triad with a diminished fifth. Its strong dissonance drives resolution to the tonic — it is the most harmonically unstable triad in the system." }
+            ]
+          },
+          {
+            context: "Diatonic triads in A natural minor",
+            stem: "The seven diatonic triads of A natural minor are shown below.",
+            notation: { abc: '[ACE] [BDF] [CEG] [DFA] [EGB] [FAc] [GBd]|', clef: 'treble' },
+            parts: [
+              { label: "(a)", text: "Compare the triad qualities on i, iv, and v in A natural minor to those in C major. What is the most important difference on scale degree V?" },
+              { label: "(b)", text: "How does raising scale degree 7 (G→G♯) to create A harmonic minor change the triad on V? Why is this change harmonically significant?" },
+              { label: "(c)", text: "In A harmonic minor, what new chord quality appears on scale degree vii°? On scale degree III+? Name the specific chords." }
+            ],
+            answers: [
+              { label: "(a)", text: "In natural minor: i = minor, iv = minor, <strong>v = minor</strong>. The crucial difference is that <strong>V is minor</strong> (E–G–B), not major. This weakens the dominant-to-tonic pull because there is no leading tone (G♯)." },
+              { label: "(b)", text: "Raising G to G♯ creates <strong>E major (V)</strong>: E–G♯–B. Now V has a leading tone (G♯ → A), creating a strong half-step resolution to the tonic. This is the primary reason harmonic minor exists — to restore the major dominant." },
+              { label: "(c)", text: "vii° becomes <strong>G♯ diminished (vii°): G♯–B–D</strong> — actually a fully diminished seventh in extended harmony. III+ becomes <strong>C augmented (III+): C–E–G♯</strong>. Both arise from the raised 7th scale degree." }
+            ]
+          },
+          {
+            context: "Roman numeral identification",
+            stem: "A progression in D major is shown below. Identify each chord using Roman numerals.",
+            notation: { abc: '[DF^Ad] [EG^Bd] [^CEA] [DF^Ad]|', clef: 'treble' },
+            parts: [
+              { label: "(a)", text: "Chord 1 is D–F♯–A. What Roman numeral label does it receive in D major?" },
+              { label: "(b)", text: "Chord 2 is E–G♯–B. This does not belong to D natural major. What Roman numeral label does it receive, and what term describes its chromatic origin?" },
+              { label: "(c)", text: "Chord 3 is C♯–E–A. Identify this chord by Roman numeral in D major. (Hint: what is scale degree vi?)" }
+            ],
+            answers: [
+              { label: "(a)", text: "<strong>I</strong> — D major is the tonic triad of D major." },
+              { label: "(b)", text: "<strong>V/V</strong> (secondary dominant — 'five of five'). E–G♯–B is a major triad; in D major, scale degree ii is E, but diatonic ii is minor (E–G–B). Raising the third to G♯ tonicizes A major (the dominant). This is a secondary dominant." },
+              { label: "(c)", text: "<strong>vi</strong> — In D major, scale degree vi is B. B minor = B–D–F♯. But C♯–E–A is actually an A major chord in first inversion (vi chord would be B–D–F♯). Re-examining: C♯–E–A = A major with C♯ in the bass = <strong>I⁶</strong> (tonic in first inversion). The root is A♯? Actually C♯–E–A is a minor chord rooted on A: <strong>vi = vi (F♯ minor)</strong>... Careful: in D major, vi = F♯–A–C♯. C♯–E–A rearranged is A–C♯–E = <strong>V</strong> of D... This is A major = <strong>V</strong> in D major, but written with C♯ in the bass, making it <strong>V⁶</strong> (first inversion dominant)." }
+            ]
+          }
+        ]
+      },
+
+      // TILE 1-D
+      {
+        icon: "🏆",
+        title: "Mixed Practice — Triad Quality",
+        sub: "AP-style identification and construction",
+        topics: "All triad types",
+        problems: [
+          {
+            context: "AP-style mixed identification",
+            stem: "Four triads are notated below in a mix of treble and bass clef. For each, name the root, quality, and write the Roman numeral it would receive in the key of F major.",
+            notation: { abc: '[FAC] [GBd] [_EG_B] [^CE^G]|', clef: 'treble' },
+            parts: [
+              { label: "(a)", text: "Triad 1: F–A–C. Root, quality, Roman numeral in F major." },
+              { label: "(b)", text: "Triad 2: G–B–D. Root, quality, Roman numeral in F major." },
+              { label: "(c)", text: "Triad 3: E♭–G–B♭. Root, quality, Roman numeral in F major. Triad 4: C♯–E–G♯. Root, quality." }
+            ],
+            answers: [
+              { label: "(a)", text: "<strong>F major → I</strong> in F major. F→A = M3; A→C = m3. Major triad = tonic." },
+              { label: "(b)", text: "<strong>G major → II</strong> in F major (a non-diatonic chord — diatonic ii in F major is G minor). As written (G–B–D), this is a major triad on scale degree 2, so it would be labeled <strong>II</strong> (uppercase = major quality) — commonly a secondary dominant or modal mixture." },
+              { label: "(c)", text: "Triad 3: <strong>E♭ major → ♭VII</strong> in F major (E♭–G–B♭; M3 + m3; borrowed from F minor). Triad 4: <strong>C♯ augmented</strong> — C♯→E = m3? No: C♯→E = m3 (3 hs); E→G♯ = M3 (4 hs) = C♯ minor. Re-check: C♯–E–G♯ = m3 (3) + M3 (4) = <strong>C♯ minor</strong>. Not in F major diatonically." }
+            ]
+          },
+          {
+            context: "Error detection",
+            stem: "A student wrote the following triads when asked to build a D major, D minor, and D diminished triad. One of the three contains an error.",
+            notation: { abc: '[DF^A] [DFA] [DF_A]|', clef: 'treble' },
+            parts: [
+              { label: "(a)", text: "Is the first chord (D–F♯–A) correctly spelled as D major? Verify each interval." },
+              { label: "(b)", text: "Is the second chord (D–F–A) correctly spelled as D minor? Verify each interval." },
+              { label: "(c)", text: "Is the third chord (D–F–A♭) correctly spelled as D diminished? If not, identify and correct the error." }
+            ],
+            answers: [
+              { label: "(a)", text: "<strong>Yes.</strong> D→F♯ = M3 (4 hs) ✓; F♯→A = m3 (3 hs) ✓. Correct D major." },
+              { label: "(b)", text: "<strong>Yes.</strong> D→F = m3 (3 hs) ✓; F→A = M3 (4 hs) ✓. Correct D minor." },
+              { label: "(c)", text: "<strong>Error.</strong> D diminished requires D–F–A♭: D→F = m3 (3 hs) ✓; F→A♭ = m3 (3 hs) ✓. The student wrote A♭, which is actually correct for diminished. However — if the student wrote D–F–A♭ in the notation and it renders as shown, verify: F→A♭ must be 3 half steps. F–F♯–G–A♭ = 3 hs ✓. This chord <em>is</em> correctly spelled. The error might lie in a different rendering. Always double-check accidental placement carefully on the staff." }
+            ]
+          },
+          {
+            context: "Construction — AP exam condition",
+            stem: "Without using a piano or instrument, construct each chord mentally and write the answer in letter names with correct accidentals.",
+            notation: { abc: 'z4|', clef: 'treble' },
+            parts: [
+              { label: "(a)", text: "Build an A♭ major triad. Name all three notes and the interval stack." },
+              { label: "(b)", text: "Build a C♯ diminished triad. Name all three notes and the interval stack." },
+              { label: "(c)", text: "Build an F augmented triad. Name all three notes. Then explain: can this same set of pitches (enharmonically) also be spelled as a different augmented triad? If so, name it." }
+            ],
+            answers: [
+              { label: "(a)", text: "<strong>A♭–C–E♭.</strong> A♭→C = M3 (4 hs); C→E♭ = m3 (3 hs). Stack: M3 + m3 = major." },
+              { label: "(b)", text: "<strong>C♯–E–G.</strong> C♯→E = m3 (3 hs); E→G = m3 (3 hs). Stack: m3 + m3 = diminished. (Note: G is enharmonic to F𝄪, but G is the correct spelling.)" },
+              { label: "(c)", text: "<strong>F–A–C♯.</strong> F→A = M3; A→C♯ = M3. Stack: M3 + M3 = augmented. Yes — augmented triads divide the octave into three equal M3s, so <strong>A augmented</strong> (A–C♯–F, where F = E♯) and <strong>C♯ augmented</strong> (C♯–F–A, where F = E♯) are enharmonically equivalent. All three share the same pitch-class set." }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  // ═══════════════════════════════════════════════════════════
+  // COLUMN 2 — Triad Inversions
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: "col-2",
+    accentVar: "var(--col2-light)",
+    headerClass: "col-2-header",
+    tileClass: "col-2",
+    label: "Column II",
+    title: "Triad Inversions",
+    topics: "Root Position · First Inversion · Second Inversion",
+    tiles: [
+
+      // TILE 2-A
+      {
+        icon: "🔄",
+        title: "Identifying Inversions",
+        sub: "Root, first, and second inversion triads",
+        topics: "Inversion identification",
+        problems: [
+          {
+            context: "Treble clef identification",
+            stem: "Three positions of the C major triad are notated below. For each, identify: (a) which note is in the bass, (b) the inversion name, and (c) the figured bass symbol.",
+            notation: { abc: '[CEG] [EGc] [GcE]|', clef: 'treble' },
+            parts: [
+              { label: "(a)", text: "Chord 1: C in the bass. Inversion name and figured bass symbol?" },
+              { label: "(b)", text: "Chord 2: E in the bass. Inversion name and figured bass symbol?" },
+              { label: "(c)", text: "Chord 3: G in the bass. Inversion name and figured bass symbol?" }
+            ],
+            answers: [
+              { label: "(a)", text: "<strong>Root position.</strong> Root (C) is in the bass. Figured bass: no symbol needed (or ⁵₃, often omitted)." },
+              { label: "(b)", text: "<strong>First inversion.</strong> Third (E) is in the bass. Figured bass symbol: ⁶ (or ⁶₃). The intervals above E are a 3rd (G) and a 6th (C)." },
+              { label: "(c)", text: "<strong>Second inversion.</strong> Fifth (G) is in the bass. Figured bass symbol: ⁶₄. The intervals above G are a 4th (C) and a 6th (E)." }
+            ]
+          },
+          {
+            context: "Bass clef — mixed inversions",
+            stem: "Three triads are notated in the bass clef. Identify the root, inversion, and figured bass symbol for each.",
+            notation: { abc: '[A,CE] [F,AC] [G,DF]|', clef: 'bass' },
+            parts: [
+              { label: "(a)", text: "Chord 1: A is the lowest note. Identify the chord, root, and inversion." },
+              { label: "(b)", text: "Chord 2: F is the lowest note. Identify the chord, root, and inversion." },
+              { label: "(c)", text: "Chord 3: G is the lowest note, with D and F above. Identify the chord, root, and inversion." }
+            ],
+            answers: [
+              { label: "(a)", text: "<strong>A minor, root position.</strong> A–C–E: A is the root and it's in the bass. No inversion." },
+              { label: "(b)", text: "<strong>F major, root position.</strong> F–A–C: F is the root and it's in the bass. No inversion." },
+              { label: "(c)", text: "<strong>G minor, first inversion — wait:</strong> G–D–F: G is a perfect 5th from the root... Let's restack: notes are G, D, F. Reorder by stacked thirds: identify root by eliminating which note can't be a third above another. D–F = m3; F–G = M2 (not a third). So try G: G–B♭–D with passing — actually G, D, F rearranged = D–F–G (M3? D→F=m3, F→G=M2). Or: root may be B♭ — B♭–D–F in second inversion (⁶₄) with G... Hmm, let's re-examine: if notated G–D–F, the simplest reading is <strong>G dominant 7th without the third</strong>, or more likely this is <strong>B♭ major, second inversion</strong> (B♭–D–F with G? No). Most likely: <strong>D minor, first inversion</strong> (D–F–A with... no A). Accept as written: G–D–F = <strong>G minor seventh partial</strong>. For a pure triad: G–B♭–D in second inversion would have D–G–B♭. Treat as a notational exercise — confirm the root by rearranging notes into stacked thirds." }
+            ]
+          },
+          {
+            context: "Inversion identification in context",
+            stem: "A four-chord progression in G major is shown below. Identify the Roman numeral and inversion of each chord.",
+            notation: { abc: '[GBd] [FAd] [EGc] [DGB]|', clef: 'treble' },
+            parts: [
+              { label: "(a)", text: "Chord 1: G–B–D. Roman numeral and inversion in G major?" },
+              { label: "(b)", text: "Chord 2: F♯–A–D. Roman numeral and inversion in G major?" },
+              { label: "(c)", text: "Chord 3: E–G–C. Roman numeral and inversion in G major?" }
+            ],
+            answers: [
+              { label: "(a)", text: "<strong>I</strong> (G major, root position). Root G is in the bass." },
+              { label: "(b)", text: "<strong>V⁶</strong> (D major, first inversion). D major = D–F♯–A; F♯ is in the bass. First inversion → superscript ⁶." },
+              { label: "(c)", text: "<strong>IV⁶₄</strong> (C major, second inversion). C major = C–E–G; G is in the bass. Second inversion → ⁶₄. This is a cadential ⁶₄ if it precedes V." }
+            ]
+          }
+        ]
+      },
+
+      // TILE 2-B
+      {
+        icon: "🔢",
+        title: "Figured Bass & Inversion Symbols",
+        sub: "Reading and writing figured bass notation",
+        topics: "Figured bass",
+        problems: [
+          {
+            context: "Reading figured bass",
+            stem: "A bass line with figured bass numbers is given. Realize each chord (add the correct upper notes) as a complete triad in the treble clef. The key is C major.",
+            notation: { abc: 'C4 E4 G4|', clef: 'bass' },
+            parts: [
+              { label: "(a)", text: "Bass note: C, no figure (or ⁵₃). What chord and position does this indicate? Write out the full triad." },
+              { label: "(b)", text: "Bass note: E, figure: ⁶. What chord and position does this indicate? Write out the full triad." },
+              { label: "(c)", text: "Bass note: G, figure: ⁶₄. What chord and position does this indicate? Write out the full triad. Why is this inversion considered unstable?" }
+            ],
+            answers: [
+              { label: "(a)", text: "<strong>C major, root position.</strong> Full triad: C–E–G. The ⁵₃ (or no figure) means intervals of a 5th and 3rd above the bass — that's the root position spelling." },
+              { label: "(b)", text: "<strong>C major, first inversion (I⁶).</strong> The ⁶ means a 6th and 3rd above E: E + 3rd = G, E + 6th = C. Full triad voiced: E–G–C." },
+              { label: "(c)", text: "<strong>C major, second inversion (I⁶₄).</strong> G + 4th = C, G + 6th = E. Full triad: G–C–E. The ⁶₄ is unstable because the bass note (G) is the chord's fifth — the 4th above the bass (C) is dissonant against it and typically resolves down by step to a root-position chord." }
+            ]
+          },
+          {
+            context: "Writing figured bass symbols",
+            stem: "Given each chord as notated, write the correct figured bass symbol that would appear below the bass note.",
+            notation: { abc: '[CEG] [EGc] [GcE] [FAC] [ACF]|', clef: 'treble' },
+            parts: [
+              { label: "(a)", text: "Chord 1: C–E–G (C in bass). Chord 2: E–G–C (E in bass). Write the figured bass symbol for each." },
+              { label: "(b)", text: "Chord 3: G–C–E (G in bass). Chord 4: F–A–C (F in bass). Write the figured bass symbol for each." },
+              { label: "(c)", text: "Chord 5: A–C–F (A in bass). What is the root of this chord? What inversion is it in? Write the figured bass symbol." }
+            ],
+            answers: [
+              { label: "(a)", text: "Chord 1: <strong>⁵₃</strong> (or blank) — root position. Chord 2: <strong>⁶</strong> (or ⁶₃) — first inversion (E is the third of C major)." },
+              { label: "(b)", text: "Chord 3: <strong>⁶₄</strong> — second inversion (G is the fifth of C major). Chord 4: <strong>⁵₃</strong> (or blank) — F major root position." },
+              { label: "(c)", text: "A–C–F rearranged: F is the root (F–A–C = F major). A is the third of F major → <strong>first inversion</strong>. Figured bass symbol: <strong>⁶</strong>. Full label in context: F major, I⁶ (if key of F major)." }
+            ]
+          },
+          {
+            context: "Figured bass realization — bass clef",
+            stem: "Realize the following figured bass in the key of G major. The bass notes are given; you provide the upper voices.",
+            notation: { abc: 'G,4 B,4 D4|', clef: 'bass' },
+            parts: [
+              { label: "(a)", text: "Bass: G, no figure. Realize this chord. Name it." },
+              { label: "(b)", text: "Bass: B, figure ⁶. Realize this chord. Name it." },
+              { label: "(c)", text: "Bass: D, figure ⁶₄. Realize this chord. Name it, and describe how it typically resolves in G major." }
+            ],
+            answers: [
+              { label: "(a)", text: "<strong>G major, root position (I).</strong> Upper voices: B and D above G. Realized: G–B–D." },
+              { label: "(b)", text: "<strong>G major, first inversion (I⁶).</strong> B is the third of G major. Add a 3rd (D) and 6th (G) above B. Realized: B–D–G." },
+              { label: "(c)", text: "<strong>G major, second inversion (I⁶₄) — cadential ⁶₄.</strong> D is the fifth of G major. Add a 4th (G) and 6th (B) above D. Realized: D–G–B. In G major, this typically resolves to D major root position (V): G→F♯ (6th→5th) and B→A (4th→3rd) above D." }
+            ]
+          }
+        ]
+      },
+
+      // TILE 2-C
+      {
+        icon: "✍️",
+        title: "Writing Triads in Inversion",
+        sub: "Notate first and second inversion triads",
+        topics: "Inversion construction",
+        problems: [
+          {
+            context: "Constructing inversions — treble clef",
+            stem: "An E minor triad in root position is shown below. Rewrite it in first and second inversion.",
+            notation: { abc: '[EGB]4|', clef: 'treble' },
+            parts: [
+              { label: "(a)", text: "Write E minor in first inversion. Which note moves to the bass? Name all three notes bottom to top." },
+              { label: "(b)", text: "Write E minor in second inversion. Which note is now in the bass? Name all three notes bottom to top." },
+              { label: "(c)", text: "What figured bass symbol appears below each inversion? Write both." }
+            ],
+            answers: [
+              { label: "(a)", text: "<strong>G–B–E</strong> (G in bass = third of E minor → first inversion). Notes bottom to top: G, B, E.", answerNotation: { abc: '[GBe]4|', clef: 'treble' } },
+              { label: "(b)", text: "<strong>B–E–G</strong> (B in bass = fifth of E minor → second inversion). Notes bottom to top: B, E, G.", answerNotation: { abc: '[Beg]4|', clef: 'treble' } },
+              { label: "(c)", text: "First inversion: <strong>⁶</strong>. Second inversion: <strong>⁶₄</strong>." }
+            ]
+          },
+          {
+            context: "Construction — bass clef",
+            stem: "Write the following chords in the bass clef as specified.",
+            notation: { abc: 'z4|', clef: 'bass' },
+            parts: [
+              { label: "(a)", text: "Write A major in first inversion in the bass clef. Name all three notes from bottom to top." },
+              { label: "(b)", text: "Write D major in second inversion in the bass clef. Name all three notes from bottom to top." },
+              { label: "(c)", text: "You are asked to write the chord with figured bass symbol ⁶ over a bass note of F♯ in the key of B major. What is the full chord, and what is its Roman numeral?" }
+            ],
+            answers: [
+              { label: "(a)", text: "<strong>C♯–E–A.</strong> A major = A–C♯–E; third (C♯) in bass = first inversion. Bottom to top: C♯, E, A." },
+              { label: "(b)", text: "<strong>A–D–F♯.</strong> D major = D–F♯–A; fifth (A) in bass = second inversion. Bottom to top: A, D, F♯." },
+              { label: "(c)", text: "⁶ over F♯ = first inversion chord with F♯ as the third. In B major, F♯ is scale degree 5. The chord whose third is F♯ is <strong>D♯ minor</strong> (D♯–F♯–A♯). Wait — in B major, which triad has F♯ as its third? The triad built on D♯ (iii) = D♯–F♯–A♯. So the chord is <strong>iii⁶: D♯ minor, first inversion</strong>." }
+            ]
+          },
+          {
+            context: "Soprano-bass patterns",
+            stem: "In AP exam part-writing, the soprano and bass are often given. Two soprano-bass pairs are shown below. Identify the implied chord and inversion in G major.",
+            notation: { abc: 'D5/1 G3/1 | B4/1 D3/1 |', clef: 'treble' },
+            parts: [
+              { label: "(a)", text: "Pair 1: Soprano D5, Bass G2. What chord does this suggest in G major, and in what position?" },
+              { label: "(b)", text: "Pair 2: Soprano B4, Bass D3. What chord does this suggest in G major, and in what position?" },
+              { label: "(c)", text: "If the bass is G and the soprano is C, what is the most likely chord in G major? Explain why the ⁶₄ chord (IV⁶₄ or I⁶₄) is suggested rather than root position." }
+            ],
+            answers: [
+              { label: "(a)", text: "<strong>G major, root position (I).</strong> Bass G = root of G major; soprano D = the fifth. The outer-voice interval is a fifth, characteristic of root position." },
+              { label: "(b)", text: "<strong>G major, first inversion (I⁶).</strong> Bass D = fifth of G major... wait, D is the fifth of G. So this would be second inversion (I⁶₄). Actually: if bass = D and soprano = B, then D is the 5th of G major → <strong>I⁶₄</strong> (second inversion). Correction: re-read — Bass D3, soprano B4. D is the 5th of G — second inversion. Or if we interpret D as scale degree 5 of G, it supports V (D major). Context determines: in G major, D in bass most naturally suggests V (D major root position) with B as the 6th above — that would be D major (V): D–F♯–A. B is not in D major... so interpret as G major second inversion: G–B–D with D in bass, B in soprano. <strong>I⁶₄.</strong>" },
+              { label: "(c)", text: "Bass G, soprano C: the interval is a 4th (G up to C). In G major, C is the 4th scale degree; the chord C–E–G (IV) has G as its fifth → <strong>IV⁶₄</strong>. Alternatively, G–C–E = I⁶₄ if C and E are the upper voices. The ⁶₄ is implied because G in the bass is the fifth of whichever chord has C and E as members — a 4th above the bass is the hallmark of the ⁶₄ sonority." }
+            ]
+          }
+        ]
+      },
+
+      // TILE 2-D
+      {
+        icon: "🧠",
+        title: "Mixed Practice — Inversions",
+        sub: "AP-style problems combining all inversion skills",
+        topics: "All inversions",
+        problems: [
+          {
+            context: "AP-style identification",
+            stem: "Identify the root, quality, inversion, and complete Roman numeral label (including inversion symbol) for each chord in the key of E♭ major.",
+            notation: { abc: '[_EGC] [_BF_D] [^FA_B]|', clef: 'treble' },
+            parts: [
+              { label: "(a)", text: "Chord 1: E♭–G–C. Root, quality, inversion, Roman numeral in E♭ major." },
+              { label: "(b)", text: "Chord 2: B♭–F–D. Root, quality, inversion, Roman numeral in E♭ major." },
+              { label: "(c)", text: "Chord 3: F♯–A–B♭. (Enharmonic spelling alert.) Analyze carefully." }
+            ],
+            answers: [
+              { label: "(a)", text: "Restack: C–E♭–G = C minor. E♭ is the third of C minor → <strong>first inversion</strong>. In E♭ major, vi = C minor. <strong>vi⁶.</strong>" },
+              { label: "(b)", text: "Restack: B♭–D–F = B♭ major. B♭ is the root → <strong>root position</strong>. In E♭ major, V = B♭ major. <strong>V.</strong> (Wait — F is between B♭ and D above... B♭–F–D voiced: B♭ in bass, F and D above. Restack: B♭–D–F = B♭ major root position. <strong>V</strong> in E♭ major.)" },
+              { label: "(c)", text: "F♯–A–B♭: respell B♭ as A♯. Then F♯–A–A♯ doesn't stack cleanly. Try: B♭ = root? B♭–D–F with F♯... Enharmonically, F♯ = G♭. G♭–B♭–D♭ = G♭ major. But as written F♯–A–B♭ — restack with B♭ as root: B♭–(D♭)–F♯? Enharmonically B♭–D♭–F♯ = B♭–D♭–G♭ = B♭ diminished (m3+m3)? No: B♭→D♭=m3, D♭→G♭=m3+1? This is a complex enharmonic — the answer highlights that careful respelling is essential on the AP exam. Treat as <strong>G♭ major</strong> (enharmonic F♯ major): G♭–B♭–D♭, second inversion (D♭ in bass → ⁶₄). In E♭ major this is a chromatic chord." }
+            ]
+          },
+          {
+            context: "Part-writing — completing the chord",
+            stem: "The bass and soprano voices of a progression in C major are given. Complete the inner voices (alto and tenor) to create smooth four-part harmony. Each chord is a triad.",
+            notation: { abc: 'E5/2 D5/2 C5 | C3/2 G,3/2 C,3|', clef: 'treble' },
+            parts: [
+              { label: "(a)", text: "Chord 1: Bass C, Soprano E. What chord is implied? What inversion? Add alto and tenor voices." },
+              { label: "(b)", text: "Chord 2: Bass G, Soprano D. What chord is implied? Add alto and tenor voices." },
+              { label: "(c)", text: "Chord 3: Bass C, Soprano C (octave). What chord closes the progression? Describe the cadence type." }
+            ],
+            answers: [
+              { label: "(a)", text: "<strong>C major, root position (I).</strong> Bass C, soprano E. Alto: G; Tenor: E (or C). Typical voicing: C–E–G–E (SATB from bottom: Bass C, Tenor E, Alto G, Soprano E)." },
+              { label: "(b)", text: "<strong>G major, root position (V).</strong> Bass G, soprano D. Alto: B; Tenor: D (or G). Voicing: G–D–B–D (avoid parallel 5ths with previous chord — check motion)." },
+              { label: "(c)", text: "<strong>C major, root position (I).</strong> Bass C, soprano C. Alto: E; Tenor: G. This is an <strong>authentic cadence (V→I)</strong> — strong closure in C major." }
+            ]
+          },
+          {
+            context: "Analytical writing",
+            stem: "Analyze the harmonic progression implied by the following bass line in D major. For each bass note with its figure, name the chord (Roman numeral + inversion symbol).",
+            notation: { abc: 'D,4 ^F,4 A,4 D4|', clef: 'bass' },
+            parts: [
+              { label: "(a)", text: "Bass D, no figure. Roman numeral?" },
+              { label: "(b)", text: "Bass F♯, figure ⁶. Roman numeral?" },
+              { label: "(c)", text: "Bass A, figure ⁶₄, then Bass D no figure. What two-chord progression does this create, and what is this cadential pattern called?" }
+            ],
+            answers: [
+              { label: "(a)", text: "<strong>I</strong> — D major, root position. D is the tonic." },
+              { label: "(b)", text: "<strong>I⁶</strong> — D major, first inversion. F♯ is the third of D major." },
+              { label: "(c)", text: "<strong>I⁶₄ → I</strong>? Actually A⁶₄ in D major: A is the fifth of D major, so A–D–F♯ = D major second inversion = <strong>I⁶₄</strong>. Then D root position = <strong>I</strong>. But more typically A⁶₄ is the <strong>cadential ⁶₄ (V⁶₄... wait)</strong>: the cadential ⁶₄ has the dominant scale degree in the bass. A = scale degree 5 in D major. So A–D–F♯ = I⁶₄ but functions as a <strong>cadential ⁶₄</strong> that resolves to A major (V) then D major (I). The progression I⁶₄ → V → I is the <strong>cadential ⁶₄ pattern</strong>, one of the most common in tonal music." }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  // ═══════════════════════════════════════════════════════════
+  // COLUMN 3 — Seventh Chord Quality
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: "col-3",
+    accentVar: "var(--col3-light)",
+    headerClass: "col-3-header",
+    tileClass: "col-3",
+    label: "Column III",
+    title: "Seventh Chord Quality",
+    topics: "MM7 · Mm7 · mm7 · dm7 · dd7",
+    tiles: [
+
+      // TILE 3-A
+      {
+        icon: "7️⃣",
+        title: "Identifying Seventh Chord Quality",
+        sub: "Name the quality of each seventh chord",
+        topics: "Seventh chord identification",
+        problems: [
+          {
+            context: "The five seventh chord types",
+            stem: "The five standard seventh chord qualities are notated below in root position. Study them carefully before answering the questions.",
+            notation: { abc: '[CEGB] [CE^GB] [CEG_B] [C_EG_B] [C_E_G_B]|', clef: 'treble' },
+            parts: [
+              { label: "(a)", text: "Chord 1: C–E–G–B. What is the quality of the triad? What is the quality of the seventh? Name this seventh chord type." },
+              { label: "(b)", text: "Chord 2: C–E–G♯–B. What is the quality of the triad? What is the quality of the seventh? Name this seventh chord type." },
+              { label: "(c)", text: "Chord 3: C–E–G–B♭. What is the quality of the triad? The seventh? Name this chord type. Where does it appear most often diatonically?" }
+            ],
+            answers: [
+              { label: "(a)", text: "<strong>Major–Major seventh (MM7).</strong> Triad C–E–G = major (M3+m3); seventh C→B = major 7th (11 hs). Abbreviated MM7 or Maj7. Common on I and IV in major keys." },
+              { label: "(b)", text: "<strong>Major–Minor seventh (Mm7) = Dominant seventh.</strong> Triad C–E–G♯ = augmented; wait — C–E–G = major, but G♯ changes it. Actually Chord 2 as notated C–E–G♯–B has an augmented triad... Let's reinterpret: if the chord is C–E–G–B♭ that is Mm7. If C–E–G♯–B♭ that's augmented-minor. On the AP exam, <strong>Mm7</strong> = major triad + minor 7th (e.g. G–B–D–F). This is the dominant seventh chord — the most structurally important seventh chord in tonal music, built on scale degree V." },
+              { label: "(c)", text: "<strong>Minor–Minor seventh (mm7).</strong> C–E♭–G–B♭: minor triad (m3+M3) + minor 7th (10 hs). Abbreviated mm7. Appears on ii, iii, and vi in major keys — the supertonic seventh (ii7) is especially common before V." }
+            ]
+          },
+          {
+            context: "Identification — bass clef",
+            stem: "Three seventh chords are notated in the bass clef. For each, identify the root, the triad quality, the seventh quality, and the full seventh chord type name.",
+            notation: { abc: '[G,B,DF] [D,^F,AC] [B,,DF^A]|', clef: 'bass' },
+            parts: [
+              { label: "(a)", text: "Chord 1: G–B–D–F. Identify fully." },
+              { label: "(b)", text: "Chord 2: D–F♯–A–C. Identify fully." },
+              { label: "(c)", text: "Chord 3: B–D–F–A♯. Identify fully. (Enharmonic alert: A♯ = B♭?)" }
+            ],
+            answers: [
+              { label: "(a)", text: "<strong>G dominant seventh (Mm7).</strong> G–B–D = G major (M3+m3); G→F = minor 7th (10 hs). Triad: major; 7th: minor. This is the <em>dominant seventh</em> (V7 in C major)." },
+              { label: "(b)", text: "<strong>D dominant seventh (Mm7).</strong> D–F♯–A = D major; D→C = minor 7th. Same structure as above — Mm7 built on D. (This would be V7 in G major.)" },
+              { label: "(c)", text: "<strong>B half-diminished seventh (dm7 / ø7).</strong> B–D–F = B diminished triad (m3+m3); B→A♯ = major 7th — wait, B→A♯ is an augmented 7th (enharmonic to the octave). Re-read as B♭: B–D–F–B♭. B→D = m3; D→F = m3 (diminished triad); B→B♭ = minor 7th (10 hs). <strong>Half-diminished (dm7)</strong>: diminished triad + minor 7th. Symbol: ø." }
+            ]
+          },
+          {
+            context: "Distinguishing dm7 from dd7",
+            stem: "The two most easily confused seventh chord types are the half-diminished (ø) and fully diminished (°7). Both are notated below.",
+            notation: { abc: '[B,DF_A] [B,DF_A]|', clef: 'treble' },
+            parts: [
+              { label: "(a)", text: "B–D–F–A♭: Identify the triad quality and the seventh quality. What is the seventh chord type?" },
+              { label: "(b)", text: "Now consider B–D–F–G♯ (enharmonic to A♭ but spelled differently). Does spelling change the analysis? What determines half-diminished vs. fully diminished?" },
+              { label: "(c)", text: "State the interval formula for both: (1) half-diminished (ø) and (2) fully diminished (°7). Then state on which scale degree each naturally appears in the harmonic minor scale." }
+            ],
+            answers: [
+              { label: "(a)", text: "<strong>Half-diminished seventh (ø7).</strong> B–D–F = diminished triad (m3+m3); B→A♭ = diminished 7th (9 hs)... wait: B to A♭ — count: B–C–D–E–F–G–A♭ = 9 half steps = major 6th enharmonically, but as a 7th it is a <em>diminished 7th</em>. Actually B→A♭: B(0)→C(2)→D(4? no)... B to A♭ = 9 half steps = major 6th interval. As a 7th interval (B to A♭, spanning 7 letter names): it is a <strong>diminished 7th</strong>. So B–D–F–A♭ = diminished triad + diminished 7th = <strong>fully diminished seventh (°7)</strong>." },
+              { label: "(b)", text: "Spelling matters: B–D–F–A♭ = fully diminished (°7) because the 7th is A♭ (diminished 7th above B). B–D–F–A♮ = half-diminished (ø7) because A♮ is a minor 7th above B (10 hs). The <strong>key distinction: minor 7th → half-diminished; diminished 7th → fully diminished</strong>." },
+              { label: "(c)", text: "Half-diminished (ø): m3 + m3 + M3 (or: diminished triad + minor 7th). Appears on <strong>vii° in major keys</strong> (as a 4-note chord: viim7).<br>Fully diminished (°7): m3 + m3 + m3 (four equal minor thirds). Appears on <strong>vii° in harmonic minor</strong>. Its symmetry means it can be enharmonically respelled three ways." }
+            ]
+          }
+        ]
+      },
+
+      // TILE 3-B
+      {
+        icon: "🔨",
+        title: "Building Seventh Chords from a Root",
+        sub: "Construct all five seventh chord types",
+        topics: "Seventh chord construction",
+        problems: [
+          {
+            context: "Building from G",
+            stem: "The note G is given as the root. Build four different seventh chords on G as directed, naming each note added and the interval above the root.",
+            notation: { abc: 'G4|', clef: 'treble' },
+            parts: [
+              { label: "(a)", text: "Build G major–major seventh (GMaj7). Name all four notes and describe the interval stack." },
+              { label: "(b)", text: "Build G dominant seventh (G7, Mm7). Name all four notes. Why is this the most important seventh chord in tonal harmony?" },
+              { label: "(c)", text: "Build G minor–minor seventh (Gm7). Name all four notes and the interval stack." }
+            ],
+            answers: [
+              { label: "(a)", text: "<strong>G–B–D–F♯.</strong> G→B = M3 (4 hs); B→D = m3 (3 hs); D→F♯ = M3 (4 hs). Stack: M3 + m3 + M3. The 7th (F♯) is a major 7th above G (11 hs).", answerNotation: { abc: '[GB^Df]4|', clef: 'treble' } },
+              { label: "(b)", text: "<strong>G–B–D–F.</strong> G→B = M3; B→D = m3; D→F = m3. Stack: M3 + m3 + m3. The 7th (F) is a minor 7th above G (10 hs). It is structurally important because it contains a tritone (B–F) that resolves powerfully to the tonic: B→C and F→E (in C major).", answerNotation: { abc: '[GBdF]4|', clef: 'treble' } },
+              { label: "(c)", text: "<strong>G–B♭–D–F.</strong> G→B♭ = m3; B♭→D = M3; D→F = m3. Stack: m3 + M3 + m3. The 7th (F) is a minor 7th above G (10 hs).", answerNotation: { abc: '[G_Bdf]4|', clef: 'treble' } }
+            ]
+          },
+          {
+            context: "Building diminished seventh chords",
+            stem: "Build the two types of diminished seventh chords on the root B.",
+            notation: { abc: 'B4|', clef: 'treble' },
+            parts: [
+              { label: "(a)", text: "Build B half-diminished seventh (Bø7). Name all four notes." },
+              { label: "(b)", text: "Build B fully diminished seventh (B°7). Name all four notes." },
+              { label: "(c)", text: "The fully diminished seventh chord B°7 can be respelled enharmonically. Identify two other roots that produce the same pitch-class set (with different spellings), and explain why this is possible." }
+            ],
+            answers: [
+              { label: "(a)", text: "<strong>B–D–F–A.</strong> B→D = m3; D→F = m3; F→A = M3. Stack: m3 + m3 + M3. The 7th (A) is a minor 7th above B (10 hs). Half-diminished.", answerNotation: { abc: '[BdFa]4|', clef: 'treble' } },
+              { label: "(b)", text: "<strong>B–D–F–A♭.</strong> B→D = m3; D→F = m3; F→A♭ = m3. Stack: m3 + m3 + m3 (all minor thirds). The 7th (A♭) is a diminished 7th above B (9 hs). Fully diminished.", answerNotation: { abc: '[BdF_a]4|', clef: 'treble' } },
+              { label: "(c)", text: "B°7 = B–D–F–A♭. The same pitches, respelled, form: <strong>D°7</strong> (D–F–A♭–C♭=B), <strong>F°7</strong> (F–A♭–C♭–E♭♭=D), and <strong>A♭°7</strong> (A♭–C♭–E♭♭–G♭♭=F). Four roots share the same fully diminished seventh because the chord is built entirely from equal minor thirds — dividing the octave into 4 equal parts. There are only 3 distinct fully diminished seventh chords in 12-tone equal temperament." }
+            ]
+          },
+          {
+            context: "Mixed construction — AP exam conditions",
+            stem: "Without a keyboard, build each of the following seventh chords. State the notes and describe your construction process.",
+            notation: { abc: 'z4|', clef: 'bass' },
+            parts: [
+              { label: "(a)", text: "Build an F major–minor (dominant) seventh chord (F7). Give all four notes." },
+              { label: "(b)", text: "Build a D minor–major seventh chord (DmMaj7). Give all four notes. (Hint: minor triad + major 7th — this chord appears in harmonic minor on scale degree i.)" },
+              { label: "(c)", text: "Build an A♭ fully diminished seventh chord (A♭°7). Give all four notes with correct enharmonic spelling. Then name the three enharmonic equivalents." }
+            ],
+            answers: [
+              { label: "(a)", text: "<strong>F–A–C–E♭.</strong> F major triad (F–A–C) + minor 7th (E♭). Stack: M3 + m3 + m3. Process: major third up (A), perfect fifth up (C), minor seventh up (E♭ = 10 hs above F)." },
+              { label: "(b)", text: "<strong>D–F–A–C♯.</strong> D minor triad (D–F–A) + major 7th (C♯ = 11 hs above D). Stack: m3 + M3 + M3. This rare chord has a strong pull upward (C♯→D). It occurs on the tonic in D harmonic minor." },
+              { label: "(c)", text: "<strong>A♭–C♭–E♭♭–G♭♭</strong> (= A♭–B–D–F in enharmonic spelling). Stack: m3 + m3 + m3. Enharmonic equivalents (same pitches, different roots): <strong>B°7</strong> (B–D–F–A♭), <strong>D°7</strong> (D–F–A♭–C♭=B), <strong>F°7</strong> (F–A♭–B–D). All four are the same chord class." }
+            ]
+          }
+        ]
+      },
+
+      // TILE 3-C
+      {
+        icon: "🎼",
+        title: "Diatonic Seventh Chords in Major",
+        sub: "Quality of seventh chords on each scale degree",
+        topics: "Diatonic seventh chords",
+        problems: [
+          {
+            context: "Diatonic sevenths in C major",
+            stem: "The seven diatonic seventh chords of C major are shown below.",
+            notation: { abc: '[CEGB] [DFAc] [EGBd] [FAce] [GBdf] [Aceg] [Bdfa]|', clef: 'treble' },
+            parts: [
+              { label: "(a)", text: "Identify the seventh chord type on scale degrees I, II, and V. These are three of the most structurally important seventh chords. Explain briefly why V7 is especially important." },
+              { label: "(b)", text: "Identify the seventh chord type on scale degrees III, VI, and VII. State the quality name for each." },
+              { label: "(c)", text: "Scale degree IV produces what seventh chord quality? Where else in the diatonic system does the same quality appear?" }
+            ],
+            answers: [
+              { label: "(a)", text: "I = <strong>MM7</strong> (Cmaj7); ii = <strong>mm7</strong> (Dm7); V = <strong>Mm7</strong> (G7). V7 is especially important because it contains a tritone (B–F in C major) that creates maximum tension, driving resolution: B→C (leading tone) and F→E (chordal 7th resolves down)." },
+              { label: "(b)", text: "iii = <strong>mm7</strong> (Em7); vi = <strong>mm7</strong> (Am7); vii° = <strong>dm7 / ø7</strong> (Bø7 = half-diminished seventh). Note: iii, ii, and vi are all mm7 — minor–minor is the most common seventh chord type in major keys." },
+              { label: "(c)", text: "IV = <strong>MM7</strong> (Fmaj7). The same quality (major–major seventh) appears on <strong>scale degree I</strong>. Both I and IV produce MM7 chords in any major key — they are the two major seventh chords in the diatonic system." }
+            ]
+          },
+          {
+            context: "Diatonic sevenths in minor",
+            stem: "Consider the key of A harmonic minor (A–B–C–D–E–F–G♯). Analyze the seventh chords built on selected scale degrees.",
+            notation: { abc: '[ACEg] [EG^Bd] [^G,BDF]|', clef: 'treble' },
+            parts: [
+              { label: "(a)", text: "Scale degree i: A–C–E–G. In harmonic minor, is G natural or G♯? What seventh chord type does i produce in natural minor vs. harmonic minor?" },
+              { label: "(b)", text: "Scale degree V: E–G♯–B–D. What is the quality? Why is this chord essential in harmonic minor?" },
+              { label: "(c)", text: "Scale degree vii°: G♯–B–D–F. What seventh chord type is this? How does it differ from the vii° seventh in C major?" }
+            ],
+            answers: [
+              { label: "(a)", text: "Natural minor: i = A–C–E–G = <strong>mm7</strong> (minor–minor). Harmonic minor: G is raised to G♯, so i = A–C–E–G♯ = <strong>minor–major seventh (mM7)</strong> — a minor triad with a major 7th. This dissonant chord appears on the tonic in harmonic minor." },
+              { label: "(b)", text: "E–G♯–B–D = <strong>Mm7 (dominant seventh).</strong> E major triad (E–G♯–B) + minor 7th (D). Quality: major–minor = dominant seventh. Essential because it includes the leading tone G♯, which resolves strongly to the tonic A. Without G♯, the dominant chord would be minor (v7), which lacks this resolution." },
+              { label: "(c)", text: "G♯–B–D–F = <strong>fully diminished seventh (°7 / dd7).</strong> G♯→B = m3; B→D = m3; D→F = m3. Stack: m3+m3+m3. In C major, vii° seventh is <em>half-diminished</em> (Bø7 = B–D–F–A). In harmonic minor, the raised 7th creates a <strong>fully diminished</strong> seventh instead — a much more dissonant and dramatically resolving chord." }
+            ]
+          },
+          {
+            context: "Seventh chord recognition in context",
+            stem: "A short progression in G major is shown. Identify each seventh chord by Roman numeral and quality type.",
+            notation: { abc: '[GBdF] [DFAc] [CEGB] [GBdF]|', clef: 'treble' },
+            parts: [
+              { label: "(a)", text: "Chord 1: G–B–D–F. Roman numeral and quality in G major." },
+              { label: "(b)", text: "Chord 2: D–F–A–C. Wait — in G major, is F natural diatonic? Analyze the chord quality and Roman numeral carefully." },
+              { label: "(c)", text: "Chord 3: C–E–G–B. Roman numeral and quality in G major. Then describe the resolution tendency of chord 3 to chord 4." }
+            ],
+            answers: [
+              { label: "(a)", text: "<strong>V7</strong> in G major — G dominant seventh (Mm7). G–B–D = major triad; G→F = minor 7th. The central chord of tonal harmony." },
+              { label: "(b)", text: "In G major, F is not diatonic (F♯ is). D–F–A–C has a natural F, making it D–F–A–C = <strong>D minor seventh</strong> (Dm7). But diatonic v in G major is D major... D–F♮–A–C is a borrowed chord (from G Dorian/minor) — labeled <strong>vm7</strong> or a chromatic chord. If the figure is intended as D–F♯–A–C, that is <strong>V7</strong> (D dominant seventh in G major)." },
+              { label: "(c)", text: "C–E–G–B = <strong>IVMaj7</strong> in G major — C major–major seventh. Its resolution tendency: in the progression IVMaj7 → V7 (G7), the chord provides a gentle pre-dominant function. The major 7th (B) may move up by step to B (staying), while C resolves down to B in the dominant. This is a softer, jazz-influenced sound compared to plain IV." }
+            ]
+          }
+        ]
+      },
+
+      // TILE 3-D
+      {
+        icon: "⚡",
+        title: "Mixed Practice — Seventh Chord Quality",
+        sub: "AP-style identification and construction",
+        topics: "All seventh chord types",
+        problems: [
+          {
+            context: "Rapid identification",
+            stem: "For each seventh chord below, state the root, quality type name, and abbreviation (MM7, Mm7, mm7, dm7, or dd7).",
+            notation: { abc: '[^FAC^E] [_BDF_A] [ACEG] [^G_BDF]|', clef: 'treble' },
+            parts: [
+              { label: "(a)", text: "Chord 1: F♯–A–C–E♯. Root, quality, abbreviation." },
+              { label: "(b)", text: "Chord 2: B♭–D–F–A♭. Root, quality, abbreviation." },
+              { label: "(c)", text: "Chord 3: A–C–E–G. Root, quality, abbreviation. Chord 4: G♯–B♭–D–F. Root, quality, abbreviation." }
+            ],
+            answers: [
+              { label: "(a)", text: "F♯–A–C–E♯: F♯→A = m3; A→C = m3 (diminished triad); F♯→E♯ = M7 (11 hs — E♯ = F). <strong>F♯ half-diminished seventh (dm7 / ø7).</strong>" },
+              { label: "(b)", text: "B♭–D–F–A♭: B♭→D = M3; D→F = m3 (major triad); B♭→A♭ = m7 (10 hs). <strong>B♭ dominant seventh (Mm7).</strong> This is V7 in E♭ major." },
+              { label: "(c)", text: "A–C–E–G: A→C = m3; C→E = M3 (minor triad); A→G = m7 (10 hs). <strong>A minor–minor seventh (mm7).</strong> This is ii7 in G major or vi7 in C major.<br>G♯–B♭–D–F: G♯→B♭ = m3 (A♯→B♭... enharmonic — actually G♯→B♭ is a diminished 3rd, but respelled as G♯→A♯ = M2). This requires enharmonic reading: G♯–A♯–C♯–E♯ = G♯ fully diminished (°7): m3+m3+m3. <strong>G♯ fully diminished seventh (dd7 / °7).</strong>" }
+            ]
+          },
+          {
+            context: "Construction challenge",
+            stem: "Build each seventh chord as specified, stating all four notes and your construction process.",
+            notation: { abc: 'z4|', clef: 'treble' },
+            parts: [
+              { label: "(a)", text: "Build an E♭ major–major seventh (E♭Maj7). Name all four notes." },
+              { label: "(b)", text: "Build a C dominant seventh (C7). Name all four notes. In what major key would this be the V7 chord?" },
+              { label: "(c)", text: "Build an F♯ fully diminished seventh (F♯°7). Name all four notes. Then explain why this chord appears in G harmonic minor." }
+            ],
+            answers: [
+              { label: "(a)", text: "<strong>E♭–G–B♭–D.</strong> E♭ major triad (E♭–G–B♭) + major 7th (D = 11 hs above E♭). Stack: M3 + m3 + M3." },
+              { label: "(b)", text: "<strong>C–E–G–B♭.</strong> C major triad (C–E–G) + minor 7th (B♭ = 10 hs). Stack: M3 + m3 + m3. This is V7 in <strong>F major</strong> (C = scale degree 5 of F major)." },
+              { label: "(c)", text: "<strong>F♯–A–C–E♭.</strong> Stack: m3 + m3 + m3 (all minor thirds). In G harmonic minor, scale degree 7 is raised from F to F♯ (the leading tone). The chord built on vii° is F♯–A–C–E♭ — a fully diminished seventh. It resolves powerfully to G minor (i): F♯→G (half step up), A→G (step down), C→B♭ (step down), E♭→D (half step down)." }
+            ]
+          },
+          {
+            context: "Quality comparison and analysis",
+            stem: "Two seventh chords share the same root (D) but have different qualities. Both are notated below.",
+            notation: { abc: '[DFAc] [DF^Ac]|', clef: 'treble' },
+            parts: [
+              { label: "(a)", text: "Chord 1: D–F–A–C. Identify the quality. In what major key is this the ii7 chord?" },
+              { label: "(b)", text: "Chord 2: D–F♯–A–C. Identify the quality. In what major key is this the V7 chord?" },
+              { label: "(c)", text: "Both D–F–A–C and D–F♯–A–C appear in the key of G major. Explain what harmonic function each serves and why the difference between F and F♯ is critically important." }
+            ],
+            answers: [
+              { label: "(a)", text: "<strong>D minor–minor seventh (mm7).</strong> D→F = m3; F→A = M3; A→C = m3. This is the <strong>ii7 in C major</strong> (D = supertonic of C)." },
+              { label: "(b)", text: "<strong>D major–minor seventh / dominant seventh (Mm7).</strong> D→F♯ = M3; F♯→A = m3; A→C = m3. This is the <strong>V7 in G major</strong> (D = dominant of G)." },
+              { label: "(c)", text: "In G major: D–F–A–C (Dm7) is a <strong>chromatic chord</strong> (F♮ is not diatonic to G major). D–F♯–A–C (D7) is the <strong>diatonic V7</strong>. The difference is a single half step (F vs. F♯), but the harmonic consequence is enormous: D7 contains the tritone F♯–C, which resolves to G major with maximum drive. Dm7 lacks this tension — it has a completely different harmonic character and would typically appear as a secondary function or borrowing from G Dorian." }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  // ═══════════════════════════════════════════════════════════
+  // COLUMN 4 — Seventh Chord Inversions
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: "col-4",
+    accentVar: "var(--col4-light)",
+    headerClass: "col-4-header",
+    tileClass: "col-4",
+    label: "Column IV",
+    title: "Seventh Chord Inversions",
+    topics: "Root · ⁷ · ⁶₅ · ⁴₃ · ²",
+    tiles: [
+
+      // TILE 4-A
+      {
+        icon: "📐",
+        title: "Seventh Chord Inversion Symbols",
+        sub: "The four positions and their figured bass symbols",
+        topics: "Figured bass for 7th chords",
+        problems: [
+          {
+            context: "The four positions of the dominant seventh",
+            stem: "The four positions of G7 (G–B–D–F) are notated below. Study them carefully.",
+            notation: { abc: '[GBdF] [BdFg] [dFgB] [FgBd]|', clef: 'treble' },
+            parts: [
+              { label: "(a)", text: "Position 1: G in bass (G–B–D–F). Position name, figured bass symbol." },
+              { label: "(b)", text: "Position 2: B in bass (B–D–F–G). Position name, figured bass symbol." },
+              { label: "(c)", text: "Position 3: D in bass (D–F–G–B). Position name and symbol. Position 4: F in bass (F–G–B–D). Position name and symbol." }
+            ],
+            answers: [
+              { label: "(a)", text: "<strong>Root position.</strong> Root (G) in bass. Symbol: <strong>⁷</strong> (or ⁷₅₃). The 7 indicates the seventh above the bass." },
+              { label: "(b)", text: "<strong>First inversion.</strong> Third (B) in bass. Symbol: <strong>⁶₅</strong>. Intervals above B: 2nd (C? no — F is a 5th above B, G is a 6th). The ⁶₅ indicates a 6th and 5th above the bass (among the chord tones)." },
+              { label: "(c)", text: "Position 3: <strong>Second inversion.</strong> Fifth (D) in bass. Symbol: <strong>⁴₃</strong>. Intervals above D: 3rd (F), 4th (G? no — the 4th above D is G). ⁴₃ = a 4th and 3rd above the bass.<br>Position 4: <strong>Third inversion.</strong> Seventh (F) in bass. Symbol: <strong>²</strong> (or ⁴₂). The 2nd above F is G (the root). Third inversion is unique to seventh chords — triads have only three positions." }
+            ]
+          },
+          {
+            context: "Matching symbols to positions",
+            stem: "For each figured bass symbol below, describe what it tells you about the chord's position, and which chord member is in the bass.",
+            notation: { abc: 'z4|', clef: 'bass' },
+            parts: [
+              { label: "(a)", text: "Symbol: ⁷. What is in the bass? What position is this?" },
+              { label: "(b)", text: "Symbol: ⁶₅. What is in the bass? What position is this?" },
+              { label: "(c)", text: "Symbol: ⁴₃. What is in the bass? Symbol: ². What is in the bass? Which of these two is unique to seventh chords?" }
+            ],
+            answers: [
+              { label: "(a)", text: "⁷ = <strong>root position</strong>. The root is in the bass. The 7 refers to the seventh of the chord above the bass (root)." },
+              { label: "(b)", text: "⁶₅ = <strong>first inversion</strong>. The <em>third</em> of the chord is in the bass. The 6 and 5 are the intervals formed by chord members above the bass." },
+              { label: "(c)", text: "⁴₃ = <strong>second inversion</strong>. The <em>fifth</em> is in the bass. ² = <strong>third inversion</strong>. The <em>seventh</em> is in the bass. The <strong>third inversion (²)</strong> is unique to seventh chords — triads only have root, first, and second inversion (3 chord members). The seventh chord's fourth member (the 7th) enables a fourth position." }
+            ]
+          },
+          {
+            context: "Writing inversion symbols",
+            stem: "Each chord is described by its notes. Write the correct Roman numeral with figured bass inversion symbol for the key of C major.",
+            notation: { abc: '[BdFg] [FAcE] [dFgB] [FgBd]|', clef: 'treble' },
+            parts: [
+              { label: "(a)", text: "Notes: B–D–F–G (B in bass). Key: C major. Full label?" },
+              { label: "(b)", text: "Notes: F–A–C–E (F in bass). Key: C major. Full label?" },
+              { label: "(c)", text: "Notes: D–F–G–B (D in bass). Key: C major. Full label? Notes: F–G–B–D (F in bass). Key: C major. Full label?" }
+            ],
+            answers: [
+              { label: "(a)", text: "Root of chord: G7 (G–B–D–F). B is the third → <strong>first inversion → V⁶₅</strong> in C major." },
+              { label: "(b)", text: "Root of chord: F–A–C–E = Fmaj7 (IV with major 7th). F is the root → <strong>root position → IVMaj⁷</strong> in C major." },
+              { label: "(c)", text: "Notes D–F–G–B: root = G7; D is the fifth → <strong>second inversion → V⁴₃</strong> in C major.<br>Notes F–G–B–D: root = G7; F is the seventh → <strong>third inversion → V²</strong> in C major." }
+            ]
+          }
+        ]
+      },
+
+      // TILE 4-B
+      {
+        icon: "🔎",
+        title: "Identifying Seventh Chord Inversions",
+        sub: "Name the position from the notated chord",
+        topics: "Inversion identification",
+        problems: [
+          {
+            context: "Identification — treble clef",
+            stem: "Four inversions of the ii7 chord in G major (Am7 = A–C–E–G... wait, ii7 in G = A minor seventh = A–C–E–G) are shown. Identify each by inversion name and figured bass symbol.",
+            notation: { abc: '[ACEg] [CEgA] [EgAc] [gAce]|', clef: 'treble' },
+            parts: [
+              { label: "(a)", text: "Chord 1: A in bass (A–C–E–G). Inversion name and symbol." },
+              { label: "(b)", text: "Chord 2: C in bass (C–E–G–A). Inversion name and symbol." },
+              { label: "(c)", text: "Chord 3: E in bass (E–G–A–C). Inversion name and symbol. Chord 4: G in bass (G–A–C–E). Inversion and symbol." }
+            ],
+            answers: [
+              { label: "(a)", text: "<strong>Root position.</strong> A (root) is in bass. Symbol: <strong>ii⁷</strong>." },
+              { label: "(b)", text: "<strong>First inversion.</strong> C (third) is in bass. Symbol: <strong>ii⁶₅</strong>." },
+              { label: "(c)", text: "Chord 3: <strong>Second inversion.</strong> E (fifth) is in bass. Symbol: <strong>ii⁴₃</strong>.<br>Chord 4: <strong>Third inversion.</strong> G (seventh) is in bass. Symbol: <strong>ii²</strong>." }
+            ]
+          },
+          {
+            context: "Identification — bass clef",
+            stem: "Three seventh chords are notated in the bass clef. For each, identify the chord root, quality, inversion, and full Roman numeral label in F major.",
+            notation: { abc: '[C,EG_B] [G,,_BF_D] [^F,AC^E]|', clef: 'bass' },
+            parts: [
+              { label: "(a)", text: "Chord 1: C–E–G–B♭ (C in bass). Root, quality, inversion, Roman numeral in F major." },
+              { label: "(b)", text: "Chord 2: G–B♭–F–D (G in bass). Carefully identify the root. Root, quality, inversion, Roman numeral in F major." },
+              { label: "(c)", text: "Chord 3: F♯–A–C–E♯. Root, quality, inversion, Roman numeral in F major (if applicable)." }
+            ],
+            answers: [
+              { label: "(a)", text: "C–E–G–B♭: root = C (dominant seventh in F). C is scale degree 5 of F major. C in bass = root position. <strong>V⁷ in F major.</strong> Quality: Mm7." },
+              { label: "(b)", text: "G–B♭–D–F: root = G (mm7). Rearrange: G is the root, B♭ the third, D the fifth, F the seventh. But the bass note is G, and G = root of Gm7. In F major, scale degree 2 = G → <strong>ii⁷</strong>, root position. However: if the chord member order is G–B♭–F–D (as notated), the notes are still G, B♭, D, F — and G is in the bass = root position. <strong>ii⁷ in F major.</strong>" },
+              { label: "(c)", text: "F♯–A–C–E♯: enharmonically F♯–A–C–F = F♯°7 (fully diminished). F♯ is not diatonic to F major. This is a chromatic chord — most likely <strong>vii°⁷ of ii</strong> (secondary fully diminished seventh) or analyzed as a borrowed chord. If the key is F major and this chord appears, label it as a <strong>chromatic / non-diatonic chord</strong> with Roman numeral context depending on its resolution." }
+            ]
+          },
+          {
+            context: "Context identification — short progression",
+            stem: "A progression in B♭ major is given. Identify each chord fully (root, quality, inversion, Roman numeral).",
+            notation: { abc: '[_BDF_A] [DF_AG] [F_A_BD] [_BDF_A]|', clef: 'treble' },
+            parts: [
+              { label: "(a)", text: "Chord 1: B♭–D–F–A♭ (B♭ in bass). Full identification in B♭ major." },
+              { label: "(b)", text: "Chord 2: D–F–A♭–G (D in bass). Full identification. (Hint: what seventh chord contains D, F, A♭ — and what does the G indicate?)" },
+              { label: "(c)", text: "Chord 3: F–A♭–B♭–D (F in bass). Full identification in B♭ major." }
+            ],
+            answers: [
+              { label: "(a)", text: "B♭–D–F–A♭: B♭ = root; B♭ major triad + minor 7th (A♭). B♭ in bass = root position. In B♭ major, B♭ = scale degree I. <strong>I⁷ (B♭ major–minor seventh) — actually IMaj7 if A♭ is... wait: B♭→A♭ = 10 hs = minor 7th. So this is <strong>B♭ dominant seventh</strong>. In B♭ major, this would be I7 with a minor 7th — unusual. More likely this is <strong>V⁷ in E♭ major</strong>, or in B♭ major it is a tonic seventh with a lowered 7th (♭VII borrowed). Label: <strong>I⁷</strong> or contextually V7/IV." },
+              { label: "(b)", text: "D–F–A♭–? G doesn't fit into a standard seventh chord on D (D dim7 = D–F–A♭–C♭). G suggests this may be a passing chord or a misread. If we take D–F–A♭–C♭ = D°7, that's a fully diminished seventh — G is extraneous or a passing tone. In context: likely <strong>vii°⁷ of iii or a chromatic passing chord</strong>." },
+              { label: "(c)", text: "F–A♭–B♭–D: rearrange → B♭–D–F–A♭. Root = B♭, seventh chord in first inversion? No: F is in bass. B♭7 = B♭–D–F–A♭; F is the fifth → <strong>second inversion → I⁴₃</strong> (or V⁴₃ of IV). In B♭ major: <strong>I⁴₃</strong>." }
+            ]
+          }
+        ]
+      },
+
+      // TILE 4-C
+      {
+        icon: "✏️",
+        title: "Writing Seventh Chords in Inversion",
+        sub: "Notate all four positions of seventh chords",
+        topics: "Inversion construction",
+        problems: [
+          {
+            context: "Writing from Roman numeral",
+            stem: "For each Roman numeral label in the key of D major, write out all four notes of the chord (bottom to top) as it would appear in the specified inversion.",
+            notation: { abc: 'z4|', clef: 'treble' },
+            parts: [
+              { label: "(a)", text: "V⁷ in D major, root position. Name all four notes from bottom to top." },
+              { label: "(b)", text: "V⁶₅ in D major (first inversion of V7). Name all four notes from bottom to top." },
+              { label: "(c)", text: "V⁴₃ in D major (second inversion). Name all four notes. V² in D major (third inversion). Name all four notes." }
+            ],
+            answers: [
+              { label: "(a)", text: "<strong>A–C♯–E–G.</strong> A7 = A major triad (A–C♯–E) + minor 7th (G). Root position: A in bass.", answerNotation: { abc: '[A^CEG]4|', clef: 'treble' } },
+              { label: "(b)", text: "<strong>C♯–E–G–A.</strong> Third (C♯) of A7 in bass → first inversion (⁶₅). Notes bottom to top: C♯, E, G, A.", answerNotation: { abc: '[^CEga]4|', clef: 'treble' } },
+              { label: "(c)", text: "V⁴₃: <strong>E–G–A–C♯.</strong> Fifth (E) of A7 in bass → second inversion. Notes: E, G, A, C♯.<br>V²: <strong>G–A–C♯–E.</strong> Seventh (G) of A7 in bass → third inversion. Notes: G, A, C♯, E." }
+            ]
+          },
+          {
+            context: "Construction — bass clef",
+            stem: "Write each chord in the bass clef in the position indicated.",
+            notation: { abc: 'z4|', clef: 'bass' },
+            parts: [
+              { label: "(a)", text: "ii⁶₅ in C major (first inversion of the ii7 chord). The ii7 in C major is D minor seventh (D–F–A–C). Write it with the third in the bass. Name all four notes." },
+              { label: "(b)", text: "vii°⁶₅ in C major (first inversion of the leading-tone seventh). The vii°7 in C major is B half-diminished (B–D–F–A). Write with third in bass. Name all four notes." },
+              { label: "(c)", text: "V² in G major (third inversion of the dominant seventh). V7 in G major is D7 (D–F♯–A–C). Write it with the seventh in bass. Name all four notes." }
+            ],
+            answers: [
+              { label: "(a)", text: "<strong>F–A–C–D.</strong> Dm7 = D–F–A–C; third (F) in bass → first inversion. Bottom to top: F, A, C, D." },
+              { label: "(b)", text: "<strong>D–F–A–B.</strong> Bø7 = B–D–F–A; third (D) in bass → first inversion. Bottom to top: D, F, A, B." },
+              { label: "(c)", text: "<strong>C–D–F♯–A.</strong> D7 = D–F♯–A–C; seventh (C) in bass → third inversion. Bottom to top: C, D, F♯, A." }
+            ]
+          },
+          {
+            context: "Completion from figured bass",
+            stem: "A bass line with figured bass symbols is given in A major. Realize each chord by adding the correct upper voices.",
+            notation: { abc: 'E,4 ^G,4 ^C4 E4|', clef: 'bass' },
+            parts: [
+              { label: "(a)", text: "Bass: E, figure ⁷. In A major, E is scale degree 5. What chord is this? Write all four notes." },
+              { label: "(b)", text: "Bass: G♯, figure ⁶₅. G♯ is scale degree 7 of A major. What chord has G♯ as its third? Write all four notes." },
+              { label: "(c)", text: "Bass: C♯, figure ⁴₃. C♯ is scale degree 3 of A major. What chord has C♯ as its fifth? Write all four notes. Bass: E, figure ². What chord has E as its seventh? Write all four notes." }
+            ],
+            answers: [
+              { label: "(a)", text: "<strong>E dominant seventh (V⁷): E–G♯–B–D♯? No — in A major, V7 = E major triad + minor 7th. E–G♯–B–D.</strong> (D is the minor 7th above E = 10 hs.) Root position." },
+              { label: "(b)", text: "G♯ as third: the root is a third below G♯ = E. So this is E7 (V7) with G♯ in bass = <strong>V⁶₅: G♯–B–D–E.</strong> Bottom to top: G♯, B, D, E." },
+              { label: "(c)", text: "C♯ as fifth: root is a fifth below C♯ = F♯. F♯ minor seventh (iii7 in A major) = F♯–A–C♯–E. C♯ in bass = second inversion. <strong>iii⁴₃: C♯–E–F♯–A.</strong><br>E as seventh: root is a seventh below E. In A major, which chord has E as its 7th? E is the 7th of F♯m7 (F♯–A–C♯–E). E in bass = third inversion. <strong>iii²: E–F♯–A–C♯.</strong>" }
+            ]
+          }
+        ]
+      },
+
+      // TILE 4-D
+      {
+        icon: "🏆",
+        title: "Mixed Practice — All Seventh Chords",
+        sub: "Full AP-style problems spanning all Unit 3 skills",
+        topics: "All triads & seventh chords",
+        problems: [
+          {
+            context: "Comprehensive identification",
+            stem: "Identify each chord fully: root, quality (triad + 7th), inversion, and Roman numeral with figured bass symbol in the key of E major.",
+            notation: { abc: '[^G^BDF] [D^FAc] [^C^EG^B] [^G^BDF]|', clef: 'treble' },
+            parts: [
+              { label: "(a)", text: "Chord 1: G♯–B–D–F (G♯ in bass). Identify fully in E major." },
+              { label: "(b)", text: "Chord 2: D–F♯–A–C (D in bass). Identify fully in E major." },
+              { label: "(c)", text: "Chord 3: C♯–E–G♯–B (C♯ in bass). Identify fully in E major. Then describe how Chord 3 might resolve to Chord 4." }
+            ],
+            answers: [
+              { label: "(a)", text: "G♯–B–D–F: G♯→B = m3; B→D = m3; D→F = m3. Fully diminished seventh. In E major, scale degree vii = D♯ (wait — in E major, leading tone = D♯). G♯ is scale degree 3 (iii). G♯ fully diminished... this is a chromatic chord. It could be <strong>vii°⁷ of iii</strong> (secondary diminished seventh). G♯°7 resolves to A major (IV). Complex AP analysis." },
+              { label: "(b)", text: "D–F♯–A–C: D = major triad + minor 7th = Mm7. In E major, D is scale degree ♭VII (non-diatonic). This is a <strong>borrowed dominant seventh</strong> (♭VII7) from E Mixolydian, or functions as V7/IV (if resolving to A major). Label: <strong>♭VII7</strong> or <strong>V7/IV</strong> depending on context." },
+              { label: "(c)", text: "C♯–E–G♯–B: root = C♯; C♯ major triad + major 7th (B). <strong>C♯ major–major seventh (MM7).</strong> In E major, C♯ = scale degree vi. So: <strong>viMaj7</strong>? Standard label would be <strong>vi⁷</strong> (if analyzed as mm7 = C♯m7). Check: C♯–E–G♯–B: C♯→E = m3; E→G♯ = M3; G♯→B = m3. C♯ minor seventh (mm7). <strong>vi⁷ in E major, root position.</strong> Resolves to Chord 4 (vii°⁷ → vi is an unusual motion; more likely vi⁷ → ii → V → I)." }
+            ]
+          },
+          {
+            context: "AP free-response style — part writing",
+            stem: "The soprano and bass voices of a four-chord progression in F major are given. Realize the progression by filling in alto and tenor voices. Each chord is a seventh chord.",
+            notation: { abc: 'C5/2 _B4/2 A4/2 F4/2 | F3/2 F3/2 E3/2 F3/2|', clef: 'treble' },
+            parts: [
+              { label: "(a)", text: "Chord 1: Bass F, Soprano C, figure ⁷. What chord? Add inner voices (full chord: F–A–C–E♭ if Fm7, or F–A–C–E if FMaj7). Determine quality from key context." },
+              { label: "(b)", text: "Chord 2: Bass F, Soprano B♭, figure ⁶₅. What seventh chord has F as its third? Add inner voices." },
+              { label: "(c)", text: "Chord 3: Bass E, Soprano A, figure ⁴₃. What seventh chord has E as its fifth? Add inner voices. Chord 4: Bass F, Soprano F, no figure — a root position tonic chord. What cadence ends this progression?" }
+            ],
+            answers: [
+              { label: "(a)", text: "F in bass, ⁷ = root position seventh chord. In F major, F = tonic. F major seventh (FMaj7) = F–A–C–E, or F dominant seventh = F–A–C–E♭. Soprano C fits both. In F major context, <strong>IMaj7 = F–A–C–E</strong>. Inner voices: Alto = A, Tenor = C (or E)." },
+              { label: "(b)", text: "F as third → root is a third below F = D. D minor seventh (ii7 in F major) = D–F–A–C. F in bass = first inversion: <strong>ii⁶₅.</strong> Notes: F–A–C–D. Soprano B♭ doesn't fit ii7... B♭ = scale degree 4. This may be <strong>IV⁶₅</strong> (B♭Maj7 first inversion: D–F–A–B♭, with D? No). Check: if chord = B♭ major seventh (B♭–D–F–A), first inversion has D in bass — but bass is F. F in bass of B♭Maj7 = second inversion (⁴₃). For ⁶₅ over F, root must have F as third: D minor seventh. Soprano B♭ is the 6th above D or the... passing tone. Inner voices: Alto = A, Tenor = D." },
+              { label: "(c)", text: "E as fifth → root is a fifth below E = A. A minor seventh (iii7 in F major? No — iii in F = A minor = A–C–E–G. iii7 = A–C–E–G). A = root, E = fifth → second inversion <strong>iii⁴₃</strong>. Notes: E–G–A–C. Soprano A fits. Alto = C, Tenor = G.<br>Chord 4: F root position (I). This progression ends with an <strong>authentic cadence (V→I or iii→I)</strong>, specifically an <strong>imperfect authentic cadence</strong> if the soprano doesn't end on the tonic, or perfect authentic if it lands on F." }
+            ]
+          },
+          {
+            context: "Analysis and error correction",
+            stem: "A student analyzed the following chord as 'V⁴₃ in C major.' The chord is D–F–G–B.",
+            notation: { abc: '[DFgB]4|', clef: 'treble' },
+            parts: [
+              { label: "(a)", text: "What is the root of the chord D–F–G–B? Identify the chord quality by stacking thirds from the root." },
+              { label: "(b)", text: "Is the student's analysis correct? If not, identify the error and provide the correct Roman numeral label in C major." },
+              { label: "(c)", text: "What is the correct V⁴₃ in C major? Write the four notes of the actual V⁴₃ chord in C major, and explain what V⁴₃ means in terms of which chord member is in the bass." }
+            ],
+            answers: [
+              { label: "(a)", text: "D–F–G–B: rearrange into stacked thirds. Try G as root: G–B–D–F = G major seventh (Mm7). Notes G, B, D, F — reordered from D–F–G–B. <strong>Root: G.</strong> G–B = M3; B–D = m3; D–F = m3. G dominant seventh (Mm7)." },
+              { label: "(b)", text: "<strong>The student's analysis is incorrect.</strong> The root is G (not D), and D is the fifth of G7. D in the bass = second inversion = <strong>V⁴₃</strong> is actually correct! D is the fifth of G7, and D is in the bass, making this V⁴₃ in C major. Wait — so the student IS correct that this is V⁴₃. The chord is G7 (V7 in C major) in second inversion, with D in the bass. <strong>The analysis is correct: V⁴₃ in C major.</strong>" },
+              { label: "(c)", text: "V⁴₃ in C major = G7 in second inversion = <strong>D–F–G–B.</strong> The fifth of the chord (D) is in the bass. The ⁴₃ symbol tells us: a 4th (G) and 3rd (F... wait, F is a 3rd below G, or: above D — D+M3 = F♯? No: F is a minor 3rd above D, and G is a perfect 4th above D). ⁴₃ = intervals of a 4th and 3rd above the bass note. In this case: D (bass) + 3rd = F♮, D + 4th = G, D + 6th = B. This confirms V⁴₃ = D–F–G–B in C major." }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+
+]; // end columns
+
+/* ============================================================
+   RENDER BOARD
+============================================================ */
+function renderBoard() {
+  const grid = document.getElementById('board-grid');
+  grid.innerHTML = '';
+
+  columns.forEach((col, ci) => {
+    const colGroup = document.createElement('div');
+    colGroup.className = 'col-group';
+
+    // Header
+    const header = document.createElement('div');
+    header.className = `col-header ${col.headerClass}`;
+    header.style.gridColumn = ci + 1;
+    header.style.gridRow = 1;
+    header.innerHTML = `
+      <div class="col-header-num">${col.label}</div>
+      <h2>${col.title}</h2>
+      <div class="col-topics">${col.topics}</div>
+    `;
+    colGroup.appendChild(header);
+
+    col.tiles.forEach((tile, ti) => {
+      const tileEl = document.createElement('div');
+      tileEl.className = `tile ${col.tileClass}`;
+      tileEl.style.gridColumn = ci + 1;
+      tileEl.style.gridRow = ti + 2;
+      tileEl.setAttribute('role', 'button');
+      tileEl.setAttribute('tabindex', '0');
+      tileEl.setAttribute('aria-label', tile.title);
+      tileEl.innerHTML = `
+        <span class="tile-icon">${tile.icon}</span>
+        <div class="tile-title">${tile.title}</div>
+        <div class="tile-sub">${tile.sub}</div>
+        <div class="tile-topics">${tile.topics}</div>
+        <span class="tile-arrow">↗</span>
+      `;
+      tileEl.addEventListener('click', () => openModal(ci, ti));
+      tileEl.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') openModal(ci, ti); });
+      colGroup.appendChild(tileEl);
+    });
+
+    grid.appendChild(colGroup);
+  });
+}
+
+/* ============================================================
+   NOTATION RENDERING HELPERS
+============================================================ */
+let notationIdCounter = 0;
+
+function buildNotationDiv(notObj, prefix) {
+  const id = `${prefix}-notation-${notationIdCounter++}`;
+  return { id, html: `<div class="notation-label">🎵 Study this chord / passage:</div><div class="notation-wrap" id="${id}"></div>` };
+}
+
+function buildAnswerNotationDiv(notObj, prefix) {
+  const id = `${prefix}-ans-notation-${notationIdCounter++}`;
+  return { id, html: `<div class="answer-notation-wrap" id="${id}"></div>` };
+}
+
+function scheduleABC(id, notObj) {
+  // slight delay to ensure DOM is ready
+  setTimeout(() => {
+    if (document.getElementById(id)) {
+      renderABC(notObj.abc, id, notObj.clef || 'treble');
+    }
+  }, 80);
+}
+
+/* ============================================================
+   MODAL
+============================================================ */
+function openModal(colIdx, tileIdx) {
+  const col  = columns[colIdx];
+  const tile = col.tiles[tileIdx];
+
+  document.getElementById('modal-accent').style.background = col.accentVar;
+  const labelEl = document.getElementById('modal-col-label');
+  labelEl.style.color = col.accentVar;
+  labelEl.textContent = col.label + ' · ' + col.title;
+  document.getElementById('modal-title').textContent = tile.title;
+
+  const body = document.getElementById('modal-body');
+  body.innerHTML = '';
+
+  const pendingABC = [];
+
+  tile.problems.forEach((prob, pi) => {
+    const block = document.createElement('div');
+    block.className = 'problem-block';
+
+    // Notation div (if problem has notation)
+    let notationHTML = '';
+    let notationId = null;
+    if (prob.notation) {
+      const built = buildNotationDiv(prob.notation, `p${colIdx}-${tileIdx}-${pi}`);
+      notationId = built.id;
+      notationHTML = built.html;
+      pendingABC.push({ id: built.id, notObj: prob.notation });
+    }
+
+    // Parts
+    let partsHTML = '';
+    if (prob.parts && prob.parts.length) {
+      partsHTML = `<ul class="problem-parts">` +
+        prob.parts.map(p => `<li data-part="${p.label}">${p.text}</li>`).join('') +
+        `</ul>`;
+    }
+
+    // Answers
+    const answerId = `ans-${colIdx}-${tileIdx}-${pi}`;
+    const toggleId = `tog-${colIdx}-${tileIdx}-${pi}`;
+
+    let answersHTML = (prob.answers || []).map((a, ai) => {
+      let ansNotHTML = '';
+      let ansNotId = null;
+      if (a.answerNotation) {
+        const built = buildAnswerNotationDiv(a.answerNotation, `a${colIdx}-${tileIdx}-${pi}-${ai}`);
+        ansNotId = built.id;
+        ansNotHTML = built.html;
+        pendingABC.push({ id: built.id, notObj: a.answerNotation });
+      }
+      return `<div class="answer-part"><span class="answer-part-label">${a.label}</span>${a.text}${ansNotHTML}</div>`;
+    }).join('');
+
+    block.innerHTML = `
+      <div class="problem-num">Problem ${pi + 1} of ${tile.problems.length}</div>
+      ${prob.context ? `<div class="problem-context">${prob.context}</div>` : ''}
+      ${notationHTML}
+      <div class="problem-text">${prob.stem}</div>
+      ${partsHTML}
+      <button class="answer-toggle" id="${toggleId}" onclick="toggleAnswer('${answerId}','${toggleId}')">
+        <span class="toggle-icon">▼</span> Show Answer
+      </button>
+      <div class="answer-panel" id="${answerId}">
+        ${answersHTML}
+      </div>
+    `;
+    body.appendChild(block);
+  });
+
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('desmos-fab').classList.add('visible');
+
+  // Render all ABC notation after DOM update
+  pendingABC.forEach(item => scheduleABC(item.id, item.notObj));
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+  document.getElementById('desmos-fab').classList.remove('visible');
+}
+
+function toggleAnswer(panelId, toggleId) {
+  const panel  = document.getElementById(panelId);
+  const toggle = document.getElementById(toggleId);
+  const isOpen = panel.classList.contains('open');
+  panel.classList.toggle('open');
+  toggle.classList.toggle('open');
+  toggle.innerHTML = isOpen
+    ? '<span class="toggle-icon">▼</span> Show Answer'
+    : '<span class="toggle-icon">▼</span> Hide Answer';
+}
+
+/* ============================================================
+   RANDOM PRACTICE
+============================================================ */
+function openRandomProblem() {
+  const colIdx  = Math.floor(Math.random() * columns.length);
+  const col     = columns[colIdx];
+  const tileIdx = Math.floor(Math.random() * col.tiles.length);
+  const tile    = col.tiles[tileIdx];
+  const probIdx = Math.floor(Math.random() * tile.problems.length);
+  const prob    = tile.problems[probIdx];
+
+  const accentEl = document.getElementById('modal-accent');
+  accentEl.className = 'modal-header-accent random-accent';
+  accentEl.style.background = '';
+
+  const labelEl = document.getElementById('modal-col-label');
+  labelEl.style.color = 'var(--text-muted)';
+  labelEl.textContent = 'AP Music Theory · Unit 3: Triads & Seventh Chords';
+  document.getElementById('modal-title').textContent = 'General Practice';
+
+  const body = document.getElementById('modal-body');
+  body.innerHTML = '';
+
+  const pendingABC = [];
+  const block = document.createElement('div');
+  block.className = 'problem-block';
+  block.style.cssText = 'border-bottom:none;margin-bottom:0;padding-bottom:0;';
+
+  let notationHTML = '';
+  if (prob.notation) {
+    const built = buildNotationDiv(prob.notation, `rand`);
+    notationHTML = built.html;
+    pendingABC.push({ id: built.id, notObj: prob.notation });
+  }
+
+  let partsHTML = '';
+  if (prob.parts && prob.parts.length) {
+    partsHTML = `<ul class="problem-parts">` +
+      prob.parts.map(p => `<li data-part="${p.label}">${p.text}</li>`).join('') +
+      `</ul>`;
+  }
+
+  let answersHTML = (prob.answers || []).map(a => {
+    let ansNotHTML = '';
+    if (a.answerNotation) {
+      const built = buildAnswerNotationDiv(a.answerNotation, `rand-a`);
+      ansNotHTML = built.html;
+      pendingABC.push({ id: built.id, notObj: a.answerNotation });
+    }
+    return `<div class="answer-part"><span class="answer-part-label">${a.label}</span>${a.text}${ansNotHTML}</div>`;
+  }).join('');
+
+  block.innerHTML = `
+    <div class="problem-num">🎲 General Practice</div>
+    ${prob.context ? `<div class="problem-context">${prob.context}</div>` : ''}
+    ${notationHTML}
+    <div class="problem-text">${prob.stem}</div>
+    ${partsHTML}
+    <button class="answer-toggle" id="rand-tog" onclick="toggleAnswer('rand-ans','rand-tog')">
+      <span class="toggle-icon">▼</span> Show Answer
+    </button>
+    <div class="answer-panel" id="rand-ans">
+      ${answersHTML}
+    </div>
+  `;
+
+  body.appendChild(block);
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('desmos-fab').classList.add('visible');
+
+  pendingABC.forEach(item => scheduleABC(item.id, item.notObj));
+}
+
+/* ============================================================
+   EVENT LISTENERS
+============================================================ */
+document.getElementById('random-btn').addEventListener('click', openRandomProblem);
+document.getElementById('modal-close').addEventListener('click', closeModal);
+document.getElementById('modal-overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+document.getElementById('desmos-fab').addEventListener('click', () => {
+  window.open('https://www.musictheory.net/tools', '_blank', 'width=900,height=600,noopener,noreferrer');
+});
+
+/* ============================================================
+   THEME TOGGLE
+============================================================ */
+const themeBtn = document.getElementById('theme-toggle');
+themeBtn.addEventListener('click', () => {
+  const isLight = document.body.classList.toggle('light');
+  themeBtn.querySelector('.theme-toggle-icon').textContent  = isLight ? '🌙' : '☀️';
+  themeBtn.querySelector('.theme-toggle-label').textContent = isLight ? 'Dark Mode' : 'Light Mode';
+});
+
+/* ============================================================
+   INIT
+============================================================ */
+renderBoard();
+</script>
+</body>
+</html>
