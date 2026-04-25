@@ -1,0 +1,1972 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BC Calculus — Unit 5: Analytical Applications of Differentiation | Middlesex School</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet" />
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+    startup: {
+      typeset: false,
+      ready() {
+        MathJax.startup.defaultReady();
+        renderBoard();
+        MathJax.typesetPromise([document.getElementById('board-grid')])
+          .catch(err => console.log(err));
+      }
+    }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+<style>
+  /* ============================================================
+     TOKENS & RESET
+  ============================================================ */
+  :root {
+    --crimson:     #cf003d;
+    --crimson-dim: #8a0028;
+    --crimson-glow:#ff1a55;
+    --black:       #0d0d0d;
+    --surface:     #151515;
+    --surface2:    #1e1e1e;
+    --surface3:    #252525;
+    --border:      #2e2e2e;
+    --border-light:#3a3a3a;
+    --text:        #f0ece6;
+    --text-muted:  #9e9e9e;
+    --text-dim:    #666666;
+
+    --col1: #cf003d;
+    --col2: #1a6b5a;
+    --col3: #4a5568;
+    --col4: #7c4a1e;
+
+    --col1-light: #ff4d75;
+    --col2-light: #2dd4bf;
+    --col3-light: #94a3b8;
+    --col4-light: #f59e0b;
+
+    --radius: 10px;
+    --radius-lg: 16px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.5);
+    --shadow-hover: 0 8px 40px rgba(0,0,0,0.7);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 16px;
+    line-height: 1.65;
+    min-height: 100vh;
+  }
+
+  /* ============================================================
+     HEADER
+  ============================================================ */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 32px 40px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--crimson), var(--crimson-glow), var(--crimson));
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(207,0,61,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .header-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+  }
+
+  .school-tag {
+    font-family: 'Source Serif 4', serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--crimson-glow);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .school-tag::before,
+  .school-tag::after {
+    content: '';
+    display: inline-block;
+    width: 28px;
+    height: 1px;
+    background: var(--crimson-glow);
+  }
+
+  h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    margin-top: 4px;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--crimson-glow);
+  }
+
+  .header-meta {
+    margin-top: 4px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .meta-pill {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 3px 12px;
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+  }
+
+  /* ============================================================
+     INSTRUCTIONS BAR
+  ============================================================ */
+  .instructions {
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 40px;
+    font-size: 13px;
+    color: var(--text-muted);
+    text-align: center;
+    letter-spacing: 0.03em;
+  }
+
+  .instructions strong { color: var(--crimson-glow); font-weight: 600; }
+
+  /* ============================================================
+     BOARD GRID — equal-height tiles across columns
+  ============================================================ */
+  .board-wrap {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 36px 24px 60px;
+  }
+
+  .board-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto repeat(4, 1fr);
+    gap: 20px;
+  }
+
+  .col-group {
+    display: contents;
+  }
+
+  /* Column headers */
+  .col-header {
+    border-radius: var(--radius) var(--radius) 0 0;
+    padding: 16px 18px 14px;
+    position: relative;
+    overflow: hidden;
+    align-self: start;
+  }
+
+  .col-header::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .col-1-header { background: color-mix(in srgb, var(--col1) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col1) 40%, transparent); }
+  .col-2-header { background: color-mix(in srgb, var(--col2) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col2) 40%, transparent); }
+  .col-3-header { background: color-mix(in srgb, var(--col3) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col3) 40%, transparent); }
+  .col-4-header { background: color-mix(in srgb, var(--col4) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col4) 40%, transparent); }
+
+  .col-header-num {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    opacity: 0.7;
+  }
+
+  .col-1-header .col-header-num { color: var(--col1-light); }
+  .col-2-header .col-header-num { color: var(--col2-light); }
+  .col-3-header .col-header-num { color: var(--col3-light); }
+  .col-4-header .col-header-num { color: var(--col4-light); }
+
+  .col-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.25;
+  }
+
+  .col-header .col-topics {
+    margin-top: 6px;
+    font-size: 10.5px;
+    color: var(--text-dim);
+    letter-spacing: 0.04em;
+  }
+
+  /* ============================================================
+     TILES
+  ============================================================ */
+  .tile {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 18px 28px;
+    cursor: pointer;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+    position: relative;
+    overflow: hidden;
+    user-select: none;
+  }
+
+  .tile::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+    border-radius: var(--radius) 0 0 var(--radius);
+    transition: opacity 0.2s;
+  }
+
+  .col-1 .tile::before { background: var(--col1-light); }
+  .col-2 .tile::before { background: var(--col2-light); }
+  .col-3 .tile::before { background: var(--col3-light); }
+  .col-4 .tile::before { background: var(--col4-light); }
+
+  .tile:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-hover);
+    background: var(--surface3);
+  }
+
+  .col-1 .tile:hover { border-color: color-mix(in srgb, var(--col1) 60%, transparent); }
+  .col-2 .tile:hover { border-color: color-mix(in srgb, var(--col2) 60%, transparent); }
+  .col-3 .tile:hover { border-color: color-mix(in srgb, var(--col3) 60%, transparent); }
+  .col-4 .tile:hover { border-color: color-mix(in srgb, var(--col4) 60%, transparent); }
+
+  .tile-icon {
+    font-size: 18px;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .tile-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+    margin-bottom: 5px;
+  }
+
+  .tile-sub {
+    font-size: 11.5px;
+    color: var(--text-muted);
+    line-height: 1.4;
+  }
+
+  .tile-topics {
+    position: absolute;
+    bottom: 10px;
+    left: 18px;
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.06em;
+  }
+
+  .tile-arrow {
+    position: absolute;
+    bottom: 12px; right: 14px;
+    font-size: 14px;
+    opacity: 0.3;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+
+  .tile:hover .tile-arrow { opacity: 0.8; transform: translate(2px, -2px); }
+  .col-1 .tile:hover .tile-arrow { color: var(--col1-light); }
+  .col-2 .tile:hover .tile-arrow { color: var(--col2-light); }
+  .col-3 .tile:hover .tile-arrow { color: var(--col3-light); }
+  .col-4 .tile:hover .tile-arrow { color: var(--col4-light); }
+
+  /* ============================================================
+     GRAPH IMAGE
+  ============================================================ */
+  .problem-img {
+    display: block;
+    width: 360px;
+    max-width: 100%;
+    border-radius: 6px;
+    margin: 10px 0 6px;
+  }
+
+  /* ============================================================
+     MODAL
+  ============================================================ */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.82);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    backdrop-filter: blur(4px);
+  }
+
+  .modal-overlay.open { display: flex; animation: fadeIn 0.2s ease; }
+
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    width: 100%;
+    max-width: 760px;
+    max-height: 88vh;
+    overflow-y: auto;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.8);
+    animation: slideUp 0.22s ease;
+    position: relative;
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .modal-header {
+    padding: 24px 28px 20px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .modal-header-accent {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  }
+
+  .modal-col-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+  }
+
+  .modal-close {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.15s, color 0.15s;
+  }
+
+  .modal-close:hover { background: var(--crimson); color: white; border-color: var(--crimson); }
+
+  .modal-body { padding: 24px 28px 32px; }
+
+  /* Video section */
+  .video-section {
+    background: var(--surface2);
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 24px;
+  }
+
+  .video-label {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+
+  .video-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    color: var(--crimson-glow);
+    text-decoration: none;
+    font-size: 13.5px;
+    font-family: 'Source Serif 4', serif;
+    transition: color 0.15s;
+  }
+
+  .video-link:hover { color: #fff; }
+  .video-icon { font-size: 12px; opacity: 0.7; }
+
+  /* Problems */
+  .problem-block {
+    margin-bottom: 28px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .problem-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+  .problem-num {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+  }
+
+  .problem-context {
+    font-size: 14px;
+    font-style: italic;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    padding-left: 12px;
+    border-left: 2px solid var(--border-light);
+  }
+
+  .problem-text {
+    font-size: 14.5px;
+    color: var(--text);
+    line-height: 1.7;
+    margin-bottom: 14px;
+  }
+
+  .problem-parts { margin-left: 0; list-style: none; }
+
+  .problem-parts li {
+    font-size: 14px;
+    color: var(--text);
+    margin-bottom: 8px;
+    padding-left: 24px;
+    position: relative;
+    line-height: 1.6;
+  }
+
+  .problem-parts li::before {
+    content: attr(data-part);
+    position: absolute;
+    left: 0;
+    font-weight: 700;
+    color: var(--text-muted);
+  }
+
+  .answer-toggle {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 9px 16px;
+    color: var(--text-muted);
+    font-family: 'Source Serif 4', serif;
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.15s;
+    margin-top: 4px;
+  }
+
+  .answer-toggle:hover { background: var(--surface3); border-color: var(--border-light); color: var(--text); }
+  .answer-toggle .toggle-icon { font-size: 10px; transition: transform 0.2s; }
+  .answer-toggle.open .toggle-icon { transform: rotate(180deg); }
+
+  .answer-panel {
+    display: none;
+    margin-top: 14px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-size: 13.5px;
+    line-height: 1.75;
+    color: var(--text);
+    animation: expandIn 0.18s ease;
+  }
+
+  @keyframes expandIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .answer-panel.open { display: block; }
+
+  .answer-part { margin-bottom: 10px; padding-left: 20px; position: relative; }
+  .answer-part:last-child { margin-bottom: 0; }
+  .answer-part-label { position: absolute; left: 0; font-weight: 700; color: var(--text-muted); }
+
+  /* ============================================================
+     RESPONSIVE
+  ============================================================ */
+  @media (max-width: 1000px) {
+    .board-grid {
+      display: flex !important;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .col-group {
+      display: flex !important;
+      flex-direction: column;
+      gap: 10px;
+      width: calc(50% - 10px);
+    }
+    .col-header { border-radius: var(--radius); }
+    .tile {
+      grid-column: unset !important;
+      grid-row: unset !important;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .board-grid { flex-direction: column; }
+    .col-group { width: 100%; }
+    header { padding: 20px; }
+    .board-wrap { padding: 20px 12px 40px; }
+    .modal { border-radius: var(--radius); }
+    .modal-header, .modal-body { padding: 18px; }
+  }
+
+  .modal::-webkit-scrollbar { width: 6px; }
+  .modal::-webkit-scrollbar-track { background: var(--surface); }
+  .modal::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
+
+  /* ============================================================
+     RANDOM PRACTICE BAR
+  ============================================================ */
+  .random-wrap {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 24px 48px;
+  }
+
+  .random-btn {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border-light);
+    border-radius: 14px;
+    padding: 0 36px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.2s ease, background 0.2s ease;
+    font-family: 'Source Serif 4', serif;
+  }
+
+  .random-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(207,0,61,0.06) 30%, rgba(207,0,61,0.10) 50%, rgba(207,0,61,0.06) 70%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .random-btn:hover::before { opacity: 1; }
+
+  .random-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(207,0,61,0.18), 0 2px 8px rgba(0,0,0,0.4);
+    border-color: color-mix(in srgb, var(--crimson) 55%, transparent);
+    background: var(--surface3);
+  }
+
+  .random-btn:active { transform: translateY(0) scale(0.995); box-shadow: 0 2px 8px rgba(0,0,0,0.4); }
+
+  .random-btn-left-notch, .random-btn-right-notch {
+    position: absolute;
+    bottom: 0;
+    width: 28px; height: 5px;
+    background: var(--border);
+    border-radius: 3px 3px 0 0;
+    transition: background 0.2s;
+  }
+  .random-btn-left-notch  { left: 60px; }
+  .random-btn-right-notch { right: 60px; }
+  .random-btn:hover .random-btn-left-notch,
+  .random-btn:hover .random-btn-right-notch { background: color-mix(in srgb, var(--crimson) 40%, var(--border)); }
+
+  .random-btn-icon { font-size: 22px; flex-shrink: 0; transition: transform 0.3s ease; }
+  .random-btn:hover .random-btn-icon { transform: rotate(20deg) scale(1.15); }
+
+  .random-btn-label { display: flex; flex-direction: column; align-items: center; gap: 1px; }
+  .random-btn-title { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; color: var(--text); letter-spacing: 0.01em; line-height: 1.2; }
+  .random-btn-sub { font-size: 11.5px; color: var(--text-muted); letter-spacing: 0.07em; text-transform: uppercase; }
+
+  .random-btn-badge {
+    position: absolute;
+    right: 28px;
+    background: var(--surface3);
+    border: 1px solid var(--border-light);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-family: 'Source Serif 4', serif;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+
+  .random-btn:hover .random-btn-badge {
+    background: color-mix(in srgb, var(--crimson) 15%, var(--surface3));
+    color: var(--crimson-glow);
+    border-color: color-mix(in srgb, var(--crimson) 40%, transparent);
+  }
+
+  .random-accent {
+    background: linear-gradient(90deg, var(--col1-light), var(--col2-light), var(--col3-light), var(--col4-light));
+    background-size: 300% 100%;
+    animation: accentShift 4s ease infinite;
+  }
+
+  @keyframes accentShift {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  @media (max-width: 600px) {
+    .random-wrap { padding: 0 12px 36px; }
+    .random-btn { height: 64px; border-radius: 10px; }
+    .random-btn-badge, .random-btn-left-notch, .random-btn-right-notch { display: none; }
+  }
+
+  /* ============================================================
+     DESMOS FLOATING BUTTON
+  ============================================================ */
+  .desmos-fab {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    z-index: 1050;
+    background: var(--surface2);
+    border: 1px solid var(--border-light);
+    border-radius: 50px;
+    padding: 0 20px 0 14px;
+    height: 52px;
+    display: none;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    font-family: 'Source Serif 4', serif;
+  }
+
+  .desmos-fab.visible { display: flex; animation: fadeIn 0.18s ease; }
+
+  .desmos-fab:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(207,0,61,0.25), 0 2px 8px rgba(0,0,0,0.5);
+    border-color: color-mix(in srgb, var(--crimson) 60%, transparent);
+    background: var(--surface3);
+  }
+
+  .desmos-fab:active { transform: translateY(0) scale(0.97); }
+
+  .desmos-fab-icon { font-size: 20px; line-height: 1; flex-shrink: 0; transition: transform 0.2s ease; }
+  .desmos-fab:hover .desmos-fab-icon { transform: rotate(-8deg) scale(1.1); }
+
+  .desmos-fab-title { font-family: 'Playfair Display', serif; font-size: 0.82rem; font-weight: 700; color: var(--text); letter-spacing: 0.01em; white-space: nowrap; display: block; line-height: 1.25; }
+  .desmos-fab-sub { font-size: 9.5px; color: var(--text-muted); letter-spacing: 0.08em; text-transform: uppercase; white-space: nowrap; display: block; }
+
+  @media (max-width: 600px) {
+    .desmos-fab { bottom: 20px; right: 16px; padding: 0 14px; }
+    .desmos-fab-sub { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     HEADER
+============================================================ -->
+<header>
+  <div class="header-inner">
+    <div class="school-tag">Middlesex School · mxschool.edu</div>
+    <h1>BC Calculus — Unit 5: <em>Analytical Applications of Differentiation</em></h1>
+    <div class="header-meta">
+      <span class="meta-pill">📐 Mean Value Theorem</span>
+      <span class="meta-pill">📈 Function Behavior</span>
+      <span class="meta-pill">🔗 Connecting f, f′, f″</span>
+      <span class="meta-pill">🎯 Optimization</span>
+      <span class="meta-pill">Topics 5.1 – 5.12</span>
+    </div>
+  </div>
+</header>
+
+<div class="instructions">
+  Click any tile to open practice problems. Use <strong>Show Answer</strong> to check your work after attempting each part.
+</div>
+
+<!-- ============================================================
+     BOARD
+============================================================ -->
+<div class="board-wrap">
+  <div class="board-grid" id="board-grid"></div>
+</div>
+
+<!-- ============================================================
+     RANDOM PRACTICE BAR
+============================================================ -->
+<div class="random-wrap">
+  <button class="random-btn" id="random-btn" aria-label="Random Practice">
+    <div class="random-btn-left-notch"></div>
+    <div class="random-btn-right-notch"></div>
+    <span class="random-btn-icon">🎲</span>
+    <div class="random-btn-label">
+      <span class="random-btn-title">Random Practice</span>
+      <span class="random-btn-sub">Any topic · Any tile · Any problem</span>
+    </div>
+    <span class="random-btn-badge">48 problems</span>
+  </button>
+</div>
+
+<!-- ============================================================
+     DESMOS FLOATING BUTTON
+============================================================ -->
+<button class="desmos-fab" id="desmos-fab" aria-label="Open Desmos Graphing Calculator">
+  <span class="desmos-fab-icon">📈</span>
+  <span>
+    <span class="desmos-fab-title">Graphing Calculator</span>
+    <span class="desmos-fab-sub">Opens Desmos in a new tab</span>
+  </span>
+</button>
+
+<!-- ============================================================
+     MODAL
+============================================================ -->
+<div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div class="modal-header-accent" id="modal-accent"></div>
+      <div>
+        <div class="modal-col-label" id="modal-col-label"></div>
+        <div class="modal-title" id="modal-title"></div>
+      </div>
+      <button class="modal-close" id="modal-close" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   DATA
+   To add a video later: add video: { title: "...", url: "..." }
+   to any tile object.
+   Graph placeholders are marked: <!-- GRAPH NEEDED: description -->
+============================================================ */
+
+const columns = [
+
+  // ═══════════════════════════════════════════════════════════
+  // COLUMN 1 — Theorems & Extrema
+  //            Topics 5.1 – 5.2
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: "col-1",
+    accentVar: "var(--col1-light)",
+    headerClass: "col-1-header",
+    tileClass: "col-1",
+    label: "Column I",
+    title: "Theorems & Extrema",
+    topics: "Topics 5.1 – 5.2",
+    tiles: [
+
+      // ── TILE 1-A ──────────────────────────────────────────
+      {
+        icon: "⚖️",
+        title: "Rolle's Theorem & the Mean Value Theorem",
+        sub: "Conditions, conclusions, and guaranteed values of c",
+        topics: "5.1",
+        video: { title: "The Mean Value Theorem — mathispower4u", url: "https://www.youtube.com/watch?v=RHQvYvL679o" },
+        problems: [
+          {
+            context: "Context: Verifying MVT conditions",
+            stem: "Let $f(x) = x^3 - x$ on $[-1, 2]$.",
+            parts: [
+              { label: "(a)", text: "Verify that $f$ satisfies the hypotheses of the Mean Value Theorem on $[-1, 2]$." },
+              { label: "(b)", text: "Find all values of $c$ in $(-1, 2)$ guaranteed by the MVT." },
+              { label: "(c)", text: "Interpret the value(s) of $c$ geometrically." }
+            ],
+            answers: [
+              { label: "(a)", text: "$f(x) = x^3 - x$ is a polynomial, so it is continuous on $[-1, 2]$ and differentiable on $(-1, 2)$. Both MVT conditions are satisfied." },
+              { label: "(b)", text: "$f(-1) = -1+1 = 0$, $f(2) = 8-2 = 6$. AROC $= \\dfrac{6-0}{3} = 2$. Set $f'(c) = 2$: $3c^2 - 1 = 2 \\Rightarrow c^2 = 1 \\Rightarrow c = \\pm 1$. Only $c = 1 \\in (-1,2)$ qualifies." },
+              { label: "(c)", text: "At $c = 1$, the tangent line to $f$ is parallel to the secant line connecting $(-1, 0)$ and $(2, 6)$. The MVT guarantees at least one such point exists." }
+            ]
+          },
+          {
+            context: "Context: Rolle's Theorem",
+            stem: "Let $g(x) = x^4 - 2x^2$ on $[-\\sqrt{2},\\, \\sqrt{2}]$.",
+            parts: [
+              { label: "(a)", text: "Verify all conditions of Rolle's Theorem." },
+              { label: "(b)", text: "Find all values of $c$ in $(-\\sqrt{2}, \\sqrt{2})$ where $g'(c) = 0$." },
+              { label: "(c)", text: "Explain why Rolle's Theorem does not apply to $h(x) = |x^2 - 1|$ on $[-2, 2]$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$g$ is a polynomial: continuous on $[-\\sqrt{2}, \\sqrt{2}]$ and differentiable on $(-\\sqrt{2}, \\sqrt{2})$. Also $g(-\\sqrt{2}) = 4-4 = 0 = g(\\sqrt{2})$. All three conditions hold." },
+              { label: "(b)", text: "$g'(x) = 4x^3 - 4x = 4x(x^2-1) = 0 \\Rightarrow x = 0, \\pm 1$. All three lie in $(-\\sqrt{2},\\sqrt{2})$. So $c = -1, 0, 1$." },
+              { label: "(c)", text: "$h(x) = |x^2-1|$ is not differentiable at $x = \\pm 1$ (corners), so the differentiability condition fails on $(-2,2)$. Rolle's Theorem does not apply." }
+            ]
+          },
+          {
+            context: "Context: MVT applied to a real-world scenario",
+            stem: "A driver travels 120 miles in exactly 2 hours. The speed limit is 65 mph the entire time.",
+            parts: [
+              { label: "(a)", text: "State what the Mean Value Theorem guarantees about the driver's speed during the trip." },
+              { label: "(b)", text: "Was the driver necessarily speeding? Justify using MVT." },
+              { label: "(c)", text: "If $s(t)$ is the car's position function and we only know $s(0) = 0$ and $s(2) = 120$, what can we say about $s'(t)$ for some $t \\in (0,2)$?" }
+            ],
+            answers: [
+              { label: "(a)", text: "The MVT guarantees that at some moment during the trip, the instantaneous speed equals the average speed for the whole trip." },
+              { label: "(b)", text: "Average speed $= \\dfrac{120}{2} = 60$ mph. By MVT, at some time $c \\in (0,2)$, $s'(c) = 60$ mph. This is under the speed limit, so MVT does not guarantee speeding — though the driver could have exceeded 65 mph at other times without MVT detecting it." },
+              { label: "(c)", text: "By MVT, there exists $c \\in (0,2)$ such that $s'(c) = \\dfrac{s(2)-s(0)}{2-0} = 60$ mph. The position function is continuous and differentiable (assuming smooth travel), so the theorem applies." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 1-B ──────────────────────────────────────────
+      {
+        icon: "🏔️",
+        title: "The Extreme Value Theorem",
+        sub: "Guaranteeing absolute extrema on closed intervals",
+        topics: "5.2",
+        video: { title: "The Extreme Value Theorem — mathispower4u", url: "https://www.youtube.com/watch?v=w6bafnqHOgU" },
+        problems: [
+          {
+            context: "Context: Applying EVT",
+            stem: "Explain why each function is or is not guaranteed to have an absolute maximum and minimum on the given interval.",
+            parts: [
+              { label: "(a)", text: "$f(x) = \\sin x$ on $[0, 2\\pi]$." },
+              { label: "(b)", text: "$g(x) = \\dfrac{1}{x}$ on $[-1, 1]$." },
+              { label: "(c)", text: "$h(x) = x^{2/3}$ on $[-8, 8]$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$f(x) = \\sin x$ is continuous on the closed interval $[0, 2\\pi]$. By EVT, it is guaranteed to attain both an absolute max and min. (Max: 1 at $x=\\pi/2$; min: $-1$ at $x = 3\\pi/2$.)" },
+              { label: "(b)", text: "$g(x) = 1/x$ is not continuous on $[-1,1]$ — it has an infinite discontinuity at $x=0$. EVT does not apply. Indeed, $g$ has no absolute max or min on this interval." },
+              { label: "(c)", text: "$h(x) = x^{2/3}$ is continuous on $[-8, 8]$ (even at $x=0$, where $h(0)=0$). By EVT, absolute extrema are guaranteed. (Min: 0 at $x=0$; max: $h(\\pm 8) = 4$.)" }
+            ]
+          },
+          {
+            context: "Context: When EVT conditions are not met",
+            stem: "For each scenario, determine whether the Extreme Value Theorem applies. If not, explain which condition fails and give an example showing the conclusion can fail.",
+            parts: [
+              { label: "(a)", text: "$f$ is continuous on the open interval $(0, 1)$." },
+              { label: "(b)", text: "$f$ is defined on $[0, 3]$ but has a jump discontinuity at $x = 1$." },
+              { label: "(c)", text: "$f$ is continuous on $[a, b]$ — but $a = b$. Does EVT apply?" }
+            ],
+            answers: [
+              { label: "(a)", text: "EVT requires a closed interval. On $(0,1)$, $f(x) = x$ is continuous but has no absolute max or min (approaches but never reaches 0 or 1). EVT does not apply." },
+              { label: "(b)", text: "EVT requires continuity on the closed interval. A jump discontinuity violates this. Example: $f(x) = \\lfloor x \\rfloor$ on $[0,3]$ — has no absolute maximum since it never reaches 3." },
+              { label: "(c)", text: "If $a = b$, the interval is a single point. $f$ is trivially continuous there and the only value is $f(a)$, which is simultaneously the absolute max and min. EVT technically applies — but trivially." }
+            ]
+          },
+          {
+            context: "Context: Finding absolute extrema using EVT",
+            stem: "Find the absolute maximum and minimum values of $f(x) = 2x^3 - 9x^2 + 12x - 4$ on $[0, 3]$.",
+            parts: [
+              { label: "(a)", text: "Explain why EVT guarantees absolute extrema exist on $[0,3]$." },
+              { label: "(b)", text: "Find all critical numbers of $f$ in $(0, 3)$." },
+              { label: "(c)", text: "Evaluate $f$ at all critical numbers and endpoints. State the absolute max and min." }
+            ],
+            answers: [
+              { label: "(a)", text: "$f$ is a polynomial, hence continuous everywhere, including on the closed interval $[0,3]$. EVT guarantees both an absolute max and absolute min exist on $[0,3]$." },
+              { label: "(b)", text: "$f'(x) = 6x^2 - 18x + 12 = 6(x^2-3x+2) = 6(x-1)(x-2)$. Critical numbers: $x = 1$ and $x = 2$, both in $(0,3)$." },
+              { label: "(c)", text: "$f(0) = -4$, $f(1) = 2-9+12-4 = 1$, $f(2) = 16-36+24-4 = 0$, $f(3) = 54-81+36-4 = 5$. Absolute max: $f(3) = 5$. Absolute min: $f(0) = -4$." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 1-C ──────────────────────────────────────────
+      {
+        icon: "🎯",
+        title: "Finding Absolute Extrema — Candidates Test",
+        sub: "Closed interval method: critical points + endpoints",
+        topics: "5.2",
+        video: { title: "Finding Absolute Extrema on a Closed Interval — mathispower4u", url: "https://www.youtube.com/watch?v=u7vCqf6cxGU" },
+        problems: [
+          {
+            context: "Context: Polynomial on a closed interval",
+            stem: "Find the absolute extrema of $f(x) = x^4 - 8x^2 + 3$ on $[-3, 3]$.",
+            parts: [
+              { label: "(a)", text: "Find $f'(x)$ and all critical numbers in $(-3, 3)$." },
+              { label: "(b)", text: "Create a candidates table: evaluate $f$ at all critical numbers and at the endpoints." },
+              { label: "(c)", text: "State the absolute maximum and minimum values and where they occur." }
+            ],
+            answers: [
+              { label: "(a)", text: "$f'(x) = 4x^3 - 16x = 4x(x^2-4) = 4x(x-2)(x+2)$. Critical numbers: $x = -2, 0, 2$ — all in $(-3,3)$." },
+              { label: "(b)", text: "$f(-3) = 81-72+3 = 12$. $f(-2) = 16-32+3 = -13$. $f(0) = 3$. $f(2) = 16-32+3 = -13$. $f(3) = 81-72+3 = 12$." },
+              { label: "(c)", text: "Absolute maximum: $f = 12$ at $x = \\pm 3$. Absolute minimum: $f = -13$ at $x = \\pm 2$." }
+            ]
+          },
+          {
+            context: "Context: Trig function on a closed interval",
+            stem: "Find the absolute extrema of $g(x) = 2\\sin x - x$ on $[0, 2\\pi]$.",
+            parts: [
+              { label: "(a)", text: "Find $g'(x)$ and solve $g'(x) = 0$ on $(0, 2\\pi)$." },
+              { label: "(b)", text: "Evaluate $g$ at all candidates (critical numbers and endpoints)." },
+              { label: "(c)", text: "State the absolute max and min.<br><br><img src='img/U11CP2cp.png' alt='Graph of g(x) = 2sin(x) - x' class='problem-img'>" }
+            ],
+            answers: [
+              { label: "(a)", text: "$g'(x) = 2\\cos x - 1 = 0 \\Rightarrow \\cos x = \\frac{1}{2} \\Rightarrow x = \\frac{\\pi}{3},\\, \\frac{5\\pi}{3}$." },
+              { label: "(b)", text: "$g(0) = 0$. $g(\\pi/3) = 2\\cdot\\frac{\\sqrt{3}}{2} - \\frac{\\pi}{3} = \\sqrt{3} - \\frac{\\pi}{3} \\approx 0.685$. $g(5\\pi/3) = 2\\cdot\\frac{\\sqrt{3}}{2} \\cdot(-1)^{\\text{sign}} $... More carefully: $g(5\\pi/3) = 2\\sin(5\\pi/3) - 5\\pi/3 = 2(-\\frac{\\sqrt{3}}{2}) - \\frac{5\\pi}{3} = -\\sqrt{3} - \\frac{5\\pi}{3} \\approx -6.97$. $g(2\\pi) = 0 - 2\\pi \\approx -6.28$." },
+              { label: "(c)", text: "Absolute maximum: $g(\\pi/3) = \\sqrt{3} - \\dfrac{\\pi}{3} \\approx 0.685$. Absolute minimum: $g(5\\pi/3) = -\\sqrt{3} - \\dfrac{5\\pi}{3} \\approx -6.97$." }
+            ]
+          },
+          {
+            context: "Context: Function with a non-differentiable point",
+            stem: "Find the absolute extrema of $h(x) = |x^2 - 4|$ on $[-3, 3]$.",
+            parts: [
+              { label: "(a)", text: "Identify all points where $h$ is not differentiable. These are also candidates." },
+              { label: "(b)", text: "Find any additional critical numbers from $h'(x) = 0$." },
+              { label: "(c)", text: "Evaluate all candidates and endpoints. State the absolute extrema." }
+            ],
+            answers: [
+              { label: "(a)", text: "$h(x) = |x^2-4|$. The expression inside is zero at $x = \\pm 2$. At these points $h$ has corners (not differentiable). So $x = -2$ and $x = 2$ are candidates." },
+              { label: "(b)", text: "For $|x|<2$: $h = 4-x^2$, $h' = -2x = 0 \\Rightarrow x = 0$. For $|x|>2$: $h = x^2-4$, $h' = 2x \\neq 0$ on $(-3,-2)\\cup(2,3)$. Additional critical number: $x = 0$." },
+              { label: "(c)", text: "$h(-3) = 5$, $h(-2) = 0$, $h(0) = 4$, $h(2) = 0$, $h(3) = 5$. Absolute max: $h = 5$ at $x = \\pm 3$. Absolute min: $h = 0$ at $x = \\pm 2$." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 1-D ──────────────────────────────────────────
+      {
+        icon: "🧠",
+        title: "Mixed Practice — Theorems & Absolute Extrema",
+        sub: "AP-style problems combining MVT, EVT, and candidates test",
+        topics: "5.1 – 5.2",
+        problems: [
+          {
+            context: "Context: Using MVT to bound function values",
+            stem: "Suppose $f$ is differentiable on $[1, 5]$ with $f(1) = 3$ and $|f'(x)| \\leq 4$ for all $x \\in [1,5]$.",
+            parts: [
+              { label: "(a)", text: "Use the MVT to find the maximum possible value of $f(5)$." },
+              { label: "(b)", text: "Use the MVT to find the minimum possible value of $f(5)$." },
+              { label: "(c)", text: "Write a general inequality bounding $|f(b) - f(a)|$ using the MVT and a bound on $|f'|$." }
+            ],
+            answers: [
+              { label: "(a)", text: "By MVT: $f(5) - f(1) = f'(c)(5-1) = 4f'(c)$ for some $c \\in (1,5)$. Since $f'(c) \\leq 4$: $f(5) \\leq 3 + 4(4) = 19$." },
+              { label: "(b)", text: "Since $f'(c) \\geq -4$: $f(5) \\geq 3 + 4(-4) = 3 - 16 = -13$." },
+              { label: "(c)", text: "If $|f'(x)| \\leq M$ on $[a,b]$, then $|f(b)-f(a)| = |f'(c)||b-a| \\leq M(b-a)$. This is sometimes called the Mean Value Inequality." }
+            ]
+          },
+          {
+            context: "Context: AP-style table problem",
+            stem: "The table below gives values of a continuous, differentiable function $f$ on $[0, 8]$.<br><br><table style='border-collapse:collapse;font-size:13.5px;margin:6px 0 10px'><thead><tr><th style='border:1px solid #3a3a3a;padding:5px 14px;background:#252525;color:#f0ece6'>$x$</th><th style='border:1px solid #3a3a3a;padding:5px 14px;background:#252525;color:#f0ece6'>0</th><th style='border:1px solid #3a3a3a;padding:5px 14px;background:#252525;color:#f0ece6'>2</th><th style='border:1px solid #3a3a3a;padding:5px 14px;background:#252525;color:#f0ece6'>4</th><th style='border:1px solid #3a3a3a;padding:5px 14px;background:#252525;color:#f0ece6'>6</th><th style='border:1px solid #3a3a3a;padding:5px 14px;background:#252525;color:#f0ece6'>8</th></tr></thead><tbody><tr><td style='border:1px solid #3a3a3a;padding:5px 14px;background:#1e1e1e;color:#f0ece6'>$f(x)$</td><td style='border:1px solid #3a3a3a;padding:5px 14px;background:#1e1e1e;color:#f0ece6;text-align:center'>2</td><td style='border:1px solid #3a3a3a;padding:5px 14px;background:#1e1e1e;color:#f0ece6;text-align:center'>9</td><td style='border:1px solid #3a3a3a;padding:5px 14px;background:#1e1e1e;color:#f0ece6;text-align:center'>5</td><td style='border:1px solid #3a3a3a;padding:5px 14px;background:#1e1e1e;color:#f0ece6;text-align:center'>7</td><td style='border:1px solid #3a3a3a;padding:5px 14px;background:#1e1e1e;color:#f0ece6;text-align:center'>3</td></tr></tbody></table>",
+            parts: [
+              { label: "(a)", text: "On which interval(s) does the MVT guarantee the existence of some $c$ where $f'(c) > 0$?" },
+              { label: "(b)", text: "Does the MVT guarantee a $c \\in (0,8)$ where $f'(c) = 0$? Explain." },
+              { label: "(c)", text: "Must the absolute maximum of $f$ on $[0,8]$ be 9? Explain." }
+            ],
+            answers: [
+              { label: "(a)", text: "On $[0,2]$: AROC $= \\frac{9-2}{2} = 3.5 > 0$. On $[4,6]$: AROC $= \\frac{7-5}{2} = 1 > 0$. MVT guarantees $f'(c) > 0$ on each of these intervals." },
+              { label: "(b)", text: "We cannot conclude this directly from MVT — MVT only guarantees $f'(c)$ equals an average rate over a specific interval. However, since $f$ rises (to 9) then falls (to 5), by Rolle's Theorem applied near $x=2$, there is likely a point where $f'=0$, but the table alone doesn't guarantee it without continuity/differentiability details between points." },
+              { label: "(c)", text: "No. The table only gives $f$ at selected points. The function could be higher than 9 between $x=0$ and $x=2$. The absolute max on $[0,8]$ could exceed 9 — we cannot determine it from the table alone." }
+            ]
+          },
+          {
+            context: "Context: Absolute extrema from a derivative graph",
+            stem: "The graph of $f'$ is shown. Also $f(0) = 1$, $f(2) = 4$, $f(5) = -2$, $f(6) = 0$.<br><br><img src='img/U11DP3p.png' alt='Graph of f prime on [0,6]' class='problem-img'>",
+            parts: [
+              { label: "(a)", text: "Identify all local maxima and minima of $f$ on $(0, 6)$." },
+              { label: "(b)", text: "Find the absolute maximum and minimum of $f$ on $[0, 6]$." },
+              { label: "(c)", text: "Could the absolute minimum occur at an interior point that is not a critical number? Explain." }
+            ],
+            answers: [
+              { label: "(a)", text: "$f' $ changes from $+$ to $-$ at $x=2$: local max, $f(2) = 4$. $f'$ changes from $-$ to $+$ at $x=5$: local min, $f(5) = -2$." },
+              { label: "(b)", text: "Candidates: $f(0)=1$, $f(2)=4$, $f(5)=-2$, $f(6)=0$. Absolute max: $f(2) = 4$. Absolute min: $f(5) = -2$." },
+              { label: "(c)", text: "No. On a closed interval, absolute extrema occur either at endpoints or at critical numbers (where $f'=0$ or $f'$ is undefined). An interior point where $f' \\neq 0$ cannot be an absolute extremum — the function is increasing or decreasing there, so nearby points have larger or smaller values." }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  // ═══════════════════════════════════════════════════════════
+  // COLUMN 2 — Analyzing Function Behavior
+  //            Topics 5.3 – 5.6
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: "col-2",
+    accentVar: "var(--col2-light)",
+    headerClass: "col-2-header",
+    tileClass: "col-2",
+    label: "Column II",
+    title: "Analyzing Function Behavior",
+    topics: "Topics 5.3 – 5.6",
+    tiles: [
+
+      // ── TILE 2-A ──────────────────────────────────────────
+      {
+        icon: "📈",
+        title: "Increasing/Decreasing & the First Derivative Test",
+        sub: "Sign charts of f′ and classifying local extrema",
+        topics: "5.3 – 5.4",
+        video: { title: "Increasing and Decreasing Functions / First Derivative Test — mathispower4u", url: "https://www.youtube.com/watch?v=Kt3lus_cop8" },
+        problems: [
+          {
+            context: "Context: Polynomial function analysis",
+            stem: "Let $f(x) = x^3 - 3x^2 - 9x + 5$.",
+            parts: [
+              { label: "(a)", text: "Find all critical numbers of $f$." },
+              { label: "(b)", text: "Determine the intervals on which $f$ is increasing and decreasing." },
+              { label: "(c)", text: "Classify each critical number as a local max, local min, or neither using the First Derivative Test." }
+            ],
+            answers: [
+              { label: "(a)", text: "$f'(x) = 3x^2 - 6x - 9 = 3(x^2-2x-3) = 3(x-3)(x+1)$. Critical numbers: $x = -1$ and $x = 3$." },
+              { label: "(b)", text: "Sign chart of $f'$: positive on $(-\\infty,-1)$, negative on $(-1,3)$, positive on $(3,\\infty)$. So $f$ is increasing on $(-\\infty,-1)\\cup(3,\\infty)$, decreasing on $(-1,3)$." },
+              { label: "(c)", text: "$f'$ changes $+\\to-$ at $x=-1$: local max. $f(-1) = -1-3+9+5 = 10$. $f'$ changes $-\\to+$ at $x=3$: local min. $f(3) = 27-27-27+5 = -22$." }
+            ]
+          },
+          {
+            context: "Context: First Derivative Test from a graph of f′",
+            stem: "The graph of $f'$ is shown.<br><br><img src='img/U12AP2p.png' alt='Graph of f prime' class='problem-img'>",
+            parts: [
+              { label: "(a)", text: "Identify all local maxima and minima of $f$ using the First Derivative Test." },
+              { label: "(b)", text: "On what intervals is $f$ increasing?" },
+              { label: "(c)", text: "What can you conclude about $x = 7$? Is it a local extremum? Explain." }
+            ],
+            answers: [
+              { label: "(a)", text: "At $x=1$: $f'$ changes $+\\to-$, so local max. At $x=4$: $f'$ changes $-\\to+$, so local min. At $x=7$: $f'=0$ but does not change sign — not a local extremum." },
+              { label: "(b)", text: "$f$ is increasing where $f'>0$: on $(-\\infty,1)\\cup(4,\\infty)$." },
+              { label: "(c)", text: "$x=7$ is a critical number (since $f'(7)=0$), but because $f'$ does not change sign there, the First Derivative Test classifies it as neither a local max nor a local min. The function has an inflection-like flattening at $x=7$." }
+            ]
+          },
+          {
+            context: "Context: Function with a non-differentiable critical point",
+            stem: "Let $g(x) = x^{2/3}(x - 5)$.",
+            parts: [
+              { label: "(a)", text: "Find $g'(x)$. Identify all critical numbers, including where $g'$ is undefined." },
+              { label: "(b)", text: "Use a sign chart to determine where $g$ is increasing and decreasing." },
+              { label: "(c)", text: "Classify each critical number using the First Derivative Test." }
+            ],
+            answers: [
+              { label: "(a)", text: "$g(x) = x^{5/3} - 5x^{2/3}$. $g'(x) = \\dfrac{5}{3}x^{2/3} - \\dfrac{10}{3}x^{-1/3} = \\dfrac{5x^{2/3} - 10x^{-1/3}}{3} = \\dfrac{5(x-2)}{3x^{1/3}}$. Critical numbers: $x = 2$ (where $g'=0$) and $x = 0$ (where $g'$ is undefined)." },
+              { label: "(b)", text: "Sign of $g' = \\dfrac{5(x-2)}{3x^{1/3}}$: positive on $(-\\infty,0)$, negative on $(0,2)$, positive on $(2,\\infty)$. Increasing on $(-\\infty,0)\\cup(2,\\infty)$; decreasing on $(0,2)$." },
+              { label: "(c)", text: "At $x=0$: $g'$ changes $+\\to-$ — local max. $g(0)=0$. At $x=2$: $g'$ changes $-\\to+$ — local min. $g(2) = 2^{2/3}(2-5) = -3\\cdot 2^{2/3} \\approx -4.76$." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 2-B ──────────────────────────────────────────
+      {
+        icon: "〜",
+        title: "Concavity & the Second Derivative Test",
+        sub: "f″ sign analysis and classifying critical points",
+        topics: "5.6 – 5.7",
+        video: { title: "Concavity and the Second Derivative Test — mathispower4u", url: "https://www.youtube.com/watch?v=2tmRPytHBuk" },
+        problems: [
+          {
+            context: "Context: Full second derivative analysis",
+            stem: "Let $f(x) = x^4 - 4x^3 + 6$.",
+            parts: [
+              { label: "(a)", text: "Find $f''(x)$ and determine the intervals where $f$ is concave up and concave down." },
+              { label: "(b)", text: "Find all inflection points." },
+              { label: "(c)", text: "Find all critical numbers and classify them using the Second Derivative Test." }
+            ],
+            answers: [
+              { label: "(a)", text: "$f'(x) = 4x^3-12x^2$. $f''(x) = 12x^2-24x = 12x(x-2)$. Concave up: $f''>0$ on $(-\\infty,0)\\cup(2,\\infty)$. Concave down: $f''<0$ on $(0,2)$." },
+              { label: "(b)", text: "$f''=0$ at $x=0$ and $x=2$; concavity changes at both. Inflection points: $(0, 6)$ and $(2, 6-32+6) = (2,-10)$." },
+              { label: "(c)", text: "$f'(x) = 4x^2(x-3) = 0$: critical numbers $x=0$ and $x=3$. $f''(0) = 0$ — SDT inconclusive at $x=0$. $f''(3) = 12(3)(1) = 36 > 0$ — local min at $x=3$. $f(3) = 81-108+6 = -21$." }
+            ]
+          },
+          {
+            context: "Context: Second Derivative Test from a table",
+            stem: "The table gives values of $f$, $f'$, and $f''$ at selected points.<br><br><table style='border-collapse:collapse;font-size:13px;margin:6px 0 10px'><thead><tr><th style='border:1px solid #3a3a3a;padding:5px 12px;background:#252525;color:#f0ece6'>$x$</th><th style='border:1px solid #3a3a3a;padding:5px 12px;background:#252525;color:#f0ece6'>$f(x)$</th><th style='border:1px solid #3a3a3a;padding:5px 12px;background:#252525;color:#f0ece6'>$f'(x)$</th><th style='border:1px solid #3a3a3a;padding:5px 12px;background:#252525;color:#f0ece6'>$f''(x)$</th></tr></thead><tbody><tr><td style='border:1px solid #3a3a3a;padding:5px 12px;background:#1e1e1e;color:#f0ece6;text-align:center'>$-2$</td><td style='border:1px solid #3a3a3a;padding:5px 12px;background:#1e1e1e;color:#f0ece6;text-align:center'>$5$</td><td style='border:1px solid #3a3a3a;padding:5px 12px;background:#1e1e1e;color:#f0ece6;text-align:center'>$0$</td><td style='border:1px solid #3a3a3a;padding:5px 12px;background:#1e1e1e;color:#f0ece6;text-align:center'>$3$</td></tr><tr><td style='border:1px solid #3a3a3a;padding:5px 12px;background:#1e1e1e;color:#f0ece6;text-align:center'>$1$</td><td style='border:1px solid #3a3a3a;padding:5px 12px;background:#1e1e1e;color:#f0ece6;text-align:center'>$-2$</td><td style='border:1px solid #3a3a3a;padding:5px 12px;background:#1e1e1e;color:#f0ece6;text-align:center'>$0$</td><td style='border:1px solid #3a3a3a;padding:5px 12px;background:#1e1e1e;color:#f0ece6;text-align:center'>$-4$</td></tr><tr><td style='border:1px solid #3a3a3a;padding:5px 12px;background:#1e1e1e;color:#f0ece6;text-align:center'>$4$</td><td style='border:1px solid #3a3a3a;padding:5px 12px;background:#1e1e1e;color:#f0ece6;text-align:center'>$7$</td><td style='border:1px solid #3a3a3a;padding:5px 12px;background:#1e1e1e;color:#f0ece6;text-align:center'>$0$</td><td style='border:1px solid #3a3a3a;padding:5px 12px;background:#1e1e1e;color:#f0ece6;text-align:center'>$0$</td></tr></tbody></table>",
+            parts: [
+              { label: "(a)", text: "Classify $x = -2$ using the Second Derivative Test." },
+              { label: "(b)", text: "Classify $x = 1$ using the Second Derivative Test." },
+              { label: "(c)", text: "What does the Second Derivative Test tell you about $x = 4$? What additional work is needed?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$f'(-2)=0$ and $f''(-2)=3>0$: $f$ is concave up at $x=-2$, so this is a local minimum. $f(-2)=5$." },
+              { label: "(b)", text: "$f'(1)=0$ and $f''(1)=-4<0$: $f$ is concave down at $x=1$, so this is a local maximum. $f(1)=-2$." },
+              { label: "(c)", text: "$f'(4)=0$ and $f''(4)=0$: the Second Derivative Test is inconclusive. Additional work (e.g., the First Derivative Test — examining the sign of $f'$ on either side of $x=4$) is needed to classify $x=4$." }
+            ]
+          },
+          {
+            context: "Context: Concavity in context",
+            stem: "A company's revenue function is $R(t) = -t^3 + 12t^2 + 60t$ (thousands of dollars) for $t \\geq 0$ years.",
+            parts: [
+              { label: "(a)", text: "Find $R''(t)$ and determine when revenue is increasing at an increasing rate vs. increasing at a decreasing rate." },
+              { label: "(b)", text: "Find the inflection point. Interpret its meaning in context." },
+              { label: "(c)", text: "At $t = 3$, is revenue growing faster or slower than at $t = 5$? Use $R'$ to justify." }
+            ],
+            answers: [
+              { label: "(a)", text: "$R'(t) = -3t^2+24t+60$. $R''(t) = -6t+24$. $R''>0$ when $t<4$: revenue is increasing at an increasing rate. $R''<0$ when $t>4$: revenue is increasing at a decreasing rate (assuming $R'>0$)." },
+              { label: "(b)", text: "$R''(t)=0$ at $t=4$. Inflection point: $(4, R(4)) = (4, -64+192+240) = (4, 368)$. At $t=4$ years, the company's revenue growth is at its fastest — after this the rate of revenue growth begins to slow." },
+              { label: "(c)", text: "$R'(3) = -27+72+60 = 105$ thousand/year. $R'(5) = -75+120+60 = 105$ thousand/year. They're equal! The inflection point at $t=4$ is the axis of symmetry for $R'$, so the rate of growth is symmetric around $t=4$." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 2-C ──────────────────────────────────────────
+      {
+        icon: "🔄",
+        title: "Points of Inflection",
+        sub: "Where concavity changes — finding and verifying inflection points",
+        topics: "5.6",
+        video: { title: "Points of Inflection — mathispower4u", url: "https://www.youtube.com/watch?v=4QFj-aY3SyY" },
+        problems: [
+          {
+            context: "Context: Finding and verifying inflection points",
+            stem: "Find all inflection points of $f(x) = x^5 - 5x^4$.",
+            parts: [
+              { label: "(a)", text: "Find $f''(x)$ and solve $f''(x) = 0$." },
+              { label: "(b)", text: "Verify that each candidate is actually an inflection point by confirming a sign change in $f''$." },
+              { label: "(c)", text: "State the coordinates of all inflection points." }
+            ],
+            answers: [
+              { label: "(a)", text: "$f'(x) = 5x^4-20x^3$. $f''(x) = 20x^3-60x^2 = 20x^2(x-3)$. $f''=0$ at $x=0$ and $x=3$." },
+              { label: "(b)", text: "Near $x=0$: $f'' = 20x^2(x-3)$. For $x<0$: $20(+)(-)<0$. For $0<x<3$: $20(+)(-)<0$. No sign change at $x=0$ — NOT an inflection point. Near $x=3$: negative on $(0,3)$, positive on $(3,\\infty)$ — sign changes. Inflection point at $x=3$." },
+              { label: "(c)", text: "$f(3) = 243-405 = -162$. Only inflection point: $(3, -162)$." }
+            ]
+          },
+          {
+            context: "Context: Inflection points from a graph of f″",
+            stem: "The graph of $f''$ is shown.<br><br><img src='img/U12CP2p.png' alt='Graph of f double prime on [-2,5]' class='problem-img'>",
+            parts: [
+              { label: "(a)", text: "Identify all inflection points of $f$. Justify." },
+              { label: "(b)", text: "On what intervals is $f$ concave up? Concave down?" },
+              { label: "(c)", text: "If $f'(1) = 0$ as well, classify $x = 1$ as a local max, local min, or neither. Justify using both the FDT and SDT if possible." }
+            ],
+            answers: [
+              { label: "(a)", text: "Inflection points occur where $f''$ changes sign. $f''$ changes from $+$ to $-$ at $x=1$: inflection point. $f''$ changes from $-$ to $+$ at $x=4$: inflection point. So inflection points at $x=1$ and $x=4$." },
+              { label: "(b)", text: "Concave up ($f''>0$): $(-2,1)\\cup(4,5)$. Concave down ($f''<0$): $(1,4)$." },
+              { label: "(c)", text: "SDT: $f'(1)=0$ and $f''(1)=0$ (since $x=1$ is where $f''$ changes sign, $f''(1)=0$) — SDT inconclusive. We'd need to check $f'$ around $x=1$. Since $x=1$ is an inflection point of $f$, the concavity changes, but whether it's a local extremum depends on whether $f'$ changes sign there — which cannot be determined from $f''$ alone at an inflection point." }
+            ]
+          },
+          {
+            context: "Context: f″ = 0 is necessary but not sufficient",
+            stem: "Determine whether $f(x) = x^4$ has an inflection point at $x = 0$.",
+            parts: [
+              { label: "(a)", text: "Compute $f''(x)$ and evaluate $f''(0)$." },
+              { label: "(b)", text: "Check whether the concavity actually changes at $x = 0$." },
+              { label: "(c)", text: "State the general principle this example illustrates about inflection points." }
+            ],
+            answers: [
+              { label: "(a)", text: "$f'(x) = 4x^3$. $f''(x) = 12x^2$. $f''(0) = 0$." },
+              { label: "(b)", text: "$f''(x) = 12x^2 \\geq 0$ for all $x$, and equals zero only at $x=0$. The concavity does NOT change — $f$ is concave up on both sides of $x=0$." },
+              { label: "(c)", text: "$f''(c) = 0$ is necessary but not sufficient for an inflection point. You must verify that $f''$ actually changes sign at $c$. If $f''$ is zero but doesn't change sign, $c$ is not an inflection point." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 2-D ──────────────────────────────────────────
+      {
+        icon: "📊",
+        title: "Mixed Practice — Derivative Analysis",
+        sub: "AP-style problems combining f′ and f″ analysis",
+        topics: "5.3 – 5.6",
+        problems: [
+          {
+            context: "Context: Complete function analysis",
+            stem: "Let $f(x) = xe^{-x}$ on $(-\\infty, \\infty)$.",
+            parts: [
+              { label: "(a)", text: "Find all critical numbers and classify them using the Second Derivative Test." },
+              { label: "(b)", text: "Find all inflection points." },
+              { label: "(c)", text: "Describe the long-run behavior: $\\lim_{x\\to\\infty} f(x)$ and $\\lim_{x\\to-\\infty} f(x)$. What does this tell you about the shape of the graph?<br><br><img src='img/U12DP1ca.png' alt='Graph of f(x)=xe^{-x}' class='problem-img'>" }
+            ],
+            answers: [
+              { label: "(a)", text: "$f'(x) = e^{-x} - xe^{-x} = e^{-x}(1-x)$. Critical number: $x=1$. $f''(x) = -e^{-x}(1-x) + e^{-x}(-1) = e^{-x}(x-2)$. $f''(1) = e^{-1}(1-2) = -e^{-1} < 0$: local max at $x=1$. $f(1) = e^{-1}$." },
+              { label: "(b)", text: "$f''(x) = e^{-x}(x-2) = 0 \\Rightarrow x=2$. Sign of $f''$: negative for $x<2$, positive for $x>2$ — concavity changes. Inflection point: $(2, 2e^{-2})$." },
+              { label: "(c)", text: "$\\lim_{x\\to\\infty} xe^{-x} = 0$ (exponential dominates). $\\lim_{x\\to-\\infty} xe^{-x} = -\\infty$ (both factors negative or large). The graph rises from $-\\infty$, reaches a local max at $(1, 1/e)$, and asymptotically approaches 0 from above as $x \\to \\infty$." }
+            ]
+          },
+          {
+            context: "Context: Analysis from a sign chart",
+            stem: "A function $f$ has the following sign charts for $f'$ and $f''$:<br><br><img src='img/U12DP2_signchart.png' alt='Sign charts for f prime and f double prime' class='problem-img'>",
+            parts: [
+              { label: "(a)", text: "State all local maxima and minima of $f$." },
+              { label: "(b)", text: "State all inflection points of $f$." },
+              { label: "(c)", text: "On what interval is $f$ both increasing and concave down?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$f'$ changes $+\\to-$ at $x=1$: local max. $f'$ changes $-\\to+$ at $x=4$: local min. No other sign changes in $f'$." },
+              { label: "(b)", text: "$f''$ changes sign at $x=0$ (negative to positive) and $x=5$ (positive to negative). Inflection points at $x=0$ and $x=5$." },
+              { label: "(c)", text: "$f$ increasing where $f'>0$: $(-2,1)\\cup(4,6)$. Concave down where $f''<0$: $(-2,0)\\cup(5,6)$. Intersection: $(-2,0)\\cup(5,6)$ — $f$ is both increasing and concave down on $(-2, 0)$ and $(5, 6)$." }
+            ]
+          },
+          {
+            context: "Context: Interpreting a given graph of f",
+            stem: "The graph of a smooth function $f$ is shown.<br><br><img src='img/U12DP3p.png' alt='Graph of f on [-1,7]' class='problem-img'>",
+            parts: [
+              { label: "(a)", text: "On what intervals is $f'(x) > 0$? On what intervals is $f'(x) < 0$? Identify all zeros of $f'$." },
+              { label: "(b)", text: "On what intervals is $f''(x) > 0$? On what intervals is $f''(x) < 0$? Identify all zeros of $f''$." },
+              { label: "(c)", text: "On what interval(s) is $f'$ both negative and decreasing?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$f' < 0$ on $(-1,1)$ and $(3,6)$ (where $f$ is decreasing). $f' > 0$ on $(1,3)$ and $(6,7)$ (where $f$ is increasing). $f'(x) = 0$ at $x = 1$ (local min), $x = 3$ (local max), and $x = 6$ (local min)." },
+              { label: "(b)", text: "$f$ is concave down on $(-1, \\approx 1.88)$ and $(\\approx 4.79, 7)$, so $f'' < 0$ there. $f$ is concave up on $(\\approx 1.88, \\approx 4.79)$, so $f'' > 0$ there. $f''(x) = 0$ at the two inflection points, $x \\approx 1.88$ and $x \\approx 4.79$." },
+              { label: "(c)", text: "$f' < 0$ on $(-1,1)\\cup(3,6)$. $f'$ is decreasing where $f'' < 0$: on $(-1, 1.88)\\cup(4.79, 7)$. Intersection: $(-1,1)\\cup(4.79,6)$." }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  // ═══════════════════════════════════════════════════════════
+  // COLUMN 3 — Connecting f, f′, and f″
+  //            Topics 5.7 – 5.9
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: "col-3",
+    accentVar: "var(--col3-light)",
+    headerClass: "col-3-header",
+    tileClass: "col-3",
+    label: "Column III",
+    title: "Connecting f, f′, and f″",
+    topics: "Topics 5.7 – 5.9",
+    tiles: [
+
+      // ── TILE 3-A ──────────────────────────────────────────
+      {
+        icon: "✏️",
+        title: "Sketching f from f′",
+        sub: "Reading derivative graphs to reconstruct the original function",
+        topics: "5.8",
+        video: { title: "Sketching a Graph Given Information About Derivatives — mathispower4u", url: "https://www.youtube.com/watch?v=syqk5Rif9AU" },
+        problems: [
+          {
+            context: "Context: Constructing f from a piecewise linear f′",
+            stem: "The graph of $f'$ is shown. You are given that $f(0) = 3$.<br><br><img src='img/U13AP1p.png' alt='Piecewise linear graph of f prime on [0,8]' class='problem-img'>",
+            parts: [
+              { label: "(a)", text: "On what interval(s) is $f$ increasing? Decreasing? Identify local extrema." },
+              { label: "(b)", text: "Estimate $f(4)$ and $f(8)$ using the areas under the $f'$ graph (net change theorem)." },
+              { label: "(c)", text: "Sketch a rough graph of $f$ on $[0, 8]$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$f' > 0$ on $(0, 3)$ (where the first segment crosses zero: zero at $x = 3$ by linear interpolation between $(0,2)$ and $(4,-2)$). Wait — the segment goes from $f'(0)=2$ to $f'(4)=-2$, so $f'=0$ at $x=2$ (midpoint). Actually: slope of segment $= -1$, so $f'(x) = 2-x$, zero at $x=2$. Increasing on $(0,2)$, decreasing on $(2,4)$. Second segment: slope $= 2$, $f'(x) = -2+2(x-4) = 2x-10$, zero at $x=5$. Decreasing on $(4,5)$, increasing on $(5,8)$. Local max at $x=2$; local min at $x=5$." },
+              { label: "(b)", text: "$f(4) = f(0) + \\int_0^4 f'(x)\\,dx = 3 + \\frac{1}{2}(2)(2) + \\frac{1}{2}(-2)(2) = 3 + 2 - 2 = 3$. (Triangle areas of the two sub-triangles.) $f(8) = f(4) + \\int_4^8 f'(x)\\,dx = 3 + \\frac{1}{2}(-2+6)(4) = 3 + 8 = 11$." },
+              { label: "(c)", text: "$f$ rises from $(0,3)$ to a local max at $x=2$, falls back to $(4,3)$, continues falling to a local min near $x=5$, then rises steeply to $(8,11)$. The curve is smooth, with no corners (since $f'$ is continuous)." }
+            ]
+          },
+          {
+            context: "Context: Matching f to its derivative",
+            stem: "Three functions are described below. Match each to its derivative graph (described separately).",
+            parts: [
+              { label: "(a)", text: "$f(x) = x^3 - 3x$. Describe what $f'$ looks like (shape, intercepts, sign)." },
+              { label: "(b)", text: "$g(x) = e^{-x^2}$ (bell curve shape). Describe what $g'$ looks like." },
+              { label: "(c)", text: "If $h'(x) > 0$ for all $x$, $h'(x) \\to 0$ as $x\\to\\pm\\infty$, and $h'$ has a single max at $x=0$, describe the shape of $h$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$f'(x) = 3x^2-3 = 3(x-1)(x+1)$. It's a upward-opening parabola, zero at $x=\\pm 1$, negative on $(-1,1)$, positive outside. $f'$ is always a parabola opening upward with vertex below the $x$-axis." },
+              { label: "(b)", text: "$g'(x) = -2xe^{-x^2}$. It is zero at $x=0$, positive for $x<0$, negative for $x>0$, and approaches 0 as $x\\to\\pm\\infty$. It looks like a negative-odd-symmetric hump." },
+              { label: "(c)", text: "$h$ is always increasing (since $h'>0$), increasing most steeply at $x=0$, and flattening out (but never decreasing) as $x\\to\\pm\\infty$. It looks like a stretched S-curve or an antiderivative of a bell curve — similar to the normal CDF shape." }
+            ]
+          },
+          {
+            context: "Context: Using f′ to find f with initial condition",
+            stem: "Suppose $f'(x) = 3x^2 - 6x$ and $f(2) = 5$.",
+            parts: [
+              { label: "(a)", text: "Find $f(x)$ explicitly by antidifferentiating and using the initial condition." },
+              { label: "(b)", text: "Identify all local extrema of $f$ using your formula." },
+              { label: "(c)", text: "Verify your local extrema classification using the Second Derivative Test." }
+            ],
+            answers: [
+              { label: "(a)", text: "$f(x) = x^3 - 3x^2 + C$. Using $f(2)=5$: $8-12+C=5 \\Rightarrow C=9$. So $f(x) = x^3-3x^2+9$." },
+              { label: "(b)", text: "$f'(x) = 3x^2-6x = 3x(x-2) = 0$: $x=0$ and $x=2$. $f'$ changes $+\\to-$ at... wait: $f'>0$ on $(-\\infty,0)$, $f'<0$ on $(0,2)$, $f'>0$ on $(2,\\infty)$. Local max at $x=0$, $f(0)=9$. Local min at $x=2$, $f(2)=5$." },
+              { label: "(c)", text: "$f''(x) = 6x-6$. $f''(0) = -6 < 0$: local max ✓. $f''(2) = 6 > 0$: local min ✓." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 3-B ──────────────────────────────────────────
+      {
+        icon: "🔎",
+        title: "Reading f″ from the Graph of f",
+        sub: "Identifying concavity and inflection points visually",
+        topics: "5.7",
+        problems: [
+          {
+            context: "Context: Inferring f″ from the shape of f",
+            stem: "The graph of $f$ is shown.<br><br><img src='img/U13BP1p.png' alt='Graph of f' class='problem-img'>",
+            parts: [
+              { label: "(a)", text: "On what intervals is $f''(x) > 0$? $f''(x) < 0$?" },
+              { label: "(b)", text: "At the local minimum $x = -1$, what can you conclude about $f''(-1)$?" },
+              { label: "(c)", text: "Sketch a rough graph of $f''$ based on the behavior of $f$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$f'' > 0$ (concave up) on $(-\\infty, 2)$. $f'' < 0$ (concave down) on $(2, \\infty)$. $f''(2) = 0$." },
+              { label: "(b)", text: "At $x = -1$, $f$ has a local minimum. Since $f$ is concave up on $(-\\infty, 2)$ and $-1 < 2$, we have $f''(-1) > 0$. This is consistent with the SDT: local min with $f'(-1)=0$ and $f''(-1)>0$." },
+              { label: "(c)", text: "$f''$ should be: positive and likely large near $x=-1$ (strong concavity), decreasing toward zero as $x$ approaches 2, zero at $x=2$, then negative for $x>2$, possibly becoming more negative before leveling off." }
+            ]
+          },
+          {
+            context: "Context: Reading all three from a graph of f",
+            stem: "The graph of $f$ is shown.<br><br><img src='img/U13BP1p.png' alt='Graph of f on [-3,5]' class='problem-img'>",
+            parts: [
+              { label: "(a)", text: "Sketch a graph of $f'$ on $[-3, 5]$ consistent with the information given." },
+              { label: "(b)", text: "Sketch a graph of $f''$ on $[-3, 5]$ consistent with the information given." },
+              { label: "(c)", text: "At $x = 1$, $f'$ has a local minimum. Explain why, using the relationship between $f'$ and $f''$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$f'$: positive on $(-3,-1)$, zero at $x=-1$ (local max of $f$), negative on $(-1,3)$, zero at $x=3$ (local min of $f$), positive on $(3,5)$. Shape: starts positive, crosses zero at $x=-1$, reaches a local minimum somewhere in $(-1,3)$, crosses zero again at $x=3$, rises." },
+              { label: "(b)", text: "$f''$: positive where $f'$ is increasing, negative where $f'$ is decreasing. $f''$ changes sign at inflection points $x=1$ and $x=4$. Negative on $(-3,1)$, positive on $(1,4)$, negative on $(4,5)$." },
+              { label: "(c)", text: "At $x=1$, $f''$ changes from negative to positive (inflection point of $f$, concavity changes from down to up). Since $f''$ is the derivative of $f'$, $f''$ changing from $-$ to $+$ at $x=1$ means $f'$ changes from decreasing to increasing — i.e., $f'$ has a local minimum at $x=1$." }
+            ]
+          },
+          {
+            context: "Context: Connecting f, f′, f″ numerically",
+            stem: "The table gives values of $f$, $f'$, and $f''$.<br><br><table style='border-collapse:collapse;font-size:13px;margin:6px 0 10px'><thead><tr><th style='border:1px solid #3a3a3a;padding:5px 11px;background:#252525;color:#f0ece6'>$x$</th><th style='border:1px solid #3a3a3a;padding:5px 11px;background:#252525;color:#f0ece6'>$f(x)$</th><th style='border:1px solid #3a3a3a;padding:5px 11px;background:#252525;color:#f0ece6'>$f'(x)$</th><th style='border:1px solid #3a3a3a;padding:5px 11px;background:#252525;color:#f0ece6'>$f''(x)$</th></tr></thead><tbody><tr><td style='border:1px solid #3a3a3a;padding:5px 11px;background:#1e1e1e;color:#f0ece6;text-align:center'>0</td><td style='border:1px solid #3a3a3a;padding:5px 11px;background:#1e1e1e;color:#f0ece6;text-align:center'>4</td><td style='border:1px solid #3a3a3a;padding:5px 11px;background:#1e1e1e;color:#f0ece6;text-align:center'>2</td><td style='border:1px solid #3a3a3a;padding:5px 11px;background:#1e1e1e;color:#f0ece6;text-align:center'>−3</td></tr><tr><td style='border:1px solid #3a3a3a;padding:5px 11px;background:#1e1e1e;color:#f0ece6;text-align:center'>2</td><td style='border:1px solid #3a3a3a;padding:5px 11px;background:#1e1e1e;color:#f0ece6;text-align:center'>7</td><td style='border:1px solid #3a3a3a;padding:5px 11px;background:#1e1e1e;color:#f0ece6;text-align:center'>0</td><td style='border:1px solid #3a3a3a;padding:5px 11px;background:#1e1e1e;color:#f0ece6;text-align:center'>−1</td></tr><tr><td style='border:1px solid #3a3a3a;padding:5px 11px;background:#1e1e1e;color:#f0ece6;text-align:center'>5</td><td style='border:1px solid #3a3a3a;padding:5px 11px;background:#1e1e1e;color:#f0ece6;text-align:center'>3</td><td style='border:1px solid #3a3a3a;padding:5px 11px;background:#1e1e1e;color:#f0ece6;text-align:center'>0</td><td style='border:1px solid #3a3a3a;padding:5px 11px;background:#1e1e1e;color:#f0ece6;text-align:center'>2</td></tr></tbody></table>",
+            parts: [
+              { label: "(a)", text: "Is $f$ increasing or decreasing at $x = 0$? Is it concave up or concave down there?" },
+              { label: "(b)", text: "Classify $x = 2$ using the Second Derivative Test." },
+              { label: "(c)", text: "Classify $x = 5$ using the Second Derivative Test." }
+            ],
+            answers: [
+              { label: "(a)", text: "$f'(0) = 2 > 0$: increasing. $f''(0) = -3 < 0$: concave down. So $f$ is increasing but at a decreasing rate at $x=0$." },
+              { label: "(b)", text: "$f'(2) = 0$ and $f''(2) = -1 < 0$: local maximum at $x=2$. $f(2) = 7$." },
+              { label: "(c)", text: "$f'(5) = 0$ and $f''(5) = 2 > 0$: local minimum at $x=5$. $f(5) = 3$." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 3-C ──────────────────────────────────────────
+      {
+        icon: "🗺️",
+        title: "Connecting All Three: f, f′, and f″",
+        sub: "Integrating all derivative information into a complete picture",
+        topics: "5.7 – 5.9",
+        video: { title: "Curve Sketching Using Calculus — mathispower4u", url: "https://www.youtube.com/watch?v=v_Ll05Qsu8U" },
+        problems: [
+          {
+            context: "Context: Complete curve sketching from analytic info",
+            stem: "Let $f(x) = \\dfrac{x^2 - 1}{x^2 + 1}$.",
+            parts: [
+              { label: "(a)", text: "Find $f'(x)$ and identify all critical numbers and intervals of increase/decrease." },
+              { label: "(b)", text: "Find $f''(x)$ and identify all inflection points and intervals of concavity." },
+              { label: "(c)", text: "Find any horizontal asymptotes and determine $f(0)$. Then describe the complete shape of the graph." }
+            ],
+            answers: [
+              { label: "(a)", text: "$f'(x) = \\dfrac{2x(x^2+1) - (x^2-1)(2x)}{(x^2+1)^2} = \\dfrac{4x}{(x^2+1)^2}$. Critical number: $x=0$. $f'<0$ for $x<0$ (decreasing), $f'>0$ for $x>0$ (increasing). Local min at $x=0$." },
+              { label: "(b)", text: "$f''(x) = \\dfrac{4(x^2+1)^2 - 4x \\cdot 2(x^2+1)(2x)}{(x^2+1)^4} = \\dfrac{4(1-3x^2)}{(x^2+1)^3}$. $f''=0$ at $x = \\pm\\frac{1}{\\sqrt{3}}$. Concave up on $(-\\frac{1}{\\sqrt{3}}, \\frac{1}{\\sqrt{3}})$, concave down outside. Inflection points at $x = \\pm\\frac{1}{\\sqrt{3}}$." },
+              { label: "(c)", text: "$\\lim_{x\\to\\pm\\infty} \\frac{x^2-1}{x^2+1} = 1$. Horizontal asymptote: $y=1$. $f(0) = -1$. The graph has a global minimum at $(0,-1)$, rises with S-shaped curves toward the asymptote $y=1$ on both sides, with inflection points symmetric about the $y$-axis." }
+            ]
+          },
+          {
+            context: "Context: Translating verbal conditions to a sketch",
+            stem: "Sketch a function $f$ that satisfies ALL of the following conditions simultaneously.",
+            parts: [
+              { label: "(a)", text: "$f(0) = 2$, $f'(0) = 0$, $f''(0) < 0$, $f'(x) < 0$ for all $x > 0$." },
+              { label: "(b)", text: "$\\lim_{x\\to\\infty} f(x) = -\\infty$ and $f'(-2) = 0$, $f''(-2) > 0$." },
+              { label: "(c)", text: "Explain why these conditions are mutually consistent (not contradictory). What does each condition constrain?" }
+            ],
+            answers: [
+              { label: "(a)", text: "At $x=0$: function value 2, horizontal tangent, concave down — so $x=0$ is a local max. For $x>0$: always decreasing." },
+              { label: "(b)", text: "$f\\to-\\infty$ as $x\\to\\infty$ (consistent with always decreasing for $x>0$). At $x=-2$: horizontal tangent, concave up — so $x=-2$ is a local min of $f$." },
+              { label: "(c)", text: "These are consistent: $f$ has a local min at $x=-2$ (concave up, zero slope), rises to a local max at $x=0$ (concave down, zero slope), then decreases without bound for $x>0$. An example: a cubic or a function shaped like an asymmetric hill that falls off to the right." }
+            ]
+          },
+          {
+            context: "Context: AP exam — given graph of f′, answer questions about f",
+            stem: "The graph of $f'$ is shown.<br><br><img src='img/U13CP3p.png' alt='Graph of f prime on [0,10]' class='problem-img'>",
+            parts: [
+              { label: "(a)", text: "On what interval(s) is $f$ concave up? Concave down?" },
+              { label: "(b)", text: "Identify the $x$-coordinates of any local extrema of $f$ and classify each." },
+              { label: "(c)", text: "$f'$ has a local maximum at $x \\approx 2.64$ and a local minimum at $x \\approx 6.70$. What does each imply about $f$ at those points?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$f$ is concave up where $f'$ is increasing: $(0, \\approx 2.64)\\cup(\\approx 6.70, 10)$. Concave down where $f'$ is decreasing: $(\\approx 2.64, \\approx 6.70)$." },
+              { label: "(b)", text: "$f' = 0$ at $x=1$, $x=5$, and $x=8$. $f'$ changes $-\\to+$ at $x=1$: local min. $f'$ changes $+\\to-$ at $x=5$: local max. $f'$ changes $-\\to+$ at $x=8$: local min." },
+              { label: "(c)", text: "At $x \\approx 2.64$: $f'$ has a local max, so $f'' = 0$ and $f''$ changes from positive to negative — $f$ has an inflection point there (concavity changes from up to down). At $x \\approx 6.70$: $f'$ has a local min, so $f''=0$ and $f''$ changes from negative to positive — another inflection point of $f$ (concavity changes from down to up)." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 3-D ──────────────────────────────────────────
+      {
+        icon: "🧩",
+        title: "Mixed Practice — Graphical Analysis",
+        sub: "AP-style multi-representation problems",
+        topics: "5.7 – 5.9",
+        problems: [
+          {
+            context: "Context: Reading a graph of f to answer all questions",
+            stem: "A function $f$ is continuous and differentiable on $(-4, 8)$. Key features from its graph: local minima at $x=-2$ and $x=5$; local max at $x=2$; inflection points at $x=0$ and $x=3.5$; $f'(-2)=f'(2)=f'(5)=0$.",
+            parts: [
+              { label: "(a)", text: "Sketch $f'$ on $(-4, 8)$ consistent with all given information." },
+              { label: "(b)", text: "At $x = 0$: is $f'$ at a local max, local min, or neither? Justify." },
+              { label: "(c)", text: "If $f(-2) = 1$, $f(2) = 6$, $f(5) = -1$, and the endpoints satisfy $f(-4) = 3$ and $f(8) = 4$, find the absolute maximum of $f$ on $[-4, 8]$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$f'$: zero at $x=-2,2,5$; positive on $(-4,-2)$, negative on $(-2,2)$... wait — local min at $x=-2$ means $f'$ changes $-\\to+$, not $+\\to-$. So: $f'<0$ on $(-4,-2)$, $f'>0$ on $(-2,2)$, $f'<0$ on $(2,5)$, $f'>0$ on $(5,8)$." },
+              { label: "(b)", text: "At $x=0$: $f'$ is between zeros at $x=-2$ and $x=2$ where it was positive. Since $x=0$ is an inflection point of $f$, $f''(0)=0$ and $f''$ changes sign — meaning $f'$ has a local extremum. Since $f$ is concave up on $(-2,0)$ and concave down on $(0,2)$ (approximately), $f'$ is increasing then decreasing: $x=0$ is a local maximum of $f'$." },
+              { label: "(c)", text: "Candidates for absolute max: $f(-4)=3$, $f(-2)=1$ (local min), $f(2)=6$ (local max), $f(5)=-1$ (local min), $f(8)=4$. Absolute maximum: $f(2) = 6$." }
+            ]
+          },
+          {
+            context: "Context: All three functions from analytic formulas",
+            stem: "Let $f(x) = \\sin x + \\cos x$ on $[0, 2\\pi]$.",
+            parts: [
+              { label: "(a)", text: "Find all local extrema of $f$ and classify them." },
+              { label: "(b)", text: "Find all inflection points of $f$." },
+              { label: "(c)", text: "Find the absolute maximum and minimum of $f$ on $[0, 2\\pi]$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$f'(x) = \\cos x - \\sin x = 0 \\Rightarrow \\tan x = 1 \\Rightarrow x = \\frac{\\pi}{4}, \\frac{5\\pi}{4}$. $f''(x) = -\\sin x - \\cos x$. $f''(\\pi/4) = -\\frac{\\sqrt{2}}{2}-\\frac{\\sqrt{2}}{2} = -\\sqrt{2} < 0$: local max at $x=\\frac{\\pi}{4}$, $f = \\sqrt{2}$. $f''(5\\pi/4) = \\frac{\\sqrt{2}}{2}+\\frac{\\sqrt{2}}{2} = \\sqrt{2} > 0$: local min at $x=\\frac{5\\pi}{4}$, $f = -\\sqrt{2}$." },
+              { label: "(b)", text: "$f''(x) = -\\sin x - \\cos x = 0 \\Rightarrow \\tan x = -1 \\Rightarrow x = \\frac{3\\pi}{4}, \\frac{7\\pi}{4}$. Check sign changes: $f''$ changes sign at both. Inflection points at $x = \\frac{3\\pi}{4}$ and $x = \\frac{7\\pi}{4}$." },
+              { label: "(c)", text: "Candidates: $f(0) = 1$, $f(\\pi/4) = \\sqrt{2}$, $f(5\\pi/4) = -\\sqrt{2}$, $f(2\\pi) = 1$. Absolute max: $\\sqrt{2}$ at $x = \\pi/4$. Absolute min: $-\\sqrt{2}$ at $x = 5\\pi/4$." }
+            ]
+          },
+          {
+            context: "Context: Reasoning from a table of f′",
+            stem: "Selected values of $f'$ are given below.<br><br><table style='border-collapse:collapse;font-size:13px;margin:6px 0 10px'><thead><tr><th style='border:1px solid #3a3a3a;padding:5px 12px;background:#252525;color:#f0ece6'>$x$</th><th style='border:1px solid #3a3a3a;padding:5px 12px;background:#252525;color:#f0ece6'>0</th><th style='border:1px solid #3a3a3a;padding:5px 12px;background:#252525;color:#f0ece6'>1</th><th style='border:1px solid #3a3a3a;padding:5px 12px;background:#252525;color:#f0ece6'>2</th><th style='border:1px solid #3a3a3a;padding:5px 12px;background:#252525;color:#f0ece6'>3</th><th style='border:1px solid #3a3a3a;padding:5px 12px;background:#252525;color:#f0ece6'>4</th></tr></thead><tbody><tr><td style='border:1px solid #3a3a3a;padding:5px 12px;background:#1e1e1e;color:#f0ece6'>$f'(x)$</td><td style='border:1px solid #3a3a3a;padding:5px 12px;background:#1e1e1e;color:#f0ece6;text-align:center'>$-3$</td><td style='border:1px solid #3a3a3a;padding:5px 12px;background:#1e1e1e;color:#f0ece6;text-align:center'>$0$</td><td style='border:1px solid #3a3a3a;padding:5px 12px;background:#1e1e1e;color:#f0ece6;text-align:center'>$4$</td><td style='border:1px solid #3a3a3a;padding:5px 12px;background:#1e1e1e;color:#f0ece6;text-align:center'>$2$</td><td style='border:1px solid #3a3a3a;padding:5px 12px;background:#1e1e1e;color:#f0ece6;text-align:center'>$-1$</td></tr></tbody></table>",
+            parts: [
+              { label: "(a)", text: "Based on the table, on what interval(s) does $f$ appear to be increasing?" },
+              { label: "(b)", text: "Use a symmetric difference quotient to estimate $f''(2)$." },
+              { label: "(c)", text: "Estimate the location of an inflection point of $f$ between $x=2$ and $x=4$. Justify." }
+            ],
+            answers: [
+              { label: "(a)", text: "$f' > 0$ at $x=1,2,3$ and negative at $x=0$ and $x=4$. $f$ appears to be increasing on approximately $(1, 4)$ (where $f'$ transitions from zero to positive then back toward zero)." },
+              { label: "(b)", text: "$f''(2) \\approx \\dfrac{f'(3)-f'(1)}{3-1} = \\dfrac{2-0}{2} = 1 > 0$. $f$ appears concave up at $x=2$." },
+              { label: "(c)", text: "$f'$ increases from $0$ to $4$ between $x=1$ and $x=2$ (so $f''>0$, concave up), then decreases from $4$ to $-1$ between $x=2$ and $x=4$ (so $f''<0$, concave down). The inflection point is between $x=2$ and $x=3$ — likely close to $x=2$ where the switch occurs." }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  // ═══════════════════════════════════════════════════════════
+  // COLUMN 4 — Optimization & L'Hôpital's Rule
+  //            Topics 5.10 – 5.12
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: "col-4",
+    accentVar: "var(--col4-light)",
+    headerClass: "col-4-header",
+    tileClass: "col-4",
+    label: "Column IV",
+    title: "Optimization & L'Hôpital's Rule",
+    topics: "Topics 5.10 – 5.12",
+    tiles: [
+
+      // ── TILE 4-A ──────────────────────────────────────────
+      {
+        icon: "📉",
+        title: "Optimization: Function Given",
+        sub: "Finding absolute extrema when the objective function is provided",
+        topics: "5.10",
+        video: { title: "Optimization — mathispower4u", url: "https://www.youtube.com/watch?v=72WF00pFLTo" },
+        problems: [
+          {
+            context: "Context: Optimizing profit with a given function",
+            stem: "A company's daily profit (in dollars) from selling $x$ units is $P(x) = -0.1x^2 + 40x - 500$ for $0 \\leq x \\leq 300$.",
+            parts: [
+              { label: "(a)", text: "Find the number of units that maximizes daily profit." },
+              { label: "(b)", text: "What is the maximum daily profit?" },
+              { label: "(c)", text: "The company must produce at least 50 units per day due to a contract. How does this change the optimal production level?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$P'(x) = -0.2x + 40 = 0 \\Rightarrow x = 200$ units. $P''(200) = -0.2 < 0$: confirmed maximum. Since $200 \\in [0, 300]$, this is the optimal production level." },
+              { label: "(b)", text: "$P(200) = -0.1(40000) + 40(200) - 500 = -4000 + 8000 - 500 = \\$3500$ per day." },
+              { label: "(c)", text: "The constraint is $x \\geq 50$. Since the unconstrained optimum $x=200$ satisfies $x \\geq 50$, the constraint is non-binding. The optimal production remains 200 units and maximum profit is still $3500." }
+            ]
+          },
+          {
+            context: "Context: Minimizing cost over a closed interval",
+            stem: "The cost of producing $x$ tons of a chemical is $C(x) = x^3 - 6x^2 + 15x + 10$ thousand dollars, for $0 \\leq x \\leq 5$.",
+            parts: [
+              { label: "(a)", text: "Find $C'(x)$ and determine whether $C$ has any critical numbers in $(0, 5)$." },
+              { label: "(b)", text: "Find the minimum cost on $[0, 5]$ using the candidates test." },
+              { label: "(c)", text: "Interpret the result: does the minimum cost occur at a production level where the marginal cost is zero, or at a boundary? What does this mean practically?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$C'(x) = 3x^2 - 12x + 15 = 3(x^2-4x+5)$. Discriminant: $16-20 = -4 < 0$. No real roots — $C'(x) > 0$ for all $x$. No critical numbers in $(0,5)$." },
+              { label: "(b)", text: "Since $C$ is strictly increasing on $[0,5]$, the minimum is at the left endpoint: $C(0) = 10$ thousand dollars." },
+              { label: "(c)", text: "The minimum occurs at $x=0$ (a boundary), where marginal cost $C'(0) = 15 > 0$. This means production costs are always increasing — there's no interior optimum. Practically, the company should produce the minimum allowable quantity to minimize cost." }
+            ]
+          },
+          {
+            context: "Context: Maximizing area of a cross-section",
+            stem: "A farmer has 400 meters of fencing to enclose a rectangular field, with one side along a river (no fence needed there).",
+            parts: [
+              { label: "(a)", text: "Let $x$ be the length of the two sides perpendicular to the river. Write the area $A$ as a function of $x$ alone." },
+              { label: "(b)", text: "Find the dimensions that maximize the enclosed area." },
+              { label: "(c)", text: "Use the Second Derivative Test to confirm your answer is a maximum." }
+            ],
+            answers: [
+              { label: "(a)", text: "Two sides of length $x$ plus the side parallel to the river: $2x + y = 400$, so $y = 400-2x$. Area: $A(x) = x(400-2x) = 400x - 2x^2$, for $0 < x < 200$." },
+              { label: "(b)", text: "$A'(x) = 400-4x = 0 \\Rightarrow x = 100$ m. Then $y = 400-200 = 200$ m. Dimensions: $100 \\text{ m} \\times 200 \\text{ m}$. Maximum area: $A(100) = 100(200) = 20{,}000$ m²." },
+              { label: "(c)", text: "$A''(x) = -4 < 0$ everywhere, so $x = 100$ is a maximum. ✓" }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 4-B ──────────────────────────────────────────
+      {
+        icon: "🏗️",
+        title: "Optimization: Building the Model",
+        sub: "Setting up objective functions and constraints from scratch",
+        topics: "5.10",
+        video: { title: "Optimization — Setting Up the Model — mathispower4u", url: "https://www.youtube.com/watch?v=CG2vO6R3Op4" },
+        problems: [
+          {
+            context: "Context: Minimizing material for a box",
+            stem: "An open-top rectangular box with a square base must have a volume of $32$ cubic feet. The base costs \\$3 per sq ft and the sides cost \\$1 per sq ft.",
+            parts: [
+              { label: "(a)", text: "Let $x$ be the side length of the square base and $h$ the height. Write the total cost $C$ as a function of $x$ alone using the volume constraint." },
+              { label: "(b)", text: "Find the dimensions that minimize cost." },
+              { label: "(c)", text: "Verify your answer is a minimum and state the minimum cost." }
+            ],
+            answers: [
+              { label: "(a)", text: "Volume constraint: $x^2 h = 32 \\Rightarrow h = \\dfrac{32}{x^2}$. Base area: $x^2$, cost $3x^2$. Four sides: each $x \\cdot h$, total area $4xh$, cost $4xh$. $C(x) = 3x^2 + 4x\\cdot\\dfrac{32}{x^2} = 3x^2 + \\dfrac{128}{x}$, for $x > 0$." },
+              { label: "(b)", text: "$C'(x) = 6x - \\dfrac{128}{x^2} = 0 \\Rightarrow 6x^3 = 128 \\Rightarrow x^3 = \\dfrac{64}{3} \\Rightarrow x = \\dfrac{4}{3^{1/3}} \\approx 2.75$ ft. $h = \\dfrac{32}{x^2} \\approx \\dfrac{32}{7.56} \\approx 4.23$ ft. Note: the box is taller than it is wide at the optimum." },
+              { label: "(c)", text: "$C''(x) = 6 + \\dfrac{256}{x^3} > 0$ for all $x>0$: confirmed minimum. $C(x^*) = 3x^{*2} + \\dfrac{128}{x^*} \\approx 3(7.56) + \\dfrac{128}{2.75} \\approx 22.68 + 46.55 \\approx \\$69.23$." }
+            ]
+          },
+          {
+            context: "Context: Shortest distance from a point to a curve",
+            stem: "Find the point on the parabola $y = x^2$ that is closest to the point $(0, 3)$.",
+            parts: [
+              { label: "(a)", text: "Write the square of the distance from a point $(x, x^2)$ on the parabola to $(0, 3)$ as a function of $x$ alone. Explain why minimizing $D^2$ is equivalent to minimizing $D$." },
+              { label: "(b)", text: "Find the point(s) on the parabola closest to $(0, 3)$ and state the minimum distance." }
+            ],
+            answers: [
+              { label: "(a)", text: "$D^2 = x^2 + (x^2-3)^2$. Minimizing $D^2$ gives the same answer as minimizing $D$ since $D = \\sqrt{D^2}$ is an increasing function of $D^2$ — the minimum occurs at the same $x$-value." },
+              { label: "(b)", text: "Let $f(x) = x^2+(x^2-3)^2$. $f'(x) = 2x + 2(x^2-3)(2x) = 2x(2x^2-5)$. Set $f'=0$: $x=0$ or $x^2 = \\frac{5}{2}$, i.e., $x = \\pm\\sqrt{5/2}$. $f(0) = 9$ (local max near origin — not minimum). $f(\\pm\\sqrt{5/2}) = \\frac{5}{2} + \\frac{1}{4} = \\frac{11}{4}$. Minimum distance $= \\sqrt{\\frac{11}{4}} = \\dfrac{\\sqrt{11}}{2}$. Closest points: $\\left(\\pm\\sqrt{\\dfrac{5}{2}},\\, \\dfrac{5}{2}\\right)$." }
+            ]
+          },
+          {
+            context: "Context: Optimal can design",
+            stem: "A cylindrical can must hold exactly $500\\pi$ cm³ of soup. The top and bottom discs cost $2$ cents per cm² and the lateral surface costs $1$ cent per cm².",
+            parts: [
+              { label: "(a)", text: "Express the total cost $C$ as a function of the radius $r$ only, using the volume constraint." },
+              { label: "(b)", text: "Find the radius and height that minimize cost." },
+              { label: "(c)", text: "What is the ratio of height to diameter at the optimum? What does this tell you about the ideal shape of the can?<br><br><img src='img/U14BP3cp.png' alt='Labeled cylinder diagram' class='problem-img'>" }
+            ],
+            answers: [
+              { label: "(a)", text: "Volume: $\\pi r^2 h = 500\\pi \\Rightarrow h = \\dfrac{500}{r^2}$. Cost: $C = 2(2\\pi r^2) + 1(2\\pi r h) = 4\\pi r^2 + 2\\pi r \\cdot \\dfrac{500}{r^2} = 4\\pi r^2 + \\dfrac{1000\\pi}{r}$." },
+              { label: "(b)", text: "$C'(r) = 8\\pi r - \\dfrac{1000\\pi}{r^2} = 0 \\Rightarrow 8r^3 = 1000 \\Rightarrow r^3 = 125 \\Rightarrow r = 5$ cm. $h = \\dfrac{500}{25} = 20$ cm." },
+              { label: "(c)", text: "Ratio $\\dfrac{h}{2r} = \\dfrac{20}{10} = 2$. The height equals twice the diameter. This is not the classic \"height equals diameter\" result because the top/bottom are more expensive — the optimal design uses a taller, narrower can to minimize the costly disc area." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 4-C ──────────────────────────────────────────
+      {
+        icon: "🏥",
+        title: "L'Hôpital's Rule",
+        sub: "Evaluating indeterminate limits using derivatives",
+        topics: "5.12",
+        video: { title: "L'Hôpital's Rule — mathispower4u", url: "https://www.youtube.com/watch?v=0xqeXSEHppM" },
+        problems: [
+          {
+            context: "Context: Basic 0/0 and ∞/∞ forms",
+            stem: "Evaluate each limit using L'Hôpital's Rule. Verify the indeterminate form first.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\lim_{x \\to 0} \\dfrac{\\sin 3x}{x}$" },
+              { label: "(b)", text: "$\\displaystyle\\lim_{x \\to \\infty} \\dfrac{x^2 + 1}{3x^2 - x}$" },
+              { label: "(c)", text: "$\\displaystyle\\lim_{x \\to 1} \\dfrac{x^3 - 1}{x - 1}$" }
+            ],
+            answers: [
+              { label: "(a)", text: "Form: $\\frac{0}{0}$. L'Hôpital: $\\lim_{x\\to 0}\\dfrac{3\\cos 3x}{1} = 3\\cos 0 = 3$." },
+              { label: "(b)", text: "Form: $\\frac{\\infty}{\\infty}$. L'Hôpital: $\\lim_{x\\to\\infty}\\dfrac{2x}{6x-1}$. Still $\\frac{\\infty}{\\infty}$. Apply again: $\\lim_{x\\to\\infty}\\dfrac{2}{6} = \\dfrac{1}{3}$." },
+              { label: "(c)", text: "Form: $\\frac{0}{0}$. L'Hôpital: $\\lim_{x\\to 1}\\dfrac{3x^2}{1} = 3$. (Alternatively, factor: $\\frac{(x-1)(x^2+x+1)}{x-1} = x^2+x+1 \\to 3$.)" }
+            ]
+          },
+          {
+            context: "Context: Other indeterminate forms",
+            stem: "Evaluate each limit. First rewrite as $0/0$ or $\\infty/\\infty$ before applying L'Hôpital's Rule.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\lim_{x \\to 0^+} x \\ln x$ &nbsp;&nbsp; (form: $0 \\cdot (-\\infty)$)" },
+              { label: "(b)", text: "$\\displaystyle\\lim_{x \\to \\infty} (x - \\ln x)$ &nbsp;&nbsp; (form: $\\infty - \\infty$... but think first)" },
+              { label: "(c)", text: "$\\displaystyle\\lim_{x \\to 0} \\dfrac{e^x - 1 - x}{x^2}$ &nbsp;&nbsp; (form: $0/0$)" }
+            ],
+            answers: [
+              { label: "(a)", text: "Rewrite: $x\\ln x = \\dfrac{\\ln x}{1/x}$. Form $\\frac{-\\infty}{\\infty}$. L'Hôpital: $\\lim_{x\\to 0^+}\\dfrac{1/x}{-1/x^2} = \\lim_{x\\to 0^+}(-x) = 0$." },
+              { label: "(b)", text: "Factor: $x-\\ln x = x(1 - \\frac{\\ln x}{x})$. As $x\\to\\infty$: $\\frac{\\ln x}{x}\\to 0$ by L'Hôpital (apply to this piece: $\\frac{1/x}{1}\\to 0$). So $x-\\ln x \\approx x(1-0) \\to \\infty$. The limit is $+\\infty$ (not an indeterminate form — it diverges)." },
+              { label: "(c)", text: "Form $\\frac{0}{0}$. L'Hôpital once: $\\lim\\dfrac{e^x-1}{2x}$. Still $\\frac{0}{0}$. Again: $\\lim\\dfrac{e^x}{2} = \\dfrac{1}{2}$." }
+            ]
+          },
+          {
+            context: "Context: When L'Hôpital's Rule does not apply",
+            stem: "Analyze each limit carefully. Apply L'Hôpital's Rule only when appropriate.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\lim_{x \\to 2} \\dfrac{x^2 - 4}{x^2 - 3x + 2}$ — is this indeterminate? Evaluate correctly." },
+              { label: "(b)", text: "$\\displaystyle\\lim_{x \\to \\infty} \\dfrac{\\sin x}{x}$ — does L'Hôpital apply? Evaluate using another method." },
+              { label: "(c)", text: "A student applies L'Hôpital to $\\displaystyle\\lim_{x \\to 1} \\dfrac{x^2 + 1}{x + 1}$ and gets $\\dfrac{2x}{1} \\to 2$. Identify the error and find the correct limit." }
+            ],
+            answers: [
+              { label: "(a)", text: "Form: $\\frac{0}{0}$ (both numerator and denominator are 0 at $x=2$). L'Hôpital: $\\lim_{x\\to 2}\\dfrac{2x}{2x-3} = \\dfrac{4}{1} = 4$. Or factor: $\\dfrac{(x-2)(x+2)}{(x-2)(x-1)} = \\dfrac{x+2}{x-1} \\to \\dfrac{4}{1} = 4$." },
+              { label: "(b)", text: "Form: $\\frac{\\sin x}{x}$. As $x\\to\\infty$, the numerator oscillates between $-1$ and $1$ while the denominator grows. L'Hôpital would give $\\frac{\\cos x}{1}$, which doesn't converge — L'Hôpital's Rule requires the limit of the ratio of derivatives to exist. Use the Squeeze Theorem: $-\\frac{1}{x} \\leq \\frac{\\sin x}{x} \\leq \\frac{1}{x} \\to 0$. Limit is $0$." },
+              { label: "(c)", text: "The error: $\\dfrac{x^2+1}{x+1}$ is NOT indeterminate at $x=1$. The numerator $= 2$ and denominator $= 2$ at $x=1$, giving $\\frac{2}{2} = 1$. L'Hôpital's Rule requires an indeterminate form ($0/0$ or $\\infty/\\infty$). The correct limit is simply $\\dfrac{1+1}{1+1} = 1$." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 4-D ──────────────────────────────────────────
+      {
+        icon: "🏆",
+        title: "Mixed Practice — Optimization & L'Hôpital's",
+        sub: "AP-style multi-part problems spanning 5.10–5.12",
+        topics: "5.10 – 5.12",
+        problems: [
+          {
+            context: "Context: Optimization — maximum revenue from pricing",
+            stem: "A hotel has 200 rooms. When the nightly rate is \\$100, all rooms are occupied. For each \\$5 increase in rate, 4 fewer rooms are occupied. Each occupied room costs \\$20 per night to service.",
+            parts: [
+              { label: "(a)", text: "Let $n$ be the number of \\$5 increases. Write the nightly profit $P(n)$ as a function of $n$." },
+              { label: "(b)", text: "Find the room rate that maximizes nightly profit." },
+              { label: "(c)", text: "What is the maximum nightly profit, and how many rooms are occupied at that rate?" }
+            ],
+            answers: [
+              { label: "(a)", text: "Rate $= 100+5n$. Rooms occupied $= 200-4n$. Revenue $= (100+5n)(200-4n)$. Cost $= 20(200-4n)$. $P(n) = (100+5n)(200-4n) - 20(200-4n) = (80+5n)(200-4n)$." },
+              { label: "(b)", text: "$P(n) = (80+5n)(200-4n) = 16000 - 320n + 1000n - 20n^2 = 16000 + 680n - 20n^2$. $P'(n) = 680-40n = 0 \\Rightarrow n = 17$. Room rate $= 100+5(17) = \\$185$." },
+              { label: "(c)", text: "Rooms occupied $= 200-4(17) = 132$. $P(17) = (80+85)(200-68) = 165 \\cdot 132 = \\$21{,}780$ per night. $P''(n) = -40 < 0$ confirms maximum." }
+            ]
+          },
+          {
+            context: "Context: Optimization — maximizing area with a constraint",
+            stem: "A Norman window consists of a rectangle topped by a semicircle. The total perimeter of the window is 12 feet.",
+            parts: [
+              { label: "(a)", text: "Let $r$ be the radius of the semicircle and $h$ the height of the rectangular portion. Write the total area $A$ as a function of $r$ alone.<br><br><img src='img/U14DP2ap.png' alt='Labeled Norman window diagram' class='problem-img'>" },
+              { label: "(b)", text: "Find the value of $r$ that maximizes the area." },
+              { label: "(c)", text: "Find the dimensions of the window with maximum area and state the maximum area." }
+            ],
+            answers: [
+              { label: "(a)", text: "Perimeter: two heights + width + semicircle arc: $2h + 2r + \\pi r = 12 \\Rightarrow h = \\dfrac{12-2r-\\pi r}{2} = 6 - r - \\dfrac{\\pi r}{2}$. Area: rectangle $+ $ semicircle: $A = 2rh + \\dfrac{1}{2}\\pi r^2 = 2r\\!\\left(6-r-\\dfrac{\\pi r}{2}\\right)+\\dfrac{\\pi r^2}{2} = 12r - 2r^2 - \\pi r^2 + \\dfrac{\\pi r^2}{2} = 12r - 2r^2 - \\dfrac{\\pi r^2}{2}$." },
+              { label: "(b)", text: "$A'(r) = 12 - 4r - \\pi r = 12 - r(4+\\pi) = 0 \\Rightarrow r = \\dfrac{12}{4+\\pi} \\approx \\dfrac{12}{7.14} \\approx 1.68$ ft." },
+              { label: "(c)", text: "$r = \\dfrac{12}{4+\\pi}$. $h = 6 - r - \\dfrac{\\pi r}{2} = 6 - \\dfrac{12}{4+\\pi}\\!\\left(1+\\dfrac{\\pi}{2}\\right) = 6 - \\dfrac{12(2+\\pi)}{2(4+\\pi)} = 6 - \\dfrac{6(2+\\pi)}{4+\\pi} = \\dfrac{6(4+\\pi)-6(2+\\pi)}{4+\\pi} = \\dfrac{12}{4+\\pi} = r$. So $h=r$ at the optimum! Max area $\\approx 12(1.68) - 2(1.68)^2 - \\frac{\\pi}{2}(1.68)^2 \\approx 20.16 - 5.65 - 4.44 \\approx 10.07$ ft²." }
+            ]
+          },
+          {
+            context: "Context: L'Hôpital meets optimization",
+            stem: "A function is defined by $f(x) = \\dfrac{\\ln x}{x}$ for $x > 0$.",
+            parts: [
+              { label: "(a)", text: "Find the absolute maximum of $f$ on $(0, \\infty)$ using calculus." },
+              { label: "(b)", text: "Evaluate $\\displaystyle\\lim_{x \\to 0^+} f(x)$ and $\\displaystyle\\lim_{x \\to \\infty} f(x)$ using L'Hôpital's Rule where needed." },
+              { label: "(c)", text: "Use your results to describe the complete behavior of $f$: where it's increasing/decreasing, its maximum, and its end behavior. Sketch a rough graph." }
+            ],
+            answers: [
+              { label: "(a)", text: "$f'(x) = \\dfrac{(1/x)\\cdot x - \\ln x \\cdot 1}{x^2} = \\dfrac{1-\\ln x}{x^2}$. $f'=0$ at $x=e$. $f''>0$ for $x<e$, $f''<0$ for $x>e$: absolute max at $x=e$. $f(e) = \\dfrac{1}{e}$." },
+              { label: "(b)", text: "$\\lim_{x\\to 0^+}\\dfrac{\\ln x}{x}$: form $\\frac{-\\infty}{0^+} = -\\infty$ — not indeterminate, limit is $-\\infty$. $\\lim_{x\\to\\infty}\\dfrac{\\ln x}{x}$: form $\\frac{\\infty}{\\infty}$. L'Hôpital: $\\lim_{x\\to\\infty}\\dfrac{1/x}{1} = 0$." },
+              { label: "(c)", text: "$f$ increases from $-\\infty$ (as $x\\to 0^+$) through zero at $x=1$, reaches a maximum of $\\frac{1}{e}$ at $x=e$, then decreases toward 0 as $x\\to\\infty$. The function is positive on $(1,\\infty)$, negative on $(0,1)$, with a single global maximum at $(e, 1/e)$." }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+
+]; // end columns
+
+
+/* ============================================================
+   RENDER BOARD
+============================================================ */
+function renderBoard() {
+  const grid = document.getElementById('board-grid');
+  grid.innerHTML = '';
+
+  columns.forEach((col, ci) => {
+    const colGroup = document.createElement('div');
+    colGroup.className = 'col-group';
+
+    // Header
+    const header = document.createElement('div');
+    header.className = `col-header ${col.headerClass}`;
+    header.style.gridColumn = ci + 1;
+    header.style.gridRow = 1;
+    header.innerHTML = `
+      <div class="col-header-num">${col.label}</div>
+      <h2>${col.title}</h2>
+      <div class="col-topics">${col.topics}</div>
+    `;
+    colGroup.appendChild(header);
+
+    // Tiles
+    col.tiles.forEach((tile, ti) => {
+      const tileEl = document.createElement('div');
+      tileEl.className = `tile ${col.tileClass}`;
+      tileEl.style.gridColumn = ci + 1;
+      tileEl.style.gridRow = ti + 2;
+      tileEl.setAttribute('role', 'button');
+      tileEl.setAttribute('tabindex', '0');
+      tileEl.setAttribute('aria-label', tile.title);
+      tileEl.innerHTML = `
+        <span class="tile-icon">${tile.icon}</span>
+        <div class="tile-title">${tile.title}</div>
+        <div class="tile-sub">${tile.sub}</div>
+        <div class="tile-topics">${tile.topics}</div>
+        <span class="tile-arrow">↗</span>
+      `;
+      tileEl.addEventListener('click', () => openModal(ci, ti));
+      tileEl.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') openModal(ci, ti); });
+      colGroup.appendChild(tileEl);
+    });
+
+    grid.appendChild(colGroup);
+  });
+}
+
+/* ============================================================
+   MODAL
+============================================================ */
+function openModal(colIdx, tileIdx) {
+  const col  = columns[colIdx];
+  const tile = col.tiles[tileIdx];
+
+  const accentEl = document.getElementById('modal-accent');
+  accentEl.className = 'modal-header-accent';
+  accentEl.style.background = col.accentVar;
+
+  const labelEl = document.getElementById('modal-col-label');
+  labelEl.style.color = col.accentVar;
+  labelEl.textContent = col.label + ' · ' + col.title;
+
+  document.getElementById('modal-title').textContent = tile.title;
+
+  const body = document.getElementById('modal-body');
+  body.innerHTML = '';
+
+  // Optional video section
+  if (tile.video) {
+    const videoSection = document.createElement('div');
+    videoSection.className = 'video-section';
+    videoSection.innerHTML = `
+      <div class="video-label">📹 Watch First</div>
+      <a href="${tile.video.url}" target="_blank" rel="noopener" class="video-link">
+        ${tile.video.title} — mathispower4u
+        <span class="video-icon">▶</span>
+      </a>
+    `;
+    body.appendChild(videoSection);
+  }
+
+  tile.problems.forEach((prob, pi) => {
+    const block = document.createElement('div');
+    block.className = 'problem-block';
+
+    let partsHTML = '';
+    if (prob.parts && prob.parts.length) {
+      partsHTML = `<ul class="problem-parts">` +
+        prob.parts.map(p => `<li data-part="${p.label}">${p.text}</li>`).join('') +
+        `</ul>`;
+    }
+
+    let answersHTML = '';
+    if (prob.answers && prob.answers.length) {
+      answersHTML = prob.answers.map(a =>
+        `<div class="answer-part"><span class="answer-part-label">${a.label}</span>${a.text}</div>`
+      ).join('');
+    }
+
+    const answerId = `ans-${colIdx}-${tileIdx}-${pi}`;
+    const toggleId = `tog-${colIdx}-${tileIdx}-${pi}`;
+
+    block.innerHTML = `
+      <div class="problem-num">Problem ${pi + 1} of ${tile.problems.length}</div>
+      ${prob.context ? `<div class="problem-context">${prob.context}</div>` : ''}
+      <div class="problem-text">${prob.stem}</div>
+      ${partsHTML}
+      <button class="answer-toggle" id="${toggleId}" onclick="toggleAnswer('${answerId}','${toggleId}')">
+        <span class="toggle-icon">▼</span> Show Answer
+      </button>
+      <div class="answer-panel" id="${answerId}">
+        ${answersHTML}
+      </div>
+    `;
+    body.appendChild(block);
+  });
+
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('desmos-fab').classList.add('visible');
+
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([body]).catch(err => console.log(err));
+  }
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+  document.getElementById('desmos-fab').classList.remove('visible');
+}
+
+function toggleAnswer(panelId, toggleId) {
+  const panel  = document.getElementById(panelId);
+  const toggle = document.getElementById(toggleId);
+  const isOpen = panel.classList.contains('open');
+  panel.classList.toggle('open');
+  toggle.classList.toggle('open');
+  toggle.innerHTML = isOpen
+    ? '<span class="toggle-icon">▼</span> Show Answer'
+    : '<span class="toggle-icon">▼</span> Hide Answer';
+}
+
+/* ============================================================
+   RANDOM PRACTICE
+============================================================ */
+function openRandomProblem() {
+  const colIdx  = Math.floor(Math.random() * columns.length);
+  const col     = columns[colIdx];
+  const tileIdx = Math.floor(Math.random() * col.tiles.length);
+  const tile    = col.tiles[tileIdx];
+  const probIdx = Math.floor(Math.random() * tile.problems.length);
+  const prob    = tile.problems[probIdx];
+
+  const accentEl = document.getElementById('modal-accent');
+  accentEl.className = 'modal-header-accent random-accent';
+  accentEl.style.background = '';
+
+  const labelEl = document.getElementById('modal-col-label');
+  labelEl.style.color = 'var(--text-muted)';
+  labelEl.innerHTML = 'BC Calculus · Unit 5: Analytical Applications of Differentiation';
+
+  document.getElementById('modal-title').textContent = 'General Practice';
+
+  const body = document.getElementById('modal-body');
+  body.innerHTML = '';
+
+  const block = document.createElement('div');
+  block.className = 'problem-block';
+  block.style.borderBottom = 'none';
+  block.style.marginBottom = '0';
+  block.style.paddingBottom = '0';
+
+  let partsHTML = '';
+  if (prob.parts && prob.parts.length) {
+    partsHTML = `<ul class="problem-parts">` +
+      prob.parts.map(p => `<li data-part="${p.label}">${p.text}</li>`).join('') +
+      `</ul>`;
+  }
+
+  let answersHTML = '';
+  if (prob.answers && prob.answers.length) {
+    answersHTML = prob.answers.map(a =>
+      `<div class="answer-part"><span class="answer-part-label">${a.label}</span>${a.text}</div>`
+    ).join('');
+  }
+
+  block.innerHTML = `
+    <div class="problem-num">🎲 General Practice</div>
+    ${prob.context ? `<div class="problem-context">${prob.context}</div>` : ''}
+    <div class="problem-text">${prob.stem}</div>
+    ${partsHTML}
+    <button class="answer-toggle" id="rand-tog" onclick="toggleAnswer('rand-ans','rand-tog')">
+      <span class="toggle-icon">▼</span> Show Answer
+    </button>
+    <div class="answer-panel" id="rand-ans">
+      ${answersHTML}
+    </div>
+  `;
+
+  body.appendChild(block);
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('desmos-fab').classList.add('visible');
+
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([body]).catch(err => console.log(err));
+  }
+}
+
+document.getElementById('random-btn').addEventListener('click', openRandomProblem);
+
+/* ============================================================
+   DESMOS BUTTON
+============================================================ */
+document.getElementById('desmos-fab').addEventListener('click', () => {
+  window.open('https://www.desmos.com/calculator', '_blank', 'width=650,height=350,noopener,noreferrer');
+});
+
+/* ============================================================
+   EVENT LISTENERS
+============================================================ */
+document.getElementById('modal-close').addEventListener('click', closeModal);
+document.getElementById('modal-overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+</script>
+</body>
+</html>
