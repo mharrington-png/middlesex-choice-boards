@@ -938,14 +938,12 @@ const columns = [
             context: "Context: Finding absolute extrema using EVT",
             stem: "Find the absolute maximum and minimum values of $f(x) = 2x^3 - 9x^2 + 12x - 4$ on $[0, 3]$.",
             parts: [
-              { label: "(a)", text: "Explain why EVT guarantees absolute extrema exist on $[0,3]$." },
-              { label: "(b)", text: "Find all critical numbers of $f$ in $(0, 3)$." },
-              { label: "(c)", text: "Evaluate $f$ at all critical numbers and endpoints. State the absolute max and min." }
+              { label: "(a)", text: "Find all critical numbers of $f$ in $(0, 3)$." },
+              { label: "(b)", text: "Find the absolute maximum and minimum values of $f$ on $[0, 3]$ and state where they occur." }
             ],
             answers: [
-              { label: "(a)", text: "$f$ is a polynomial, hence continuous everywhere, including on the closed interval $[0,3]$. EVT guarantees both an absolute max and absolute min exist on $[0,3]$." },
-              { label: "(b)", text: "$f'(x) = 6x^2 - 18x + 12 = 6(x^2-3x+2) = 6(x-1)(x-2)$. Critical numbers: $x = 1$ and $x = 2$, both in $(0,3)$." },
-              { label: "(c)", text: "$f(0) = -4$, $f(1) = 2-9+12-4 = 1$, $f(2) = 16-36+24-4 = 0$, $f(3) = 54-81+36-4 = 5$. Absolute max: $f(3) = 5$. Absolute min: $f(0) = -4$." }
+              { label: "(a)", text: "$f'(x) = 6x^2 - 18x + 12 = 6(x^2-3x+2) = 6(x-1)(x-2)$. Critical numbers: $x = 1$ and $x = 2$, both in $(0,3)$." },
+              { label: "(b)", text: "$f$ is a polynomial, so it is continuous on $[0,3]$ — EVT guarantees absolute extrema exist. Evaluating at critical numbers and endpoints: $f(0) = -4$, $f(1) = 1$, $f(2) = 0$, $f(3) = 5$. Absolute max: $f(3) = 5$. Absolute min: $f(0) = -4$." }
             ]
           }
         ]
@@ -964,13 +962,11 @@ const columns = [
             stem: "Find the absolute extrema of $f(x) = x^4 - 8x^2 + 3$ on $[-3, 3]$.",
             parts: [
               { label: "(a)", text: "Find $f'(x)$ and all critical numbers in $(-3, 3)$." },
-              { label: "(b)", text: "Create a candidates table: evaluate $f$ at all critical numbers and at the endpoints." },
-              { label: "(c)", text: "State the absolute maximum and minimum values and where they occur." }
+              { label: "(b)", text: "Find the absolute maximum and minimum values of $f$ on $[-3, 3]$ and state where they occur." }
             ],
             answers: [
               { label: "(a)", text: "$f'(x) = 4x^3 - 16x = 4x(x^2-4) = 4x(x-2)(x+2)$. Critical numbers: $x = -2, 0, 2$ — all in $(-3,3)$." },
-              { label: "(b)", text: "$f(-3) = 81-72+3 = 12$. $f(-2) = 16-32+3 = -13$. $f(0) = 3$. $f(2) = 16-32+3 = -13$. $f(3) = 81-72+3 = 12$." },
-              { label: "(c)", text: "Absolute maximum: $f = 12$ at $x = \\pm 3$. Absolute minimum: $f = -13$ at $x = \\pm 2$." }
+              { label: "(b)", text: "Evaluating at critical numbers and endpoints: $f(-3) = 12$, $f(-2) = -13$, $f(0) = 3$, $f(2) = -13$, $f(3) = 12$. Absolute maximum: $f = 12$ at $x = \\pm 3$. Absolute minimum: $f = -13$ at $x = \\pm 2$." }
             ]
           },
           {
@@ -991,7 +987,7 @@ const columns = [
             context: "Context: Function with a non-differentiable point",
             stem: "Find the absolute extrema of $h(x) = |x^2 - 4|$ on $[-3, 3]$.",
             parts: [
-              { label: "(a)", text: "Identify all points where $h$ is not differentiable. These are also candidates." },
+              { label: "(a)", text: "Identify all points where $h$ is not differentiable." },
               { label: "(b)", text: "Find any additional critical numbers from $h'(x) = 0$." },
               { label: "(c)", text: "Evaluate all candidates and endpoints. State the absolute extrema." }
             ],
@@ -1341,7 +1337,7 @@ const columns = [
             parts: [
               { label: "(a)", text: "Find $f(x)$ explicitly by antidifferentiating and using the initial condition." },
               { label: "(b)", text: "Identify all local extrema of $f$ using your formula." },
-              { label: "(c)", text: "Verify your local extrema classification using the Second Derivative Test." }
+              { label: "(c)", text: "Verify your local extrema classification." }
             ],
             answers: [
               { label: "(a)", text: "$f(x) = x^3 - 3x^2 + C$. Using $f(2)=5$: $8-12+C=5 \\Rightarrow C=9$. So $f(x) = x^3-3x^2+9$." },
@@ -1375,16 +1371,16 @@ const columns = [
           },
           {
             context: "Context: Reading all three from a graph of f",
-            stem: "The graph of $f$ is shown.<br><br><img src='img/U13BP1p.png' alt='Graph of f on [-3,5]' class='problem-img'>",
+            stem: "The graph of $f$ is shown.<br><br><img src='img/U13BP2p.png' alt='Graph of f' class='problem-img'>",
             parts: [
-              { label: "(a)", text: "Sketch a graph of $f'$ on $[-3, 5]$ consistent with the information given." },
-              { label: "(b)", text: "Sketch a graph of $f''$ on $[-3, 5]$ consistent with the information given." },
-              { label: "(c)", text: "At $x = 1$, $f'$ has a local minimum. Explain why, using the relationship between $f'$ and $f''$." }
+              { label: "(a)", text: "Sketch a graph of $f'$ consistent with the graph of $f$." },
+              { label: "(b)", text: "Sketch a graph of $f''$ consistent with the graph of $f$." },
+              { label: "(c)", text: "What is the relationship between $f'$ and $f''$ at $x \\approx 0.64$ and $x \\approx 4.69$? Justify using the graph." }
             ],
             answers: [
-              { label: "(a)", text: "$f'$: positive on $(-3,-1)$, zero at $x=-1$ (local max of $f$), negative on $(-1,3)$, zero at $x=3$ (local min of $f$), positive on $(3,5)$. Shape: starts positive, crosses zero at $x=-1$, reaches a local minimum somewhere in $(-1,3)$, crosses zero again at $x=3$, rises." },
-              { label: "(b)", text: "$f''$: positive where $f'$ is increasing, negative where $f'$ is decreasing. $f''$ changes sign at inflection points $x=1$ and $x=4$. Negative on $(-3,1)$, positive on $(1,4)$, negative on $(4,5)$." },
-              { label: "(c)", text: "At $x=1$, $f''$ changes from negative to positive (inflection point of $f$, concavity changes from down to up). Since $f''$ is the derivative of $f'$, $f''$ changing from $-$ to $+$ at $x=1$ means $f'$ changes from decreasing to increasing — i.e., $f'$ has a local minimum at $x=1$." }
+              { label: "(a)", text: "$f'$: positive on $(-\\infty,-1)$, zero at $x=-1$ (local max), negative on $(-1,3)$, zero at $x=3$ (local min), positive on $(3,6)$, zero at $x=6$ (local max), negative on $(6,\\infty)$. $f'$ has a local min near $x \\approx 0.64$ (where $f$ transitions from concave down to concave up) and a local max near $x \\approx 4.69$." },
+              { label: "(b)", text: "$f''$: negative on $(-\\infty, 0.64)$ (concave down), zero at $x \\approx 0.64$, positive on $(0.64, 4.69)$ (concave up), zero at $x \\approx 4.69$, negative on $(4.69, \\infty)$ (concave down). $f''$ is a function that changes sign at both inflection points." },
+              { label: "(c)", text: "At each inflection point, $f''= 0$ and $f''$ changes sign — so $f'$ has a local extremum there. At $x \\approx 0.64$: $f''$ changes $-\\to+$, so $f'$ has a local minimum. At $x \\approx 4.69$: $f''$ changes $+\\to-$, so $f'$ has a local maximum. In general, inflection points of $f$ correspond to local extrema of $f'$." }
             ]
           },
           {
@@ -1446,7 +1442,7 @@ const columns = [
             parts: [
               { label: "(a)", text: "On what interval(s) is $f$ concave up? Concave down?" },
               { label: "(b)", text: "Identify the $x$-coordinates of any local extrema of $f$ and classify each." },
-              { label: "(c)", text: "$f'$ has a local maximum at $x \\approx 2.64$ and a local minimum at $x \\approx 6.70$. What does each imply about $f$ at those points?" }
+              { label: "(c)", text: "Identify any local extrema of $f'$ from the graph and explain what each implies about $f$." }
             ],
             answers: [
               { label: "(a)", text: "$f$ is concave up where $f'$ is increasing: $(0, \\approx 2.64)\\cup(\\approx 6.70, 10)$. Concave down where $f'$ is decreasing: $(\\approx 2.64, \\approx 6.70)$." },
