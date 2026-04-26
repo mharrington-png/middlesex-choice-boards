@@ -1,0 +1,1952 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BC Calculus — Unit 4: Contextual Applications of Differentiation | Middlesex School</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet" />
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+    startup: {
+      typeset: false,
+      ready() {
+        MathJax.startup.defaultReady();
+        renderBoard();
+        MathJax.typesetPromise([document.getElementById('board-grid')])
+          .catch(err => console.log(err));
+      }
+    }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+  /* ============================================================
+     TOKENS & RESET
+  ============================================================ */
+  :root {
+    --crimson:     #cf003d;
+    --crimson-dim: #8a0028;
+    --crimson-glow:#ff1a55;
+    --black:       #0d0d0d;
+    --surface:     #151515;
+    --surface2:    #1e1e1e;
+    --surface3:    #252525;
+    --border:      #2e2e2e;
+    --border-light:#3a3a3a;
+    --text:        #f0ece6;
+    --text-muted:  #9e9e9e;
+    --text-dim:    #666666;
+
+    --col1: #cf003d;
+    --col2: #1a6b5a;
+    --col3: #4a5568;
+    --col4: #7c4a1e;
+
+    --col1-light: #ff4d75;
+    --col2-light: #2dd4bf;
+    --col3-light: #94a3b8;
+    --col4-light: #f59e0b;
+
+    --radius: 10px;
+    --radius-lg: 16px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.5);
+    --shadow-hover: 0 8px 40px rgba(0,0,0,0.7);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 16px;
+    line-height: 1.65;
+    min-height: 100vh;
+  }
+
+  /* ============================================================
+     HEADER
+  ============================================================ */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 32px 40px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--crimson), var(--crimson-glow), var(--crimson));
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(207,0,61,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .header-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+  }
+
+  .school-tag {
+    font-family: 'Source Serif 4', serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--crimson-glow);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .school-tag::before,
+  .school-tag::after {
+    content: '';
+    display: inline-block;
+    width: 28px;
+    height: 1px;
+    background: var(--crimson-glow);
+  }
+
+  h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    margin-top: 4px;
+  }
+
+  h1 em { font-style: italic; color: var(--crimson-glow); }
+
+  .header-meta {
+    margin-top: 4px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .meta-pill {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 3px 12px;
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+  }
+
+  /* ============================================================
+     INSTRUCTIONS BAR
+  ============================================================ */
+  .instructions {
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 40px;
+    font-size: 13px;
+    color: var(--text-muted);
+    text-align: center;
+    letter-spacing: 0.03em;
+  }
+
+  .instructions strong { color: var(--crimson-glow); font-weight: 600; }
+
+  /* ============================================================
+     BOARD GRID
+  ============================================================ */
+  .board-wrap {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 36px 24px 60px;
+  }
+
+  .board-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto repeat(4, 1fr);
+    gap: 20px;
+  }
+
+  .col-group { display: contents; }
+
+  .col-header {
+    border-radius: var(--radius) var(--radius) 0 0;
+    padding: 16px 18px 14px;
+    position: relative;
+    overflow: hidden;
+    align-self: start;
+  }
+
+  .col-header::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .col-1-header { background: color-mix(in srgb, var(--col1) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col1) 40%, transparent); }
+  .col-2-header { background: color-mix(in srgb, var(--col2) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col2) 40%, transparent); }
+  .col-3-header { background: color-mix(in srgb, var(--col3) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col3) 40%, transparent); }
+  .col-4-header { background: color-mix(in srgb, var(--col4) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col4) 40%, transparent); }
+
+  .col-header-num {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    opacity: 0.7;
+  }
+
+  .col-1-header .col-header-num { color: var(--col1-light); }
+  .col-2-header .col-header-num { color: var(--col2-light); }
+  .col-3-header .col-header-num { color: var(--col3-light); }
+  .col-4-header .col-header-num { color: var(--col4-light); }
+
+  .col-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.25;
+  }
+
+  .col-header .col-topics {
+    margin-top: 6px;
+    font-size: 10.5px;
+    color: var(--text-dim);
+    letter-spacing: 0.04em;
+  }
+
+  /* ============================================================
+     TILES
+  ============================================================ */
+  .tile {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 18px 28px;
+    cursor: pointer;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+    position: relative;
+    overflow: hidden;
+    user-select: none;
+  }
+
+  .tile::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+    border-radius: var(--radius) 0 0 var(--radius);
+    transition: opacity 0.2s;
+  }
+
+  .col-1 .tile::before { background: var(--col1-light); }
+  .col-2 .tile::before { background: var(--col2-light); }
+  .col-3 .tile::before { background: var(--col3-light); }
+  .col-4 .tile::before { background: var(--col4-light); }
+
+  .tile:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-hover);
+    background: var(--surface3);
+  }
+
+  .col-1 .tile:hover { border-color: color-mix(in srgb, var(--col1) 60%, transparent); }
+  .col-2 .tile:hover { border-color: color-mix(in srgb, var(--col2) 60%, transparent); }
+  .col-3 .tile:hover { border-color: color-mix(in srgb, var(--col3) 60%, transparent); }
+  .col-4 .tile:hover { border-color: color-mix(in srgb, var(--col4) 60%, transparent); }
+
+  .tile-icon { font-size: 18px; margin-bottom: 8px; display: block; }
+
+  .tile-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+    margin-bottom: 5px;
+  }
+
+  .tile-sub { font-size: 11.5px; color: var(--text-muted); line-height: 1.4; }
+
+  .tile-topics {
+    position: absolute;
+    bottom: 10px;
+    left: 18px;
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.06em;
+  }
+
+  .tile-arrow {
+    position: absolute;
+    bottom: 12px; right: 14px;
+    font-size: 14px;
+    opacity: 0.3;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+
+  .tile:hover .tile-arrow { opacity: 0.8; transform: translate(2px, -2px); }
+  .col-1 .tile:hover .tile-arrow { color: var(--col1-light); }
+  .col-2 .tile:hover .tile-arrow { color: var(--col2-light); }
+  .col-3 .tile:hover .tile-arrow { color: var(--col3-light); }
+  .col-4 .tile:hover .tile-arrow { color: var(--col4-light); }
+
+  /* ============================================================
+     MODAL
+  ============================================================ */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.82);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    backdrop-filter: blur(4px);
+  }
+
+  .modal-overlay.open { display: flex; animation: fadeIn 0.2s ease; }
+
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    width: 100%;
+    max-width: 760px;
+    max-height: 88vh;
+    overflow-y: auto;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.8);
+    animation: slideUp 0.22s ease;
+    position: relative;
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .modal-header {
+    padding: 24px 28px 20px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .modal-header-accent {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  }
+
+  .modal-col-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+  }
+
+  .modal-close {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.15s, color 0.15s;
+  }
+
+  .modal-close:hover { background: var(--crimson); color: white; border-color: var(--crimson); }
+
+  .modal-body { padding: 24px 28px 32px; }
+
+  /* Video section */
+  .video-section {
+    background: var(--surface2);
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 24px;
+  }
+
+  .video-label {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+
+  .video-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    color: var(--crimson-glow);
+    text-decoration: none;
+    font-size: 13.5px;
+    font-family: 'Source Serif 4', serif;
+    transition: color 0.15s;
+  }
+
+  .video-link:hover { color: #fff; }
+  .video-icon { font-size: 12px; opacity: 0.7; }
+
+  /* Problems */
+  .problem-block {
+    margin-bottom: 28px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .problem-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+  .problem-num {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+  }
+
+  .problem-context {
+    font-size: 14px;
+    font-style: italic;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    padding-left: 12px;
+    border-left: 2px solid var(--border-light);
+  }
+
+  .problem-text {
+    font-size: 14.5px;
+    color: var(--text);
+    line-height: 1.7;
+    margin-bottom: 14px;
+  }
+
+  .problem-parts { margin-left: 0; list-style: none; }
+
+  .problem-parts li {
+    font-size: 14px;
+    color: var(--text);
+    margin-bottom: 8px;
+    padding-left: 24px;
+    position: relative;
+    line-height: 1.6;
+  }
+
+  .problem-parts li::before {
+    content: attr(data-part);
+    position: absolute;
+    left: 0;
+    font-weight: 700;
+    color: var(--text-muted);
+  }
+
+  .problem-img {
+    display: block;
+    width: 360px;
+    max-width: 100%;
+    border-radius: 6px;
+    margin: 10px 0 6px;
+  }
+
+  .answer-toggle {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 9px 16px;
+    color: var(--text-muted);
+    font-family: 'Source Serif 4', serif;
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.15s;
+    margin-top: 4px;
+  }
+
+  .answer-toggle:hover { background: var(--surface3); border-color: var(--border-light); color: var(--text); }
+  .answer-toggle .toggle-icon { font-size: 10px; transition: transform 0.2s; }
+  .answer-toggle.open .toggle-icon { transform: rotate(180deg); }
+
+  .answer-panel {
+    display: none;
+    margin-top: 14px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-size: 13.5px;
+    line-height: 1.75;
+    color: var(--text);
+    animation: expandIn 0.18s ease;
+  }
+
+  @keyframes expandIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .answer-panel.open { display: block; }
+
+  .answer-part { margin-bottom: 10px; padding-left: 20px; position: relative; }
+  .answer-part:last-child { margin-bottom: 0; }
+  .answer-part-label { position: absolute; left: 0; font-weight: 700; color: var(--text-muted); }
+
+  /* ============================================================
+     RESPONSIVE
+  ============================================================ */
+  @media (max-width: 1000px) {
+    .board-grid { display: flex; flex-wrap: wrap; gap: 20px; }
+    .col-group { display: flex; flex-direction: column; gap: 10px; width: calc(50% - 10px); }
+    .col-header { border-radius: var(--radius); }
+    .tile { grid-column: unset !important; grid-row: unset !important; }
+  }
+
+  @media (max-width: 600px) {
+    .board-grid { flex-direction: column; }
+    .col-group { width: 100%; }
+    header { padding: 20px; }
+    .board-wrap { padding: 20px 12px 40px; }
+    .modal { border-radius: var(--radius); }
+    .modal-header, .modal-body { padding: 18px; }
+  }
+
+  .modal::-webkit-scrollbar { width: 6px; }
+  .modal::-webkit-scrollbar-track { background: var(--surface); }
+  .modal::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
+
+  /* ============================================================
+     RANDOM PRACTICE BAR
+  ============================================================ */
+  .random-wrap { max-width: 1400px; margin: 0 auto; padding: 0 24px 48px; }
+
+  .random-btn {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border-light);
+    border-radius: 14px;
+    padding: 0 36px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.2s ease, background 0.2s ease;
+    font-family: 'Source Serif 4', serif;
+  }
+
+  .random-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(207,0,61,0.06) 30%, rgba(207,0,61,0.10) 50%, rgba(207,0,61,0.06) 70%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .random-btn:hover::before { opacity: 1; }
+
+  .random-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(207,0,61,0.18), 0 2px 8px rgba(0,0,0,0.4);
+    border-color: color-mix(in srgb, var(--crimson) 55%, transparent);
+    background: var(--surface3);
+  }
+
+  .random-btn:active { transform: translateY(0) scale(0.995); box-shadow: 0 2px 8px rgba(0,0,0,0.4); }
+
+  .random-btn-left-notch, .random-btn-right-notch {
+    position: absolute;
+    bottom: 0;
+    width: 28px; height: 5px;
+    background: var(--border);
+    border-radius: 3px 3px 0 0;
+    transition: background 0.2s;
+  }
+  .random-btn-left-notch  { left: 60px; }
+  .random-btn-right-notch { right: 60px; }
+  .random-btn:hover .random-btn-left-notch,
+  .random-btn:hover .random-btn-right-notch { background: color-mix(in srgb, var(--crimson) 40%, var(--border)); }
+
+  .random-btn-icon { font-size: 22px; flex-shrink: 0; transition: transform 0.3s ease; }
+  .random-btn:hover .random-btn-icon { transform: rotate(20deg) scale(1.15); }
+
+  .random-btn-label { display: flex; flex-direction: column; align-items: center; gap: 1px; }
+  .random-btn-title { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; color: var(--text); letter-spacing: 0.01em; line-height: 1.2; }
+  .random-btn-sub { font-size: 11.5px; color: var(--text-muted); letter-spacing: 0.07em; text-transform: uppercase; }
+
+  .random-btn-badge {
+    position: absolute;
+    right: 28px;
+    background: var(--surface3);
+    border: 1px solid var(--border-light);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-family: 'Source Serif 4', serif;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+
+  .random-btn:hover .random-btn-badge {
+    background: color-mix(in srgb, var(--crimson) 15%, var(--surface3));
+    color: var(--crimson-glow);
+    border-color: color-mix(in srgb, var(--crimson) 40%, transparent);
+  }
+
+  .random-accent {
+    background: linear-gradient(90deg, var(--col1-light), var(--col2-light), var(--col3-light), var(--col4-light));
+    background-size: 300% 100%;
+    animation: accentShift 4s ease infinite;
+  }
+
+  @keyframes accentShift {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  @media (max-width: 600px) {
+    .random-wrap { padding: 0 12px 36px; }
+    .random-btn { height: 64px; border-radius: 10px; }
+    .random-btn-badge, .random-btn-left-notch, .random-btn-right-notch { display: none; }
+  }
+
+  /* ============================================================
+     DESMOS FLOATING BUTTON
+  ============================================================ */
+  .desmos-fab {
+    position: fixed;
+    bottom: 32px; right: 32px;
+    z-index: 1050;
+    background: var(--surface2);
+    border: 1px solid var(--border-light);
+    border-radius: 50px;
+    padding: 0 20px 0 14px;
+    height: 52px;
+    display: none;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    font-family: 'Source Serif 4', serif;
+  }
+
+  .desmos-fab.visible { display: flex; animation: fadeIn 0.18s ease; }
+
+  .desmos-fab:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(207,0,61,0.25), 0 2px 8px rgba(0,0,0,0.5);
+    border-color: color-mix(in srgb, var(--crimson) 60%, transparent);
+    background: var(--surface3);
+  }
+
+  .desmos-fab:active { transform: translateY(0) scale(0.97); }
+
+  .desmos-fab-icon { font-size: 20px; line-height: 1; flex-shrink: 0; transition: transform 0.2s ease; }
+  .desmos-fab:hover .desmos-fab-icon { transform: rotate(-8deg) scale(1.1); }
+
+  .desmos-fab-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    display: block;
+    line-height: 1.25;
+  }
+
+  .desmos-fab-sub {
+    font-size: 9.5px;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    display: block;
+  }
+
+  @media (max-width: 600px) {
+    .desmos-fab { bottom: 20px; right: 16px; padding: 0 14px; }
+    .desmos-fab-sub { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="school-tag">Middlesex School · mxschool.edu</div>
+    <h1>BC Calculus — Unit 4: <em>Contextual Applications of Differentiation</em></h1>
+    <div class="header-meta">
+      <span class="meta-pill">📊 Derivative in Context</span>
+      <span class="meta-pill">🔗 Related Rates</span>
+      <span class="meta-pill">📐 Linearization</span>
+      <span class="meta-pill">🏥 L'Hôpital's Rule</span>
+      <span class="meta-pill">Topics 4.1 – 4.7</span>
+    </div>
+  </div>
+</header>
+
+<div class="instructions">
+  Click any tile to open practice problems. Use <strong>Show Answer</strong> to check your work after attempting each part.
+</div>
+
+<!-- BOARD -->
+<div class="board-wrap">
+  <div class="board-grid" id="board-grid"></div>
+</div>
+
+<!-- RANDOM PRACTICE BAR -->
+<div class="random-wrap">
+  <button class="random-btn" id="random-btn" aria-label="Random Practice">
+    <div class="random-btn-left-notch"></div>
+    <div class="random-btn-right-notch"></div>
+    <span class="random-btn-icon">🎲</span>
+    <div class="random-btn-label">
+      <span class="random-btn-title">Random Practice</span>
+      <span class="random-btn-sub">Any topic · Any tile · Any problem</span>
+    </div>
+    <span class="random-btn-badge">48 problems</span>
+  </button>
+</div>
+
+<!-- DESMOS FLOATING BUTTON -->
+<button class="desmos-fab" id="desmos-fab" aria-label="Open Desmos Graphing Calculator">
+  <span class="desmos-fab-icon">📈</span>
+  <span>
+    <span class="desmos-fab-title">Graphing Calculator</span>
+    <span class="desmos-fab-sub">Opens Desmos in a new tab</span>
+  </span>
+</button>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div class="modal-header-accent" id="modal-accent"></div>
+      <div>
+        <div class="modal-col-label" id="modal-col-label"></div>
+        <div class="modal-title" id="modal-title"></div>
+      </div>
+      <button class="modal-close" id="modal-close" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   DATA — Edit problems here without touching layout code.
+   Each column has tiles[]. Each tile has: icon, title, sub, topics,
+   and problems[]. Each problem has context, stem, parts[], answers[].
+   To add a video: add video: { title: "...", url: "..." } to a tile.
+   Graph placeholders: <!-- GRAPH NEEDED: description -->
+============================================================ */
+
+const columns = [
+
+  // ═══════════════════════════════════════════════════════════
+  // COLUMN A — Derivative in Context
+  //            Topics 4.1, 4.2, 4.3
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: "col-1",
+    accentVar: "var(--col1-light)",
+    headerClass: "col-1-header",
+    tileClass: "col-1",
+    label: "Column A",
+    title: "Derivative in Context",
+    topics: "Topics 4.1 – 4.3",
+    tiles: [
+
+      // ── TILE A-1 ──────────────────────────────────────────
+      {
+        icon: "📊",
+        title: "Interpreting f′(x)",
+        sub: "Meaning, units, and sign in real-world scenarios",
+        topics: "4.1",
+        problems: [
+          {
+            context: "Context: Biology — puppy growth",
+            stem: "The function $W(t)$ gives the weight (in pounds) of a puppy $t$ weeks after birth. Interpret each expression in context, including units.",
+            parts: [
+              { label: "(a)", text: "$W(8) = 12$" },
+              { label: "(b)", text: "$W'(8) = 0.75$" },
+              { label: "(c)", text: "$W'(8) > W'(4)$" }
+            ],
+            answers: [
+              { label: "(a)", text: "Eight weeks after birth, the puppy weighs 12 pounds." },
+              { label: "(b)", text: "Eight weeks after birth, the puppy's weight is increasing at a rate of 0.75 pounds per week." },
+              { label: "(c)", text: "The puppy is gaining weight faster at 8 weeks than at 4 weeks — the rate of weight gain is itself increasing. This indicates $W$ is concave up at $t = 8$." }
+            ]
+          },
+          {
+            context: "Context: Economics — marginal cost",
+            stem: "Let $C(x)$ represent the total cost (in dollars) of producing $x$ units of a product. Interpret each expression and explain what it tells a production manager.",
+            parts: [
+              { label: "(a)", text: "$C(500) = 12{,}000$" },
+              { label: "(b)", text: "$C'(500) = 8.50$" },
+              { label: "(c)", text: "$C'(500) < C'(200)$" }
+            ],
+            answers: [
+              { label: "(a)", text: "Producing 500 units costs $\\$12{,}000$ in total." },
+              { label: "(b)", text: "At a production level of 500 units, total cost is increasing at $\\$8.50$ per additional unit produced. This is the marginal cost at $x = 500$." },
+              { label: "(c)", text: "It costs less (per unit) to produce the 500th unit than the 200th unit, suggesting decreasing marginal costs — perhaps due to economies of scale or improved efficiency at higher production." }
+            ]
+          },
+          {
+            context: "Context: Environmental science — pollution",
+            stem: "The amount of a pollutant $A(t)$ in a lake (in ppm) is a differentiable, decreasing function of time $t$ (in years). Given $A(3) = 40$, $A'(3) = -6$, and $A''(3) > 0$, answer each question.",
+            parts: [
+              { label: "(a)", text: "Interpret $A'(3) = -6$ in context, including units." },
+              { label: "(b)", text: "Interpret the sign of $A''(3)$ in context." },
+              { label: "(c)", text: "A student claims: \"Since $A'(3) < 0$, the pollution is accelerating.\" Identify the error in this reasoning." }
+            ],
+            answers: [
+              { label: "(a)", text: "Three years after the cleanup began, the pollutant level is decreasing at a rate of 6 parts per million per year." },
+              { label: "(b)", text: "$A'' > 0$ means $A'$ is increasing (becoming less negative). The rate of decrease is slowing down — the cleanup is losing effectiveness over time." },
+              { label: "(c)", text: "$A' < 0$ only tells us the pollution is decreasing — not accelerating. Acceleration refers to the sign of $A'' = (A')'$. Since $A'' > 0$ and $A' < 0$, the magnitude $|A'|$ is shrinking: the cleanup is actually decelerating." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE A-2 ──────────────────────────────────────────
+      {
+        icon: "🚀",
+        title: "Straight-Line Motion",
+        sub: "Position, velocity, acceleration, and direction",
+        topics: "4.2",
+        problems: [
+          {
+            context: "Context: Position function analysis",
+            stem: "A particle moves along a number line with position $s(t) = t^3 - 6t^2 + 9t - 2$ for $t \\geq 0$ (meters, seconds).",
+            parts: [
+              { label: "(a)", text: "Find the velocity and acceleration functions." },
+              { label: "(b)", text: "At what times is the particle at rest?" },
+              { label: "(c)", text: "On $[0, 4]$, find all intervals when the particle moves to the right." }
+            ],
+            answers: [
+              { label: "(a)", text: "$v(t) = s'(t) = 3t^2 - 12t + 9$;&ensp; $a(t) = v'(t) = 6t - 12$." },
+              { label: "(b)", text: "$v(t) = 3(t-1)(t-3) = 0$ at $t = 1$ and $t = 3$. Both are sign changes, so the particle is at rest at both times." },
+              { label: "(c)", text: "Moving right when $v(t) > 0$. Sign chart: $v > 0$ on $[0,1)$ and $(3, 4]$." }
+            ]
+          },
+          {
+            context: "Context: Total distance vs. displacement",
+            stem: "A particle moves along the $x$-axis with velocity $v(t) = t^2 - 4$ for $0 \\leq t \\leq 3$. The particle starts at $x = 5$.",
+            parts: [
+              { label: "(a)", text: "Find the displacement of the particle over $[0, 3]$." },
+              { label: "(b)", text: "Find the total distance traveled over $[0, 3]$." },
+              { label: "(c)", text: "Find the position of the particle at $t = 3$." }
+            ],
+            answers: [
+              { label: "(a)", text: "Displacement $= \\int_0^3 (t^2 - 4)\\,dt = \\left[\\dfrac{t^3}{3} - 4t\\right]_0^3 = (9 - 12) = -3$ m." },
+              { label: "(b)", text: "$v(t) = 0$ at $t = 2$. On $(0,2)$: $v < 0$; on $(2,3)$: $v > 0$. Total distance $= \\int_0^2(4-t^2)\\,dt + \\int_2^3(t^2-4)\\,dt = \\dfrac{16}{3} + \\dfrac{7}{3} = \\dfrac{23}{3}$ m." },
+              { label: "(c)", text: "$x(3) = x(0) + \\text{displacement} = 5 + (-3) = 2$ m." }
+            ]
+          },
+          {
+            context: "Context: Speed increasing and decreasing",
+            stem: "A particle moves along the $x$-axis with velocity $v(t) = t^2 - 5t + 4$ for $t \\geq 0$.",
+            parts: [
+              { label: "(a)", text: "Find all times when the particle changes direction." },
+              { label: "(b)", text: "Determine all intervals on which the particle's speed is increasing." },
+              { label: "(c)", text: "Find the acceleration at each time in (a) and interpret its sign in context." }
+            ],
+            answers: [
+              { label: "(a)", text: "$v(t) = (t-1)(t-4) = 0$ at $t = 1$ and $t = 4$. $v$ changes sign at both: the particle changes direction at $t = 1$ and $t = 4$." },
+              { label: "(b)", text: "$a(t) = 2t - 5$; $a = 0$ at $t = \\frac{5}{2}$. Speed increases when $v$ and $a$ share the same sign: $v < 0,\\, a < 0$ on $(1, \\frac{5}{2})$; $v > 0,\\, a > 0$ on $(4, \\infty)$. Speed is increasing on $\\left(1, \\tfrac{5}{2}\\right)$ and $(4, \\infty)$." },
+              { label: "(c)", text: "$a(1) = -3 < 0$: at $t=1$ the particle is moving right but decelerating (negative acceleration slows it, then reverses it). $a(4) = 3 > 0$: at $t=4$ the particle was moving left and is now accelerating rightward — it changes direction and speeds up." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE A-3 ──────────────────────────────────────────
+      {
+        icon: "🌡️",
+        title: "Rates of Change in Applied Contexts",
+        sub: "Non-motion rates: temperature, economics, science",
+        topics: "4.3",
+        problems: [
+          {
+            context: "Context: Chemistry — Newton's Law of Cooling",
+            stem: "A cup of coffee cools so that its temperature $T$ (°F) at time $t$ minutes is $T(t) = 70 + 100e^{-0.05t}$.",
+            parts: [
+              { label: "(a)", text: "What is the initial temperature of the coffee?" },
+              { label: "(b)", text: "Find $T'(t)$ and interpret $T'(10)$ in context, with units." },
+              { label: "(c)", text: "At what time is the coffee cooling most rapidly, and what is that rate?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$T(0) = 70 + 100 = 170°\\text{F}$." },
+              { label: "(b)", text: "$T'(t) = -5e^{-0.05t}$. $T'(10) = -5e^{-0.5} \\approx -3.03$ °F/min. Ten minutes in, the coffee temperature is dropping at about 3.03 degrees per minute." },
+              { label: "(c)", text: "$|T'(t)| = 5e^{-0.05t}$ is a decreasing function. It is maximized at $t = 0$, where $T'(0) = -5$ °F/min — the coffee cools fastest at the very start." }
+            ]
+          },
+          {
+            context: "Context: Economics — revenue and profit",
+            stem: "A company's revenue is $R(q) = 80q - 0.5q^2$ dollars when $q$ units are sold, and its cost is $C(q) = 150 + 20q$ dollars.",
+            parts: [
+              { label: "(a)", text: "Find the marginal revenue and marginal cost functions." },
+              { label: "(b)", text: "At what production level $q$ does $MR = MC$? What is the significance of this value?" },
+              { label: "(c)", text: "Compute the profit function $P(q)$ and verify that $P'(q) = 0$ at the level found in (b)." }
+            ],
+            answers: [
+              { label: "(a)", text: "$MR = R'(q) = 80 - q$;&ensp; $MC = C'(q) = 20$." },
+              { label: "(b)", text: "$80 - q = 20 \\Rightarrow q = 60$ units. This is the profit-maximizing production level — past this point, each additional unit costs more to produce than it generates in revenue." },
+              { label: "(c)", text: "$P(q) = R(q) - C(q) = -0.5q^2 + 60q - 150$. $P'(q) = -q + 60 = 0$ at $q = 60$. ✓" }
+            ]
+          },
+          {
+            context: "Context: Physics — volume flow rate",
+            stem: "Water flows into a tank so that the volume (in gallons) after $t$ minutes is $V(t) = 3t^2 + 2t$. Water simultaneously drains out at a constant 5 gallons per minute.",
+            parts: [
+              { label: "(a)", text: "Write an expression for the net rate of change of water in the tank at time $t$." },
+              { label: "(b)", text: "At what time $t$ is the tank's volume neither increasing nor decreasing?" },
+              { label: "(c)", text: "Interpret the sign of $V''(t)$ in context." }
+            ],
+            answers: [
+              { label: "(a)", text: "Net rate $= V'(t) - 5 = (6t + 2) - 5 = 6t - 3$ gal/min." },
+              { label: "(b)", text: "Net rate $= 0$ when $6t - 3 = 0 \\Rightarrow t = 0.5$ min." },
+              { label: "(c)", text: "$V''(t) = 6 > 0$ for all $t$, so the inflow rate is always accelerating. Even after $t = 0.5$, the net rate grows positive and stays positive — the tank fills faster and faster." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE A-4 ──────────────────────────────────────────
+      {
+        icon: "📉",
+        title: "Analyzing Motion Graphs",
+        sub: "Reading $v(t)$ and $a(t)$ graphs for position and speed",
+        topics: "4.2",
+        problems: [
+          {
+            context: "Context: Piecewise velocity graph",
+            stem: "The graph of $v(t)$ (ft/sec) is shown below. The particle is at $x = 1$ when $t = 0$.<br><br><img src='img/vt_piecewise_a4p1.png' alt='Piecewise velocity graph: line segment from (0,4) to (6,-2), then horizontal at v=-2 from t=6 to t=8' class='problem-img'>",
+            parts: [
+              { label: "(a)", text: "At what time does the particle change direction? Justify." },
+              { label: "(b)", text: "Find the displacement of the particle on $[0, 8]$." },
+              { label: "(c)", text: "Find the total distance traveled on $[0, 8]$." }
+            ],
+            answers: [
+              { label: "(a)", text: "On the line segment, $v(t) = 4 - t$. $v = 0$ at $t = 4$. Before $t=4$: $v > 0$ (moving right); after: $v < 0$ (moving left). The particle changes direction at $t = 4$." },
+              { label: "(b)", text: "Displacement = net signed area. Above axis (triangle, $t \\in [0,4]$): $\\frac{1}{2}(4)(4) = 8$. Below axis (triangle, $[4,6]$): $\\frac{1}{2}(2)(2) = 2$; rectangle $[6,8]$: $(2)(2) = 4$. Displacement $= 8 - 2 - 4 = 2$ units." },
+              { label: "(c)", text: "Total distance $= 8 + 2 + 4 = 14$ units." }
+            ]
+          },
+          {
+            context: "Context: Acceleration from a velocity function",
+            stem: "The graph of $v(t) = t^2 - 6t + 8$ (m/sec) for $0 \\leq t \\leq 5$ is shown below.<br><br><img src='img/vt_parabola_a4p2.png' alt='Graph of v(t)=t^2-6t+8: parabola with zeros at t=2 and t=4, minimum at (3,-1)' class='problem-img'>",
+            parts: [
+              { label: "(a)", text: "Find all times when the particle changes direction on $(0, 5)$." },
+              { label: "(b)", text: "Find all intervals on which the particle's speed is decreasing." },
+              { label: "(c)", text: "At $t = 1$, is the particle speeding up or slowing down? At $t = 3$?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$v(t) = (t-2)(t-4) = 0$ at $t = 2$ and $t = 4$, both sign changes. Changes direction at $t = 2$ and $t = 4$." },
+              { label: "(b)", text: "$a(t) = 2t - 6$; $a = 0$ at $t = 3$. Speed decreases when $v$ and $a$ have opposite signs. $v > 0$ and $a < 0$ on $(0, 2)$; $v < 0$ and $a > 0$ on $(3, 4)$. Speed is decreasing on $(0,2)$ and $(3,4)$." },
+              { label: "(c)", text: "At $t=1$: $v(1) = 3 > 0$, $a(1) = -4 < 0$ — opposite signs, so <em>slowing down</em>. At $t=3$: $v(3) = -1 < 0$, $a(3) = 0$ — particle is momentarily at constant speed (instantaneous speed neither increasing nor decreasing)." }
+            ]
+          },
+          {
+            context: "Context: Table-based motion analysis",
+            stem: "The table gives the velocity $v(t)$ (m/s) of a particle at selected times.",
+            parts: [
+              { label: "", text: "<table style='border-collapse:collapse;font-size:13px;margin:8px 0'><tr><th style='border:1px solid #3a3a3a;padding:5px 12px;'>$t$</th><td style='border:1px solid #3a3a3a;padding:5px 12px;'>0</td><td style='border:1px solid #3a3a3a;padding:5px 12px;'>1</td><td style='border:1px solid #3a3a3a;padding:5px 12px;'>2</td><td style='border:1px solid #3a3a3a;padding:5px 12px;'>3</td><td style='border:1px solid #3a3a3a;padding:5px 12px;'>4</td><td style='border:1px solid #3a3a3a;padding:5px 12px;'>5</td></tr><tr><th style='border:1px solid #3a3a3a;padding:5px 12px;'>$v(t)$</th><td style='border:1px solid #3a3a3a;padding:5px 12px;'>3</td><td style='border:1px solid #3a3a3a;padding:5px 12px;'>2</td><td style='border:1px solid #3a3a3a;padding:5px 12px;'>0</td><td style='border:1px solid #3a3a3a;padding:5px 12px;'>−1</td><td style='border:1px solid #3a3a3a;padding:5px 12px;'>−3</td><td style='border:1px solid #3a3a3a;padding:5px 12px;'>−1</td></tr></table>" },
+              { label: "(a)", text: "Approximately when does the particle change direction? Justify." },
+              { label: "(b)", text: "Using a right-hand Riemann sum, estimate the displacement over $[0, 5]$." },
+              { label: "(c)", text: "Over which unit interval $[k,\\,k+1]$ is the magnitude of acceleration greatest?" }
+            ],
+            answers: [
+              { label: "(a)", text: "The particle changes direction near $t = 2$, where $v$ changes from positive to negative." },
+              { label: "(b)", text: "RHS $= v(1)(1) + v(2)(1) + v(3)(1) + v(4)(1) + v(5)(1) = 2 + 0 + (-1) + (-3) + (-1) = -3$ m." },
+              { label: "(c)", text: "Approximate $|a| \\approx |\\Delta v / \\Delta t|$: $[0,1]: 1$,&ensp; $[1,2]: 2$,&ensp; $[2,3]: 1$,&ensp; $[3,4]: 2$,&ensp; $[4,5]: 2$. Greatest on $[1,2]$, $[3,4]$, and $[4,5]$ (all tied at 2 m/s²)." }
+            ]
+          }
+        ]
+      }
+
+    ]
+  },
+
+  // ═══════════════════════════════════════════════════════════
+  // COLUMN B — Related Rates
+  //            Topics 4.4, 4.5
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: "col-2",
+    accentVar: "var(--col2-light)",
+    headerClass: "col-2-header",
+    tileClass: "col-2",
+    label: "Column B",
+    title: "Related Rates",
+    topics: "Topics 4.4 – 4.5",
+    tiles: [
+
+      // ── TILE B-1 ──────────────────────────────────────────
+      {
+        icon: "🔗",
+        title: "Setting Up Related Rates",
+        sub: "Diagrams, implicit differentiation, and labeling",
+        topics: "4.4",
+        problems: [
+          {
+            context: "Context: Sliding ladder",
+            stem: "A 10-foot ladder leans against a vertical wall. The base slides away from the wall at 2 ft/sec.",
+            parts: [
+              { label: "(a)", text: "Define variables and write an equation relating the base distance $x$ and wall height $y$." },
+              { label: "(b)", text: "Find $\\dfrac{dy}{dt}$ when the base is 6 feet from the wall." },
+              { label: "(c)", text: "As the base slides farther from the wall, does $\\left|\\dfrac{dy}{dt}\\right|$ increase or decrease? Explain." }
+            ],
+            answers: [
+              { label: "(a)", text: "Let $x$ = distance from wall to base (ft), $y$ = height of ladder on wall (ft). $\\dfrac{dx}{dt} = 2$ ft/sec. Constraint: $x^2 + y^2 = 100$." },
+              { label: "(b)", text: "Differentiating: $2x\\dfrac{dx}{dt} + 2y\\dfrac{dy}{dt} = 0$. At $x = 6$: $y = 8$. $2(6)(2) + 2(8)\\dfrac{dy}{dt} = 0 \\Rightarrow \\dfrac{dy}{dt} = -\\dfrac{3}{2}$ ft/sec." },
+              { label: "(c)", text: "$\\dfrac{dy}{dt} = -\\dfrac{x}{y}\\dfrac{dx}{dt}$. As $x$ increases, $y$ decreases, so $x/y$ increases — meaning $|dy/dt|$ grows without bound as the top of the ladder approaches the ground. The top slides faster and faster." }
+            ]
+          },
+          {
+            context: "Context: Circular ripple",
+            stem: "A stone dropped in a pond creates circular ripples whose radius increases at 3 cm/sec.",
+            parts: [
+              { label: "(a)", text: "Write the equation relating area $A$ and radius $r$." },
+              { label: "(b)", text: "Find $\\dfrac{dA}{dt}$ as a function of $r$." },
+              { label: "(c)", text: "How fast is the enclosed area growing when $r = 20$ cm?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$A = \\pi r^2$." },
+              { label: "(b)", text: "$\\dfrac{dA}{dt} = 2\\pi r \\dfrac{dr}{dt} = 2\\pi r(3) = 6\\pi r$ cm²/sec." },
+              { label: "(c)", text: "$\\dfrac{dA}{dt}\\big|_{r=20} = 6\\pi(20) = 120\\pi \\approx 376.99$ cm²/sec." }
+            ]
+          },
+          {
+            context: "Context: Street lamp shadow",
+            stem: "A person 6 ft tall walks away from a 15 ft street lamp at 4 ft/sec. Let $x$ = distance from lamp to person, $s$ = shadow length.",
+            parts: [
+              { label: "(a)", text: "Use similar triangles to write $s$ as a function of $x$." },
+              { label: "(b)", text: "Find $\\dfrac{ds}{dt}$." },
+              { label: "(c)", text: "How fast is the tip of the shadow moving away from the lamp?" }
+            ],
+            answers: [
+              { label: "(a)", text: "Similar triangles: $\\dfrac{15}{x+s} = \\dfrac{6}{s} \\Rightarrow 15s = 6x + 6s \\Rightarrow s = \\dfrac{2x}{3}$." },
+              { label: "(b)", text: "$\\dfrac{ds}{dt} = \\dfrac{2}{3}\\dfrac{dx}{dt} = \\dfrac{2}{3}(4) = \\dfrac{8}{3}$ ft/sec." },
+              { label: "(c)", text: "Tip is at distance $x + s$ from lamp. $\\dfrac{d(x+s)}{dt} = \\dfrac{dx}{dt} + \\dfrac{ds}{dt} = 4 + \\dfrac{8}{3} = \\dfrac{20}{3}$ ft/sec." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE B-2 ──────────────────────────────────────────
+      {
+        icon: "📐",
+        title: "Geometric Related Rates",
+        sub: "Areas and volumes of standard shapes",
+        topics: "4.5",
+        problems: [
+          {
+            context: "Context: Spherical balloon",
+            stem: "Air is pumped into a spherical balloon at 100 cm³/sec.",
+            parts: [
+              { label: "(a)", text: "At what rate is the radius increasing when $r = 5$ cm?" },
+              { label: "(b)", text: "At what rate is the surface area increasing at that moment?" },
+              { label: "(c)", text: "Does the radius increase faster when the balloon is small or large? Justify." }
+            ],
+            answers: [
+              { label: "(a)", text: "$V = \\dfrac{4}{3}\\pi r^3 \\Rightarrow \\dfrac{dV}{dt} = 4\\pi r^2\\dfrac{dr}{dt}$. $100 = 4\\pi(25)\\dfrac{dr}{dt} \\Rightarrow \\dfrac{dr}{dt} = \\dfrac{1}{\\pi}$ cm/sec." },
+              { label: "(b)", text: "$S = 4\\pi r^2 \\Rightarrow \\dfrac{dS}{dt} = 8\\pi r \\dfrac{dr}{dt} = 8\\pi(5)\\cdot\\dfrac{1}{\\pi} = 40$ cm²/sec." },
+              { label: "(c)", text: "$\\dfrac{dr}{dt} = \\dfrac{1}{4\\pi r^2} \\cdot \\dfrac{dV}{dt}$, which decreases as $r$ increases. The radius grows faster when the balloon is small." }
+            ]
+          },
+          {
+            context: "Context: Draining conical tank",
+            stem: "Water drains from a conical tank (vertex down) at 2 ft³/min. The tank has height 10 ft and top radius 4 ft.",
+            parts: [
+              { label: "(a)", text: "Use similar triangles to express $V$ as a function of water depth $h$ only." },
+              { label: "(b)", text: "At what rate is the water level dropping when $h = 5$ ft?" },
+              { label: "(c)", text: "Is the level dropping faster when the tank is nearly full or nearly empty? Justify." }
+            ],
+            answers: [
+              { label: "(a)", text: "Similar triangles: $r = \\dfrac{2h}{5}$. $V = \\dfrac{1}{3}\\pi r^2 h = \\dfrac{4\\pi h^3}{75}$." },
+              { label: "(b)", text: "$\\dfrac{dV}{dt} = \\dfrac{4\\pi h^2}{25}\\dfrac{dh}{dt}$. At $h=5$: $-2 = \\dfrac{4\\pi(25)}{25}\\dfrac{dh}{dt} \\Rightarrow \\dfrac{dh}{dt} = -\\dfrac{1}{2\\pi}$ ft/min." },
+              { label: "(c)", text: "$\\dfrac{dh}{dt} = \\dfrac{-50}{4\\pi h^2}$. As $h \\to 0$, $|\\dfrac{dh}{dt}| \\to \\infty$. The level drops faster when the tank is nearly empty." }
+            ]
+          },
+          {
+            context: "Context: Changing rectangle",
+            stem: "A rectangle has length $\\ell$ (increasing at 3 cm/sec) and width $w$ (decreasing at 1 cm/sec).",
+            parts: [
+              { label: "(a)", text: "Write $\\dfrac{dA}{dt}$ in terms of $\\ell$, $w$, and their rates." },
+              { label: "(b)", text: "When $\\ell = 12$ and $w = 5$, is the area increasing or decreasing?" },
+              { label: "(c)", text: "At the same moment, find the rate of change of the perimeter." }
+            ],
+            answers: [
+              { label: "(a)", text: "$A = \\ell w \\Rightarrow \\dfrac{dA}{dt} = \\ell\\dfrac{dw}{dt} + w\\dfrac{d\\ell}{dt} = -\\ell + 3w$." },
+              { label: "(b)", text: "$\\dfrac{dA}{dt} = -12 + 15 = 3$ cm²/sec $> 0$. The area is increasing." },
+              { label: "(c)", text: "$P = 2(\\ell + w) \\Rightarrow \\dfrac{dP}{dt} = 2\\!\\left(\\dfrac{d\\ell}{dt} + \\dfrac{dw}{dt}\\right) = 2(3 - 1) = 4$ cm/sec." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE B-3 ──────────────────────────────────────────
+      {
+        icon: "📐",
+        title: "Pythagorean & Trig Related Rates",
+        sub: "Distances, angles, and rotating quantities",
+        topics: "4.5",
+        problems: [
+          {
+            context: "Context: Two cars at an intersection",
+            stem: "Two cars leave an intersection simultaneously. Car A travels north at 40 mph; Car B travels east at 30 mph. Let $z$ = distance between them.",
+            parts: [
+              { label: "(a)", text: "Find $\\dfrac{dz}{dt}$ after 2 hours." },
+              { label: "(b)", text: "Evaluate $\\dfrac{dz}{dt}$ at $t = 1$ hour. What do you notice? Show algebraically why this result holds for all $t > 0$." },
+              { label: "(c)", text: "Car C travels due west at 50 mph from the same intersection. Find the rate at which the distance between Car A and Car C is changing after 2 hours." }
+            ],
+            answers: [
+              { label: "(a)", text: "Let $y = 40t$, $x = 30t$, $z^2 = x^2 + y^2 = 2500t^2$, so $z = 50t$. Differentiating: $\\dfrac{dz}{dt} = 50$ mph. (Or: $2z\\dfrac{dz}{dt} = 2x(30) + 2y(40)$; at $t=2$: $z=100$, $x=60$, $y=80$, giving $\\dfrac{dz}{dt} = 50$ mph.)" },
+              { label: "(b)", text: "At $t=1$: $\\dfrac{dz}{dt} = 50$ mph — same answer. Since $z = 50t$, $\\dfrac{dz}{dt} = 50$ for all $t > 0$. The 30-40-50 right triangle remains geometrically similar as $t$ grows, so the rate of separation is constant." },
+              { label: "(c)", text: "Car A goes north at 40 mph, Car C goes west. Let $w$ = distance between them. $w^2 = (40t)^2 + (50t)^2 = 4100t^2$, so $w = 10\\sqrt{41}\\,t$. $\\dfrac{dw}{dt} = 10\\sqrt{41} \\approx 64.0$ mph." }
+            ]
+          },
+          {
+            context: "Context: Rising balloon — angle of elevation",
+            stem: "A balloon rises vertically at 8 ft/sec from a launch point 100 ft from an observer. Let $\\theta$ = angle of elevation.",
+            parts: [
+              { label: "(a)", text: "Write an equation relating $\\theta$ to the balloon's height $h$." },
+              { label: "(b)", text: "Find an expression for $\\dfrac{d\\theta}{dt}$ in terms of $h$." },
+              { label: "(c)", text: "At what rate is the angle of elevation increasing when $h = 100$ ft?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\tan\\theta = \\dfrac{h}{100}$." },
+              { label: "(b)", text: "$\\sec^2\\!\\theta\\,\\dfrac{d\\theta}{dt} = \\dfrac{1}{100}\\dfrac{dh}{dt} = \\dfrac{8}{100}$." },
+              { label: "(c)", text: "When $h=100$: $\\tan\\theta = 1 \\Rightarrow \\theta = \\pi/4$, $\\sec^2\\theta = 2$. $2\\dfrac{d\\theta}{dt} = \\dfrac{8}{100} \\Rightarrow \\dfrac{d\\theta}{dt} = \\dfrac{1}{25}$ rad/sec." }
+            ]
+          },
+          {
+            context: "Context: Rotating lighthouse beam",
+            stem: "A lighthouse beam rotates at $\\dfrac{\\pi}{6}$ rad/sec. The beam sweeps a straight cliff 200 m away. Let $x$ = distance along the cliff from the closest point.",
+            parts: [
+              { label: "(a)", text: "Write $x$ as a function of $\\theta$." },
+              { label: "(b)", text: "Find $\\dfrac{dx}{dt}$ as a function of $\\theta$." },
+              { label: "(c)", text: "How fast is the beam moving along the cliff when $\\theta = \\dfrac{\\pi}{4}$?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$x = 200\\tan\\theta$." },
+              { label: "(b)", text: "$\\dfrac{dx}{dt} = 200\\sec^2\\!\\theta \\cdot \\dfrac{d\\theta}{dt} = 200\\sec^2\\!\\theta \\cdot \\dfrac{\\pi}{6} = \\dfrac{100\\pi}{3}\\sec^2\\!\\theta$ m/sec." },
+              { label: "(c)", text: "$\\sec^2(\\pi/4) = 2 \\Rightarrow \\dfrac{dx}{dt} = \\dfrac{100\\pi}{3}(2) = \\dfrac{200\\pi}{3} \\approx 209.4$ m/sec." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE B-4 ──────────────────────────────────────────
+      {
+        icon: "⚙️",
+        title: "Multi-Step Related Rates",
+        sub: "Two changing quantities, harder setups",
+        topics: "4.5",
+        problems: [
+          {
+            context: "Context: Cylinder with changing dimensions",
+            stem: "A cylinder has radius $r$ cm (decreasing at 0.5 cm/sec) and height $h$ cm (increasing at 2 cm/sec).",
+            parts: [
+              { label: "(a)", text: "Find $\\dfrac{dV}{dt}$ in terms of $r$ and $h$." },
+              { label: "(b)", text: "When $r = 4$ and $h = 10$, is the volume increasing or decreasing?" },
+              { label: "(c)", text: "Find all pairs $(r, h)$ (with these same rates) for which $\\dfrac{dV}{dt} = 0$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$V = \\pi r^2 h \\Rightarrow \\dfrac{dV}{dt} = \\pi(2rh\\dfrac{dr}{dt} + r^2\\dfrac{dh}{dt}) = \\pi r(2h(-0.5) + r(2)) = \\pi r(2r - h)$." },
+              { label: "(b)", text: "$\\dfrac{dV}{dt} = \\pi(4)(8 - 10) = -8\\pi$ cm³/sec. Volume is decreasing." },
+              { label: "(c)", text: "$\\dfrac{dV}{dt} = 0$ when $r = 0$ (trivial) or $h = 2r$. Any configuration with height equal to twice the radius gives a momentarily constant volume." }
+            ]
+          },
+          {
+            context: "Context: Boat and pulley",
+            stem: "A rope attached to a boat passes over a pulley on a dock 15 ft above water. The rope is pulled in at 3 ft/sec. Let $x$ = horizontal distance from dock to boat, $\\ell$ = rope length from pulley to boat.",
+            parts: [
+              { label: "(a)", text: "Write an equation relating $\\ell$ and $x$." },
+              { label: "(b)", text: "Find $\\dfrac{dx}{dt}$ in terms of $\\ell$ and $x$." },
+              { label: "(c)", text: "How fast is the boat approaching the dock when it is 20 ft away horizontally?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\ell^2 = x^2 + 225$." },
+              { label: "(b)", text: "$2\\ell\\dfrac{d\\ell}{dt} = 2x\\dfrac{dx}{dt} \\Rightarrow \\dfrac{dx}{dt} = \\dfrac{\\ell}{x}\\dfrac{d\\ell}{dt} = \\dfrac{-3\\ell}{x}$." },
+              { label: "(c)", text: "At $x=20$: $\\ell = \\sqrt{400+225} = 25$. $\\dfrac{dx}{dt} = \\dfrac{-3(25)}{20} = -\\dfrac{15}{4}$ ft/sec. The boat approaches at $3.75$ ft/sec." }
+            ]
+          },
+          {
+            context: "Context: Cube — volume and surface area together",
+            stem: "A cube's volume is increasing at 12 cm³/sec.",
+            parts: [
+              { label: "(a)", text: "Express $\\dfrac{ds}{dt}$ (rate of change of side length) in terms of $s$." },
+              { label: "(b)", text: "At what rate is the surface area changing when $s = 3$ cm?" },
+              { label: "(c)", text: "At what side length does the surface area increase at exactly 24 cm²/sec?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$V = s^3 \\Rightarrow 12 = 3s^2\\dfrac{ds}{dt} \\Rightarrow \\dfrac{ds}{dt} = \\dfrac{4}{s^2}$." },
+              { label: "(b)", text: "$S = 6s^2 \\Rightarrow \\dfrac{dS}{dt} = 12s\\dfrac{ds}{dt} = 12s\\cdot\\dfrac{4}{s^2} = \\dfrac{48}{s}$. At $s=3$: $\\dfrac{dS}{dt} = 16$ cm²/sec." },
+              { label: "(c)", text: "$\\dfrac{48}{s} = 24 \\Rightarrow s = 2$ cm." }
+            ]
+          }
+        ]
+      }
+
+    ]
+  },
+
+  // ═══════════════════════════════════════════════════════════
+  // COLUMN C — Linearization & Differentials
+  //            Topic 4.6
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: "col-3",
+    accentVar: "var(--col3-light)",
+    headerClass: "col-3-header",
+    tileClass: "col-3",
+    label: "Column C",
+    title: "Linearization & Differentials",
+    topics: "Topic 4.6",
+    tiles: [
+
+      // ── TILE C-1 ──────────────────────────────────────────
+      {
+        icon: "📏",
+        title: "Tangent Line Approximations",
+        sub: "Using $L(x)$ to estimate function values",
+        topics: "4.6",
+        problems: [
+          {
+            context: "Context: Estimating a root",
+            stem: "Use a tangent line at an appropriate base point to approximate $\\sqrt{17}$.",
+            parts: [
+              { label: "(a)", text: "Choose an appropriate function and base point. Write the linearization $L(x)$." },
+              { label: "(b)", text: "Compute $L(17)$." },
+              { label: "(c)", text: "Determine whether $L(17)$ is an overestimate or underestimate, and justify using concavity." }
+            ],
+            answers: [
+              { label: "(a)", text: "Use $a = 16$. $f(16) = 4$, $f'(x) = \\dfrac{1}{2\\sqrt{x}}$, $f'(16) = \\dfrac{1}{8}$. $L(x) = 4 + \\dfrac{1}{8}(x-16)$." },
+              { label: "(b)", text: "$L(17) = 4 + \\dfrac{1}{8}(1) = 4.125$." },
+              { label: "(c)", text: "$f''(x) = -\\dfrac{1}{4x^{3/2}} < 0$ — concave down. Tangent line lies above the curve, so $L(17) = 4.125$ overestimates. ($\\sqrt{17} \\approx 4.123$)." }
+            ]
+          },
+          {
+            context: "Context: Given function values",
+            stem: "Suppose $f(3) = 7$ and $f'(3) = -2$.",
+            parts: [
+              { label: "(a)", text: "Write the linearization $L(x)$ of $f$ at $x = 3$." },
+              { label: "(b)", text: "Approximate $f(3.1)$ and $f(2.8)$ using $L$." },
+              { label: "(c)", text: "If $f''(x) < 0$ on an interval around $x = 3$, classify each estimate in (b) as an overestimate or underestimate." }
+            ],
+            answers: [
+              { label: "(a)", text: "$L(x) = 7 - 2(x - 3) = 13 - 2x$." },
+              { label: "(b)", text: "$L(3.1) = 7 - 2(0.1) = 6.8$;&ensp; $L(2.8) = 7 - 2(-0.2) = 7.4$." },
+              { label: "(c)", text: "$f'' < 0 \\Rightarrow$ concave down $\\Rightarrow$ tangent line lies above the curve. Both $L(3.1)$ and $L(2.8)$ are overestimates." }
+            ]
+          },
+          {
+            context: "Context: Exponential approximation and the rule of thumb",
+            stem: "Use a linear approximation to estimate $e^{0.04}$ without a calculator.",
+            parts: [
+              { label: "(a)", text: "Choose a base point and write $L(x)$ for $f(x) = e^x$." },
+              { label: "(b)", text: "Compute $L(0.04)$." },
+              { label: "(c)", text: "Finance uses the approximation $e^r \\approx 1 + r$ for small $r$. Explain this using the linearization, and discuss when it breaks down." }
+            ],
+            answers: [
+              { label: "(a)", text: "Use $a = 0$: $f(0) = 1$, $f'(0) = 1$. $L(x) = 1 + x$." },
+              { label: "(b)", text: "$L(0.04) = 1.04$. (Actual: $e^{0.04} \\approx 1.0408$, so within 0.08%.)" },
+              { label: "(c)", text: "The linearization of $e^x$ at $x=0$ is exactly $L(x) = 1+x$. The error is approximately $\\frac{x^2}{2}$ — negligible when $|x| \\ll 1$ but grows rapidly. For $r = 0.10$, the approximation gives 1.10 vs. actual $\\approx 1.105$; for $r = 0.50$, it gives 1.50 vs. $\\approx 1.649$. The rule of thumb fails for large interest rates." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE C-2 ──────────────────────────────────────────
+      {
+        icon: "🧮",
+        title: "Building the Linearization",
+        sub: "$L(x) = f(a) + f'(a)(x-a)$ — finding and applying it",
+        topics: "4.6",
+        problems: [
+          {
+            context: "Context: Three functions, three linearizations",
+            stem: "Find the linearization $L(x)$ of each function at the given point.",
+            parts: [
+              { label: "(a)", text: "$f(x) = x^4 - 2x + 1$ at $a = 1$" },
+              { label: "(b)", text: "$f(x) = \\ln x$ at $a = 1$" },
+              { label: "(c)", text: "$f(x) = \\cos x$ at $a = \\pi/2$" }
+            ],
+            answers: [
+              { label: "(a)", text: "$f(1) = 0$, $f'(x) = 4x^3 - 2$, $f'(1) = 2$. $L(x) = 2(x-1) = 2x - 2$." },
+              { label: "(b)", text: "$f(1) = 0$, $f'(x) = 1/x$, $f'(1) = 1$. $L(x) = x - 1$." },
+              { label: "(c)", text: "$f(\\pi/2) = 0$, $f'(x) = -\\sin x$, $f'(\\pi/2) = -1$. $L(x) = -(x - \\pi/2)$." }
+            ]
+          },
+          {
+            context: "Context: General power rule — $(1+x)^n \\approx 1 + nx$",
+            stem: "Let $f(x) = (1+x)^n$ for any real $n$.",
+            parts: [
+              { label: "(a)", text: "Find the linearization $L(x)$ at $a = 0$." },
+              { label: "(b)", text: "Use $L(x)$ to approximate $(1.02)^5$ and $(0.99)^{10}$." },
+              { label: "(c)", text: "What condition on $|x|$ makes the approximation $(1+x)^n \\approx 1 + nx$ more accurate? What is the size of the error term?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$f(0) = 1$, $f'(x) = n(1+x)^{n-1}$, $f'(0) = n$. $L(x) = 1 + nx$." },
+              { label: "(b)", text: "$(1.02)^5$: $n=5$, $x=0.02$. $L \\approx 1 + 0.10 = 1.10$. (Actual: $\\approx 1.104$.) $(0.99)^{10} = (1-0.01)^{10}$: $L \\approx 1 - 0.10 = 0.90$. (Actual: $\\approx 0.904$.)" },
+              { label: "(c)", text: "The error is $\\approx \\dfrac{n(n-1)}{2}x^2$, negligible when $|x| \\ll 1$. The smaller $|x|$, the more accurate the approximation." }
+            ]
+          },
+          {
+            context: "Context: Implicit differentiation + linearization",
+            stem: "The circle $x^2 + y^2 = 25$ passes through $(3, 4)$.",
+            parts: [
+              { label: "(a)", text: "Find $\\dfrac{dy}{dx}$ at $(3, 4)$." },
+              { label: "(b)", text: "Write the linearization (tangent line) $L(x)$ at $(3, 4)$." },
+              { label: "(c)", text: "Use $L(x)$ to approximate $y$ when $x = 3.1$. Compare to the exact value on the circle." }
+            ],
+            answers: [
+              { label: "(a)", text: "$2x + 2y\\dfrac{dy}{dx} = 0 \\Rightarrow \\dfrac{dy}{dx} = -\\dfrac{x}{y} = -\\dfrac{3}{4}$." },
+              { label: "(b)", text: "$L(x) = 4 - \\dfrac{3}{4}(x - 3)$." },
+              { label: "(c)", text: "$L(3.1) = 4 - \\dfrac{3}{4}(0.1) = 3.925$. Exact: $y = \\sqrt{25 - 9.61} = \\sqrt{15.39} \\approx 3.923$. Very close — error $< 0.002$." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE C-3 ──────────────────────────────────────────
+      {
+        icon: "🔍",
+        title: "Over vs. Under Estimates",
+        sub: "Concavity determines whether $L(x)$ overshoots or undershoots",
+        topics: "4.6",
+        problems: [
+          {
+            context: "Context: Concave down near the base point",
+            stem: "Let $g(x) = e^{-x^2}$. The linearization at $a = 0$ is $L(x) = 1$.",
+            parts: [
+              { label: "(a)", text: "Find $g''(0)$ and determine the concavity of $g$ at $x = 0$." },
+              { label: "(b)", text: "Is $L(x) = 1$ an overestimate or underestimate of $g(x)$ near $x = 0$? Explain." },
+              { label: "(c)", text: "For all $x \\ne 0$, does $L$ overestimate or underestimate $g$? Explain without further computation." }
+            ],
+            answers: [
+              { label: "(a)", text: "$g'(x) = -2xe^{-x^2}$; $g''(x) = (-2 + 4x^2)e^{-x^2}$. $g''(0) = -2 < 0$ — concave down at $x = 0$." },
+              { label: "(b)", text: "Concave down $\\Rightarrow$ tangent line lies above the curve. $L(x) = 1$ overestimates $g(x)$ near $x = 0$." },
+              { label: "(c)", text: "$g(x) = e^{-x^2} < e^0 = 1$ for all $x \\ne 0$. So $L(x) = 1 > g(x)$ everywhere — $L$ overestimates $g$ for all $x \\ne 0$." }
+            ]
+          },
+          {
+            context: "Context: Concave up — underestimate every time",
+            stem: "A function $h$ is twice differentiable with $h(5) = 3$, $h'(5) = -1$, and $h''(x) > 0$ for all $x$.",
+            parts: [
+              { label: "(a)", text: "Write the linearization $L(x)$ of $h$ at $x = 5$." },
+              { label: "(b)", text: "Is $L(4.5)$ an overestimate or underestimate of $h(4.5)$? Justify." },
+              { label: "(c)", text: "Is $L(5.5)$ an overestimate or underestimate of $h(5.5)$? Does the direction matter — i.e., does it matter whether we estimate to the left or right of $a$?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$L(x) = 3 - (x - 5) = 8 - x$." },
+              { label: "(b)", text: "$h'' > 0 \\Rightarrow$ concave up $\\Rightarrow$ curve lies above tangent line. $L(4.5) = 3.5$ underestimates $h(4.5)$." },
+              { label: "(c)", text: "$L(5.5) = 2.5$ also underestimates $h(5.5)$. Direction does not matter — for a concave-up function, the tangent line lies below the curve on both sides of the point of tangency." }
+            ]
+          },
+          {
+            context: "Context: Inferring concavity from $f'$ information",
+            stem: "Let $f$ be differentiable with $f(2) = 1$. The derivative $f'$ is given by $f'(x) = 3x$.",
+            parts: [
+              { label: "(a)", text: "Write the linearization $L(x)$ at $x = 2$." },
+              { label: "(b)", text: "Use $L$ to estimate $f(2.1)$." },
+              { label: "(c)", text: "Determine whether $f$ is concave up or down near $x = 2$ and classify your estimate as an overestimate or underestimate." }
+            ],
+            answers: [
+              { label: "(a)", text: "$f'(2) = 6$. $L(x) = 1 + 6(x - 2)$." },
+              { label: "(b)", text: "$L(2.1) = 1 + 6(0.1) = 1.6$." },
+              { label: "(c)", text: "$f''(x) = (f')'(x) = 3 > 0$ — concave up. The tangent line lies below the curve, so $L(2.1) = 1.6$ is an underestimate." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE C-4 ──────────────────────────────────────────
+      {
+        icon: "📋",
+        title: "Applied Linearization",
+        sub: "Table data, differentials, and error estimation",
+        topics: "4.6",
+        problems: [
+          {
+            context: "Context: Linearization from a table",
+            stem: "Selected values of a differentiable function $f$ and its derivative are given.",
+            parts: [
+              { label: "", text: "<table style='border-collapse:collapse;font-size:13px;margin:8px 0'><tr><th style='border:1px solid #3a3a3a;padding:5px 10px;'>$x$</th><td style='border:1px solid #3a3a3a;padding:5px 10px;'>1</td><td style='border:1px solid #3a3a3a;padding:5px 10px;'>2</td><td style='border:1px solid #3a3a3a;padding:5px 10px;'>3</td><td style='border:1px solid #3a3a3a;padding:5px 10px;'>4</td></tr><tr><th style='border:1px solid #3a3a3a;padding:5px 10px;'>$f(x)$</th><td style='border:1px solid #3a3a3a;padding:5px 10px;'>4</td><td style='border:1px solid #3a3a3a;padding:5px 10px;'>1</td><td style='border:1px solid #3a3a3a;padding:5px 10px;'>$-1$</td><td style='border:1px solid #3a3a3a;padding:5px 10px;'>$-1$</td></tr><tr><th style='border:1px solid #3a3a3a;padding:5px 10px;'>$f'(x)$</th><td style='border:1px solid #3a3a3a;padding:5px 10px;'>$-3$</td><td style='border:1px solid #3a3a3a;padding:5px 10px;'>$-2$</td><td style='border:1px solid #3a3a3a;padding:5px 10px;'>$0$</td><td style='border:1px solid #3a3a3a;padding:5px 10px;'>$2$</td></tr></table>" },
+              { label: "(a)", text: "Write the linearization of $f$ at $x = 2$." },
+              { label: "(b)", text: "Use your linearization to estimate $f(2.3)$." },
+              { label: "(c)", text: "Is there enough information to classify the estimate in (b) as an overestimate or underestimate? Explain." }
+            ],
+            answers: [
+              { label: "(a)", text: "$L(x) = 1 - 2(x-2) = 5 - 2x$." },
+              { label: "(b)", text: "$L(2.3) = 5 - 4.6 = 0.4$." },
+              { label: "(c)", text: "We'd need the sign of $f''(2)$. From the table, $f'$ increases from $-3$ to $-2$ to $0$ — suggesting $f'' > 0$ near $x = 2$ (concave up), which would make our estimate an underestimate. But without an exact value of $f''(2)$, we cannot be certain." }
+            ]
+          },
+          {
+            context: "Context: Differentials",
+            stem: "A function $f$ satisfies $f(10) = 50$ and $f'(10) = -4$.",
+            parts: [
+              { label: "(a)", text: "Use a differential to estimate $f(10.5)$." },
+              { label: "(b)", text: "Estimate $f(9.8)$." },
+              { label: "(c)", text: "Explain geometrically what the differential $df = f'(a)\\,dx$ represents compared to the actual change $\\Delta f$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$df = f'(10)\\,dx = (-4)(0.5) = -2$. So $f(10.5) \\approx 50 - 2 = 48$." },
+              { label: "(b)", text: "$dx = -0.2$. $df = (-4)(-0.2) = 0.8$. $f(9.8) \\approx 50 + 0.8 = 50.8$." },
+              { label: "(c)", text: "$df$ is the change in height along the tangent line; $\\Delta f$ is the actual change along the curve. They agree to first order — the difference $\\Delta f - df$ is $O(dx^2)$, meaning it becomes negligible for small $|dx|$." }
+            ]
+          },
+          {
+            context: "Context: Error propagation",
+            stem: "The side length $s$ of a cube is measured as 8 cm with a possible error of $\\pm 0.05$ cm.",
+            parts: [
+              { label: "(a)", text: "Use a differential to estimate the maximum error in the calculated volume." },
+              { label: "(b)", text: "Estimate the maximum error in the calculated surface area." },
+              { label: "(c)", text: "Compute the relative (percentage) error in each and compare." }
+            ],
+            answers: [
+              { label: "(a)", text: "$V = s^3$, $dV = 3s^2\\,ds = 3(64)(0.05) = 9.6$ cm³." },
+              { label: "(b)", text: "$S = 6s^2$, $dS = 12s\\,ds = 12(8)(0.05) = 4.8$ cm²." },
+              { label: "(c)", text: "Relative error in $V$: $\\dfrac{9.6}{512} \\approx 1.9\\%$. Relative error in $S$: $\\dfrac{4.8}{384} \\approx 1.25\\%$. Volume accumulates measurement error more than surface area does — as expected, since $V \\sim s^3$ amplifies errors more than $S \\sim s^2$." }
+            ]
+          }
+        ]
+      }
+
+    ]
+  },
+
+  // ═══════════════════════════════════════════════════════════
+  // COLUMN D — L'Hôpital's Rule
+  //            Topic 4.7
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: "col-4",
+    accentVar: "var(--col4-light)",
+    headerClass: "col-4-header",
+    tileClass: "col-4",
+    label: "Column D",
+    title: "L'Hôpital's Rule",
+    topics: "Topic 4.7",
+    tiles: [
+
+      // ── TILE D-1 ──────────────────────────────────────────
+      {
+        icon: "🏥",
+        title: "Basic Indeterminate Forms",
+        sub: "$0/0$ and $\\infty/\\infty$ — verify the form, then differentiate",
+        topics: "4.7",
+        video: { title: "L'Hôpital's Rule", url: "https://www.youtube.com/watch?v=0xqeXSEHppM" },
+        problems: [
+          {
+            context: "Context: Basic 0/0 and ∞/∞ forms",
+            stem: "Evaluate each limit using L'Hôpital's Rule.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\lim_{x \\to 0} \\dfrac{\\sin 3x}{x}$" },
+              { label: "(b)", text: "$\\displaystyle\\lim_{x \\to \\infty} \\dfrac{x^2 + 1}{3x^2 - x}$" },
+              { label: "(c)", text: "$\\displaystyle\\lim_{x \\to 1} \\dfrac{x^3 - 1}{x - 1}$" }
+            ],
+            answers: [
+              { label: "(a)", text: "Form: $\\frac{0}{0}$. L'Hôpital: $\\lim_{x\\to 0}\\dfrac{3\\cos 3x}{1} = 3\\cos 0 = 3$." },
+              { label: "(b)", text: "Form: $\\frac{\\infty}{\\infty}$. L'Hôpital: $\\lim_{x\\to\\infty}\\dfrac{2x}{6x-1}$. Still $\\frac{\\infty}{\\infty}$. Apply again: $\\lim_{x\\to\\infty}\\dfrac{2}{6} = \\dfrac{1}{3}$." },
+              { label: "(c)", text: "Form: $\\frac{0}{0}$. L'Hôpital: $\\lim_{x\\to 1}\\dfrac{3x^2}{1} = 3$. (Check: factor gives $\\dfrac{(x-1)(x^2+x+1)}{x-1} = x^2+x+1 \\to 3$. ✓)" }
+            ]
+          },
+          {
+            context: "Context: Repeated applications",
+            stem: "Evaluate each limit. Apply L'Hôpital's Rule as many times as needed, verifying the form at each step.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\lim_{x \\to 0} \\dfrac{1 - \\cos x}{x^2}$" },
+              { label: "(b)", text: "$\\displaystyle\\lim_{x \\to \\infty} \\dfrac{\\ln x}{\\sqrt{x}}$" },
+              { label: "(c)", text: "$\\displaystyle\\lim_{x \\to 0} \\dfrac{e^x - 1 - x}{x^2}$" }
+            ],
+            answers: [
+              { label: "(a)", text: "Form $\\frac{0}{0}$. Apply: $\\dfrac{\\sin x}{2x}$. Still $\\frac{0}{0}$. Apply again: $\\dfrac{\\cos x}{2} \\to \\dfrac{1}{2}$." },
+              { label: "(b)", text: "Form $\\frac{\\infty}{\\infty}$. Apply: $\\dfrac{1/x}{1/(2\\sqrt{x})} = \\dfrac{2\\sqrt{x}}{x} = \\dfrac{2}{\\sqrt{x}} \\to 0$." },
+              { label: "(c)", text: "Form $\\frac{0}{0}$. Apply: $\\dfrac{e^x - 1}{2x}$. Still $\\frac{0}{0}$. Apply again: $\\dfrac{e^x}{2} \\to \\dfrac{1}{2}$." }
+            ]
+          },
+          {
+            context: "Context: Recognizing the derivative in disguise",
+            stem: "Each limit below is a derivative in limit form. Evaluate using L'Hôpital's Rule, then confirm by identifying which derivative it computes.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\lim_{h \\to 0} \\dfrac{(2+h)^5 - 32}{h}$" },
+              { label: "(b)", text: "$\\displaystyle\\lim_{x \\to \\pi/6} \\dfrac{\\sin x - 1/2}{x - \\pi/6}$" },
+              { label: "(c)", text: "$\\displaystyle\\lim_{x \\to 4} \\dfrac{xe^x - 4e^4}{x - 4}$" }
+            ],
+            answers: [
+              { label: "(a)", text: "Form $\\frac{0}{0}$. L'Hôpital: $\\lim_{h\\to 0} 5(2+h)^4 = 5(16) = 80$. This is $f'(2)$ where $f(x) = x^5$." },
+              { label: "(b)", text: "Form $\\frac{0}{0}$. L'Hôpital: $\\lim_{x\\to\\pi/6}\\cos x = \\cos(\\pi/6) = \\dfrac{\\sqrt{3}}{2}$. This is $f'(\\pi/6)$ where $f(x) = \\sin x$." },
+              { label: "(c)", text: "Form $\\frac{0}{0}$. L'Hôpital: $\\lim_{x\\to 4}(e^x + xe^x) = e^4 + 4e^4 = 5e^4$. This is $f'(4)$ where $f(x) = xe^x$." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE D-2 ──────────────────────────────────────────
+      {
+        icon: "♾️",
+        title: "Other Indeterminate Forms",
+        sub: "$0 \\cdot \\infty$ and $\\infty - \\infty$ — rewrite first, then apply L'Hôpital",
+        topics: "4.7",
+        problems: [
+          {
+            context: "Context: Rewriting indeterminate products and differences",
+            stem: "Evaluate each limit.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\lim_{x \\to 0^+} x \\ln x$" },
+              { label: "(b)", text: "$\\displaystyle\\lim_{x \\to \\infty} (x - \\ln x)$" },
+              { label: "(c)", text: "$\\displaystyle\\lim_{x \\to 0^+} \\dfrac{1}{x} - \\dfrac{1}{\\sin x}$" }
+            ],
+            answers: [
+              { label: "(a)", text: "Rewrite: $x\\ln x = \\dfrac{\\ln x}{1/x}$. Form $\\frac{-\\infty}{\\infty}$. L'Hôpital: $\\dfrac{1/x}{-1/x^2} = -x \\to 0$." },
+              { label: "(b)", text: "Factor: $x - \\ln x = x\\!\\left(1 - \\dfrac{\\ln x}{x}\\right)$. As $x\\to\\infty$: $\\dfrac{\\ln x}{x}\\to 0$ (apply L'Hôpital to this piece: $\\dfrac{1/x}{1}\\to 0$). So $x-\\ln x \\approx x(1) \\to +\\infty$. The limit is $+\\infty$ — not truly indeterminate, it diverges." },
+              { label: "(c)", text: "Combine: $\\dfrac{1}{x} - \\dfrac{1}{\\sin x} = \\dfrac{\\sin x - x}{x\\sin x}$. Form $\\frac{0}{0}$. Apply once: $\\dfrac{\\cos x - 1}{\\sin x + x\\cos x}$. Still $\\frac{0}{0}$. Apply again: $\\dfrac{-\\sin x}{2\\cos x - x\\sin x} \\to \\dfrac{0}{2} = 0$." }
+            ]
+          },
+          {
+            context: "Context: Products involving exponentials and logs",
+            stem: "Evaluate each limit.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\lim_{x \\to \\infty} x^2 e^{-x}$" },
+              { label: "(b)", text: "$\\displaystyle\\lim_{x \\to 0^+} x^2 \\ln x$" },
+              { label: "(c)", text: "$\\displaystyle\\lim_{x \\to 0} \\dfrac{\\tan x - x}{x^3}$" }
+            ],
+            answers: [
+              { label: "(a)", text: "Rewrite as $\\dfrac{x^2}{e^x}$. Form $\\frac{\\infty}{\\infty}$. Apply: $\\dfrac{2x}{e^x}$. Apply again: $\\dfrac{2}{e^x} \\to 0$." },
+              { label: "(b)", text: "Rewrite as $\\dfrac{\\ln x}{1/x^2}$. Form $\\frac{-\\infty}{\\infty}$. L'Hôpital: $\\dfrac{1/x}{-2/x^3} = \\dfrac{-x^2}{2} \\to 0$." },
+              { label: "(c)", text: "Form $\\frac{0}{0}$. Apply: $\\dfrac{\\sec^2 x - 1}{3x^2}$. Still $\\frac{0}{0}$. Apply: $\\dfrac{2\\sec^2\\!x\\tan x}{6x}$. Still $\\frac{0}{0}$. Apply: $\\dfrac{2(2\\sec^2\\!x\\tan^2\\!x + \\sec^4\\!x)}{6}$. At $x=0$: $\\dfrac{2(0+1)}{6} = \\dfrac{1}{3}$." }
+            ]
+          },
+          {
+            context: "Context: Connecting to known results",
+            stem: "Use L'Hôpital's Rule (or limit laws) to evaluate each limit, then connect to something you already know.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\lim_{x \\to 0} \\dfrac{\\sin x}{x}$ — standard result, confirmed via L'Hôpital" },
+              { label: "(b)", text: "$\\displaystyle\\lim_{x \\to 0} \\dfrac{e^x - 1}{x}$ — connect to the definition of $e$" },
+              { label: "(c)", text: "$\\displaystyle\\lim_{x \\to 0} \\dfrac{\\ln(1+x)}{x}$ — interpret as a derivative" }
+            ],
+            answers: [
+              { label: "(a)", text: "Form $\\frac{0}{0}$. L'Hôpital: $\\dfrac{\\cos x}{1} \\to 1$. This confirms the foundational trigonometric limit." },
+              { label: "(b)", text: "Form $\\frac{0}{0}$. L'Hôpital: $\\dfrac{e^x}{1} \\to 1$. This is the definition of the derivative of $e^x$ at $x=0$: $\\frac{d}{dx}e^x\\big|_{x=0} = e^0 = 1$." },
+              { label: "(c)", text: "Form $\\frac{0}{0}$. L'Hôpital: $\\dfrac{1/(1+x)}{1} \\to 1$. Alternatively: this is $\\frac{d}{dx}\\ln(1+x)\\big|_{x=0} = \\frac{1}{1+0} = 1$ — the limit is the derivative of $\\ln(1+x)$ at $x=0$." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE D-3 ──────────────────────────────────────────
+      {
+        icon: "🚫",
+        title: "When L'Hôpital Doesn't Apply",
+        sub: "Non-indeterminate forms, oscillation, and common errors",
+        topics: "4.7",
+        problems: [
+          {
+            context: "Context: Verify the form before applying",
+            stem: "Analyze each limit carefully. Apply L'Hôpital's Rule only when appropriate.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\lim_{x \\to 2} \\dfrac{x^2 - 4}{x^2 - 3x + 2}$ — is this indeterminate? Evaluate correctly." },
+              { label: "(b)", text: "$\\displaystyle\\lim_{x \\to \\infty} \\dfrac{\\sin x}{x}$ — does L'Hôpital apply? Evaluate using another method." },
+              { label: "(c)", text: "A student applies L'Hôpital to $\\displaystyle\\lim_{x \\to 1} \\dfrac{x^2+1}{x+1}$ and gets $\\dfrac{2x}{1} \\to 2$. Identify the error." }
+            ],
+            answers: [
+              { label: "(a)", text: "Form: $\\frac{0}{0}$ at $x=2$. L'Hôpital: $\\lim_{x\\to 2}\\dfrac{2x}{2x-3} = \\dfrac{4}{1} = 4$. (Or factor: $\\dfrac{(x-2)(x+2)}{(x-2)(x-1)} = \\dfrac{x+2}{x-1} \\to 4$.)" },
+              { label: "(b)", text: "As $x\\to\\infty$, the numerator oscillates between $-1$ and $1$ — the ratio $\\frac{\\cos x}{1}$ does not converge, so L'Hôpital's Rule does not apply here. Use the Squeeze Theorem: $-\\dfrac{1}{x} \\leq \\dfrac{\\sin x}{x} \\leq \\dfrac{1}{x} \\to 0$. Limit is $0$." },
+              { label: "(c)", text: "At $x=1$: numerator $= 2$, denominator $= 2$, so the limit is $\\frac{2}{2} = 1$ — not indeterminate. L'Hôpital's Rule requires a $\\frac{0}{0}$ or $\\frac{\\infty}{\\infty}$ form. The student applied it to a non-indeterminate limit, producing an incorrect answer." }
+            ]
+          },
+          {
+            context: "Context: Common L'Hôpital errors to avoid",
+            stem: "Each of the following contains an error. Identify the mistake and find the correct limit.",
+            parts: [
+              { label: "(a)", text: "Claim: $\\displaystyle\\lim_{x\\to 0}\\dfrac{x+\\sin x}{x} \\overset{L'H}{=} \\lim_{x\\to 0}\\dfrac{1+\\cos x}{1} = 2$. Is this correct? (Hint: check the form.)" },
+              { label: "(b)", text: "Claim: $\\displaystyle\\lim_{x\\to 0}\\dfrac{\\sin x}{x^2} \\overset{L'H}{=} \\lim_{x\\to 0}\\dfrac{\\cos x}{2x} = \\dfrac{1}{0}$, so the limit is $\\infty$. What's wrong?" },
+              { label: "(c)", text: "Claim: $\\displaystyle\\lim_{x\\to\\infty}\\dfrac{e^x}{e^x + 1} \\overset{L'H}{=} \\lim_{x\\to\\infty}\\dfrac{e^x}{e^x} = 1$. The answer is right — but was L'Hôpital needed?" }
+            ],
+            answers: [
+              { label: "(a)", text: "The form is $\\frac{0}{0}$, so L'Hôpital does apply and the algebra is correct — but there's a simpler approach: $\\dfrac{x+\\sin x}{x} = 1 + \\dfrac{\\sin x}{x} \\to 1 + 1 = 2$. The claimed answer of 2 is correct, but using L'Hôpital was unnecessary." },
+              { label: "(b)", text: "After one application, the resulting limit $\\dfrac{\\cos x}{2x}$ is of the form $\\dfrac{1}{0}$, not $\\frac{0}{0}$ or $\\frac{\\infty}{\\infty}$ — so L'Hôpital cannot be applied a second time. The limit $\\lim_{x\\to 0^+}\\dfrac{\\cos x}{2x} = +\\infty$, meaning the original limit is $+\\infty$ (confirmed by noting $\\sin x \\approx x$ near 0, so $\\frac{\\sin x}{x^2} \\approx \\frac{1}{x} \\to \\infty$)." },
+              { label: "(c)", text: "L'Hôpital gives the right answer, but the form $\\frac{\\infty}{\\infty}$ makes it technically valid. However, dividing numerator and denominator by $e^x$ gives $\\dfrac{1}{1 + e^{-x}} \\to 1$ immediately — no L'Hôpital needed. Using L'Hôpital when simpler methods exist is correct but inefficient." }
+            ]
+          },
+          {
+            context: "Context: L'Hôpital fails — oscillation",
+            stem: "Consider $\\displaystyle\\lim_{x\\to\\infty} \\dfrac{x + \\sin x}{x}$.",
+            parts: [
+              { label: "(a)", text: "What form does this limit take as $x\\to\\infty$? Does L'Hôpital apply?" },
+              { label: "(b)", text: "If you attempt L'Hôpital anyway, what do you get? Why is the result unreliable?" },
+              { label: "(c)", text: "Find the correct limit using a valid method and explain why L'Hôpital's Rule failed here." }
+            ],
+            answers: [
+              { label: "(a)", text: "Form $\\frac{\\infty}{\\infty}$, so L'Hôpital technically appears to apply. However, a key hypothesis — that the limit of the ratio of derivatives must exist — must hold for the conclusion to be valid." },
+              { label: "(b)", text: "Applying L'Hôpital: $\\dfrac{1+\\cos x}{1}$. As $x\\to\\infty$, $\\cos x$ oscillates between $-1$ and $1$ — this limit does not exist. L'Hôpital gives no conclusion when the limit of derivatives fails to exist." },
+              { label: "(c)", text: "Correct method: $\\dfrac{x+\\sin x}{x} = 1 + \\dfrac{\\sin x}{x} \\to 1 + 0 = 1$ (using the known result $\\frac{\\sin x}{x}\\to 0$). L'Hôpital failed because the condition \"the limit of $\\frac{f'}{g'}$ exists\" was not met — the theorem requires this, and the form alone is not sufficient." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE D-4 ──────────────────────────────────────────
+      {
+        icon: "🎯",
+        title: "Mixed Practice",
+        sub: "Harder applications; AP-level synthesis",
+        topics: "4.7",
+        problems: [
+          {
+            context: "Context: L'Hôpital meets optimization",
+            stem: "A function is defined by $f(x) = \\dfrac{\\ln x}{x}$ for $x > 0$.",
+            parts: [
+              { label: "(a)", text: "Find the absolute maximum of $f$ on $(0,\\infty)$." },
+              { label: "(b)", text: "Evaluate $\\displaystyle\\lim_{x\\to 0^+} f(x)$ and $\\displaystyle\\lim_{x\\to\\infty} f(x)$ using L'Hôpital's Rule where applicable." },
+              { label: "(c)", text: "Describe the complete behavior of $f$: increasing/decreasing intervals, maximum, and end behavior." }
+            ],
+            answers: [
+              { label: "(a)", text: "$f'(x) = \\dfrac{1 - \\ln x}{x^2}$. $f' = 0$ at $x = e$; $f' > 0$ for $x < e$, $f' < 0$ for $x > e$: absolute max at $x = e$. $f(e) = \\dfrac{1}{e}$." },
+              { label: "(b)", text: "$\\lim_{x\\to 0^+}\\dfrac{\\ln x}{x}$: form $\\frac{-\\infty}{0^+}$ — not indeterminate, limit is $-\\infty$. $\\lim_{x\\to\\infty}\\dfrac{\\ln x}{x}$: form $\\frac{\\infty}{\\infty}$. L'Hôpital: $\\dfrac{1/x}{1} \\to 0$." },
+              { label: "(c)", text: "$f$ increases from $-\\infty$ (as $x\\to 0^+$) through zero at $x=1$, peaks at $\\left(e,\\,\\tfrac{1}{e}\\right)$, then decreases toward 0. Positive on $(1,\\infty)$, negative on $(0,1)$. Single global maximum at $x = e$." }
+            ]
+          },
+          {
+            context: "Context: AP-style limits requiring strategy",
+            stem: "Evaluate each limit. Identify the form, choose the right approach (L'Hôpital or algebraic), and show all work.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\lim_{x \\to 0} \\dfrac{e^{2x} - 1 - 2x}{x^2}$" },
+              { label: "(b)", text: "$\\displaystyle\\lim_{x \\to \\infty} \\left(\\sqrt{x^2 + x} - x\\right)$ &ensp; (form: $\\infty - \\infty$)" },
+              { label: "(c)", text: "$\\displaystyle\\lim_{x \\to 0^+} (\\sin x)(\\ln x)$ &ensp; (form: $0 \\cdot (-\\infty)$)" }
+            ],
+            answers: [
+              { label: "(a)", text: "Form $\\frac{0}{0}$. Apply: $\\dfrac{2e^{2x}-2}{2x}$. Still $\\frac{0}{0}$. Apply: $\\dfrac{4e^{2x}}{2} = 2e^{2x} \\to 2$." },
+              { label: "(b)", text: "Rationalize: $\\sqrt{x^2+x} - x = \\dfrac{x}{\\sqrt{x^2+x}+x} = \\dfrac{1}{\\sqrt{1+1/x}+1} \\to \\dfrac{1}{2}$ as $x\\to\\infty$. (L'Hôpital also works after rewriting, but algebra is faster.)" },
+              { label: "(c)", text: "Rewrite: $\\dfrac{\\ln x}{1/\\sin x}$. Form $\\frac{-\\infty}{\\infty}$. L'Hôpital: $\\dfrac{1/x}{-\\cos x/\\sin^2 x} = \\dfrac{-\\sin^2 x}{x\\cos x}$. As $x\\to 0^+$: $\\dfrac{-\\sin^2 x}{x\\cos x} \\approx \\dfrac{-x^2}{x} = -x \\to 0$." }
+            ]
+          },
+          {
+            context: "Context: Scope note — forms not on the AP exam",
+            stem: "<em>Note:</em> Forms like $1^\\infty$, $0^0$, and $\\infty^0$ require taking a logarithm before L'Hôpital applies (e.g. letting $L = \\lim x^x$ then evaluating $\\lim x\\ln x$ first). These forms are <strong>not tested on the AP BC Calculus exam</strong>. The problems below use only AP-covered forms.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\lim_{x \\to 0} \\dfrac{3^x - 1}{x}$ &ensp; (AP form: $0/0$)" },
+              { label: "(b)", text: "$\\displaystyle\\lim_{x \\to \\infty} x\\sin\\!\\left(\\dfrac{1}{x}\\right)$ &ensp; (AP form: $\\infty \\cdot 0$)" },
+              { label: "(c)", text: "$\\displaystyle\\lim_{x \\to 0} \\dfrac{\\cos x - 1 + x^2/2}{x^4}$ &ensp; (AP form: $0/0$; requires patience)" }
+            ],
+            answers: [
+              { label: "(a)", text: "Form $\\frac{0}{0}$. L'Hôpital: $\\dfrac{3^x \\ln 3}{1} \\to \\ln 3 \\approx 1.099$. (This is the derivative of $3^x$ at $x=0$.)" },
+              { label: "(b)", text: "Let $u = 1/x \\to 0^+$. Limit becomes $\\dfrac{\\sin u}{u} \\to 1$. Alternatively, rewrite as $\\dfrac{\\sin(1/x)}{1/x}$ and apply L'Hôpital (form $\\frac{0}{0}$ as $x\\to\\infty$): $\\dfrac{(-1/x^2)\\cos(1/x)}{-1/x^2} = \\cos(1/x) \\to 1$." },
+              { label: "(c)", text: "Form $\\frac{0}{0}$. Apply: $\\dfrac{-\\sin x + x}{4x^3}$. Still $\\frac{0}{0}$. Apply: $\\dfrac{-\\cos x + 1}{12x^2}$. Still $\\frac{0}{0}$. Apply: $\\dfrac{\\sin x}{24x}$. Still $\\frac{0}{0}$. Apply: $\\dfrac{\\cos x}{24} \\to \\dfrac{1}{24}$." }
+            ]
+          }
+        ]
+      }
+
+    ]
+  }
+
+]; // end columns
+
+
+/* ============================================================
+   RENDER BOARD
+============================================================ */
+function renderBoard() {
+  const grid = document.getElementById('board-grid');
+  grid.innerHTML = '';
+
+  columns.forEach((col, ci) => {
+    const colGroup = document.createElement('div');
+    colGroup.className = 'col-group';
+
+    // Header
+    const header = document.createElement('div');
+    header.className = `col-header ${col.headerClass}`;
+    header.style.gridColumn = ci + 1;
+    header.style.gridRow = 1;
+    header.innerHTML = `
+      <div class="col-header-num">${col.label}</div>
+      <h2>${col.title}</h2>
+      <div class="col-topics">${col.topics}</div>
+    `;
+    colGroup.appendChild(header);
+
+    // Tiles
+    col.tiles.forEach((tile, ti) => {
+      const tileEl = document.createElement('div');
+      tileEl.className = `tile ${col.tileClass}`;
+      tileEl.style.gridColumn = ci + 1;
+      tileEl.style.gridRow = ti + 2;
+      tileEl.setAttribute('role', 'button');
+      tileEl.setAttribute('tabindex', '0');
+      tileEl.setAttribute('aria-label', tile.title);
+      tileEl.innerHTML = `
+        <span class="tile-icon">${tile.icon}</span>
+        <div class="tile-title">${tile.title}</div>
+        <div class="tile-sub">${tile.sub}</div>
+        <div class="tile-topics">${tile.topics}</div>
+        <span class="tile-arrow">↗</span>
+      `;
+      tileEl.addEventListener('click', () => openModal(ci, ti));
+      tileEl.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') openModal(ci, ti); });
+      colGroup.appendChild(tileEl);
+    });
+
+    grid.appendChild(colGroup);
+  });
+}
+
+
+/* ============================================================
+   MODAL
+============================================================ */
+function openModal(colIdx, tileIdx) {
+  const col  = columns[colIdx];
+  const tile = col.tiles[tileIdx];
+
+  const accentEl = document.getElementById('modal-accent');
+  accentEl.className = 'modal-header-accent';
+  accentEl.style.background = col.accentVar;
+
+  const labelEl = document.getElementById('modal-col-label');
+  labelEl.style.color = col.accentVar;
+  labelEl.textContent = col.label + ' · ' + col.title;
+
+  document.getElementById('modal-title').textContent = tile.title;
+
+  const body = document.getElementById('modal-body');
+  body.innerHTML = '';
+
+  // Optional video section
+  if (tile.video) {
+    const videoSection = document.createElement('div');
+    videoSection.className = 'video-section';
+    videoSection.innerHTML = `
+      <div class="video-label">📹 Watch First</div>
+      <a href="${tile.video.url}" target="_blank" rel="noopener" class="video-link">
+        ${tile.video.title} — mathispower4u
+        <span class="video-icon">▶</span>
+      </a>
+    `;
+    body.appendChild(videoSection);
+  }
+
+  tile.problems.forEach((prob, pi) => {
+    const block = document.createElement('div');
+    block.className = 'problem-block';
+
+    let partsHTML = '';
+    if (prob.parts && prob.parts.length) {
+      partsHTML = `<ul class="problem-parts">` +
+        prob.parts.map(p => `<li data-part="${p.label}">${p.text}</li>`).join('') +
+        `</ul>`;
+    }
+
+    let answersHTML = '';
+    if (prob.answers && prob.answers.length) {
+      answersHTML = prob.answers.map(a =>
+        `<div class="answer-part"><span class="answer-part-label">${a.label}</span>${a.text}</div>`
+      ).join('');
+    }
+
+    const answerId = `ans-${colIdx}-${tileIdx}-${pi}`;
+    const toggleId = `tog-${colIdx}-${tileIdx}-${pi}`;
+
+    block.innerHTML = `
+      <div class="problem-num">Problem ${pi + 1} of ${tile.problems.length}</div>
+      ${prob.context ? `<div class="problem-context">${prob.context}</div>` : ''}
+      <div class="problem-text">${prob.stem}</div>
+      ${partsHTML}
+      <button class="answer-toggle" id="${toggleId}" onclick="toggleAnswer('${answerId}','${toggleId}')">
+        <span class="toggle-icon">▼</span> Show Answer
+      </button>
+      <div class="answer-panel" id="${answerId}">
+        ${answersHTML}
+      </div>
+    `;
+    body.appendChild(block);
+  });
+
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('desmos-fab').classList.add('visible');
+
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([body]).catch(err => console.log(err));
+  }
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+  document.getElementById('desmos-fab').classList.remove('visible');
+}
+
+function toggleAnswer(panelId, toggleId) {
+  const panel  = document.getElementById(panelId);
+  const toggle = document.getElementById(toggleId);
+  const isOpen = panel.classList.contains('open');
+  panel.classList.toggle('open');
+  toggle.classList.toggle('open');
+  toggle.innerHTML = isOpen
+    ? '<span class="toggle-icon">▼</span> Show Answer'
+    : '<span class="toggle-icon">▼</span> Hide Answer';
+}
+
+
+/* ============================================================
+   RANDOM PRACTICE
+============================================================ */
+function openRandomProblem() {
+  const colIdx  = Math.floor(Math.random() * columns.length);
+  const col     = columns[colIdx];
+  const tileIdx = Math.floor(Math.random() * col.tiles.length);
+  const tile    = col.tiles[tileIdx];
+  const probIdx = Math.floor(Math.random() * tile.problems.length);
+  const prob    = tile.problems[probIdx];
+
+  const accentEl = document.getElementById('modal-accent');
+  accentEl.className = 'modal-header-accent random-accent';
+  accentEl.style.background = '';
+
+  const labelEl = document.getElementById('modal-col-label');
+  labelEl.style.color = 'var(--text-muted)';
+  labelEl.textContent = 'BC Calculus · Unit 4: Contextual Applications';
+
+  document.getElementById('modal-title').textContent = 'General Practice';
+
+  const body = document.getElementById('modal-body');
+  body.innerHTML = '';
+
+  const block = document.createElement('div');
+  block.className = 'problem-block';
+  block.style.borderBottom = 'none';
+  block.style.marginBottom = '0';
+  block.style.paddingBottom = '0';
+
+  let partsHTML = '';
+  if (prob.parts && prob.parts.length) {
+    partsHTML = `<ul class="problem-parts">` +
+      prob.parts.map(p => `<li data-part="${p.label}">${p.text}</li>`).join('') +
+      `</ul>`;
+  }
+
+  let answersHTML = '';
+  if (prob.answers && prob.answers.length) {
+    answersHTML = prob.answers.map(a =>
+      `<div class="answer-part"><span class="answer-part-label">${a.label}</span>${a.text}</div>`
+    ).join('');
+  }
+
+  block.innerHTML = `
+    <div class="problem-num">🎲 General Practice</div>
+    ${prob.context ? `<div class="problem-context">${prob.context}</div>` : ''}
+    <div class="problem-text">${prob.stem}</div>
+    ${partsHTML}
+    <button class="answer-toggle" id="rand-tog" onclick="toggleAnswer('rand-ans','rand-tog')">
+      <span class="toggle-icon">▼</span> Show Answer
+    </button>
+    <div class="answer-panel" id="rand-ans">
+      ${answersHTML}
+    </div>
+  `;
+
+  body.appendChild(block);
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('desmos-fab').classList.add('visible');
+
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([body]).catch(err => console.log(err));
+  }
+}
+
+document.getElementById('random-btn').addEventListener('click', openRandomProblem);
+
+
+/* ============================================================
+   DESMOS BUTTON
+============================================================ */
+document.getElementById('desmos-fab').addEventListener('click', () => {
+  window.open('https://www.desmos.com/calculator', '_blank', 'width=1000,height=700,noopener,noreferrer');
+});
+
+
+/* ============================================================
+   EVENT LISTENERS
+============================================================ */
+document.getElementById('modal-close').addEventListener('click', closeModal);
+document.getElementById('modal-overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+/* ============================================================
+   INIT — renderBoard() called inside MathJax.startup.ready()
+============================================================ */
+</script>
+</body>
+</html>

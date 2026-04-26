@@ -761,7 +761,8 @@
       <span class="meta-pill">📈 Function Behavior</span>
       <span class="meta-pill">🔗 Connecting f, f′, f″</span>
       <span class="meta-pill">🎯 Optimization</span>
-      <span class="meta-pill">Topics 5.1 – 5.12</span>
+      <span class="meta-pill">🔗 Implicit Differentiation</span>
+      <span class="meta-pill">Topics 5.1 – 5.11</span>
     </div>
   </div>
 </header>
@@ -1627,52 +1628,51 @@ const columns = [
 
       // ── TILE 4-C ──────────────────────────────────────────
       {
-        icon: "🏥",
-        title: "L'Hôpital's Rule",
-        sub: "Evaluating indeterminate limits using derivatives",
-        topics: "5.12",
-        video: { title: "L'Hôpital's Rule — mathispower4u", url: "https://www.youtube.com/watch?v=0xqeXSEHppM" },
+        icon: "🔗",
+        title: "Implicit Differentiation",
+        sub: "Finding dy/dx when y is defined implicitly",
+        topics: "5.11",
         problems: [
           {
-            context: "Context: Basic 0/0 and ∞/∞ forms",
-            stem: "Evaluate each limit using L'Hôpital's Rule. Verify the indeterminate form first.",
+            context: "Context: Finding the slope of an implicitly defined curve",
+            stem: "Consider the curve defined by $x^2 + y^2 = 25$.",
             parts: [
-              { label: "(a)", text: "$\\displaystyle\\lim_{x \\to 0} \\dfrac{\\sin 3x}{x}$" },
-              { label: "(b)", text: "$\\displaystyle\\lim_{x \\to \\infty} \\dfrac{x^2 + 1}{3x^2 - x}$" },
-              { label: "(c)", text: "$\\displaystyle\\lim_{x \\to 1} \\dfrac{x^3 - 1}{x - 1}$" }
+              { label: "(a)", text: "Use implicit differentiation to find $\\dfrac{dy}{dx}$." },
+              { label: "(b)", text: "Find the slope of the tangent line at the point $(3, 4)$. Verify that $(3,4)$ lies on the curve." },
+              { label: "(c)", text: "Find all points on the curve where the tangent line is horizontal and where it is vertical." }
             ],
             answers: [
-              { label: "(a)", text: "Form: $\\frac{0}{0}$. L'Hôpital: $\\lim_{x\\to 0}\\dfrac{3\\cos 3x}{1} = 3\\cos 0 = 3$." },
-              { label: "(b)", text: "Form: $\\frac{\\infty}{\\infty}$. L'Hôpital: $\\lim_{x\\to\\infty}\\dfrac{2x}{6x-1}$. Still $\\frac{\\infty}{\\infty}$. Apply again: $\\lim_{x\\to\\infty}\\dfrac{2}{6} = \\dfrac{1}{3}$." },
-              { label: "(c)", text: "Form: $\\frac{0}{0}$. L'Hôpital: $\\lim_{x\\to 1}\\dfrac{3x^2}{1} = 3$. (Alternatively, factor: $\\frac{(x-1)(x^2+x+1)}{x-1} = x^2+x+1 \\to 3$.)" }
+              { label: "(a)", text: "Differentiating both sides with respect to $x$: $2x + 2y\\dfrac{dy}{dx} = 0 \\Rightarrow \\dfrac{dy}{dx} = -\\dfrac{x}{y}$." },
+              { label: "(b)", text: "$3^2 + 4^2 = 9+16 = 25$ ✓. Slope at $(3,4)$: $\\dfrac{dy}{dx} = -\\dfrac{3}{4}$." },
+              { label: "(c)", text: "Horizontal tangent: $\\dfrac{dy}{dx} = 0 \\Rightarrow x = 0$. Points: $(0, 5)$ and $(0,-5)$. Vertical tangent: $\\dfrac{dy}{dx}$ undefined $\\Rightarrow y = 0$. Points: $(5, 0)$ and $(-5, 0)$." }
             ]
           },
           {
-            context: "Context: Other indeterminate forms",
-            stem: "Evaluate each limit. First rewrite as $0/0$ or $\\infty/\\infty$ before applying L'Hôpital's Rule.",
+            context: "Context: Implicit differentiation with a product",
+            stem: "The curve $x^3 + y^3 = 6xy$ is called the Folium of Descartes.",
             parts: [
-              { label: "(a)", text: "$\\displaystyle\\lim_{x \\to 0^+} x \\ln x$ &nbsp;&nbsp; (form: $0 \\cdot (-\\infty)$)" },
-              { label: "(b)", text: "$\\displaystyle\\lim_{x \\to \\infty} (x - \\ln x)$ &nbsp;&nbsp; (form: $\\infty - \\infty$... but think first)" },
-              { label: "(c)", text: "$\\displaystyle\\lim_{x \\to 0} \\dfrac{e^x - 1 - x}{x^2}$ &nbsp;&nbsp; (form: $0/0$)" }
+              { label: "(a)", text: "Find $\\dfrac{dy}{dx}$ by implicit differentiation." },
+              { label: "(b)", text: "Find the slope of the tangent line at the point $(3, 3)$." },
+              { label: "(c)", text: "Find all points on the curve where the tangent line is horizontal." }
             ],
             answers: [
-              { label: "(a)", text: "Rewrite: $x\\ln x = \\dfrac{\\ln x}{1/x}$. Form $\\frac{-\\infty}{\\infty}$. L'Hôpital: $\\lim_{x\\to 0^+}\\dfrac{1/x}{-1/x^2} = \\lim_{x\\to 0^+}(-x) = 0$." },
-              { label: "(b)", text: "Factor: $x-\\ln x = x(1 - \\frac{\\ln x}{x})$. As $x\\to\\infty$: $\\frac{\\ln x}{x}\\to 0$ by L'Hôpital (apply to this piece: $\\frac{1/x}{1}\\to 0$). So $x-\\ln x \\approx x(1-0) \\to \\infty$. The limit is $+\\infty$ (not an indeterminate form — it diverges)." },
-              { label: "(c)", text: "Form $\\frac{0}{0}$. L'Hôpital once: $\\lim\\dfrac{e^x-1}{2x}$. Still $\\frac{0}{0}$. Again: $\\lim\\dfrac{e^x}{2} = \\dfrac{1}{2}$." }
+              { label: "(a)", text: "Differentiating: $3x^2 + 3y^2\\dfrac{dy}{dx} = 6y + 6x\\dfrac{dy}{dx}$. Collect $\\dfrac{dy}{dx}$ terms: $\\dfrac{dy}{dx}(3y^2 - 6x) = 6y - 3x^2 \\Rightarrow \\dfrac{dy}{dx} = \\dfrac{6y-3x^2}{3y^2-6x} = \\dfrac{2y-x^2}{y^2-2x}$." },
+              { label: "(b)", text: "Verify: $27+27 = 54 = 6(3)(3)$ ✓. $\\dfrac{dy}{dx}\\bigg|_{(3,3)} = \\dfrac{6-9}{9-6} = \\dfrac{-3}{3} = -1$." },
+              { label: "(c)", text: "Horizontal tangent: $2y - x^2 = 0 \\Rightarrow y = \\dfrac{x^2}{2}$. Substitute into the curve: $x^3 + \\dfrac{x^6}{8} = 6x\\cdot\\dfrac{x^2}{2} = 3x^3 \\Rightarrow \\dfrac{x^6}{8} = 2x^3 \\Rightarrow x^3 = 16 \\Rightarrow x = 2^{4/3}$. Then $y = \\dfrac{x^2}{2} = 2^{2/3}$. Horizontal tangent at $\\left(2^{4/3},\\, 2^{2/3}\\right) \\approx (2.52,\\, 1.59)$." }
             ]
           },
           {
-            context: "Context: When L'Hôpital's Rule does not apply",
-            stem: "Analyze each limit carefully. Apply L'Hôpital's Rule only when appropriate.",
+            context: "Context: Second derivative implicitly",
+            stem: "The curve $x^2 - xy + y^2 = 3$ passes through $(1, -1)$.",
             parts: [
-              { label: "(a)", text: "$\\displaystyle\\lim_{x \\to 2} \\dfrac{x^2 - 4}{x^2 - 3x + 2}$ — is this indeterminate? Evaluate correctly." },
-              { label: "(b)", text: "$\\displaystyle\\lim_{x \\to \\infty} \\dfrac{\\sin x}{x}$ — does L'Hôpital apply? Evaluate using another method." },
-              { label: "(c)", text: "A student applies L'Hôpital to $\\displaystyle\\lim_{x \\to 1} \\dfrac{x^2 + 1}{x + 1}$ and gets $\\dfrac{2x}{1} \\to 2$. Identify the error and find the correct limit." }
+              { label: "(a)", text: "Find $\\dfrac{dy}{dx}$ by implicit differentiation." },
+              { label: "(b)", text: "Find $\\dfrac{dy}{dx}$ at $(1, -1)$ and write the equation of the tangent line there." },
+              { label: "(c)", text: "Find $\\dfrac{d^2y}{dx^2}$ at $(1, -1)$." }
             ],
             answers: [
-              { label: "(a)", text: "Form: $\\frac{0}{0}$ (both numerator and denominator are 0 at $x=2$). L'Hôpital: $\\lim_{x\\to 2}\\dfrac{2x}{2x-3} = \\dfrac{4}{1} = 4$. Or factor: $\\dfrac{(x-2)(x+2)}{(x-2)(x-1)} = \\dfrac{x+2}{x-1} \\to \\dfrac{4}{1} = 4$." },
-              { label: "(b)", text: "Form: $\\frac{\\sin x}{x}$. As $x\\to\\infty$, the numerator oscillates between $-1$ and $1$ while the denominator grows. L'Hôpital would give $\\frac{\\cos x}{1}$, which doesn't converge — L'Hôpital's Rule requires the limit of the ratio of derivatives to exist. Use the Squeeze Theorem: $-\\frac{1}{x} \\leq \\frac{\\sin x}{x} \\leq \\frac{1}{x} \\to 0$. Limit is $0$." },
-              { label: "(c)", text: "The error: $\\dfrac{x^2+1}{x+1}$ is NOT indeterminate at $x=1$. The numerator $= 2$ and denominator $= 2$ at $x=1$, giving $\\frac{2}{2} = 1$. L'Hôpital's Rule requires an indeterminate form ($0/0$ or $\\infty/\\infty$). The correct limit is simply $\\dfrac{1+1}{1+1} = 1$." }
+              { label: "(a)", text: "Differentiating: $2x - y - x\\dfrac{dy}{dx} + 2y\\dfrac{dy}{dx} = 0 \\Rightarrow \\dfrac{dy}{dx}(2y-x) = y-2x \\Rightarrow \\dfrac{dy}{dx} = \\dfrac{y-2x}{2y-x}$." },
+              { label: "(b)", text: "Verify: $1+1+1=3$ ✓. $\\dfrac{dy}{dx}\\bigg|_{(1,-1)} = \\dfrac{-1-2}{-2-1} = \\dfrac{-3}{-3} = 1$. Tangent line: $y+1 = 1(x-1) \\Rightarrow y = x-2$." },
+              { label: "(c)", text: "Differentiate $\\dfrac{dy}{dx} = \\dfrac{y-2x}{2y-x}$ implicitly using the quotient rule, substituting $y'=1$ at $(1,-1)$: $\\dfrac{d^2y}{dx^2} = \\dfrac{(y'-2)(2y-x)-(y-2x)(2y'-1)}{(2y-x)^2}$. At $(1,-1)$, $y'=1$, $2y-x=-3$: $= \\dfrac{(1-2)(-3)-(-1-2)(2-1)}{9} = \\dfrac{3+3}{9} = \\dfrac{6}{9} = \\dfrac{2}{3}$." }
             ]
           }
         ]
@@ -1681,9 +1681,9 @@ const columns = [
       // ── TILE 4-D ──────────────────────────────────────────
       {
         icon: "🏆",
-        title: "Mixed Practice — Optimization & L'Hôpital's",
-        sub: "AP-style multi-part problems spanning 5.10–5.12",
-        topics: "5.10 – 5.12",
+        title: "Mixed Practice — Optimization & Implicit Differentiation",
+        sub: "AP-style multi-part problems spanning 5.10–5.11",
+        topics: "5.10 – 5.11",
         problems: [
           {
             context: "Context: Optimization — maximum revenue from pricing",
@@ -1714,17 +1714,17 @@ const columns = [
             ]
           },
           {
-            context: "Context: L'Hôpital meets optimization",
-            stem: "A function is defined by $f(x) = \\dfrac{\\ln x}{x}$ for $x > 0$.",
+            context: "Context: Implicit differentiation and tangent lines on a conic",
+            stem: "The ellipse $\\dfrac{x^2}{16} + \\dfrac{y^2}{9} = 1$ passes through the point $(2, \\tfrac{3\\sqrt{3}}{2})$.",
             parts: [
-              { label: "(a)", text: "Find the absolute maximum of $f$ on $(0, \\infty)$ using calculus." },
-              { label: "(b)", text: "Evaluate $\\displaystyle\\lim_{x \\to 0^+} f(x)$ and $\\displaystyle\\lim_{x \\to \\infty} f(x)$ using L'Hôpital's Rule where needed." },
-              { label: "(c)", text: "Use your results to describe the complete behavior of $f$: where it's increasing/decreasing, its maximum, and its end behavior. Sketch a rough graph." }
+              { label: "(a)", text: "Find $\\dfrac{dy}{dx}$ by implicit differentiation." },
+              { label: "(b)", text: "Find the equation of the tangent line at $(2, \\tfrac{3\\sqrt{3}}{2})$." },
+              { label: "(c)", text: "Find all points on the ellipse where the tangent line passes through the origin." }
             ],
             answers: [
-              { label: "(a)", text: "$f'(x) = \\dfrac{(1/x)\\cdot x - \\ln x \\cdot 1}{x^2} = \\dfrac{1-\\ln x}{x^2}$. $f'=0$ at $x=e$. $f''>0$ for $x<e$, $f''<0$ for $x>e$: absolute max at $x=e$. $f(e) = \\dfrac{1}{e}$." },
-              { label: "(b)", text: "$\\lim_{x\\to 0^+}\\dfrac{\\ln x}{x}$: form $\\frac{-\\infty}{0^+} = -\\infty$ — not indeterminate, limit is $-\\infty$. $\\lim_{x\\to\\infty}\\dfrac{\\ln x}{x}$: form $\\frac{\\infty}{\\infty}$. L'Hôpital: $\\lim_{x\\to\\infty}\\dfrac{1/x}{1} = 0$." },
-              { label: "(c)", text: "$f$ increases from $-\\infty$ (as $x\\to 0^+$) through zero at $x=1$, reaches a maximum of $\\frac{1}{e}$ at $x=e$, then decreases toward 0 as $x\\to\\infty$. The function is positive on $(1,\\infty)$, negative on $(0,1)$, with a single global maximum at $(e, 1/e)$." }
+              { label: "(a)", text: "Differentiating: $\\dfrac{2x}{16} + \\dfrac{2y}{9}\\dfrac{dy}{dx} = 0 \\Rightarrow \\dfrac{dy}{dx} = -\\dfrac{9x}{16y}$." },
+              { label: "(b)", text: "At $(2, \\frac{3\\sqrt{3}}{2})$: $\\dfrac{dy}{dx} = -\\dfrac{18}{16 \\cdot \\frac{3\\sqrt{3}}{2}} = -\\dfrac{18}{24\\sqrt{3}} = -\\dfrac{3}{4\\sqrt{3}} = -\\dfrac{\\sqrt{3}}{4}$. Tangent line: $y - \\dfrac{3\\sqrt{3}}{2} = -\\dfrac{\\sqrt{3}}{4}(x-2) \\Rightarrow y = -\\dfrac{\\sqrt{3}}{4}x + 2\\sqrt{3}$." },
+              { label: "(c)", text: "A line through the origin has the form $y = mx$. For it to be tangent to the ellipse at $(x_0, y_0)$, we need (i) the point on the ellipse: $\\frac{x_0^2}{16}+\\frac{y_0^2}{9}=1$, (ii) slope matches: $m = -\\frac{9x_0}{16y_0}$, and (iii) passes through origin: $y_0 = mx_0$. From (iii) and (ii): $y_0 = -\\frac{9x_0^2}{16y_0} \\Rightarrow 16y_0^2 = -9x_0^2$ — impossible for real points. So no tangent line to this ellipse passes through the origin (the origin is inside the ellipse)." }
             ]
           }
         ]
