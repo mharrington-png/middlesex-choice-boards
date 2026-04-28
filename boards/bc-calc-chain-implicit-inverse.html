@@ -1,0 +1,1669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BC Calculus — Unit 3: Composite, Implicit &amp; Inverse Functions | Middlesex School</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet" />
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+    startup: {
+      typeset: false,
+      ready() {
+        MathJax.startup.defaultReady();
+        renderBoard();
+        MathJax.typesetPromise([document.getElementById('board-grid')])
+          .catch(err => console.log(err));
+      }
+    }
+  };
+</script>
+<style>
+  /* ============================================================
+     TOKENS & RESET
+  ============================================================ */
+  :root {
+    --crimson:     #cf003d;
+    --crimson-dim: #8a0028;
+    --crimson-glow:#ff1a55;
+    --black:       #0d0d0d;
+    --surface:     #151515;
+    --surface2:    #1e1e1e;
+    --surface3:    #252525;
+    --border:      #2e2e2e;
+    --border-light:#3a3a3a;
+    --text:        #f0ece6;
+    --text-muted:  #9e9e9e;
+    --text-dim:    #666666;
+
+    --col1: #cf003d;
+    --col2: #1a6b5a;
+    --col3: #3b5b8c;
+    --col4: #7c4a1e;
+
+    --col1-light: #ff4d75;
+    --col2-light: #2dd4bf;
+    --col3-light: #7eb3f5;
+    --col4-light: #f59e0b;
+
+    --radius: 10px;
+    --radius-lg: 16px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.5);
+    --shadow-hover: 0 8px 40px rgba(0,0,0,0.7);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 16px;
+    line-height: 1.65;
+    min-height: 100vh;
+  }
+
+  /* ============================================================
+     HEADER
+  ============================================================ */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 32px 40px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--crimson), var(--crimson-glow), var(--crimson));
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(207,0,61,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .header-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+  }
+
+  .school-tag {
+    font-family: 'Source Serif 4', serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--crimson-glow);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .school-tag::before,
+  .school-tag::after {
+    content: '';
+    display: inline-block;
+    width: 28px;
+    height: 1px;
+    background: var(--crimson-glow);
+  }
+
+  h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    margin-top: 4px;
+  }
+
+  h1 em { font-style: italic; color: var(--crimson-glow); }
+
+  .header-meta {
+    margin-top: 4px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .meta-pill {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 3px 12px;
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+  }
+
+  /* ============================================================
+     INSTRUCTIONS
+  ============================================================ */
+  .instructions {
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 40px;
+    font-size: 13px;
+    color: var(--text-muted);
+    text-align: center;
+    letter-spacing: 0.03em;
+  }
+
+  .instructions strong { color: var(--crimson-glow); font-weight: 600; }
+
+  /* ============================================================
+     BOARD GRID
+  ============================================================ */
+  .board-wrap {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 36px 24px 60px;
+  }
+
+  .board-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto repeat(4, 1fr);
+    gap: 20px;
+  }
+
+  .col-group { display: contents; }
+
+  .col-header {
+    border-radius: var(--radius) var(--radius) 0 0;
+    padding: 16px 18px 14px;
+    position: relative;
+    overflow: hidden;
+    align-self: start;
+  }
+
+  .col-header::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .col-1-header { background: color-mix(in srgb, var(--col1) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col1) 40%, transparent); }
+  .col-2-header { background: color-mix(in srgb, var(--col2) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col2) 40%, transparent); }
+  .col-3-header { background: color-mix(in srgb, var(--col3) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col3) 40%, transparent); }
+  .col-4-header { background: color-mix(in srgb, var(--col4) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col4) 40%, transparent); }
+
+  .col-header-num {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    opacity: 0.7;
+  }
+
+  .col-1-header .col-header-num { color: var(--col1-light); }
+  .col-2-header .col-header-num { color: var(--col2-light); }
+  .col-3-header .col-header-num { color: var(--col3-light); }
+  .col-4-header .col-header-num { color: var(--col4-light); }
+
+  .col-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.25;
+  }
+
+  .col-header .col-topics {
+    margin-top: 6px;
+    font-size: 10.5px;
+    color: var(--text-dim);
+    letter-spacing: 0.04em;
+  }
+
+  /* ============================================================
+     TILES
+  ============================================================ */
+  .tile {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 18px 28px;
+    cursor: pointer;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+    position: relative;
+    overflow: hidden;
+    user-select: none;
+  }
+
+  .tile::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+    border-radius: var(--radius) 0 0 var(--radius);
+    transition: opacity 0.2s;
+  }
+
+  .col-1 .tile::before { background: var(--col1-light); }
+  .col-2 .tile::before { background: var(--col2-light); }
+  .col-3 .tile::before { background: var(--col3-light); }
+  .col-4 .tile::before { background: var(--col4-light); }
+
+  .tile:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-hover);
+    background: var(--surface3);
+  }
+
+  .col-1 .tile:hover { border-color: color-mix(in srgb, var(--col1) 60%, transparent); }
+  .col-2 .tile:hover { border-color: color-mix(in srgb, var(--col2) 60%, transparent); }
+  .col-3 .tile:hover { border-color: color-mix(in srgb, var(--col3) 60%, transparent); }
+  .col-4 .tile:hover { border-color: color-mix(in srgb, var(--col4) 60%, transparent); }
+
+  .tile-icon { font-size: 18px; margin-bottom: 8px; display: block; }
+
+  .tile-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+    margin-bottom: 5px;
+  }
+
+  .tile-sub { font-size: 11.5px; color: var(--text-muted); line-height: 1.4; }
+
+  .tile-topics {
+    position: absolute;
+    bottom: 10px;
+    left: 18px;
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.06em;
+  }
+
+  .tile-arrow {
+    position: absolute;
+    bottom: 12px; right: 14px;
+    font-size: 14px;
+    opacity: 0.3;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+
+  .tile:hover .tile-arrow { opacity: 0.8; transform: translate(2px, -2px); }
+  .col-1 .tile:hover .tile-arrow { color: var(--col1-light); }
+  .col-2 .tile:hover .tile-arrow { color: var(--col2-light); }
+  .col-3 .tile:hover .tile-arrow { color: var(--col3-light); }
+  .col-4 .tile:hover .tile-arrow { color: var(--col4-light); }
+
+  /* ============================================================
+     MODAL
+  ============================================================ */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.82);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    backdrop-filter: blur(4px);
+  }
+
+  .modal-overlay.open { display: flex; animation: fadeIn 0.2s ease; }
+
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    width: 100%;
+    max-width: 760px;
+    max-height: 88vh;
+    overflow-y: auto;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.8);
+    animation: slideUp 0.22s ease;
+    position: relative;
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .modal-header {
+    padding: 24px 28px 20px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .modal-header-accent {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  }
+
+  .modal-col-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+  }
+
+  .modal-close {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.15s, color 0.15s;
+  }
+
+  .modal-close:hover { background: var(--crimson); color: white; border-color: var(--crimson); }
+
+  .modal-body { padding: 24px 28px 32px; }
+
+  /* Video section */
+  .video-section {
+    background: var(--surface2);
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 24px;
+  }
+
+  .video-label {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+
+  .video-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    color: var(--crimson-glow);
+    text-decoration: none;
+    font-size: 13.5px;
+    font-family: 'Source Serif 4', serif;
+    transition: color 0.15s;
+  }
+
+  .video-link:hover { color: #fff; }
+  .video-icon { font-size: 12px; opacity: 0.7; }
+
+  /* Problems */
+  .problem-block {
+    margin-bottom: 28px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .problem-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+  .problem-num {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+  }
+
+  .problem-context {
+    font-size: 14.5px;
+    color: var(--text);
+    line-height: 1.7;
+    margin-bottom: 6px;
+  }
+
+  .problem-text {
+    font-size: 14.5px;
+    color: var(--text);
+    line-height: 1.7;
+    margin-bottom: 14px;
+  }
+
+  .problem-parts { margin-left: 0; list-style: none; }
+
+  .problem-parts li {
+    font-size: 14px;
+    color: var(--text);
+    margin-bottom: 8px;
+    padding-left: 24px;
+    position: relative;
+    line-height: 1.6;
+  }
+
+  .problem-parts li::before {
+    content: attr(data-part);
+    position: absolute;
+    left: 0;
+    font-weight: 700;
+    color: var(--text-muted);
+  }
+
+  .answer-toggle {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 9px 16px;
+    color: var(--text-muted);
+    font-family: 'Source Serif 4', serif;
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.15s;
+    margin-top: 4px;
+  }
+
+  .answer-toggle:hover { background: var(--surface3); border-color: var(--border-light); color: var(--text); }
+  .answer-toggle .toggle-icon { font-size: 10px; transition: transform 0.2s; }
+  .answer-toggle.open .toggle-icon { transform: rotate(180deg); }
+
+  .answer-panel {
+    display: none;
+    margin-top: 14px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-size: 13.5px;
+    line-height: 1.75;
+    color: var(--text);
+    animation: expandIn 0.18s ease;
+  }
+
+  @keyframes expandIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .answer-panel.open { display: block; }
+
+  .answer-part { margin-bottom: 10px; padding-left: 20px; position: relative; }
+  .answer-part:last-child { margin-bottom: 0; }
+  .answer-part-label { position: absolute; left: 0; font-weight: 700; color: var(--text-muted); }
+
+  /* Problem images */
+  .problem-img {
+    display: block;
+    width: 360px;
+    max-width: 100%;
+    border-radius: 6px;
+    margin: 10px 0 6px;
+  }
+
+  /* Data tables (tabular problems) */
+  .data-table {
+    border-collapse: collapse;
+    margin: 12px 0 14px;
+    font-size: 13px;
+  }
+
+  .data-table th, .data-table td {
+    border: 1px solid var(--border-light);
+    padding: 6px 14px;
+    text-align: center;
+  }
+
+  .data-table th {
+    background: var(--surface3);
+    color: var(--text-muted);
+    font-weight: 600;
+    font-family: 'Source Serif 4', serif;
+  }
+
+  .data-table td {
+    background: var(--surface2);
+    color: var(--text);
+  }
+
+  /* ============================================================
+     RESPONSIVE
+  ============================================================ */
+  @media (max-width: 1000px) {
+    .board-grid { display: flex; flex-wrap: wrap; gap: 20px; }
+    .col-group { display: flex; flex-direction: column; gap: 10px; width: calc(50% - 10px); }
+    .col-header { border-radius: var(--radius); }
+    .tile { grid-column: unset !important; grid-row: unset !important; }
+  }
+
+  @media (max-width: 600px) {
+    .board-grid { flex-direction: column; }
+    .col-group { width: 100%; }
+    header { padding: 20px; }
+    .board-wrap { padding: 20px 12px 40px; }
+    .modal { border-radius: var(--radius); }
+    .modal-header, .modal-body { padding: 18px; }
+  }
+
+  .modal::-webkit-scrollbar { width: 6px; }
+  .modal::-webkit-scrollbar-track { background: var(--surface); }
+  .modal::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
+
+  /* ============================================================
+     RANDOM PRACTICE BAR
+  ============================================================ */
+  .random-wrap { max-width: 1400px; margin: 0 auto; padding: 0 24px 48px; }
+
+  .random-btn {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border-light);
+    border-radius: 14px;
+    padding: 0 36px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.2s ease, background 0.2s ease;
+    font-family: 'Source Serif 4', serif;
+  }
+
+  .random-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(207,0,61,0.06) 30%, rgba(207,0,61,0.10) 50%, rgba(207,0,61,0.06) 70%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .random-btn:hover::before { opacity: 1; }
+
+  .random-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(207,0,61,0.18), 0 2px 8px rgba(0,0,0,0.4);
+    border-color: color-mix(in srgb, var(--crimson) 55%, transparent);
+    background: var(--surface3);
+  }
+
+  .random-btn:active { transform: translateY(0) scale(0.995); box-shadow: 0 2px 8px rgba(0,0,0,0.4); }
+
+  .random-btn-left-notch, .random-btn-right-notch {
+    position: absolute;
+    bottom: 0;
+    width: 28px; height: 5px;
+    background: var(--border);
+    border-radius: 3px 3px 0 0;
+    transition: background 0.2s;
+  }
+  .random-btn-left-notch  { left: 60px; }
+  .random-btn-right-notch { right: 60px; }
+  .random-btn:hover .random-btn-left-notch,
+  .random-btn:hover .random-btn-right-notch { background: color-mix(in srgb, var(--crimson) 40%, var(--border)); }
+
+  .random-btn-icon { font-size: 22px; flex-shrink: 0; transition: transform 0.3s ease; }
+  .random-btn:hover .random-btn-icon { transform: rotate(20deg) scale(1.15); }
+
+  .random-btn-label { display: flex; flex-direction: column; align-items: center; gap: 1px; }
+  .random-btn-title { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; color: var(--text); letter-spacing: 0.01em; line-height: 1.2; }
+  .random-btn-sub { font-size: 11.5px; color: var(--text-muted); letter-spacing: 0.07em; text-transform: uppercase; }
+
+  .random-btn-badge {
+    position: absolute;
+    right: 28px;
+    background: var(--surface3);
+    border: 1px solid var(--border-light);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-family: 'Source Serif 4', serif;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+
+  .random-btn:hover .random-btn-badge {
+    background: color-mix(in srgb, var(--crimson) 15%, var(--surface3));
+    color: var(--crimson-glow);
+    border-color: color-mix(in srgb, var(--crimson) 40%, transparent);
+  }
+
+  .random-accent {
+    background: linear-gradient(90deg, var(--col1-light), var(--col2-light), var(--col3-light), var(--col4-light));
+    background-size: 300% 100%;
+    animation: accentShift 4s ease infinite;
+  }
+
+  @keyframes accentShift {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  @media (max-width: 600px) {
+    .random-wrap { padding: 0 12px 36px; }
+    .random-btn { height: 64px; border-radius: 10px; }
+    .random-btn-badge, .random-btn-left-notch, .random-btn-right-notch { display: none; }
+  }
+
+  /* ============================================================
+     DESMOS FLOATING BUTTON
+  ============================================================ */
+  .desmos-fab {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    z-index: 1050;
+    background: var(--surface2);
+    border: 1px solid var(--border-light);
+    border-radius: 50px;
+    padding: 0 20px 0 14px;
+    height: 52px;
+    display: none;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    font-family: 'Source Serif 4', serif;
+  }
+
+  .desmos-fab.visible { display: flex; animation: fadeIn 0.18s ease; }
+
+  .desmos-fab:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(207,0,61,0.25), 0 2px 8px rgba(0,0,0,0.5);
+    border-color: color-mix(in srgb, var(--crimson) 60%, transparent);
+    background: var(--surface3);
+  }
+
+  .desmos-fab:active { transform: translateY(0) scale(0.97); }
+  .desmos-fab-icon { font-size: 20px; line-height: 1; flex-shrink: 0; transition: transform 0.2s ease; }
+  .desmos-fab:hover .desmos-fab-icon { transform: rotate(-8deg) scale(1.1); }
+
+  .desmos-fab-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    display: block;
+    line-height: 1.25;
+  }
+
+  .desmos-fab-sub {
+    font-size: 9.5px;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    display: block;
+  }
+
+  @media (max-width: 600px) {
+    .desmos-fab { bottom: 20px; right: 16px; padding: 0 14px; }
+    .desmos-fab-sub { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="school-tag">Middlesex School · mxschool.edu</div>
+    <h1>BC Calculus — Unit 3: <em>Composite, Implicit &amp; Inverse Functions</em></h1>
+    <div class="header-meta">
+      <span class="meta-pill">🔗 Chain Rule</span>
+      <span class="meta-pill">∂ Implicit Differentiation</span>
+      <span class="meta-pill">🔃 Inverse Functions</span>
+      <span class="meta-pill">🔺 Inverse Trig</span>
+      <span class="meta-pill">Topics 3.1 – 3.6</span>
+    </div>
+  </div>
+</header>
+
+<div class="instructions">
+  Click any tile to open practice problems. Use <strong>Show Answer</strong> to check your work after attempting each part.
+</div>
+
+<!-- BOARD -->
+<div class="board-wrap">
+  <div class="board-grid" id="board-grid"></div>
+</div>
+
+<!-- RANDOM PRACTICE BAR -->
+<div class="random-wrap">
+  <button class="random-btn" id="random-btn" aria-label="Random Practice">
+    <div class="random-btn-left-notch"></div>
+    <div class="random-btn-right-notch"></div>
+    <span class="random-btn-icon">🎲</span>
+    <div class="random-btn-label">
+      <span class="random-btn-title">Random Practice</span>
+      <span class="random-btn-sub">Any topic · Any tile · Any problem</span>
+    </div>
+    <span class="random-btn-badge" id="random-badge">— problems</span>
+  </button>
+</div>
+
+<!-- DESMOS -->
+<button class="desmos-fab" id="desmos-fab" aria-label="Open Desmos Graphing Calculator">
+  <span class="desmos-fab-icon">📈</span>
+  <span>
+    <span class="desmos-fab-title">Graphing Calculator</span>
+    <span class="desmos-fab-sub">Opens Desmos in a new tab</span>
+  </span>
+</button>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div class="modal-header-accent" id="modal-accent"></div>
+      <div>
+        <div class="modal-col-label" id="modal-col-label"></div>
+        <div class="modal-title" id="modal-title"></div>
+      </div>
+      <button class="modal-close" id="modal-close" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   DATA
+   Each tile: { icon, title, sub, topics, problems[] }
+   Each problem: { context?, stem, parts[]?, answers[] }
+   parts / answers: { label, text }
+   Graph placeholders: <!-- GRAPH NEEDED: description --> in stem
+   Video: add video: { title, url } to a tile when confirmed
+============================================================ */
+
+const columns = [
+
+  // ════════════════════════════════════════════════════════════
+  // COLUMN 1 — The Chain Rule   (FUN 3.1)
+  // ════════════════════════════════════════════════════════════
+  {
+    id: "col-1",
+    accentVar: "var(--col1-light)",
+    headerClass: "col-1-header",
+    tileClass: "col-1",
+    label: "Column I",
+    title: "The Chain Rule",
+    topics: "Topic 3.1",
+    tiles: [
+
+      // ── 1-A  Basic Chain Rule ────────────────────────────────
+      {
+        icon: "🔗",
+        title: "Basic Chain Rule",
+        sub: "Differentiating $f(g(x))$ — polynomial & trig compositions",
+        topics: "3.1",
+        video: { title: "Applying Chain Rule to Trig Functions", url: "https://www.youtube.com/shorts/IeLqkVRxhqQ" },
+        problems: [
+          {
+            stem: "Find $\\dfrac{d}{dx}\\!\\left[(3x^2-5)^4\\right]$.",
+            answers: [
+              { label: "", text: "Let $u = 3x^2 - 5$. By the chain rule: $\\dfrac{d}{dx}[u^4] = 4u^3 \\cdot u' = 4(3x^2-5)^3 \\cdot 6x = 24x(3x^2-5)^3$." }
+            ]
+          },
+          {
+            stem: "Differentiate $h(x) = \\sin(x^3 - 2x)$.",
+            answers: [
+              { label: "", text: "$h'(x) = \\cos(x^3-2x)\\cdot(3x^2-2)$." }
+            ]
+          },
+          {
+            context: "Let $g(x) = \\tan(\\pi x^2)$.",
+            stem: "Find $g'(1)$.",
+            answers: [
+              { label: "", text: "$g'(x) = \\sec^2(\\pi x^2)\\cdot 2\\pi x$. At $x = 1$: $g'(1) = \\sec^2(\\pi)\\cdot 2\\pi = (1)(2\\pi) = 2\\pi$. (Note: $\\sec(\\pi) = -1$, so $\\sec^2(\\pi) = 1$.)" }
+            ]
+          }
+        ]
+      },
+
+      // ── 1-B  Chain Rule with Exp & Log ──────────────────────
+      {
+        icon: "📉",
+        title: "Chain Rule with Exp & Log",
+        sub: "Compositions involving $e^x$ and $\\ln x$",
+        topics: "3.1",
+        video: { title: "Applying Chain Rule to Log Functions", url: "https://www.youtube.com/shorts/FNHIIHKbpWo" },
+        problems: [
+          {
+            stem: "Find $\\dfrac{d}{dx}\\!\\left[e^{x^3-2x}\\right]$.",
+            answers: [
+              { label: "", text: "$\\dfrac{d}{dx}\\!\\left[e^{x^3-2x}\\right] = e^{x^3-2x}\\cdot(3x^2-2)$." }
+            ]
+          },
+          {
+            stem: "Differentiate $y = \\ln(\\sin x)$.",
+            answers: [
+              { label: "", text: "$\\dfrac{dy}{dx} = \\dfrac{1}{\\sin x}\\cdot\\cos x = \\cot x$." }
+            ]
+          },
+          {
+            stem: "Find $\\dfrac{d}{dx}$ for each function.",
+            parts: [
+              { label: "(a)", text: "$y = \\ln(x^2+4)$" },
+              { label: "(b)", text: "$y = e^{\\sqrt{x}}$" }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\dfrac{dy}{dx} = \\dfrac{2x}{x^2+4}$." },
+              { label: "(b)", text: "$\\dfrac{dy}{dx} = e^{\\sqrt{x}}\\cdot\\dfrac{1}{2\\sqrt{x}} = \\dfrac{e^{\\sqrt{x}}}{2\\sqrt{x}}$." }
+            ]
+          }
+        ]
+      },
+
+      // ── 1-C  Chain Rule from Tables & Graphs ────────────────
+      {
+        icon: "📊",
+        title: "Chain Rule from Tables & Graphs",
+        sub: "Reading $f,\\, g,\\, f',\\, g'$ from a table to find $(f\\circ g)'$",
+        topics: "3.1",
+        problems: [
+          {
+            context: "The table gives values of differentiable functions $f$ and $g$ and their derivatives.<table class='data-table'><thead><tr><th>$x$</th><th>$f(x)$</th><th>$g(x)$</th><th>$f'(x)$</th><th>$g'(x)$</th></tr></thead><tbody><tr><td>1</td><td>2</td><td>3</td><td>&minus;4</td><td>5</td></tr><tr><td>2</td><td>3</td><td>1</td><td>6</td><td>&minus;2</td></tr><tr><td>3</td><td>1</td><td>2</td><td>2</td><td>7</td></tr></tbody></table>",
+            stem: "Let $h(x) = f(g(x))$. Find $h'(1)$.",
+            answers: [
+              { label: "", text: "$h'(x) = f'(g(x))\\cdot g'(x)$. At $x = 1$: $g(1) = 3$, so $h'(1) = f'(3)\\cdot g'(1) = 2\\cdot 5 = 10$." }
+            ]
+          },
+          {
+            context: "Use the same table above.",
+            stem: "Let $p(x) = g(f(x))$. Find $p'(3)$.",
+            answers: [
+              { label: "", text: "$p'(x) = g'(f(x))\\cdot f'(x)$. At $x = 3$: $f(3) = 1$, so $p'(3) = g'(1)\\cdot f'(3) = (-2)\\cdot 2 = -4$." }
+            ]
+          },
+          {
+            context: "Use the same table above.",
+            stem: "Let $r(x) = [f(x)]^2$. Find $r'(2)$.",
+            answers: [
+              { label: "", text: "$r'(x) = 2f(x)\\cdot f'(x)$. At $x = 2$: $r'(2) = 2\\cdot f(2)\\cdot f'(2) = 2\\cdot 3\\cdot 6 = 36$." }
+            ]
+          },
+          {
+            context: "The graph of a differentiable function $f$ is shown, with a single local minimum at $x = 1$.<br><img src='img/u31cp4p.png' alt='Graph of f with local minimum at x=1' class='problem-img'>",
+            stem: "Let $h(x) = f(x^2)$. At what values of $x$ does $h$ have a horizontal tangent? Justify your answer.",
+            answers: [
+              { label: "", text: "$h'(x) = f'(x^2)\\cdot 2x = 0$ when (i) $x = 0$, or (ii) $f'(x^2) = 0$, i.e., $x^2 = 1$, giving $x = \\pm 1$. From the graph $f'(1) = 0$ (local min). So $h$ has horizontal tangents at $x = -1,\\; 0,\\; 1$." }
+            ]
+          }
+        ]
+      },
+
+      // ── 1-D  Nested Chain Rule ───────────────────────────────
+      {
+        icon: "🔄",
+        title: "Nested Chain Rule",
+        sub: "Three or more composed functions",
+        topics: "3.1",
+        problems: [
+          {
+            stem: "Differentiate $y = \\sin^3(2x)$, where $\\sin^3(2x) = [\\sin(2x)]^3$.",
+            answers: [
+              { label: "", text: "Outer power: $3[\\sin(2x)]^2$. Middle trig: $\\cos(2x)$. Inner linear: $2$. Combined: $y' = 3\\sin^2(2x)\\cdot\\cos(2x)\\cdot 2 = 6\\sin^2(2x)\\cos(2x)$." }
+            ]
+          },
+          {
+            stem: "Find $\\dfrac{d}{dx}\\!\\left[\\ln(\\cos(3x))\\right]$.",
+            answers: [
+              { label: "", text: "$= \\dfrac{1}{\\cos(3x)}\\cdot(-\\sin(3x))\\cdot 3 = -3\\tan(3x)$." }
+            ]
+          },
+          {
+            stem: "Differentiate $f(x) = e^{\\sin^2 x}$.",
+            answers: [
+              { label: "", text: "$f'(x) = e^{\\sin^2 x}\\cdot \\dfrac{d}{dx}[\\sin^2 x] = e^{\\sin^2 x}\\cdot 2\\sin x\\cos x = e^{\\sin^2 x}\\sin(2x)$." }
+            ]
+          }
+        ]
+      }
+
+    ] // end col 1 tiles
+  },
+
+  // ════════════════════════════════════════════════════════════
+  // COLUMN 2 — Implicit Differentiation   (FUN 3.2)
+  // ════════════════════════════════════════════════════════════
+  {
+    id: "col-2",
+    accentVar: "var(--col2-light)",
+    headerClass: "col-2-header",
+    tileClass: "col-2",
+    label: "Column II",
+    title: "Implicit Differentiation",
+    topics: "Topic 3.2",
+    tiles: [
+
+      // ── 2-A  Finding dy/dx ──────────────────────────────────
+      {
+        icon: "∂",
+        title: "Finding dy/dx",
+        sub: "Differentiating both sides with respect to $x$",
+        topics: "3.2",
+        video: { title: "Implicit Differentiation Example", url: "https://www.youtube.com/watch?v=nPwN6qvypms" },
+        problems: [
+          {
+            stem: "Find $\\dfrac{dy}{dx}$ if $x^2 + y^2 = 25$.",
+            answers: [
+              { label: "", text: "$2x + 2y\\dfrac{dy}{dx} = 0 \\implies \\dfrac{dy}{dx} = -\\dfrac{x}{y}$." }
+            ]
+          },
+          {
+            stem: "Find $\\dfrac{dy}{dx}$ if $x^3 + y^3 = 6xy$.",
+            answers: [
+              { label: "", text: "$3x^2 + 3y^2\\dfrac{dy}{dx} = 6y + 6x\\dfrac{dy}{dx}$. Collecting: $(3y^2 - 6x)\\dfrac{dy}{dx} = 6y - 3x^2$, so $\\dfrac{dy}{dx} = \\dfrac{2y - x^2}{y^2 - 2x}$." }
+            ]
+          },
+          {
+            stem: "Find $\\dfrac{dy}{dx}$ if $\\sqrt{x} + \\sqrt{y} = 4$.",
+            answers: [
+              { label: "", text: "$\\dfrac{1}{2\\sqrt{x}} + \\dfrac{1}{2\\sqrt{y}}\\dfrac{dy}{dx} = 0 \\implies \\dfrac{dy}{dx} = -\\dfrac{\\sqrt{y}}{\\sqrt{x}} = -\\sqrt{\\dfrac{y}{x}}$." }
+            ]
+          }
+        ]
+      },
+
+      // ── 2-B  Implicit with Trig & Exponentials ───────────────
+      {
+        icon: "🌊",
+        title: "Implicit with Trig & Exp",
+        sub: "Transcendental equations — $\\sin$, $\\cos$, $e^{xy}$",
+        topics: "3.2",
+        video: { title: "Implicit Differentiation with Exponentials", url: "https://www.youtube.com/watch?v=gTmc61gugmA" },
+        problems: [
+          {
+            stem: "Find $\\dfrac{dy}{dx}$ if $\\sin(xy) = y$.",
+            answers: [
+              { label: "", text: "$\\cos(xy)\\!\\left(y + x\\dfrac{dy}{dx}\\right) = \\dfrac{dy}{dx}$. Rearranging: $y\\cos(xy) = \\dfrac{dy}{dx}(1 - x\\cos(xy))$, so $\\dfrac{dy}{dx} = \\dfrac{y\\cos(xy)}{1 - x\\cos(xy)}$." }
+            ]
+          },
+          {
+            stem: "Find $\\dfrac{dy}{dx}$ if $e^{xy} = x + y$.",
+            answers: [
+              { label: "", text: "$e^{xy}\\!\\left(y + x\\dfrac{dy}{dx}\\right) = 1 + \\dfrac{dy}{dx}$. Collecting $dy/dx$: $(xe^{xy} - 1)\\dfrac{dy}{dx} = 1 - ye^{xy}$, so $\\dfrac{dy}{dx} = \\dfrac{1 - ye^{xy}}{xe^{xy} - 1}$." }
+            ]
+          },
+          {
+            stem: "Find $\\dfrac{dy}{dx}$ if $x^2\\cos y + y\\sin x = 1$.",
+            answers: [
+              { label: "", text: "$2x\\cos y - x^2\\sin y\\dfrac{dy}{dx} + \\dfrac{dy}{dx}\\sin x + y\\cos x = 0$. Collecting: $\\dfrac{dy}{dx}(\\sin x - x^2\\sin y) = -2x\\cos y - y\\cos x$, so $\\dfrac{dy}{dx} = \\dfrac{-2x\\cos y - y\\cos x}{\\sin x - x^2\\sin y}$." }
+            ]
+          }
+        ]
+      },
+
+      // ── 2-C  Second Derivatives Implicitly ──────────────────
+      {
+        icon: "🔁",
+        title: "Second Derivatives Implicitly",
+        sub: "Finding $d^2y/dx^2$ for implicitly defined curves",
+        topics: "3.2, 3.6",
+        video: { title: "Implicit Differentiation to Determine a Second Derivative", url: "https://www.youtube.com/watch?v=5hjA_Ty_e3U" },
+        problems: [
+          {
+            context: "Consider the circle $x^2 + y^2 = r^2$.",
+            stem: "Find $\\dfrac{d^2y}{dx^2}$ in terms of $x$, $y$, and $r$.",
+            answers: [
+              { label: "", text: "First derivative: $\\dfrac{dy}{dx} = -\\dfrac{x}{y}$. Differentiating again: $\\dfrac{d^2y}{dx^2} = -\\dfrac{y - x\\cdot(-x/y)}{y^2} = -\\dfrac{y^2+x^2}{y^3} = -\\dfrac{r^2}{y^3}$." }
+            ]
+          },
+          {
+            context: "Consider $xy = 5$.",
+            stem: "Find $\\dfrac{d^2y}{dx^2}$. Simplify using the relation $xy = 5$.",
+            answers: [
+              { label: "", text: "$y + x\\dfrac{dy}{dx} = 0 \\Rightarrow \\dfrac{dy}{dx} = -\\dfrac{y}{x}$. Differentiating: $\\dfrac{d^2y}{dx^2} = -\\dfrac{\\dfrac{dy}{dx}\\cdot x - y}{x^2} = -\\dfrac{(-y/x)x - y}{x^2} = \\dfrac{2y}{x^2}$. Since $y = 5/x$: $\\dfrac{d^2y}{dx^2} = \\dfrac{10}{x^3}$." }
+            ]
+          },
+          {
+            context: "Consider $y^2 = x^3$ (semicubical parabola).",
+            stem: "Find $\\dfrac{d^2y}{dx^2}$.",
+            answers: [
+              { label: "", text: "$2y\\dfrac{dy}{dx} = 3x^2 \\Rightarrow \\dfrac{dy}{dx} = \\dfrac{3x^2}{2y}$. Differentiating and substituting $y^2 = x^3$: $\\dfrac{d^2y}{dx^2} = \\dfrac{12xy^2 - 9x^4}{4y^3} = \\dfrac{12x\\cdot x^3 - 9x^4}{4y^3} = \\dfrac{3x^4}{4y^3}$." }
+            ]
+          }
+        ]
+      },
+
+      // ── 2-D  Tangent Lines via Implicit Diff ─────────────────
+      {
+        icon: "📐",
+        title: "Tangent Lines via Implicit Diff",
+        sub: "Finding slope and equations of tangent lines on curves",
+        topics: "3.2",
+        video: { title: "Finding a Tangent to an Implicit Curve", url: "https://www.youtube.com/watch?v=J8tOaG8-aB0" },
+        problems: [
+          {
+            context: "Consider the curve $x^2 + xy + y^2 = 7$.",
+            stem: "Find the equation of the tangent line at $(1, 2)$.",
+            answers: [
+              { label: "", text: "Implicit diff: $2x + y + x\\dfrac{dy}{dx} + 2y\\dfrac{dy}{dx} = 0 \\Rightarrow \\dfrac{dy}{dx} = -\\dfrac{2x+y}{x+2y}$. At $(1,2)$: slope $= -\\dfrac{4}{5}$. Tangent line: $y - 2 = -\\dfrac{4}{5}(x-1)$, i.e., $y = -\\dfrac{4}{5}x + \\dfrac{14}{5}$." }
+            ]
+          },
+          {
+            context: "Consider the ellipse $x^2 + 4y^2 = 8$.<br><img src='img/u32dp2p.png' alt='Ellipse x^2 + 4y^2 = 8' class='problem-img'>",
+            stem: "Find all points on the ellipse where the tangent line is vertical.",
+            answers: [
+              { label: "", text: "Implicit diff: $2x + 8y\\dfrac{dy}{dx} = 0 \\Rightarrow \\dfrac{dy}{dx} = -\\dfrac{x}{4y}$. Vertical tangents occur where $4y = 0$, i.e., $y = 0$. Substituting: $x^2 = 8 \\Rightarrow x = \\pm 2\\sqrt{2}$. Points: $(\\pm 2\\sqrt{2},\\; 0)$." }
+            ]
+          },
+          {
+            context: "The curve $\\sin(x+y) = 2x - 2y$ passes through the origin.",
+            stem: "Find the slope of the tangent line at $(0, 0)$.",
+            answers: [
+              { label: "", text: "$\\cos(x+y)\\!\\left(1 + \\dfrac{dy}{dx}\\right) = 2 - 2\\dfrac{dy}{dx}$. At $(0,0)$: $\\cos(0)(1+m) = 2 - 2m \\Rightarrow 1 + m = 2 - 2m \\Rightarrow 3m = 1 \\Rightarrow m = \\dfrac{1}{3}$." }
+            ]
+          }
+        ]
+      }
+
+    ] // end col 2 tiles
+  },
+
+  // ════════════════════════════════════════════════════════════
+  // COLUMN 3 — Inverse Functions & Inverse Trig  (FUN 3.3–3.4)
+  // ════════════════════════════════════════════════════════════
+  {
+    id: "col-3",
+    accentVar: "var(--col3-light)",
+    headerClass: "col-3-header",
+    tileClass: "col-3",
+    label: "Column III",
+    title: "Inverse Functions & Inverse Trig",
+    topics: "Topics 3.3 – 3.4",
+    tiles: [
+
+      // ── 3-A  Differentiating Inverse Functions ───────────────
+      {
+        icon: "🔃",
+        title: "Differentiating Inverse Functions",
+        sub: "$(f^{-1})'(a) = \\dfrac{1}{f'(f^{-1}(a))}$",
+        topics: "3.3",
+        video: { title: "Finding an Inverse Function Derivative", url: "https://www.youtube.com/watch?v=o94iS6NMz2M" },
+        problems: [
+          {
+            context: "Let $f(x) = x^3 + 2x$.",
+            stem: "Find $(f^{-1})'(3)$.",
+            answers: [
+              { label: "", text: "Find $f^{-1}(3)$: $x^3 + 2x = 3 \\Rightarrow x = 1$, so $f^{-1}(3) = 1$. Then $(f^{-1})'(3) = \\dfrac{1}{f'(1)}$. Since $f'(x) = 3x^2 + 2$, we get $f'(1) = 5$. So $(f^{-1})'(3) = \\dfrac{1}{5}$." }
+            ]
+          },
+          {
+            context: "Let $f(x) = 2x^3 - x + 5$.",
+            stem: "Find $(f^{-1})'(5)$.",
+            answers: [
+              { label: "", text: "Find $f^{-1}(5)$: $f(0) = 5$, so $f^{-1}(5) = 0$. Then $f'(x) = 6x^2 - 1$, so $f'(0) = -1$. $(f^{-1})'(5) = \\dfrac{1}{-1} = -1$." }
+            ]
+          },
+          {
+            context: "Let $f(x) = x^5 + 3x + 1$.",
+            stem: "Find $(f^{-1})'(5)$.",
+            parts: [
+              { label: "(a)", text: "Show that $f$ is one-to-one on $\\mathbb{R}$." },
+              { label: "(b)", text: "Find $(f^{-1})'(5)$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$f'(x) = 5x^4 + 3 > 0$ for all $x$, so $f$ is strictly increasing, hence one-to-one." },
+              { label: "(b)", text: "$f(1) = 1 + 3 + 1 = 5$, so $f^{-1}(5) = 1$. $f'(1) = 5 + 3 = 8$. $(f^{-1})'(5) = \\dfrac{1}{8}$." }
+            ]
+          }
+        ]
+      },
+
+      // ── 3-B  Inverse Trig Derivatives ───────────────────────
+      {
+        icon: "🔺",
+        title: "Inverse Trig Derivatives",
+        sub: "$\\arcsin u$, $\\arctan u$, and chain rule",
+        topics: "3.4",
+        video: { title: "Inverse Trig Derivative Example", url: "https://www.youtube.com/watch?v=Vy002NmwT5s" },
+        problems: [
+          {
+            stem: "Find $\\dfrac{d}{dx}\\!\\left[\\arcsin(3x)\\right]$.",
+            answers: [
+              { label: "", text: "$\\dfrac{d}{dx}[\\arcsin(u)] = \\dfrac{u'}{\\sqrt{1-u^2}}$. With $u = 3x$: $= \\dfrac{3}{\\sqrt{1-9x^2}}$." }
+            ]
+          },
+          {
+            stem: "Find $\\dfrac{d}{dx}$ for each.",
+            parts: [
+              { label: "(a)", text: "$y = \\arctan(x^2)$" },
+              { label: "(b)", text: "$y = \\arcsin\\!\\left(\\dfrac{x}{2}\\right)$" }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\dfrac{dy}{dx} = \\dfrac{2x}{1+x^4}$." },
+              { label: "(b)", text: "$\\dfrac{dy}{dx} = \\dfrac{1/2}{\\sqrt{1-x^2/4}} = \\dfrac{1}{\\sqrt{4-x^2}}$." }
+            ]
+          },
+          {
+            stem: "Differentiate $y = \\arctan(\\sqrt{x})$.",
+            answers: [
+              { label: "", text: "$\\dfrac{dy}{dx} = \\dfrac{1}{1+(\\sqrt{x})^2}\\cdot\\dfrac{1}{2\\sqrt{x}} = \\dfrac{1}{(1+x)\\cdot 2\\sqrt{x}} = \\dfrac{1}{2\\sqrt{x}\\,(1+x)}$." }
+            ]
+          },
+          {
+            stem: "Find $\\dfrac{d}{dx}\\!\\left[x\\arctan x - \\tfrac{1}{2}\\ln(1+x^2)\\right]$.",
+            answers: [
+              { label: "", text: "$= \\arctan x + \\dfrac{x}{1+x^2} - \\dfrac{1}{2}\\cdot\\dfrac{2x}{1+x^2} = \\arctan x + \\dfrac{x}{1+x^2} - \\dfrac{x}{1+x^2} = \\arctan x$." }
+            ]
+          }
+        ]
+      },
+
+      // ── 3-C  Inverses from Tables & Graphs ──────────────────
+      {
+        icon: "📋",
+        title: "Inverses from Tables & Graphs",
+        sub: "Computing $(f^{-1})'$ from tabular and graphical data",
+        topics: "3.3",
+        problems: [
+          {
+            context: "The table gives selected values of a differentiable, invertible function $f$ and its derivative $f'$.<table class='data-table'><thead><tr><th>$x$</th><th>$f(x)$</th><th>$f'(x)$</th></tr></thead><tbody><tr><td>&minus;2</td><td>3</td><td>4</td></tr><tr><td>0</td><td>1</td><td>&minus;2</td></tr><tr><td>1</td><td>&minus;2</td><td>5</td></tr><tr><td>3</td><td>0</td><td>&minus;3</td></tr></tbody></table>",
+            stem: "Find $(f^{-1})'(3)$.",
+            answers: [
+              { label: "", text: "We need $x$ such that $f(x) = 3$: from the table, $f(-2) = 3$. So $(f^{-1})'(3) = \\dfrac{1}{f'(-2)} = \\dfrac{1}{4}$." }
+            ]
+          },
+          {
+            context: "Use the same table.",
+            stem: "Find $(f^{-1})'(0)$.",
+            answers: [
+              { label: "", text: "$f(3) = 0$, so $f^{-1}(0) = 3$. $(f^{-1})'(0) = \\dfrac{1}{f'(3)} = \\dfrac{1}{-3} = -\\dfrac{1}{3}$." }
+            ]
+          },
+          {
+            context: "Use the same table.",
+            stem: "Let $h(x) = f^{-1}(2x-1)$. Find $h'(1)$.",
+            answers: [
+              { label: "", text: "$h'(x) = (f^{-1})'(2x-1)\\cdot 2$. At $x=1$: $2x-1 = 1$. Need $f^{-1}(1)$: $f(0) = 1$, so $f^{-1}(1) = 0$. $(f^{-1})'(1) = \\dfrac{1}{f'(0)} = \\dfrac{1}{-2}$. Thus $h'(1) = \\dfrac{1}{-2}\\cdot 2 = -1$." }
+            ]
+          },
+          {
+            context: "The graph of a differentiable, one-to-one function $f$ is shown.<br><img src='img/u33cp4p.png' alt='Graph of one-to-one function f passing through (1,3)' class='problem-img'>",
+            stem: "Use the graph to estimate $(f^{-1})'(3)$.",
+            answers: [
+              { label: "", text: "$(f^{-1})'(3) = \\dfrac{1}{f'(f^{-1}(3))}$. From the graph, $f(1) = 3$, so $f^{-1}(3) = 1$. The slope of $f$ at $x = 1$ appears to be approximately $2$. Therefore $(f^{-1})'(3) \\approx \\dfrac{1}{2}$." }
+            ]
+          }
+        ]
+      },
+
+      // ── 3-D  Combining Inverses with Chain Rule ──────────────
+      {
+        icon: "⛓️",
+        title: "Combining Inverses & Chain Rule",
+        sub: "Chain rule applied to $f^{-1}$ and inverse trig functions",
+        topics: "3.3, 3.4",
+        video: { title: "Example: Derivative Involving Inverse Trig and Chain Rule", url: "https://www.youtube.com/watch?v=br6VKTV5ZHE" },
+        problems: [
+          {
+            stem: "Find $\\dfrac{d}{dx}\\!\\left[\\arctan(e^x)\\right]$.",
+            answers: [
+              { label: "", text: "$= \\dfrac{e^x}{1+e^{2x}}$." }
+            ]
+          },
+          {
+            stem: "Find $\\dfrac{d}{dx}\\!\\left[\\arcsin(\\ln x)\\right]$.",
+            answers: [
+              { label: "", text: "$= \\dfrac{1/x}{\\sqrt{1-(\\ln x)^2}} = \\dfrac{1}{x\\sqrt{1-(\\ln x)^2}}$." }
+            ]
+          },
+          {
+            context: "Let $f$ be differentiable with $f(2) = 5$ and $f'(2) = 4$.",
+            stem: "Find $\\dfrac{d}{dx}\\!\\left[f^{-1}(x^2+1)\\right]$ evaluated at $x = 2$.",
+            answers: [
+              { label: "", text: "Let $g(x) = f^{-1}(x^2+1)$. $g'(x) = (f^{-1})'(x^2+1)\\cdot 2x = \\dfrac{2x}{f'(f^{-1}(x^2+1))}$. At $x = 2$: $x^2+1 = 5$, and $f^{-1}(5) = 2$ since $f(2) = 5$. So $g'(2) = \\dfrac{4}{f'(2)} = \\dfrac{4}{4} = 1$." }
+            ]
+          }
+        ]
+      }
+
+    ] // end col 3 tiles
+  },
+
+  // ════════════════════════════════════════════════════════════
+  // COLUMN 4 — Higher-Order Derivatives & Selecting Procedures
+  //            (FUN 3.5, 3.6)
+  // ════════════════════════════════════════════════════════════
+  {
+    id: "col-4",
+    accentVar: "var(--col4-light)",
+    headerClass: "col-4-header",
+    tileClass: "col-4",
+    label: "Column IV",
+    title: "Higher-Order Derivatives & Selecting Procedures",
+    topics: "Topics 3.5 – 3.6",
+    tiles: [
+
+      // ── 4-A  Second & Third Derivatives ─────────────────────
+      {
+        icon: "📈",
+        title: "Second & Third Derivatives",
+        sub: "Computing $f''$ and $f'''$ directly",
+        topics: "3.6",
+        video: { title: "Higher Order Derivatives — Chain Rule Example", url: "https://www.youtube.com/watch?v=gQh5lINXffA" },
+        problems: [
+          {
+            context: "Let $f(x) = x^4 - 3x^2 + 2$.",
+            stem: "Find $f''(x)$ and $f'''(x)$.",
+            answers: [
+              { label: "", text: "$f'(x) = 4x^3 - 6x$. &ensp; $f''(x) = 12x^2 - 6$. &ensp; $f'''(x) = 24x$." }
+            ]
+          },
+          {
+            stem: "Find $\\dfrac{d^2}{dx^2}\\!\\left[x\\sin x\\right]$.",
+            answers: [
+              { label: "", text: "$y' = \\sin x + x\\cos x$ (Product Rule). $y'' = \\cos x + (\\cos x - x\\sin x) = 2\\cos x - x\\sin x$." }
+            ]
+          },
+          {
+            stem: "Find $f''(x)$ if $f(x) = e^{-x^2}$.",
+            answers: [
+              { label: "", text: "$f'(x) = -2x\\,e^{-x^2}$ (chain rule). $f''(x) = -2e^{-x^2} + (-2x)(-2x)e^{-x^2} = (-2 + 4x^2)e^{-x^2} = (4x^2-2)e^{-x^2}$." }
+            ]
+          }
+        ]
+      },
+
+      // ── 4-B  Higher-Order from Tables & Graphs ───────────────
+      {
+        icon: "🗠",
+        title: "Higher-Order from Tables & Graphs",
+        sub: "Interpreting $f''$ sign from tabular and graphical data",
+        topics: "3.6",
+        problems: [
+          {
+            context: "The table shows selected values of a twice-differentiable function $f$ and its derivative $f'$.<table class='data-table'><thead><tr><th>$x$</th><th>0</th><th>1</th><th>2</th><th>3</th></tr></thead><tbody><tr><td>$f(x)$</td><td>5</td><td>3</td><td>2</td><td>4</td></tr><tr><td>$f'(x)$</td><td>&minus;3</td><td>&minus;1</td><td>1</td><td>3</td></tr></tbody></table>",
+            stem: "Explain why $f$ must have a relative minimum on $[0, 3]$, and estimate the $x$-value where it occurs.",
+            answers: [
+              { label: "", text: "$f'$ changes sign from negative to positive somewhere in $(1, 2)$ (since $f'(1) = -1 < 0$ and $f'(2) = 1 > 0$). By the First Derivative Test and IVT (since $f'$ is continuous), there is a relative minimum near $x \\approx 1.5$." }
+            ]
+          },
+          {
+            context: "Use the same table.",
+            stem: "Is $f''$ positive or negative on $[0, 3]$? Justify using the table.",
+            answers: [
+              { label: "", text: "$f'$ is increasing on $[0, 3]$: from $-3$ to $-1$ to $1$ to $3$, each step is an increase. Since $f'$ is increasing, $f'' > 0$ on $[0, 3]$, meaning $f$ is concave up. (As a numerical estimate: $f''(1) \\approx \\dfrac{f'(2)-f'(0)}{2} = \\dfrac{1-(-3)}{2} = 2 > 0$.)" }
+            ]
+          },
+          {
+            context: "The graph of $f'$ is shown below.<br><img src='img/u34bp3p.png' alt=\"Graph of f prime, an upward parabola with zeros at x equals negative 2 and x equals 2\" class='problem-img'>",
+            stem: "Identify all $x$-values in $(-3, 3)$ where $f$ has an inflection point. Justify.",
+            answers: [
+              { label: "", text: "$f$ has inflection points where $f''$ changes sign, i.e., where $f'$ has a local extremum. From the graph, $f'$ has a minimum at $x = 0$, so $f''(0) = 0$ and $f''$ changes sign (negative for $x < 0$, positive for $x > 0$, based on the parabola shape). Thus $f$ has an inflection point at $x = 0$." }
+            ]
+          },
+          {
+            context: "The graph of $f''$ is shown below.<br><img src='img/u34bp4p.png' alt=\"Graph of f double prime, an upward parabola with zeros at x equals 1 and x equals 3\" class='problem-img'>",
+            stem: "Based on the graph of $f''$:",
+            parts: [
+              { label: "(a)", text: "On what intervals is $f$ concave up?" },
+              { label: "(b)", text: "At what $x$-values does $f$ have inflection points?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$f$ is concave up where $f'' > 0$: on $(-\\infty, 1)$ and $(3, \\infty)$." },
+              { label: "(b)", text: "Inflection points where $f''$ changes sign: at $x = 1$ and $x = 3$." }
+            ]
+          }
+        ]
+      },
+
+      // ── 4-C  Selecting Differentiation Procedures ────────────
+      {
+        icon: "🎯",
+        title: "Selecting Differentiation Procedures",
+        sub: "Identifying which rules to apply — and applying them",
+        topics: "3.5",
+        problems: [
+          {
+            stem: "Differentiate $f(x) = \\dfrac{\\sin(x^2)}{e^{3x}}$. State which rules you use.",
+            answers: [
+              { label: "", text: "Quotient Rule + Chain Rule (twice). $f'(x) = \\dfrac{2x\\cos(x^2)\\cdot e^{3x} - \\sin(x^2)\\cdot 3e^{3x}}{e^{6x}} = \\dfrac{2x\\cos(x^2) - 3\\sin(x^2)}{e^{3x}}$." }
+            ]
+          },
+          {
+            stem: "Differentiate $y = x^2\\arctan(2x)$. State which rules you use.",
+            answers: [
+              { label: "", text: "Product Rule + Chain Rule. $y' = 2x\\arctan(2x) + x^2\\cdot\\dfrac{2}{1+4x^2} = 2x\\arctan(2x) + \\dfrac{2x^2}{1+4x^2}$." }
+            ]
+          },
+          {
+            context: "Consider $g(x) = \\ln\\!\\left(\\dfrac{\\sqrt{x^2+1}}{x^3}\\right)$.",
+            stem: "Use logarithm properties to simplify $g(x)$ before differentiating.",
+            answers: [
+              { label: "", text: "$g(x) = \\tfrac{1}{2}\\ln(x^2+1) - 3\\ln x$. Then $g'(x) = \\dfrac{x}{x^2+1} - \\dfrac{3}{x} = \\dfrac{x^2 - 3(x^2+1)}{x(x^2+1)} = \\dfrac{-2x^2-3}{x(x^2+1)}$." }
+            ]
+          }
+        ]
+      },
+
+      // ── 4-D  Mixed Challenge ─────────────────────────────────
+      {
+        icon: "🏆",
+        title: "Mixed Challenge",
+        sub: "Multi-step problems combining Unit 3 techniques",
+        topics: "3.1 – 3.6",
+        problems: [
+          {
+            context: "The table gives selected values of a differentiable function $f$.<table class='data-table'><thead><tr><th>$x$</th><th>$f(x)$</th><th>$f'(x)$</th></tr></thead><tbody><tr><td>2</td><td>4</td><td>3</td></tr><tr><td>3</td><td>2</td><td>&minus;1</td></tr><tr><td>4</td><td>3</td><td>5</td></tr></tbody></table>",
+            stem: "Find each derivative.",
+            parts: [
+              { label: "(a)", text: "Let $g(x) = f(f(x))$. Find $g'(3)$." },
+              { label: "(b)", text: "Let $h(x) = [f(x)]^2$. Find $h'(2)$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$g'(3) = f'(f(3))\\cdot f'(3) = f'(2)\\cdot(-1) = 3\\cdot(-1) = -3$." },
+              { label: "(b)", text: "$h'(x) = 2f(x)\\cdot f'(x)$. $h'(2) = 2\\cdot f(2)\\cdot f'(2) = 2\\cdot 4\\cdot 3 = 24$." }
+            ]
+          },
+          {
+            context: "A curve is defined implicitly by $\\arctan\\!\\left(\\dfrac{y}{x}\\right) = \\ln\\sqrt{x^2+y^2}$.",
+            stem: "Find $\\dfrac{dy}{dx}$. (Hint: simplify the right side using a log property.)",
+            answers: [
+              { label: "", text: "Right side $= \\tfrac{1}{2}\\ln(x^2+y^2)$. Differentiating both sides implicitly: LHS $= \\dfrac{xy'-y}{x^2+y^2}$; RHS $= \\dfrac{x+yy'}{x^2+y^2}$. Setting equal: $xy' - y = x + yy' \\Rightarrow (x-y)y' = x+y \\Rightarrow \\dfrac{dy}{dx} = \\dfrac{x+y}{x-y}$." }
+            ]
+          },
+          {
+            context: "Let $F(x) = f(g(h(x)))$ where $h(0)=2,\\; h'(0)=3,\\; g(2)=5,\\; g'(2)=-4,\\; f(5)=1,\\; f'(5)=6$.",
+            stem: "Write a general formula for $F'(x)$ using the chain rule, then find $F'(0)$.",
+            answers: [
+              { label: "", text: "$F'(x) = f'(g(h(x)))\\cdot g'(h(x))\\cdot h'(x)$. At $x = 0$: $F'(0) = f'(g(2))\\cdot g'(2)\\cdot h'(0) = f'(5)\\cdot(-4)\\cdot 3 = 6\\cdot(-4)\\cdot 3 = -72$." }
+            ]
+          }
+        ]
+      }
+
+    ] // end col 4 tiles
+  }
+
+]; // end columns
+
+
+/* ============================================================
+   RENDER BOARD
+============================================================ */
+function renderBoard() {
+  const grid = document.getElementById('board-grid');
+  grid.innerHTML = '';
+
+  columns.forEach((col, ci) => {
+    const colGroup = document.createElement('div');
+    colGroup.className = 'col-group';
+
+    // Header
+    const header = document.createElement('div');
+    header.className = `col-header ${col.headerClass}`;
+    header.style.gridColumn = ci + 1;
+    header.style.gridRow = 1;
+    header.innerHTML = `
+      <div class="col-header-num">${col.label}</div>
+      <h2>${col.title}</h2>
+      <div class="col-topics">${col.topics}</div>
+    `;
+    colGroup.appendChild(header);
+
+    // Tiles
+    col.tiles.forEach((tile, ti) => {
+      const tileEl = document.createElement('div');
+      tileEl.className = `tile ${col.tileClass}`;
+      tileEl.style.gridColumn = ci + 1;
+      tileEl.style.gridRow = ti + 2;
+      tileEl.setAttribute('role', 'button');
+      tileEl.setAttribute('tabindex', '0');
+      tileEl.setAttribute('aria-label', tile.title);
+      tileEl.innerHTML = `
+        <span class="tile-icon">${tile.icon}</span>
+        <div class="tile-title">${tile.title}</div>
+        <div class="tile-sub">${tile.sub}</div>
+        <div class="tile-topics">${tile.topics}</div>
+        <span class="tile-arrow">↗</span>
+      `;
+      tileEl.addEventListener('click', () => openModal(ci, ti));
+      tileEl.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') openModal(ci, ti); });
+      colGroup.appendChild(tileEl);
+    });
+
+    grid.appendChild(colGroup);
+  });
+}
+
+/* ============================================================
+   MODAL
+============================================================ */
+function openModal(colIdx, tileIdx) {
+  const col  = columns[colIdx];
+  const tile = col.tiles[tileIdx];
+
+  const accentEl = document.getElementById('modal-accent');
+  accentEl.className = 'modal-header-accent';
+  accentEl.style.background = col.accentVar;
+
+  const labelEl = document.getElementById('modal-col-label');
+  labelEl.style.color = col.accentVar;
+  labelEl.textContent = col.label + ' · ' + col.title;
+
+  document.getElementById('modal-title').textContent = tile.title;
+
+  const body = document.getElementById('modal-body');
+  body.innerHTML = '';
+
+  // Optional video section
+  if (tile.video) {
+    const videoSection = document.createElement('div');
+    videoSection.className = 'video-section';
+    videoSection.innerHTML = `
+      <div class="video-label">📹 Watch First</div>
+      <a href="${tile.video.url}" target="_blank" rel="noopener" class="video-link">
+        ${tile.video.title} — mathispower4u
+        <span class="video-icon">▶</span>
+      </a>
+    `;
+    body.appendChild(videoSection);
+  }
+
+  tile.problems.forEach((prob, pi) => {
+    const block = document.createElement('div');
+    block.className = 'problem-block';
+
+    let partsHTML = '';
+    if (prob.parts && prob.parts.length) {
+      partsHTML = `<ul class="problem-parts">` +
+        prob.parts.map(p => `<li data-part="${p.label}">${p.text}</li>`).join('') +
+        `</ul>`;
+    }
+
+    let answersHTML = '';
+    if (prob.answers && prob.answers.length) {
+      answersHTML = prob.answers.map(a =>
+        `<div class="answer-part"><span class="answer-part-label">${a.label}</span>${a.text}</div>`
+      ).join('');
+    }
+
+    const answerId = `ans-${colIdx}-${tileIdx}-${pi}`;
+    const toggleId = `tog-${colIdx}-${tileIdx}-${pi}`;
+
+    block.innerHTML = `
+      <div class="problem-num">Problem ${pi + 1} of ${tile.problems.length}</div>
+      ${prob.context ? `<div class="problem-context">${prob.context}</div>` : ''}
+      <div class="problem-text">${prob.stem}</div>
+      ${partsHTML}
+      <button class="answer-toggle" id="${toggleId}" onclick="toggleAnswer('${answerId}','${toggleId}')">
+        <span class="toggle-icon">▼</span> Show Answer
+      </button>
+      <div class="answer-panel" id="${answerId}">
+        ${answersHTML}
+      </div>
+    `;
+    body.appendChild(block);
+  });
+
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('desmos-fab').classList.add('visible');
+
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([body]).catch(err => console.log(err));
+  }
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+  document.getElementById('desmos-fab').classList.remove('visible');
+}
+
+function toggleAnswer(panelId, toggleId) {
+  const panel  = document.getElementById(panelId);
+  const toggle = document.getElementById(toggleId);
+  const isOpen = panel.classList.contains('open');
+  panel.classList.toggle('open');
+  toggle.classList.toggle('open');
+  toggle.innerHTML = isOpen
+    ? '<span class="toggle-icon">▼</span> Show Answer'
+    : '<span class="toggle-icon">▼</span> Hide Answer';
+}
+
+/* ============================================================
+   RANDOM PRACTICE
+============================================================ */
+function openRandomProblem() {
+  const colIdx  = Math.floor(Math.random() * columns.length);
+  const col     = columns[colIdx];
+  const tileIdx = Math.floor(Math.random() * col.tiles.length);
+  const tile    = col.tiles[tileIdx];
+  const probIdx = Math.floor(Math.random() * tile.problems.length);
+  const prob    = tile.problems[probIdx];
+
+  const accentEl = document.getElementById('modal-accent');
+  accentEl.className = 'modal-header-accent random-accent';
+  accentEl.style.background = '';
+
+  const labelEl = document.getElementById('modal-col-label');
+  labelEl.style.color = 'var(--text-muted)';
+  labelEl.textContent = 'BC Calculus · Unit 3: Composite, Implicit & Inverse';
+
+  document.getElementById('modal-title').textContent = 'General Practice';
+
+  const body = document.getElementById('modal-body');
+  body.innerHTML = '';
+
+  const block = document.createElement('div');
+  block.className = 'problem-block';
+  block.style.borderBottom = 'none';
+  block.style.marginBottom = '0';
+  block.style.paddingBottom = '0';
+
+  let partsHTML = '';
+  if (prob.parts && prob.parts.length) {
+    partsHTML = `<ul class="problem-parts">` +
+      prob.parts.map(p => `<li data-part="${p.label}">${p.text}</li>`).join('') +
+      `</ul>`;
+  }
+
+  let answersHTML = '';
+  if (prob.answers && prob.answers.length) {
+    answersHTML = prob.answers.map(a =>
+      `<div class="answer-part"><span class="answer-part-label">${a.label}</span>${a.text}</div>`
+    ).join('');
+  }
+
+  block.innerHTML = `
+    <div class="problem-num">🎲 General Practice</div>
+    ${prob.context ? `<div class="problem-context">${prob.context}</div>` : ''}
+    <div class="problem-text">${prob.stem}</div>
+    ${partsHTML}
+    <button class="answer-toggle" id="rand-tog" onclick="toggleAnswer('rand-ans','rand-tog')">
+      <span class="toggle-icon">▼</span> Show Answer
+    </button>
+    <div class="answer-panel" id="rand-ans">
+      ${answersHTML}
+    </div>
+  `;
+
+  body.appendChild(block);
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('desmos-fab').classList.add('visible');
+
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([body]).catch(err => console.log(err));
+  }
+}
+
+/* ============================================================
+   INIT
+============================================================ */
+// Badge — total problem count
+function getTotalProblems() {
+  return columns.reduce((sum, col) =>
+    sum + col.tiles.reduce((s, tile) => s + tile.problems.length, 0), 0);
+}
+document.getElementById('random-badge').textContent = getTotalProblems() + ' problems';
+
+// Event listeners
+document.getElementById('random-btn').addEventListener('click', openRandomProblem);
+document.getElementById('desmos-fab').addEventListener('click', () => {
+  window.open('https://www.desmos.com/calculator', '_blank', 'width=1000,height=700,noopener,noreferrer');
+});
+document.getElementById('modal-close').addEventListener('click', closeModal);
+document.getElementById('modal-overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+</body>
+</html>
