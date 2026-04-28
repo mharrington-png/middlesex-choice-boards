@@ -1,0 +1,1989 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BC Calculus — Unit 1: Limits &amp; Continuity | Middlesex School</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet" />
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+    startup: {
+      typeset: false,
+      ready() {
+        MathJax.startup.defaultReady();
+        renderBoard();
+        MathJax.typesetPromise([document.getElementById('board-grid')])
+          .catch(err => console.log(err));
+      }
+    }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+  /* ============================================================
+     TOKENS & RESET
+  ============================================================ */
+  :root {
+    --crimson:     #cf003d;
+    --crimson-dim: #8a0028;
+    --crimson-glow:#ff1a55;
+    --black:       #0d0d0d;
+    --surface:     #151515;
+    --surface2:    #1e1e1e;
+    --surface3:    #252525;
+    --border:      #2e2e2e;
+    --border-light:#3a3a3a;
+    --text:        #f0ece6;
+    --text-muted:  #9e9e9e;
+    --text-dim:    #666666;
+
+    --col1: #cf003d;
+    --col2: #1a6b5a;
+    --col3: #4a5568;
+    --col4: #7c4a1e;
+
+    --col1-light: #ff4d75;
+    --col2-light: #2dd4bf;
+    --col3-light: #94a3b8;
+    --col4-light: #f59e0b;
+
+    --radius: 10px;
+    --radius-lg: 16px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.5);
+    --shadow-hover: 0 8px 40px rgba(0,0,0,0.7);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 16px;
+    line-height: 1.65;
+    min-height: 100vh;
+  }
+
+  /* ============================================================
+     HEADER
+  ============================================================ */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 32px 40px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--crimson), var(--crimson-glow), var(--crimson));
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(207,0,61,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .header-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+  }
+
+  .school-tag {
+    font-family: 'Source Serif 4', serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--crimson-glow);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .school-tag::before,
+  .school-tag::after {
+    content: '';
+    display: inline-block;
+    width: 28px;
+    height: 1px;
+    background: var(--crimson-glow);
+  }
+
+  h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    margin-top: 4px;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--crimson-glow);
+  }
+
+  .header-meta {
+    margin-top: 4px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .meta-pill {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 3px 12px;
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+  }
+
+  /* ============================================================
+     INSTRUCTIONS BAR
+  ============================================================ */
+  .instructions {
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 40px;
+    font-size: 13px;
+    color: var(--text-muted);
+    text-align: center;
+    letter-spacing: 0.03em;
+  }
+
+  .instructions strong { color: var(--crimson-glow); font-weight: 600; }
+
+  /* ============================================================
+     BOARD GRID
+  ============================================================ */
+  .board-wrap {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 36px 24px 60px;
+  }
+
+  .board-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto repeat(4, 1fr);
+    gap: 20px;
+  }
+
+  .col-group { display: contents; }
+
+  .col-header {
+    border-radius: var(--radius) var(--radius) 0 0;
+    padding: 16px 18px 14px;
+    position: relative;
+    overflow: hidden;
+    align-self: start;
+  }
+
+  .col-header::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .col-1-header { background: color-mix(in srgb, var(--col1) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col1) 40%, transparent); }
+  .col-2-header { background: color-mix(in srgb, var(--col2) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col2) 40%, transparent); }
+  .col-3-header { background: color-mix(in srgb, var(--col3) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col3) 40%, transparent); }
+  .col-4-header { background: color-mix(in srgb, var(--col4) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col4) 40%, transparent); }
+
+  .col-header-num {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    opacity: 0.7;
+  }
+
+  .col-1-header .col-header-num { color: var(--col1-light); }
+  .col-2-header .col-header-num { color: var(--col2-light); }
+  .col-3-header .col-header-num { color: var(--col3-light); }
+  .col-4-header .col-header-num { color: var(--col4-light); }
+
+  .col-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.25;
+  }
+
+  .col-header .col-topics {
+    margin-top: 6px;
+    font-size: 10.5px;
+    color: var(--text-dim);
+    letter-spacing: 0.04em;
+  }
+
+  /* ============================================================
+     TILES
+  ============================================================ */
+  .tile {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 18px 28px;
+    cursor: pointer;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+    position: relative;
+    overflow: hidden;
+    user-select: none;
+  }
+
+  .tile::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+    border-radius: var(--radius) 0 0 var(--radius);
+    transition: opacity 0.2s;
+  }
+
+  .col-1 .tile::before { background: var(--col1-light); }
+  .col-2 .tile::before { background: var(--col2-light); }
+  .col-3 .tile::before { background: var(--col3-light); }
+  .col-4 .tile::before { background: var(--col4-light); }
+
+  .tile:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-hover);
+    background: var(--surface3);
+  }
+
+  .col-1 .tile:hover { border-color: color-mix(in srgb, var(--col1) 60%, transparent); }
+  .col-2 .tile:hover { border-color: color-mix(in srgb, var(--col2) 60%, transparent); }
+  .col-3 .tile:hover { border-color: color-mix(in srgb, var(--col3) 60%, transparent); }
+  .col-4 .tile:hover { border-color: color-mix(in srgb, var(--col4) 60%, transparent); }
+
+  .tile-icon { font-size: 18px; margin-bottom: 8px; display: block; }
+
+  .tile-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+    margin-bottom: 5px;
+  }
+
+  .tile-sub { font-size: 11.5px; color: var(--text-muted); line-height: 1.4; }
+
+  .tile-topics {
+    position: absolute;
+    bottom: 10px;
+    left: 18px;
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.06em;
+  }
+
+  .tile-arrow {
+    position: absolute;
+    bottom: 12px; right: 14px;
+    font-size: 14px;
+    opacity: 0.3;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+
+  .tile:hover .tile-arrow { opacity: 0.8; transform: translate(2px, -2px); }
+  .col-1 .tile:hover .tile-arrow { color: var(--col1-light); }
+  .col-2 .tile:hover .tile-arrow { color: var(--col2-light); }
+  .col-3 .tile:hover .tile-arrow { color: var(--col3-light); }
+  .col-4 .tile:hover .tile-arrow { color: var(--col4-light); }
+
+  /* ============================================================
+     DATA TABLES (for table problems)
+  ============================================================ */
+  .data-table {
+    border-collapse: collapse;
+    margin: 10px 0 14px;
+    font-size: 13.5px;
+    width: auto;
+  }
+
+  .data-table th, .data-table td {
+    border: 1px solid var(--border-light);
+    padding: 6px 14px;
+    text-align: center;
+  }
+
+  .data-table th {
+    background: var(--surface3);
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+  }
+
+  .data-table td { color: var(--text); }
+
+  /* ============================================================
+     MODAL
+  ============================================================ */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.82);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    backdrop-filter: blur(4px);
+  }
+
+  .modal-overlay.open { display: flex; animation: fadeIn 0.2s ease; }
+
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    width: 100%;
+    max-width: 760px;
+    max-height: 88vh;
+    overflow-y: auto;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.8);
+    animation: slideUp 0.22s ease;
+    position: relative;
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .modal-header {
+    padding: 24px 28px 20px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .modal-header-accent {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  }
+
+  .modal-col-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+  }
+
+  .modal-close {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.15s, color 0.15s;
+  }
+
+  .modal-close:hover { background: var(--crimson); color: white; border-color: var(--crimson); }
+
+  .modal-body { padding: 24px 28px 32px; }
+
+  /* Video section */
+  .video-section {
+    background: var(--surface2);
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 24px;
+  }
+
+  .video-label {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+
+  .video-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    color: var(--crimson-glow);
+    text-decoration: none;
+    font-size: 13.5px;
+    font-family: 'Source Serif 4', serif;
+    transition: color 0.15s;
+  }
+
+  .video-link:hover { color: #fff; }
+  .video-icon { font-size: 12px; opacity: 0.7; }
+
+  /* Problems */
+  .problem-block {
+    margin-bottom: 28px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .problem-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+  .problem-num {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+  }
+
+  .problem-context {
+    font-size: 14px;
+    font-style: italic;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    padding-left: 12px;
+    border-left: 2px solid var(--border-light);
+  }
+
+  .problem-text {
+    font-size: 14.5px;
+    color: var(--text);
+    line-height: 1.7;
+    margin-bottom: 14px;
+  }
+
+  .problem-parts { margin-left: 0; list-style: none; }
+
+  .problem-parts li {
+    font-size: 14px;
+    color: var(--text);
+    margin-bottom: 8px;
+    padding-left: 24px;
+    position: relative;
+    line-height: 1.6;
+  }
+
+  .problem-parts li::before {
+    content: attr(data-part);
+    position: absolute;
+    left: 0;
+    font-weight: 700;
+    color: var(--text-muted);
+  }
+
+  .problem-img {
+    display: block;
+    width: 360px;
+    max-width: 100%;
+    border-radius: 6px;
+    margin: 10px 0 6px;
+  }
+
+  .answer-toggle {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 9px 16px;
+    color: var(--text-muted);
+    font-family: 'Source Serif 4', serif;
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.15s;
+    margin-top: 4px;
+  }
+
+  .answer-toggle:hover { background: var(--surface3); border-color: var(--border-light); color: var(--text); }
+  .answer-toggle .toggle-icon { font-size: 10px; transition: transform 0.2s; }
+  .answer-toggle.open .toggle-icon { transform: rotate(180deg); }
+
+  .answer-panel {
+    display: none;
+    margin-top: 14px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-size: 13.5px;
+    line-height: 1.75;
+    color: var(--text);
+    animation: expandIn 0.18s ease;
+  }
+
+  @keyframes expandIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .answer-panel.open { display: block; }
+
+  .answer-part { margin-bottom: 10px; padding-left: 20px; position: relative; }
+  .answer-part:last-child { margin-bottom: 0; }
+  .answer-part-label { position: absolute; left: 0; font-weight: 700; color: var(--text-muted); }
+
+  /* ============================================================
+     RESPONSIVE
+  ============================================================ */
+  @media (max-width: 1000px) {
+    .board-grid { display: flex; flex-wrap: wrap; gap: 20px; }
+    .col-group { display: flex; flex-direction: column; gap: 10px; width: calc(50% - 10px); }
+    .col-header { border-radius: var(--radius); }
+    .tile { grid-column: unset !important; grid-row: unset !important; }
+  }
+
+  @media (max-width: 600px) {
+    .board-grid { flex-direction: column; }
+    .col-group { width: 100%; }
+    header { padding: 20px; }
+    .board-wrap { padding: 20px 12px 40px; }
+    .modal { border-radius: var(--radius); }
+    .modal-header, .modal-body { padding: 18px; }
+  }
+
+  .modal::-webkit-scrollbar { width: 6px; }
+  .modal::-webkit-scrollbar-track { background: var(--surface); }
+  .modal::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
+
+  /* ============================================================
+     RANDOM PRACTICE BAR
+  ============================================================ */
+  .random-wrap {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 24px 48px;
+  }
+
+  .random-btn {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border-light);
+    border-radius: 14px;
+    padding: 0 36px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.2s ease, background 0.2s ease;
+    font-family: 'Source Serif 4', serif;
+  }
+
+  .random-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(207,0,61,0.06) 30%, rgba(207,0,61,0.10) 50%, rgba(207,0,61,0.06) 70%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .random-btn:hover::before { opacity: 1; }
+
+  .random-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(207,0,61,0.18), 0 2px 8px rgba(0,0,0,0.4);
+    border-color: color-mix(in srgb, var(--crimson) 55%, transparent);
+    background: var(--surface3);
+  }
+
+  .random-btn:active { transform: translateY(0) scale(0.995); box-shadow: 0 2px 8px rgba(0,0,0,0.4); }
+
+  .random-btn-left-notch, .random-btn-right-notch {
+    position: absolute;
+    bottom: 0;
+    width: 28px; height: 5px;
+    background: var(--border);
+    border-radius: 3px 3px 0 0;
+    transition: background 0.2s;
+  }
+  .random-btn-left-notch  { left: 60px; }
+  .random-btn-right-notch { right: 60px; }
+  .random-btn:hover .random-btn-left-notch,
+  .random-btn:hover .random-btn-right-notch { background: color-mix(in srgb, var(--crimson) 40%, var(--border)); }
+
+  .random-btn-icon { font-size: 22px; flex-shrink: 0; transition: transform 0.3s ease; }
+  .random-btn:hover .random-btn-icon { transform: rotate(20deg) scale(1.15); }
+
+  .random-btn-label { display: flex; flex-direction: column; align-items: center; gap: 1px; }
+  .random-btn-title { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; color: var(--text); letter-spacing: 0.01em; line-height: 1.2; }
+  .random-btn-sub { font-size: 11.5px; color: var(--text-muted); letter-spacing: 0.07em; text-transform: uppercase; }
+
+  .random-btn-badge {
+    position: absolute;
+    right: 28px;
+    background: var(--surface3);
+    border: 1px solid var(--border-light);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-family: 'Source Serif 4', serif;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+
+  .random-btn:hover .random-btn-badge {
+    background: color-mix(in srgb, var(--crimson) 15%, var(--surface3));
+    color: var(--crimson-glow);
+    border-color: color-mix(in srgb, var(--crimson) 40%, transparent);
+  }
+
+  .random-accent {
+    background: linear-gradient(90deg, var(--col1-light), var(--col2-light), var(--col3-light), var(--col4-light));
+    background-size: 300% 100%;
+    animation: accentShift 4s ease infinite;
+  }
+
+  @keyframes accentShift {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  @media (max-width: 600px) {
+    .random-wrap { padding: 0 12px 36px; }
+    .random-btn { height: 64px; border-radius: 10px; }
+    .random-btn-badge, .random-btn-left-notch, .random-btn-right-notch { display: none; }
+  }
+
+  /* ============================================================
+     DESMOS FLOATING BUTTON
+  ============================================================ */
+  .desmos-fab {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    z-index: 1050;
+    background: var(--surface2);
+    border: 1px solid var(--border-light);
+    border-radius: 50px;
+    padding: 0 20px 0 14px;
+    height: 52px;
+    display: none;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    font-family: 'Source Serif 4', serif;
+  }
+
+  .desmos-fab.visible { display: flex; animation: fadeIn 0.18s ease; }
+
+  .desmos-fab:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(207,0,61,0.25), 0 2px 8px rgba(0,0,0,0.5);
+    border-color: color-mix(in srgb, var(--crimson) 60%, transparent);
+    background: var(--surface3);
+  }
+
+  .desmos-fab:active { transform: translateY(0) scale(0.97); }
+
+  .desmos-fab-icon { font-size: 20px; line-height: 1; flex-shrink: 0; transition: transform 0.2s ease; }
+  .desmos-fab:hover .desmos-fab-icon { transform: rotate(-8deg) scale(1.1); }
+
+  .desmos-fab-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    display: block;
+    line-height: 1.25;
+  }
+
+  .desmos-fab-sub {
+    font-size: 9.5px;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    display: block;
+  }
+
+  @media (max-width: 600px) {
+    .desmos-fab { bottom: 20px; right: 16px; padding: 0 14px; }
+    .desmos-fab-sub { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     HEADER
+============================================================ -->
+<header>
+  <div class="header-inner">
+    <div class="school-tag">Middlesex School · mxschool.edu</div>
+    <h1>BC Calculus — Unit 1: <em>Limits &amp; Continuity</em></h1>
+    <div class="header-meta">
+      <span class="meta-pill">📉 Limits from Graphs &amp; Tables</span>
+      <span class="meta-pill">∞ Algebraic Limit Techniques</span>
+      <span class="meta-pill">〰️ Continuity</span>
+      <span class="meta-pill">↔ Asymptotes &amp; IVT</span>
+      <span class="meta-pill">Topics 1.2 – 1.16</span>
+    </div>
+  </div>
+</header>
+
+<div class="instructions">
+  Click any tile to open practice problems. Use <strong>Show Answer</strong> to check your work after attempting each part.
+</div>
+
+<!-- ============================================================
+     BOARD
+============================================================ -->
+<div class="board-wrap">
+  <div class="board-grid" id="board-grid"></div>
+</div>
+
+<!-- ============================================================
+     RANDOM PRACTICE BAR
+============================================================ -->
+<div class="random-wrap">
+  <button class="random-btn" id="random-btn" aria-label="Random Practice">
+    <div class="random-btn-left-notch"></div>
+    <div class="random-btn-right-notch"></div>
+    <span class="random-btn-icon">🎲</span>
+    <div class="random-btn-label">
+      <span class="random-btn-title">Random Practice</span>
+      <span class="random-btn-sub">Any topic · Any tile · Any problem</span>
+    </div>
+    <span class="random-btn-badge">48 problems</span>
+  </button>
+</div>
+
+<!-- ============================================================
+     DESMOS FLOATING BUTTON
+============================================================ -->
+<button class="desmos-fab" id="desmos-fab" aria-label="Open Desmos Graphing Calculator">
+  <span class="desmos-fab-icon">📈</span>
+  <span>
+    <span class="desmos-fab-title">Graphing Calculator</span>
+    <span class="desmos-fab-sub">Opens Desmos in a new tab</span>
+  </span>
+</button>
+
+<!-- ============================================================
+     MODAL
+============================================================ -->
+<div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div class="modal-header-accent" id="modal-accent"></div>
+      <div>
+        <div class="modal-col-label" id="modal-col-label"></div>
+        <div class="modal-title" id="modal-title"></div>
+      </div>
+      <button class="modal-close" id="modal-close" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   DATA
+   Edit problems here without touching layout code.
+   Each tile: icon, title, sub, topics, problems[]
+   Each problem: context, stem, parts[], answers[]
+   Graph placeholders: <!-- GRAPH NEEDED: description -->
+   Video (optional): video: { title, url }
+============================================================ */
+
+const columns = [
+
+  // ═══════════════════════════════════════════════════════════
+  // COLUMN 1 — Limits from Graphs & Tables  (1.2 – 1.4, 1.9)
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: "col-1",
+    accentVar: "var(--col1-light)",
+    headerClass: "col-1-header",
+    tileClass: "col-1",
+    label: "Column I",
+    title: "Limits from Graphs & Tables",
+    topics: "Topics 1.2 – 1.4, 1.9",
+    tiles: [
+
+      // ── TILE 1-A ──────────────────────────────────────────
+      {
+        icon: "📈",
+        title: "Reading Limits from Graphs",
+        sub: "Two-sided, one-sided, and nonexistent limits",
+        topics: "1.3",
+        problems: [
+          {
+            context: "Context: Piecewise behavior from a graph",
+            stem: "The graph of $f$ is shown below.<br><br><!-- GRAPH NEEDED: Piecewise function with: open circle at (1, 3) approached from both sides; closed circle at (1, 0); jump discontinuity at x = 3 with left limit y = 1 (open dot) and right limit y = 4 (closed dot); otherwise smooth --><br><img src='img/u1a1p1.png' alt='Graph of f' class='problem-img'>",
+            parts: [
+              { label: "(a)", text: "Find $\\lim_{x \\to 1^-} f(x)$ and $\\lim_{x \\to 1^+} f(x)$." },
+              { label: "(b)", text: "Does $\\lim_{x \\to 1} f(x)$ exist? Justify your answer." },
+              { label: "(c)", text: "Find $\\lim_{x \\to 3} f(x)$, or state that it does not exist with justification." },
+              { label: "(d)", text: "Find $f(3)$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\lim_{x \\to 1^-} f(x) = 3$ and $\\lim_{x \\to 1^+} f(x) = 3$ (both one-sided limits approach the open circle at $y = 3$)." },
+              { label: "(b)", text: "Yes. Both one-sided limits equal 3, so $\\lim_{x \\to 1} f(x) = 3$. Note: the limit does not depend on the value $f(1) = 0$." },
+              { label: "(c)", text: "DNE. $\\lim_{x \\to 3^-} f(x) = 1$ and $\\lim_{x \\to 3^+} f(x) = 4$. Since the one-sided limits are not equal, the two-sided limit does not exist." },
+              { label: "(d)", text: "$f(3) = 4$ (read from the closed dot on the right branch at $x = 3$)." }
+            ]
+          },
+          {
+            context: "Context: Asymptotic and undefined behavior",
+            stem: "The graph of $g$ is shown below.<br><br><!-- GRAPH NEEDED: g with vertical asymptote at x = -2 (→+∞ from right, →-∞ from left); removable discontinuity (hole) at (1, 2) with g(1) = 5 marked by closed dot above; g is otherwise continuous and smooth --><br><img src='img/u1a1p2.png' alt='Graph of g' class='problem-img'>",
+            parts: [
+              { label: "(a)", text: "Find $\\lim_{x \\to -2^+} g(x)$ and $\\lim_{x \\to -2^-} g(x)$." },
+              { label: "(b)", text: "Find $\\lim_{x \\to 1} g(x)$." },
+              { label: "(c)", text: "State $g(1)$, and determine whether $g$ is continuous at $x = 1$. Justify using the definition of continuity." }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\lim_{x \\to -2^+} g(x) = +\\infty$ and $\\lim_{x \\to -2^-} g(x) = -\\infty$. There is a vertical asymptote at $x = -2$." },
+              { label: "(b)", text: "$\\lim_{x \\to 1} g(x) = 2$ (value of the open circle / hole at $x = 1$). Both one-sided limits approach 2." },
+              { label: "(c)", text: "$g(1) = 5$ (closed dot above the hole). Since $g(1) = 5 \\neq 2 = \\lim_{x \\to 1} g(x)$, the function value and the limit disagree — $g$ is <strong>not continuous</strong> at $x = 1$." }
+            ]
+          },
+          {
+            context: "Context: Translating verbal descriptions into limit notation",
+            stem: "A function $h$ satisfies all of the following conditions. No graph is given — write limit statements and answer from the description alone.<br><br>$h(0) = 2$; as $x \\to 0^-$, $h(x) \\to -1$; as $x \\to 0^+$, $h(x) \\to -1$; $h(4)$ is undefined; $\\lim_{x \\to 4} h(x) = 7$.",
+            parts: [
+              { label: "(a)", text: "Write the four conditions above in proper limit notation." },
+              { label: "(b)", text: "Is $h$ continuous at $x = 0$? Which part of the definition of continuity fails?" },
+              { label: "(c)", text: "Is $h$ continuous at $x = 4$? Which part of the definition fails?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$h(0) = 2$; $\\lim_{x \\to 0^-} h(x) = -1$; $\\lim_{x \\to 0^+} h(x) = -1$; $\\lim_{x \\to 0} h(x) = -1$; $h(4)$ is undefined; $\\lim_{x \\to 4} h(x) = 7$." },
+              { label: "(b)", text: "Not continuous at $x = 0$. The two-sided limit exists ($-1$), but $h(0) = 2 \\neq -1$. Condition 3 fails: the limit must equal the function value." },
+              { label: "(c)", text: "Not continuous at $x = 4$. $h(4)$ is undefined, so Condition 1 fails immediately — the function must be defined at the point." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 1-B ──────────────────────────────────────────
+      {
+        icon: "📋",
+        title: "Limits from Tables",
+        sub: "Numerical estimation and recognizing indeterminate forms",
+        topics: "1.4",
+        problems: [
+          {
+            context: "Context: Numerical estimate, then algebraic confirmation",
+            stem: "The table gives values of $f(x) = \\dfrac{x^2 - 9}{x - 3}$ for $x$ near 3.<br><br><table class='data-table'><tr><th>$x$</th><td>2.9</td><td>2.99</td><td>2.999</td><th style='border-left:2px solid #555'>$x$</th><td>3.001</td><td>3.01</td><td>3.1</td></tr><tr><th>$f(x)$</th><td>5.9</td><td>5.99</td><td>5.999</td><th style='border-left:2px solid #555'>$f(x)$</th><td>6.001</td><td>6.01</td><td>6.1</td></tr></table>",
+            parts: [
+              { label: "(a)", text: "Use the table to estimate $\\lim_{x \\to 3} f(x)$." },
+              { label: "(b)", text: "Confirm your estimate by evaluating the limit algebraically." },
+              { label: "(c)", text: "Why can't you simply substitute $x = 3$ into $f(x)$? What form does direct substitution produce?" }
+            ],
+            answers: [
+              { label: "(a)", text: "Values from both sides approach 6, so $\\lim_{x \\to 3} f(x) \\approx 6$." },
+              { label: "(b)", text: "$\\dfrac{x^2-9}{x-3} = \\dfrac{(x-3)(x+3)}{x-3} = x+3$ for $x \\neq 3$. So $\\lim_{x \\to 3} f(x) = 3 + 3 = 6$. ✓" },
+              { label: "(c)", text: "$f(3) = \\dfrac{0}{0}$, which is indeterminate. This means the function is undefined at $x=3$, but the table (and algebra) confirm the limit still exists." }
+            ]
+          },
+          {
+            context: "Context: Recognizing a fundamental trig limit numerically",
+            stem: "The table gives values of $g(x) = \\dfrac{\\sin(3x)}{x}$ for $x$ near 0.<br><br><table class='data-table'><tr><th>$x$</th><td>−0.1</td><td>−0.01</td><td>−0.001</td><th style='border-left:2px solid #555'>$x$</th><td>0.001</td><td>0.01</td><td>0.1</td></tr><tr><th>$g(x)$</th><td>2.955</td><td>2.9999</td><td>≈3.000</td><th style='border-left:2px solid #555'>$g(x)$</th><td>≈3.000</td><td>2.9999</td><td>2.955</td></tr></table>",
+            parts: [
+              { label: "(a)", text: "Estimate $\\lim_{x \\to 0} g(x)$ from the table." },
+              { label: "(b)", text: "Evaluate the limit exactly using the special limit $\\lim_{\\theta \\to 0} \\dfrac{\\sin \\theta}{\\theta} = 1$." },
+              { label: "(c)", text: "Explain why a table can suggest a limit value but cannot prove it." }
+            ],
+            answers: [
+              { label: "(a)", text: "Values from both sides approach 3, so $\\lim_{x \\to 0} g(x) \\approx 3$." },
+              { label: "(b)", text: "$\\dfrac{\\sin(3x)}{x} = 3 \\cdot \\dfrac{\\sin(3x)}{3x} \\to 3 \\cdot 1 = 3$ as $x \\to 0$." },
+              { label: "(c)", text: "A table only samples specific $x$-values and cannot confirm behavior for all $x$ approaching 0. The function might behave unexpectedly between the sampled points, or the table might miss a discontinuity. Analytical methods are required for a proof." }
+            ]
+          },
+          {
+            context: "Context: Applied — temperature approaching a moment in time",
+            stem: "A temperature sensor records $T(t)$ (°C) at time $t$ (minutes). At $t = 5$, the sensor glitches and records nothing. Readings near $t = 5$ are:<br><br><table class='data-table'><tr><th>$t$</th><td>4.9</td><td>4.99</td><td>4.999</td><th style='border-left:2px solid #555'>$t$</th><td>5.001</td><td>5.01</td><td>5.1</td></tr><tr><th>$T(t)$</th><td>22.30</td><td>22.03</td><td>22.003</td><th style='border-left:2px solid #555'>$T(t)$</th><td>21.997</td><td>21.97</td><td>21.70</td></tr></table>",
+            parts: [
+              { label: "(a)", text: "Estimate $\\lim_{t \\to 5} T(t)$ from the table." },
+              { label: "(b)", text: "Does the temperature have a well-defined value at $t = 5$ even though the sensor failed? Argue using your estimate." },
+              { label: "(c)", text: "The actual model is $T(t) = 20 + \\dfrac{2}{t - 4}$. Verify your estimate by computing $\\lim_{t \\to 5} T(t)$ analytically, then find $T(5)$." }
+            ],
+            answers: [
+              { label: "(a)", text: "Both sides approach 22, so $\\lim_{t \\to 5} T(t) \\approx 22$ °C." },
+              { label: "(b)", text: "Yes. The limit exists and equals 22 °C. Physically, temperature is a continuous quantity — even without a sensor reading, the limiting value tells us the temperature at that instant." },
+              { label: "(c)", text: "$\\lim_{t \\to 5}\\left(20 + \\dfrac{2}{t-4}\\right) = 20 + \\dfrac{2}{1} = 22$ °C. ✓ &nbsp; Also $T(5) = 20 + 2 = 22$ °C, so the function is actually continuous at $t = 5$ — the sensor malfunction was a measurement failure, not a physical discontinuity." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 1-C ──────────────────────────────────────────
+      {
+        icon: "↔️",
+        title: "One-Sided Limits",
+        sub: "When $\\lim_{x\\to c^-}$ and $\\lim_{x\\to c^+}$ agree — and when they don't",
+        topics: "1.3, 1.9",
+        problems: [
+          {
+            context: "Context: Piecewise-defined function",
+            stem: "Let $f(x) = \\begin{cases} x^2 - 1 &amp; x &lt; 2 \\\\ 5 &amp; x = 2 \\\\ 3x - 4 &amp; x &gt; 2 \\end{cases}$",
+            parts: [
+              { label: "(a)", text: "Find $\\lim_{x \\to 2^-} f(x)$ and $\\lim_{x \\to 2^+} f(x)$." },
+              { label: "(b)", text: "Does $\\lim_{x \\to 2} f(x)$ exist? Justify." },
+              { label: "(c)", text: "Is $f$ continuous at $x = 2$? Explain why or why not." }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\lim_{x \\to 2^-} f(x) = (2)^2 - 1 = 3$. $\\quad\\lim_{x \\to 2^+} f(x) = 3(2) - 4 = 2$." },
+              { label: "(b)", text: "No. The one-sided limits are not equal ($3 \\neq 2$), so $\\lim_{x \\to 2} f(x)$ does not exist." },
+              { label: "(c)", text: "Not continuous. The two-sided limit does not exist, so continuity fails at $x = 2$ — regardless of the value $f(2) = 5$." }
+            ]
+          },
+          {
+            context: "Context: Absolute value functions and sign analysis",
+            stem: "Consider $g(x) = \\dfrac{|x - 3|}{x - 3}$.",
+            parts: [
+              { label: "(a)", text: "Evaluate $\\lim_{x \\to 3^-} g(x)$ and $\\lim_{x \\to 3^+} g(x)$ by analyzing the sign of $|x-3|$ on each side." },
+              { label: "(b)", text: "Does $\\lim_{x \\to 3} g(x)$ exist? Explain." },
+              { label: "(c)", text: "State the domain of $g$ and describe the graph." }
+            ],
+            answers: [
+              { label: "(a)", text: "For $x &lt; 3$: $|x-3| = -(x-3)$, so $g(x) = -1$. Thus $\\lim_{x \\to 3^-} g(x) = -1$.<br>For $x &gt; 3$: $|x-3| = x-3$, so $g(x) = 1$. Thus $\\lim_{x \\to 3^+} g(x) = 1$." },
+              { label: "(b)", text: "No. $-1 \\neq 1$, so the one-sided limits disagree and $\\lim_{x \\to 3} g(x)$ does not exist." },
+              { label: "(c)", text: "Domain: $(-\\infty, 3) \\cup (3, \\infty)$. The graph is $g = -1$ for $x &lt; 3$ and $g = 1$ for $x &gt; 3$ — a step function with a jump discontinuity at $x = 3$." }
+            ]
+          },
+          {
+            context: "Context: Graph with multiple interesting points",
+            stem: "The graph of $h$ is shown.<br><br><!-- GRAPH NEEDED: h continuous near x=-1 (both sides approach 3, but h(-1)=1 marked by closed dot below); at x=2 a jump (left limit = 2 with open dot, right limit = -1 with closed dot); at x=4 a vertical asymptote with h→+∞ from both sides --><br><img src='img/u1c1p3.png' alt='Graph of h' class='problem-img'>",
+            parts: [
+              { label: "(a)", text: "Evaluate $\\lim_{x \\to -1^-} h(x)$, $\\lim_{x \\to -1^+} h(x)$, and $h(-1)$." },
+              { label: "(b)", text: "Evaluate $\\lim_{x \\to 2^-} h(x)$ and $\\lim_{x \\to 2^+} h(x)$." },
+              { label: "(c)", text: "For which values in $\\{-1, 2, 4\\}$ does $\\lim_{x \\to c} h(x)$ exist?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\lim_{x \\to -1^-} h(x) = 3$; $\\lim_{x \\to -1^+} h(x) = 3$; $h(-1) = 1$." },
+              { label: "(b)", text: "$\\lim_{x \\to 2^-} h(x) = 2$; $\\lim_{x \\to 2^+} h(x) = -1$." },
+              { label: "(c)", text: "Only $x = -1$ (both one-sided limits equal 3). At $x = 2$: one-sided limits differ, so no two-sided limit. At $x = 4$: limits are infinite, so no finite two-sided limit." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 1-D ──────────────────────────────────────────
+      {
+        icon: "🔗",
+        title: "Connecting Representations",
+        sub: "Graphs, tables, and formulas telling the same story",
+        topics: "1.9",
+        problems: [
+          {
+            context: "Context: Multi-representation analysis",
+            stem: "Three representations of the same function $f(x) = \\dfrac{x^2 - 4}{x - 2}$ are given:<br><br><strong>Table:</strong><table class='data-table'><tr><th>$x$</th><td>1.5</td><td>1.9</td><td>1.99</td><th style='border-left:2px solid #555'>$x$</th><td>2.01</td><td>2.1</td><td>2.5</td></tr><tr><th>$f(x)$</th><td>3.5</td><td>3.9</td><td>3.99</td><th style='border-left:2px solid #555'>$f(x)$</th><td>4.01</td><td>4.1</td><td>4.5</td></tr></table><br><!-- GRAPH NEEDED: Line y = x + 2 with open circle (hole) at (2, 4) --><br><img src='img/u1d1p1.png' alt='Graph of f: line y=x+2 with hole at (2,4)' class='problem-img'>",
+            parts: [
+              { label: "(a)", text: "From the table, estimate $\\lim_{x \\to 2} f(x)$." },
+              { label: "(b)", text: "Describe the graph of $f$ near $x = 2$ in a complete sentence." },
+              { label: "(c)", text: "Evaluate $\\lim_{x \\to 2} f(x)$ analytically and confirm all three representations agree." }
+            ],
+            answers: [
+              { label: "(a)", text: "Values approach 4 from both sides: $\\lim_{x \\to 2} f(x) \\approx 4$." },
+              { label: "(b)", text: "The graph is a straight line $y = x + 2$ with an open circle (hole) at the point $(2, 4)$, since $f(2)$ is undefined." },
+              { label: "(c)", text: "$\\dfrac{x^2-4}{x-2} = \\dfrac{(x-2)(x+2)}{x-2} = x + 2$ for $x \\neq 2$. So $\\lim_{x \\to 2} f(x) = 4$. All three representations agree. ✓" }
+            ]
+          },
+          {
+            context: "Context: Rationalization and estimating from a table",
+            stem: "Let $k(x) = \\dfrac{\\sqrt{x + 4} - 2}{x}$.",
+            parts: [
+              { label: "(a)", text: "Complete the table for $x \\in \\{-0.1,\\, -0.01,\\, 0.01,\\, 0.1\\}$ (round to 4 decimal places) and estimate $\\lim_{x \\to 0} k(x)$." },
+              { label: "(b)", text: "Evaluate $\\lim_{x \\to 0} k(x)$ algebraically by rationalizing the numerator." },
+              { label: "(c)", text: "What does the graph of $k$ look like near $x = 0$? Is $k$ defined at $x = 0$?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$k(-0.1) \\approx 0.2532$; $k(-0.01) \\approx 0.2503$; $k(0.01) \\approx 0.2497$; $k(0.1) \\approx 0.2481$. Estimate: $\\lim_{x\\to 0}k(x) \\approx 0.25$." },
+              { label: "(b)", text: "Multiply by $\\dfrac{\\sqrt{x+4}+2}{\\sqrt{x+4}+2}$: $\\dfrac{(x+4)-4}{x(\\sqrt{x+4}+2)} = \\dfrac{x}{x(\\sqrt{x+4}+2)} = \\dfrac{1}{\\sqrt{x+4}+2} \\to \\dfrac{1}{\\sqrt{4}+2} = \\dfrac{1}{4}$." },
+              { label: "(c)", text: "$k(0)$ is undefined ($0/0$ form). Near $x = 0$, the graph has a smooth curve with a removable discontinuity — an open circle at $\\left(0,\\, \\tfrac{1}{4}\\right)$, approaching that value from both sides." }
+            ]
+          },
+          {
+            context: "Context: Motion — position sensor at a glitch",
+            stem: "A drone's position $s(t)$ (in feet) is recorded for times $t$ (seconds) near $t = 3$. The sensor fails at $t = 3$.<br><br><table class='data-table'><tr><th>$t$</th><td>2.9</td><td>2.99</td><td>2.999</td><th style='border-left:2px solid #555'>$t$</th><td>3.001</td><td>3.01</td><td>3.1</td></tr><tr><th>$s(t)$</th><td>8.41</td><td>8.9401</td><td>8.994</td><th style='border-left:2px solid #555'>$s(t)$</th><td>9.006</td><td>9.0601</td><td>9.61</td></tr></table>",
+            parts: [
+              { label: "(a)", text: "Estimate $\\lim_{t \\to 3} s(t)$ from the table." },
+              { label: "(b)", text: "The pattern is consistent with $s(t) = t^2$. Verify analytically and interpret $\\lim_{t \\to 3} s(t)$ in context." },
+              { label: "(c)", text: "Would knowing the formula for $s$ be strictly necessary to determine the limit? Explain the relationship between the three representations." }
+            ],
+            answers: [
+              { label: "(a)", text: "Values approach 9 from both sides: $\\lim_{t \\to 3} s(t) \\approx 9$ feet." },
+              { label: "(b)", text: "$\\lim_{t \\to 3} t^2 = 9$ feet. The drone's position is approaching 9 feet from the reference point at the moment $t = 3$ seconds. Because $t^2$ is continuous, the limit equals the actual position." },
+              { label: "(c)", text: "No — the table alone is sufficient to estimate the limit. The formula confirms and sharpens it; the graph makes the pattern visual. All three representations are consistent, and each provides a different kind of evidence. A formula is only strictly necessary if you need an exact value." }
+            ]
+          }
+        ]
+      }
+
+    ]
+  },
+
+  // ═══════════════════════════════════════════════════════════
+  // COLUMN 2 — Computing Limits Algebraically  (1.5 – 1.8)
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: "col-2",
+    accentVar: "var(--col2-light)",
+    headerClass: "col-2-header",
+    tileClass: "col-2",
+    label: "Column II",
+    title: "Computing Limits Algebraically",
+    topics: "Topics 1.5 – 1.8",
+    tiles: [
+
+      // ── TILE 2-A ──────────────────────────────────────────
+      {
+        icon: "⚡",
+        title: "Direct Substitution & Limit Laws",
+        sub: "Properties that let you build limits from simpler pieces",
+        topics: "1.5",
+        problems: [
+          {
+            context: "Context: Applying limit laws with given values",
+            stem: "Suppose $\\lim_{x \\to 3} f(x) = 4$ and $\\lim_{x \\to 3} g(x) = -2$. Evaluate each limit, or explain why it does not exist.",
+            parts: [
+              { label: "(a)", text: "$\\lim_{x \\to 3} \\left[3f(x) - g(x)^2\\right]$" },
+              { label: "(b)", text: "$\\lim_{x \\to 3} \\sqrt{f(x) + g(x) + 5}$" },
+              { label: "(c)", text: "$\\lim_{x \\to 3} \\dfrac{f(x)}{g(x) + 2}$" }
+            ],
+            answers: [
+              { label: "(a)", text: "$3(4) - (-2)^2 = 12 - 4 = 8$." },
+              { label: "(b)", text: "$\\sqrt{4 + (-2) + 5} = \\sqrt{7}$." },
+              { label: "(c)", text: "The denominator limit: $\\lim_{x\\to 3}[g(x)+2] = -2 + 2 = 0$. The quotient law requires the denominator limit to be nonzero. Without more information about the numerator's sign, we cannot determine whether the limit is $+\\infty$, $-\\infty$, or nonexistent. The limit <strong>does not exist</strong> (or is infinite)." }
+            ]
+          },
+          {
+            context: "Context: Polynomial, rational, and radical limits",
+            stem: "Evaluate each limit.",
+            parts: [
+              { label: "(a)", text: "$\\lim_{x \\to -1} (x^3 - 2x^2 + 5x - 7)$" },
+              { label: "(b)", text: "$\\lim_{x \\to 2} \\dfrac{x^2 + 3x - 10}{x^2 - 4}$" },
+              { label: "(c)", text: "$\\lim_{x \\to 4} \\dfrac{\\sqrt{x} - 2}{x - 4}$" }
+            ],
+            answers: [
+              { label: "(a)", text: "Polynomial — use direct substitution: $(-1)^3 - 2(-1)^2 + 5(-1) - 7 = -1 - 2 - 5 - 7 = -15$." },
+              { label: "(b)", text: "$\\frac{0}{0}$ form. Factor: $\\dfrac{(x+5)(x-2)}{(x+2)(x-2)} = \\dfrac{x+5}{x+2} \\to \\dfrac{7}{4}$ as $x \\to 2$." },
+              { label: "(c)", text: "$\\frac{0}{0}$ form. Rationalize: $\\dfrac{\\sqrt{x}-2}{x-4}\\cdot\\dfrac{\\sqrt{x}+2}{\\sqrt{x}+2} = \\dfrac{x-4}{(x-4)(\\sqrt{x}+2)} = \\dfrac{1}{\\sqrt{x}+2} \\to \\dfrac{1}{4}$." }
+            ]
+          },
+          {
+            context: "Context: Composition and limit-definition connections",
+            stem: "Evaluate each limit.",
+            parts: [
+              { label: "(a)", text: "Given $\\lim_{x \\to 2} f(x) = -3$ and $f$ continuous at $-3$ with $f(-3) = 7$: find $\\lim_{x \\to 2} f(f(x))$." },
+              { label: "(b)", text: "$\\lim_{x \\to 5} \\left[\\cos(x - 5) \\cdot \\dfrac{x^2 - 25}{x - 5}\\right]$" },
+              { label: "(c)", text: "$\\lim_{x \\to 0} \\dfrac{(1 + x)^3 - 1}{x}$ — expand the numerator first." }
+            ],
+            answers: [
+              { label: "(a)", text: "Since $f$ is continuous at $-3$: $\\lim_{x\\to 2} f(f(x)) = f\\!\\left(\\lim_{x\\to 2}f(x)\\right) = f(-3) = 7$." },
+              { label: "(b)", text: "$\\dfrac{x^2-25}{x-5} = x+5 \\to 10$ and $\\cos(x-5) \\to \\cos(0) = 1$. Product: $10 \\cdot 1 = 10$." },
+              { label: "(c)", text: "$(1+x)^3 = 1 + 3x + 3x^2 + x^3$. So $\\dfrac{3x + 3x^2 + x^3}{x} = 3 + 3x + x^2 \\to 3$." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 2-B ──────────────────────────────────────────
+      {
+        icon: "🔧",
+        title: "Algebraic Manipulation",
+        sub: "Factor, rationalize, and simplify $\\tfrac{0}{0}$ forms",
+        topics: "1.6",
+        problems: [
+          {
+            context: "Context: Factoring and cancellation",
+            stem: "Evaluate each limit.",
+            parts: [
+              { label: "(a)", text: "$\\lim_{x \\to -3} \\dfrac{x^2 + 5x + 6}{x^2 - x - 12}$" },
+              { label: "(b)", text: "$\\lim_{h \\to 0} \\dfrac{(3 + h)^2 - 9}{h}$" },
+              { label: "(c)", text: "$\\lim_{x \\to 2} \\dfrac{x^3 - 8}{x^2 - 4}$" }
+            ],
+            answers: [
+              { label: "(a)", text: "Factor: $\\dfrac{(x+3)(x+2)}{(x+3)(x-4)} = \\dfrac{x+2}{x-4} \\to \\dfrac{-1}{-7} = \\dfrac{1}{7}$." },
+              { label: "(b)", text: "$\\dfrac{9 + 6h + h^2 - 9}{h} = \\dfrac{6h + h^2}{h} = 6 + h \\to 6$. (This is $f'(3)$ for $f(x) = x^2$.)" },
+              { label: "(c)", text: "Factor difference of cubes: $\\dfrac{(x-2)(x^2+2x+4)}{(x-2)(x+2)} = \\dfrac{x^2+2x+4}{x+2} \\to \\dfrac{12}{4} = 3$." }
+            ]
+          },
+          {
+            context: "Context: Rationalization",
+            stem: "Evaluate each limit by rationalizing.",
+            parts: [
+              { label: "(a)", text: "$\\lim_{x \\to 9} \\dfrac{x - 9}{\\sqrt{x} - 3}$" },
+              { label: "(b)", text: "$\\lim_{x \\to 0} \\dfrac{\\sqrt{x + 16} - 4}{x}$" },
+              { label: "(c)", text: "$\\lim_{h \\to 0} \\dfrac{\\sqrt{a + h} - \\sqrt{a}}{h}$ for constant $a &gt; 0$. (Your answer will be in terms of $a$.)" }
+            ],
+            answers: [
+              { label: "(a)", text: "Multiply by $\\dfrac{\\sqrt{x}+3}{\\sqrt{x}+3}$: $\\dfrac{(x-9)(\\sqrt{x}+3)}{x-9} = \\sqrt{x}+3 \\to 6$." },
+              { label: "(b)", text: "Multiply by $\\dfrac{\\sqrt{x+16}+4}{\\sqrt{x+16}+4}$: $\\dfrac{x}{x(\\sqrt{x+16}+4)} = \\dfrac{1}{\\sqrt{x+16}+4} \\to \\dfrac{1}{8}$." },
+              { label: "(c)", text: "Multiply by $\\dfrac{\\sqrt{a+h}+\\sqrt{a}}{\\sqrt{a+h}+\\sqrt{a}}$: $\\dfrac{(a+h)-a}{h(\\sqrt{a+h}+\\sqrt{a})} = \\dfrac{1}{\\sqrt{a+h}+\\sqrt{a}} \\to \\dfrac{1}{2\\sqrt{a}}$. (This is the derivative of $\\sqrt{x}$ at $x = a$.)" }
+            ]
+          },
+          {
+            context: "Context: Complex fractions",
+            stem: "Evaluate each limit.",
+            parts: [
+              { label: "(a)", text: "$\\lim_{x \\to 0} \\dfrac{\\dfrac{1}{x+3} - \\dfrac{1}{3}}{x}$" },
+              { label: "(b)", text: "$\\lim_{x \\to 2} \\dfrac{\\dfrac{1}{x} - \\dfrac{1}{2}}{x - 2}$" },
+              { label: "(c)", text: "$\\lim_{x \\to -1} \\dfrac{x^2 + 4x + 3}{x^2 - 2x - 3}$" }
+            ],
+            answers: [
+              { label: "(a)", text: "Combine: $\\dfrac{1}{x+3} - \\dfrac{1}{3} = \\dfrac{3-(x+3)}{3(x+3)} = \\dfrac{-x}{3(x+3)}$. Divide by $x$: $\\dfrac{-1}{3(x+3)} \\to \\dfrac{-1}{9}$." },
+              { label: "(b)", text: "Combine: $\\dfrac{1}{x}-\\dfrac{1}{2} = \\dfrac{2-x}{2x}$. So the expression is $\\dfrac{2-x}{2x(x-2)} = \\dfrac{-(x-2)}{2x(x-2)} = \\dfrac{-1}{2x} \\to \\dfrac{-1}{4}$. (This is the derivative of $1/x$ at $x = 2$.)" },
+              { label: "(c)", text: "Factor: $\\dfrac{(x+1)(x+3)}{(x+1)(x-3)} = \\dfrac{x+3}{x-3} \\to \\dfrac{2}{-4} = -\\dfrac{1}{2}$." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 2-C ──────────────────────────────────────────
+      {
+        icon: "〰️",
+        title: "Trig & Special Limits",
+        sub: "$\\lim_{\\theta \\to 0}\\dfrac{\\sin\\theta}{\\theta}=1$ and the techniques it unlocks",
+        topics: "1.7",
+        problems: [
+          {
+            context: "Context: Fundamental trig limits",
+            stem: "Evaluate each limit.",
+            parts: [
+              { label: "(a)", text: "$\\lim_{x \\to 0} \\dfrac{\\sin(5x)}{x}$" },
+              { label: "(b)", text: "$\\lim_{x \\to 0} \\dfrac{\\tan(3x)}{x}$" },
+              { label: "(c)", text: "$\\lim_{x \\to 0} \\dfrac{1 - \\cos x}{x^2}$" }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\dfrac{\\sin(5x)}{x} = 5 \\cdot \\dfrac{\\sin(5x)}{5x} \\to 5 \\cdot 1 = 5$." },
+              { label: "(b)", text: "$\\dfrac{\\tan(3x)}{x} = \\dfrac{\\sin(3x)}{x\\cos(3x)} = 3\\cdot\\dfrac{\\sin(3x)}{3x} \\cdot \\dfrac{1}{\\cos(3x)} \\to 3\\cdot 1\\cdot 1 = 3$." },
+              { label: "(c)", text: "Multiply by $\\dfrac{1+\\cos x}{1+\\cos x}$: $\\dfrac{1-\\cos^2 x}{x^2(1+\\cos x)} = \\dfrac{\\sin^2 x}{x^2(1+\\cos x)} = \\left(\\dfrac{\\sin x}{x}\\right)^2\\cdot\\dfrac{1}{1+\\cos x} \\to 1\\cdot\\dfrac{1}{2} = \\dfrac{1}{2}$." }
+            ]
+          },
+          {
+            context: "Context: Selecting the most efficient strategy",
+            stem: "For each limit, identify the best technique and evaluate.",
+            parts: [
+              { label: "(a)", text: "$\\lim_{x \\to 0} \\dfrac{\\sin^2(3x)}{x^2}$" },
+              { label: "(b)", text: "$\\lim_{x \\to \\pi/2} \\dfrac{\\cos x}{x - \\pi/2}$" },
+              { label: "(c)", text: "$\\lim_{x \\to 0} \\dfrac{x^2 \\cos x}{\\sin(2x)}$" }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\left(\\dfrac{\\sin(3x)}{x}\\right)^2 = \\left(3\\cdot\\dfrac{\\sin(3x)}{3x}\\right)^2 \\to 9$." },
+              { label: "(b)", text: "Let $u = x - \\pi/2 \\to 0$. Then $\\cos x = \\cos(u + \\pi/2) = -\\sin u$. So the limit $= \\dfrac{-\\sin u}{u} \\to -1$." },
+              { label: "(c)", text: "$\\dfrac{x^2\\cos x}{\\sin(2x)} = \\dfrac{x}{2}\\cdot\\dfrac{2x}{\\sin(2x)}\\cdot\\cos x \\to \\dfrac{0}{2}\\cdot 1\\cdot 1 = 0$." }
+            ]
+          },
+          {
+            context: "Context: Limit definition of the derivative for trig functions",
+            stem: "Each limit is the derivative of a trig function at a specific point. Identify the function and point, then evaluate.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\lim_{h \\to 0} \\dfrac{\\sin\\!\\left(\\dfrac{\\pi}{6}+h\\right) - \\dfrac{1}{2}}{h}$" },
+              { label: "(b)", text: "$\\displaystyle\\lim_{h \\to 0} \\dfrac{\\cos(\\pi + h) + 1}{h}$" },
+              { label: "(c)", text: "$\\displaystyle\\lim_{x \\to 0} \\dfrac{\\sin x - x}{x^3}$ &nbsp; (use the Maclaurin series $\\sin x = x - \\tfrac{x^3}{6} + \\cdots$)" }
+            ],
+            answers: [
+              { label: "(a)", text: "This is $f'(\\pi/6)$ for $f(x) = \\sin x$. $f'(x) = \\cos x$, so $f'(\\pi/6) = \\cos(\\pi/6) = \\dfrac{\\sqrt{3}}{2}$." },
+              { label: "(b)", text: "This is $f'(\\pi)$ for $f(x) = \\cos x$. $f'(x) = -\\sin x$, so $f'(\\pi) = -\\sin(\\pi) = 0$." },
+              { label: "(c)", text: "$\\sin x - x \\approx -\\dfrac{x^3}{6}$ near $x = 0$. So $\\dfrac{\\sin x - x}{x^3} \\approx -\\dfrac{1}{6} \\to -\\dfrac{1}{6}$." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 2-D ──────────────────────────────────────────
+      {
+        icon: "🗜️",
+        title: "Squeeze Theorem",
+        sub: "Trapping a limit between two known bounds",
+        topics: "1.8",
+        problems: [
+          {
+            context: "Context: Classic oscillating function",
+            stem: "Let $f(x) = x^2 \\cos\\!\\left(\\dfrac{1}{x}\\right)$ for $x \\neq 0$.",
+            parts: [
+              { label: "(a)", text: "State appropriate bounding inequalities for $\\cos(1/x)$." },
+              { label: "(b)", text: "Multiply through by $x^2$ and apply the Squeeze Theorem to find $\\lim_{x \\to 0} f(x)$." },
+              { label: "(c)", text: "Explain qualitatively why the function oscillates infinitely near $x = 0$ but the limit still exists." }
+            ],
+            answers: [
+              { label: "(a)", text: "$-1 \\le \\cos(1/x) \\le 1$ for all $x \\neq 0$." },
+              { label: "(b)", text: "$-x^2 \\le x^2\\cos(1/x) \\le x^2$. Since $\\lim_{x\\to 0}(-x^2) = 0$ and $\\lim_{x\\to 0}x^2 = 0$, the Squeeze Theorem gives $\\lim_{x \\to 0} f(x) = 0$." },
+              { label: "(c)", text: "As $x \\to 0$, the cosine term oscillates between $-1$ and $1$ infinitely rapidly, but the amplitude $x^2$ shrinks to 0. The oscillations are forced into an ever-tighter band around 0, and the function is squeezed to 0 regardless of the oscillation." }
+            ]
+          },
+          {
+            context: "Context: Squeeze with polynomial bounds — function unknown",
+            stem: "You are told that $3 - x^2 \\le f(x) \\le 3 + \\sin^2 x$ for all $x$ near 0.",
+            parts: [
+              { label: "(a)", text: "Compute $\\lim_{x \\to 0}(3 - x^2)$ and $\\lim_{x \\to 0}(3 + \\sin^2 x)$." },
+              { label: "(b)", text: "Apply the Squeeze Theorem to find $\\lim_{x \\to 0} f(x)$." },
+              { label: "(c)", text: "Can you determine $f(0)$ from this information alone? Explain." }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\lim_{x\\to 0}(3-x^2) = 3$ and $\\lim_{x\\to 0}(3 + \\sin^2 x) = 3 + 0 = 3$." },
+              { label: "(b)", text: "Both bounding functions approach 3 and $f$ is trapped between them, so by the Squeeze Theorem $\\lim_{x \\to 0} f(x) = 3$." },
+              { label: "(c)", text: "No. The Squeeze Theorem tells us only about the limiting behavior as $x \\to 0$, not the value of $f$ at 0. We know $2 \\le f(0) \\le 4$ from the bounds (plugging in $x=0$: $3 \\le f(0) \\le 3$, so $f(0) = 3$ if defined), but if $f(0)$ is undefined the limit still equals 3." }
+            ]
+          },
+          {
+            context: "Context: Oscillating function made continuous",
+            stem: "Let $g(x) = x \\sin\\!\\left(\\dfrac{\\pi}{x}\\right)$ for $x \\neq 0$.",
+            parts: [
+              { label: "(a)", text: "Explain why $\\lim_{x \\to 0}\\sin(\\pi/x)$ does not exist on its own." },
+              { label: "(b)", text: "Apply the Squeeze Theorem to find $\\lim_{x \\to 0} g(x)$." },
+              { label: "(c)", text: "If we define $g(0) = 0$, is the extended function $g$ continuous at $x = 0$? Justify using the definition of continuity." }
+            ],
+            answers: [
+              { label: "(a)", text: "As $x \\to 0$, $\\pi/x \\to \\pm\\infty$ and $\\sin(\\pi/x)$ oscillates between $-1$ and $1$ without settling at any value. The limit does not exist." },
+              { label: "(b)", text: "$|\\sin(\\pi/x)| \\le 1$ so $-|x| \\le x\\sin(\\pi/x) \\le |x|$. Since $\\lim_{x\\to 0}(\\pm|x|) = 0$, the Squeeze Theorem gives $\\lim_{x \\to 0} g(x) = 0$." },
+              { label: "(c)", text: "Yes. With $g(0) = 0$: (1) $g(0) = 0$ is defined; (2) $\\lim_{x\\to 0}g(x) = 0$ exists; (3) $g(0) = 0 = \\lim_{x\\to 0}g(x)$. All three conditions hold — $g$ is continuous at $x = 0$." }
+            ]
+          }
+        ]
+      }
+
+    ]
+  },
+
+  // ═══════════════════════════════════════════════════════════
+  // COLUMN 3 — Continuity  (1.10 – 1.13)
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: "col-3",
+    accentVar: "var(--col3-light)",
+    headerClass: "col-3-header",
+    tileClass: "col-3",
+    label: "Column III",
+    title: "Continuity",
+    topics: "Topics 1.10 – 1.13",
+    tiles: [
+
+      // ── TILE 3-A ──────────────────────────────────────────
+      {
+        icon: "✅",
+        title: "Continuity at a Point",
+        sub: "Three conditions: defined, limit exists, limit equals value",
+        topics: "1.11",
+        problems: [
+          {
+            context: "Context: Checking the three-part definition",
+            stem: "Determine whether each function is continuous at the given point. Identify which condition(s) fail when it is not.",
+            parts: [
+              { label: "(a)", text: "$f(x) = \\dfrac{x^2 - 4}{x - 2}$, at $x = 2$" },
+              { label: "(b)", text: "$g(x) = \\begin{cases} x + 1 &amp; x \\ne 1 \\\\ 3 &amp; x = 1 \\end{cases}$, at $x = 1$" },
+              { label: "(c)", text: "$h(x) = \\begin{cases} x^2 &amp; x &lt; 0 \\\\ 0 &amp; x = 0 \\\\ \\sin x &amp; x &gt; 0 \\end{cases}$, at $x = 0$" }
+            ],
+            answers: [
+              { label: "(a)", text: "$f(2) = 0/0$ — undefined. Condition 1 fails. Not continuous." },
+              { label: "(b)", text: "$g(1) = 3$. $\\lim_{x\\to 1}g(x) = 1+1 = 2 \\neq 3$. Condition 3 fails (limit ≠ function value). Not continuous." },
+              { label: "(c)", text: "$h(0) = 0$. $\\lim_{x\\to 0^-}h = 0^2 = 0$. $\\lim_{x\\to 0^+}h = \\sin(0) = 0$. Two-sided limit = 0 = $h(0)$. All three conditions hold — $h$ is <strong>continuous</strong> at $x = 0$." }
+            ]
+          },
+          {
+            context: "Context: Finding constants for continuity",
+            stem: "Find the value of the constant that makes each function continuous at the indicated point.",
+            parts: [
+              { label: "(a)", text: "$f(x) = \\begin{cases} kx^2 - 1 &amp; x \\le 2 \\\\ 3x &amp; x &gt; 2 \\end{cases}$, at $x = 2$" },
+              { label: "(b)", text: "$g(x) = \\begin{cases} \\dfrac{\\sin(kx)}{x} &amp; x \\ne 0 \\\\ 4 &amp; x = 0 \\end{cases}$, at $x = 0$" },
+              { label: "(c)", text: "$h(x) = \\begin{cases} x^2 + k &amp; x &lt; 3 \\\\ 2kx - 1 &amp; x \\ge 3 \\end{cases}$, at $x = 3$" }
+            ],
+            answers: [
+              { label: "(a)", text: "Continuity requires $k(4)-1 = 3(2)$: $4k-1 = 6$, so $k = \\dfrac{7}{4}$." },
+              { label: "(b)", text: "$\\lim_{x\\to 0}\\dfrac{\\sin(kx)}{x} = k$. For continuity: $k = 4$." },
+              { label: "(c)", text: "Left limit at 3: $9+k$. Right value at 3: $6k-1$. Set equal: $9+k = 6k-1 \\Rightarrow 10 = 5k \\Rightarrow k = 2$." }
+            ]
+          },
+          {
+            context: "Context: Applied — water volume in a tank",
+            stem: "A tank's volume (in gallons) switches between filling and draining models at time $t = 5$ minutes:<br>$V(t) = \\begin{cases} 10t^2 &amp; 0 \\le t \\le 5 \\\\ kt - 50 &amp; t &gt; 5 \\end{cases}$",
+            parts: [
+              { label: "(a)", text: "Find the value of $k$ so that $V$ is continuous at $t = 5$." },
+              { label: "(b)", text: "Interpret the continuity condition in context." },
+              { label: "(c)", text: "What would a discontinuity in $V$ at $t = 5$ mean physically?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$V(5) = 10(25) = 250$. For continuity: $5k - 50 = 250 \\Rightarrow 5k = 300 \\Rightarrow k = 60$." },
+              { label: "(b)", text: "At $t = 5$ min, the volume is 250 gallons under both models. Continuity means there is no sudden jump — the water volume transitions smoothly from filling to draining." },
+              { label: "(c)", text: "A jump discontinuity would mean water instantaneously appears or disappears at $t = 5$, which is physically impossible. Continuity is a physical requirement for volume." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 3-B ──────────────────────────────────────────
+      {
+        icon: "⚠️",
+        title: "Types of Discontinuities",
+        sub: "Removable, jump, and infinite — classification and behavior",
+        topics: "1.10",
+        problems: [
+          {
+            context: "Context: Classifying algebraically",
+            stem: "For each function, find all discontinuities and classify each as removable, jump, or infinite.",
+            parts: [
+              { label: "(a)", text: "$f(x) = \\dfrac{x^2 - 1}{x - 1}$" },
+              { label: "(b)", text: "$g(x) = \\dfrac{1}{x^2 - 4}$" },
+              { label: "(c)", text: "$h(x) = \\begin{cases} x &amp; x &lt; 0 \\\\ 2 &amp; x = 0 \\\\ x + 3 &amp; x &gt; 0 \\end{cases}$" }
+            ],
+            answers: [
+              { label: "(a)", text: "$f$ undefined at $x = 1$; $\\dfrac{(x-1)(x+1)}{x-1} = x+1$, so $\\lim_{x\\to 1}f = 2$. <strong>Removable</strong> discontinuity at $x = 1$." },
+              { label: "(b)", text: "$g$ undefined at $x = \\pm 2$; limits are $\\pm\\infty$. <strong>Infinite</strong> discontinuities at $x = 2$ and $x = -2$." },
+              { label: "(c)", text: "$\\lim_{x\\to 0^-}h = 0$; $\\lim_{x\\to 0^+}h = 3$. One-sided limits disagree. <strong>Jump</strong> discontinuity at $x = 0$." }
+            ]
+          },
+          {
+            context: "Context: Reading discontinuities from a graph",
+            stem: "The graph of $p$ is shown below.<br><br><!-- GRAPH NEEDED: p with: removable discontinuity (hole) at x = -2 at y = 1, p(-2) not defined; jump discontinuity at x = 1 (left limit = 3 open dot, right limit = 0 with p(1) = 0 closed dot); vertical asymptote at x = 3; otherwise smooth --><br><img src='img/u1c2p2.png' alt='Graph of p' class='problem-img'>",
+            parts: [
+              { label: "(a)", text: "List all discontinuities of $p$ and classify each." },
+              { label: "(b)", text: "At which discontinuity can $p$ be redefined to make it continuous? What value should be assigned?" },
+              { label: "(c)", text: "At $x = 1$, is $p$ left-continuous, right-continuous, or neither? (Recall: left-continuous means $\\lim_{x\\to 1^-}p(x) = p(1)$.)" }
+            ],
+            answers: [
+              { label: "(a)", text: "$x = -2$: removable (hole, limit exists but $p(-2)$ undefined). $x = 1$: jump (one-sided limits differ). $x = 3$: infinite (vertical asymptote)." },
+              { label: "(b)", text: "Only the removable discontinuity at $x = -2$ can be fixed. Define $p(-2) = 1$ (the $y$-value of the hole) to make $p$ continuous there." },
+              { label: "(c)", text: "$\\lim_{x\\to 1^-}p(x) = 3 \\neq p(1) = 0$, so $p$ is <strong>not</strong> left-continuous. $\\lim_{x\\to 1^+}p(x) = 0 = p(1)$, so $p$ is <strong>right-continuous</strong> at $x = 1$." }
+            ]
+          },
+          {
+            context: "Context: Applied — stock price model",
+            stem: "A stock's price is modeled piecewise over one trading day ($t$ in hours, $P$ in dollars):<br>$P(t) = \\begin{cases} 120 + 2t &amp; 0 \\le t &lt; 3 \\\\ 130 &amp; t = 3 \\\\ 140 - t &amp; 3 &lt; t \\le 6 \\end{cases}$",
+            parts: [
+              { label: "(a)", text: "Find $\\lim_{t \\to 3^-} P(t)$, $\\lim_{t \\to 3^+} P(t)$, and $P(3)$." },
+              { label: "(b)", text: "Classify the discontinuity at $t = 3$." },
+              { label: "(c)", text: "What must be true of the two piecewise formulas in order for $P$ to be continuous at $t = 3$?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\lim_{t\\to 3^-}P = 120+6 = 126$; $\\lim_{t\\to 3^+}P = 140-3 = 137$; $P(3) = 130$." },
+              { label: "(b)", text: "Jump discontinuity — the left and right limits ($126$ and $137$) are not equal. (Note: $P(3) = 130$ matches neither, making this a doubly unusual case.)" },
+              { label: "(c)", text: "The two formulas must produce the same value at $t = 3$: we need $\\lim_{t\\to 3^-}P = \\lim_{t\\to 3^+}P$, and this common value must also equal $P(3)$. At minimum, $120 + 2(3)$ must equal $140 - 3$, which requires adjusting at least one formula." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 3-C ──────────────────────────────────────────
+      {
+        icon: "🩹",
+        title: "Removing Discontinuities",
+        sub: "Extending or redefining functions to restore continuity",
+        topics: "1.13",
+        problems: [
+          {
+            context: "Context: Identifying and filling holes",
+            stem: "Each function has a removable discontinuity. Locate it and define an extended function that is continuous there.",
+            parts: [
+              { label: "(a)", text: "$f(x) = \\dfrac{x^3 - 8}{x - 2}$" },
+              { label: "(b)", text: "$g(x) = \\dfrac{\\sin x}{x}$" },
+              { label: "(c)", text: "$h(x) = \\dfrac{x^2 - 7x + 12}{x^2 - 9}$" }
+            ],
+            answers: [
+              { label: "(a)", text: "Factor: $\\dfrac{(x-2)(x^2+2x+4)}{x-2} = x^2+2x+4$ for $x \\neq 2$. $\\lim_{x\\to 2}f = 12$. Define $f(2) = 12$." },
+              { label: "(b)", text: "$g(0)$ is undefined; $\\lim_{x\\to 0}\\dfrac{\\sin x}{x} = 1$. Define $g(0) = 1$. This creates the continuous sinc function." },
+              { label: "(c)", text: "Factor: $\\dfrac{(x-3)(x-4)}{(x-3)(x+3)} = \\dfrac{x-4}{x+3}$ for $x \\neq 3$. Removable discontinuity at $x = 3$: $\\lim_{x\\to 3}h = -\\dfrac{1}{6}$. Define $h(3) = -\\dfrac{1}{6}$. (Note: $x=-3$ is an <em>infinite</em> discontinuity — it cannot be removed.)" }
+            ]
+          },
+          {
+            context: "Context: Piecewise function with a removable discontinuity",
+            stem: "Consider $f(x) = \\begin{cases} \\dfrac{2x^2 + x - 3}{x - 1} &amp; x \\ne 1 \\\\ k &amp; x = 1 \\end{cases}$",
+            parts: [
+              { label: "(a)", text: "Factor the numerator and simplify the expression for $x \\neq 1$." },
+              { label: "(b)", text: "Find $\\lim_{x \\to 1} f(x)$." },
+              { label: "(c)", text: "What value of $k$ makes $f$ continuous at $x = 1$? Verify by checking all three continuity conditions." }
+            ],
+            answers: [
+              { label: "(a)", text: "$2x^2+x-3 = (x-1)(2x+3)$. So $f(x) = 2x+3$ for $x \\neq 1$." },
+              { label: "(b)", text: "$\\lim_{x\\to 1}f(x) = 2(1)+3 = 5$." },
+              { label: "(c)", text: "$k = 5$. Verify: (1) $f(1) = 5$ ✓; (2) $\\lim_{x\\to 1}f(x) = 5$ ✓; (3) $f(1) = 5 = \\lim_{x\\to 1}f(x)$ ✓. $f$ is continuous at $x = 1$." }
+            ]
+          },
+          {
+            context: "Context: Applied — audio signal processing",
+            stem: "An audio filter has response function $R(f) = \\dfrac{f^2 - 4f + 3}{f^2 - 1}$ for frequency $f$ (kHz).",
+            parts: [
+              { label: "(a)", text: "Find all values of $f$ where $R$ is undefined." },
+              { label: "(b)", text: "Classify each discontinuity as removable or infinite." },
+              { label: "(c)", text: "Engineers need $R$ to be defined at $f = 1$ kHz. What value should they assign to $R(1)$ to make the response continuous there?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$f^2-1 = (f-1)(f+1) = 0$ at $f = 1$ and $f = -1$." },
+              { label: "(b)", text: "Factor numerator: $(f-1)(f-3)$. Then $R(f) = \\dfrac{(f-1)(f-3)}{(f-1)(f+1)} = \\dfrac{f-3}{f+1}$ for $f \\neq 1$. At $f = 1$: $\\lim_{f\\to 1}R = \\dfrac{-2}{2} = -1$ — <strong>removable</strong>. At $f=-1$: numerator $= (-2)(-4) = 8 \\neq 0$, denominator $= 0$ — <strong>infinite</strong>." },
+              { label: "(c)", text: "$R(1) = -1$. This assigns the value that fills the hole and makes $R$ continuous at $f = 1$ kHz." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 3-D ──────────────────────────────────────────
+      {
+        icon: "📏",
+        title: "Continuity over an Interval",
+        sub: "Where are polynomials, rationals, and trig functions continuous?",
+        topics: "1.12",
+        problems: [
+          {
+            context: "Context: Standard function families",
+            stem: "State all intervals of continuity for each function.",
+            parts: [
+              { label: "(a)", text: "$f(x) = \\dfrac{x + 2}{x^2 - x - 6}$" },
+              { label: "(b)", text: "$g(x) = \\sqrt{4 - x^2}$" },
+              { label: "(c)", text: "$h(x) = \\tan x$ on $(-2\\pi, 2\\pi)$" }
+            ],
+            answers: [
+              { label: "(a)", text: "$x^2-x-6 = (x-3)(x+2) = 0$ at $x = 3$ and $x = -2$. Continuous on $(-\\infty,-2)$, $(-2,3)$, $(3,\\infty)$." },
+              { label: "(b)", text: "Requires $4 - x^2 \\ge 0 \\Rightarrow -2 \\le x \\le 2$. Continuous on $[-2, 2]$." },
+              { label: "(c)", text: "$\\tan x$ undefined at $x = \\pm\\tfrac{\\pi}{2}, \\pm\\tfrac{3\\pi}{2}$. Continuous on $(-2\\pi,-\\tfrac{3\\pi}{2})$, $(-\\tfrac{3\\pi}{2},-\\tfrac{\\pi}{2})$, $(-\\tfrac{\\pi}{2},\\tfrac{\\pi}{2})$, $(\\tfrac{\\pi}{2},\\tfrac{3\\pi}{2})$, $(\\tfrac{3\\pi}{2},2\\pi)$." }
+            ]
+          },
+          {
+            context: "Context: Piecewise function — continuity on all of ℝ",
+            stem: "Find constants $a$ and $b$ so that $f$ is continuous on $(-\\infty, \\infty)$:<br>$f(x) = \\begin{cases} ax + 1 &amp; x &lt; -1 \\\\ x^2 + b &amp; -1 \\le x \\le 2 \\\\ bx - 3 &amp; x &gt; 2 \\end{cases}$",
+            parts: [
+              { label: "(a)", text: "Write the continuity condition at $x = -1$ and simplify." },
+              { label: "(b)", text: "Write the continuity condition at $x = 2$ and solve for $b$." },
+              { label: "(c)", text: "Substitute the value of $b$ back into part (a) and solve for $a$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\lim_{x\\to -1^-}(ax+1) = \\lim_{x\\to -1^+}(x^2+b)$: $-a+1 = 1+b$, so $-a = b$, i.e., $a = -b$." },
+              { label: "(b)", text: "$\\lim_{x\\to 2^-}(x^2+b) = \\lim_{x\\to 2^+}(bx-3)$: $4+b = 2b-3 \\Rightarrow 7 = b$. So $b = 7$." },
+              { label: "(c)", text: "$a = -b = -7$. Check: at $x=-1$: $(-7)(-1)+1 = 8$ and $(-1)^2+7 = 8$ ✓. At $x=2$: $4+7=11$ and $7(2)-3=11$ ✓." }
+            ]
+          },
+          {
+            context: "Context: Enzyme kinetics — Michaelis-Menten model",
+            stem: "An enzyme's reaction rate is $R(s) = \\dfrac{10s}{s + 2}$ (mg/L per min), where $s \\ge 0$ is substrate concentration (mM).",
+            parts: [
+              { label: "(a)", text: "On what interval is $R$ continuous? (Consider both the mathematical domain and physical domain $s \\ge 0$.)" },
+              { label: "(b)", text: "Find $\\lim_{s \\to 0^+} R(s)$ and $\\lim_{s \\to \\infty} R(s)$. Interpret each result biologically." },
+              { label: "(c)", text: "Is $R$ continuous at $s = 0$ and $s = 2$ within the physical domain? Justify." }
+            ],
+            answers: [
+              { label: "(a)", text: "Mathematically, $R$ is undefined at $s = -2$. On the physical domain $s \\ge 0$, the denominator $s+2 > 0$ always, so $R$ is continuous on $[0, \\infty)$." },
+              { label: "(b)", text: "$\\lim_{s\\to 0^+}R(s) = 0$: zero substrate means no reaction. $\\lim_{s\\to\\infty}R(s) = 10 = V_{\\max}$: at saturating substrate, the rate approaches the enzyme's maximum." },
+              { label: "(c)", text: "$R(0) = 0 = \\lim_{s\\to 0^+}R$ ✓ — continuous at $s = 0$. $R(2) = 20/4 = 5$, and $R$ is a rational function with no discontinuity at $s = 2$ — continuous at $s = 2$. ✓" }
+            ]
+          }
+        ]
+      }
+
+    ]
+  },
+
+  // ═══════════════════════════════════════════════════════════
+  // COLUMN 4 — Asymptotes, Infinity & IVT  (1.14 – 1.16)
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: "col-4",
+    accentVar: "var(--col4-light)",
+    headerClass: "col-4-header",
+    tileClass: "col-4",
+    label: "Column IV",
+    title: "Asymptotes, Infinity & IVT",
+    topics: "Topics 1.14 – 1.16",
+    tiles: [
+
+      // ── TILE 4-A ──────────────────────────────────────────
+      {
+        icon: "📡",
+        title: "Vertical Asymptotes & Infinite Limits",
+        sub: "$\\lim_{x\\to c}f(x) = \\pm\\infty$ — sign analysis on each side",
+        topics: "1.14",
+        problems: [
+          {
+            context: "Context: Finding VAs and analyzing signs",
+            stem: "For each function, find all vertical asymptotes. Determine the sign of the limit from each side using a sign chart.",
+            parts: [
+              { label: "(a)", text: "$f(x) = \\dfrac{3}{x - 2}$" },
+              { label: "(b)", text: "$g(x) = \\dfrac{x + 1}{x^2 - x - 6}$" },
+              { label: "(c)", text: "$h(x) = \\dfrac{x^2 + 1}{x^2 - 1}$" }
+            ],
+            answers: [
+              { label: "(a)", text: "VA at $x = 2$. Numerator $= 3 > 0$ always. $(x-2) > 0$ for $x > 2$ (positive), $< 0$ for $x < 2$ (negative). So: $\\lim_{x\\to 2^+}f = +\\infty$ and $\\lim_{x\\to 2^-}f = -\\infty$." },
+              { label: "(b)", text: "$x^2-x-6 = (x-3)(x+2)$. VAs at $x = 3$ and $x = -2$ (numerator $\\neq 0$ there). At $x = 3^+$: numerator $(+4) > 0$; $(x-3)(x+2) > 0$. So $+\\infty$. At $x = 3^-$: denom $< 0$, so $-\\infty$. At $x=-2^+$: numerator $(-1) < 0$; denom $(x-3)(x+2) < 0$, so limit $= +\\infty$. At $x=-2^-$: denom $> 0$, so $-\\infty$." },
+              { label: "(c)", text: "VAs at $x = \\pm 1$. Numerator $x^2+1 > 0$ always. At $x=1^+$: $(x-1) > 0, (x+1) > 0$, denom $> 0$: $+\\infty$. At $x=1^-$: denom $< 0$: $-\\infty$. At $x=-1^+$: $(x-1) < 0, (x+1) > 0$, denom $< 0$: $-\\infty$. At $x=-1^-$: denom $> 0$: $+\\infty$." }
+            ]
+          },
+          {
+            context: "Context: Graph reading and sign analysis",
+            stem: "The graph of $r(x) = \\dfrac{x - 2}{x^2(x + 3)}$ is shown.<br><br><!-- GRAPH NEEDED: Graph of r(x) = (x-2)/(x^2(x+3)) with: VA at x = 0 (both sides go to -∞ since numerator near 0 is -2 and denominator x^2>0, x+3>0); VA at x = -3; zero at x = 2; approaches 0 as x→±∞ --><br><img src='img/u1d1p2.png' alt='Graph of r' class='problem-img'>",
+            parts: [
+              { label: "(a)", text: "Identify all vertical asymptotes." },
+              { label: "(b)", text: "Find $\\lim_{x \\to 0^-} r(x)$ and $\\lim_{x \\to 0^+} r(x)$ by analyzing signs." },
+              { label: "(c)", text: "Explain why $x = 2$ is not a vertical asymptote, even though it may look like a special point." }
+            ],
+            answers: [
+              { label: "(a)", text: "VAs at $x = 0$ and $x = -3$ (zeros of the denominator with numerator $\\neq 0$)." },
+              { label: "(b)", text: "Near $x = 0$: numerator $\\approx -2 < 0$; $x^2 > 0$; $(x+3) \\approx 3 > 0$. So $r(x) \\approx \\dfrac{-2}{x^2 \\cdot 3}$, which $\\to -\\infty$ as $x \\to 0$ from either side. $\\lim_{x\\to 0^-}r = -\\infty$ and $\\lim_{x\\to 0^+}r = -\\infty$." },
+              { label: "(c)", text: "At $x = 2$: the denominator $= 4 \\cdot 5 = 20 \\neq 0$, and the numerator $= 0$. So $r(2) = 0$ — the function has a zero (x-intercept) at $x = 2$, not an asymptote." }
+            ]
+          },
+          {
+            context: "Context: Drug concentration — modeling breakdown",
+            stem: "A drug's plasma concentration is $C(t) = \\dfrac{5t}{t^2 + 1}$ mg/L for $t \\ge 0$ hours. A second drug follows $D(t) = \\dfrac{3}{(t-1)^2}$ for $t > 0$, $t \\ne 1$.",
+            parts: [
+              { label: "(a)", text: "Does $C(t)$ have any vertical asymptotes for $t \\ge 0$? Justify." },
+              { label: "(b)", text: "Find $\\lim_{t \\to 0^+} C(t)$ and interpret." },
+              { label: "(c)", text: "Find $\\lim_{t \\to 1} D(t)$ and explain what it implies about the second drug model." }
+            ],
+            answers: [
+              { label: "(a)", text: "$t^2 + 1 \\ge 1 > 0$ for all real $t$ — the denominator is never zero. $C(t)$ has no vertical asymptotes. The model is continuous on $[0, \\infty)$." },
+              { label: "(b)", text: "$\\lim_{t\\to 0^+}C(t) = \\dfrac{0}{1} = 0$ mg/L. At the moment of administration ($t=0$), zero drug has entered the bloodstream." },
+              { label: "(c)", text: "$\\lim_{t\\to 1}D(t) = \\lim_{t\\to 1}\\dfrac{3}{(t-1)^2} = +\\infty$. The model predicts an unbounded concentration at $t=1$ hour, which is physically impossible. The formula breaks down near $t = 1$ and cannot be valid there." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 4-B ──────────────────────────────────────────
+      {
+        icon: "🔭",
+        title: "Limits at Infinity",
+        sub: "Horizontal asymptotes and end behavior of functions",
+        topics: "1.15",
+        problems: [
+          {
+            context: "Context: Rational functions — comparing degrees",
+            stem: "Evaluate each limit and identify any horizontal asymptotes.",
+            parts: [
+              { label: "(a)", text: "$\\lim_{x \\to \\infty} \\dfrac{3x^2 - 5x + 1}{2x^2 + 7}$" },
+              { label: "(b)", text: "$\\lim_{x \\to -\\infty} \\dfrac{4x^3 - x}{x^2 + 2}$" },
+              { label: "(c)", text: "$\\lim_{x \\to \\infty} \\dfrac{5x - 3}{\\sqrt{4x^2 + 1}}$" }
+            ],
+            answers: [
+              { label: "(a)", text: "Divide by $x^2$: $\\dfrac{3 - 5/x + 1/x^2}{2 + 7/x^2} \\to \\dfrac{3}{2}$. Horizontal asymptote $y = \\dfrac{3}{2}$." },
+              { label: "(b)", text: "Degree of numerator (3) exceeds degree of denominator (2). Divide by $x^2$: $\\dfrac{4x - 1/x}{1 + 2/x^2} \\to -\\infty$. No horizontal asymptote." },
+              { label: "(c)", text: "For $x > 0$: $\\sqrt{4x^2+1} \\approx 2x$. Divide numerator and denominator by $x$: $\\dfrac{5 - 3/x}{\\sqrt{4 + 1/x^2}} \\to \\dfrac{5}{2}$. Horizontal asymptote $y = \\dfrac{5}{2}$ as $x \\to +\\infty$." }
+            ]
+          },
+          {
+            context: "Context: Exponential, logarithmic, and compound growth",
+            stem: "Evaluate each limit.",
+            parts: [
+              { label: "(a)", text: "$\\lim_{x \\to \\infty} \\dfrac{e^x}{x^{100}}$" },
+              { label: "(b)", text: "$\\lim_{x \\to \\infty} \\dfrac{\\ln x}{x}$" },
+              { label: "(c)", text: "$\\lim_{x \\to \\infty} \\left(1 + \\dfrac{3}{x}\\right)^x$" }
+            ],
+            answers: [
+              { label: "(a)", text: "Exponential growth dominates any polynomial: $\\lim_{x\\to\\infty}\\dfrac{e^x}{x^{100}} = +\\infty$. No horizontal asymptote." },
+              { label: "(b)", text: "Logarithms grow more slowly than any positive power of $x$: $\\lim_{x\\to\\infty}\\dfrac{\\ln x}{x} = 0$. Horizontal asymptote $y = 0$." },
+              { label: "(c)", text: "This is the standard limit $\\lim_{x\\to\\infty}\\left(1+\\dfrac{k}{x}\\right)^x = e^k$ with $k = 3$. The limit is $e^3$." }
+            ]
+          },
+          {
+            context: "Context: Logistic population model",
+            stem: "A population is modeled by $P(t) = \\dfrac{8000}{1 + 39e^{-0.4t}}$ where $t$ is years after introduction.",
+            parts: [
+              { label: "(a)", text: "Find $\\lim_{t \\to \\infty} P(t)$ and interpret in context." },
+              { label: "(b)", text: "Find $P(0)$ and interpret." },
+              { label: "(c)", text: "A second species follows $Q(t) = 500 + 200\\sin t$. Find $\\lim_{t \\to \\infty} Q(t)$, or explain why it does not exist." }
+            ],
+            answers: [
+              { label: "(a)", text: "As $t \\to \\infty$: $e^{-0.4t} \\to 0$, so $P \\to \\dfrac{8000}{1} = 8000$. The carrying capacity is 8000 individuals — the long-term sustainable population." },
+              { label: "(b)", text: "$P(0) = \\dfrac{8000}{1+39} = \\dfrac{8000}{40} = 200$. The population starts at 200 individuals." },
+              { label: "(c)", text: "$Q(t) = 500 + 200\\sin t$ oscillates between 300 and 700 indefinitely. The limit <strong>does not exist</strong> — the population fluctuates seasonally and never stabilizes." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 4-C ──────────────────────────────────────────
+      {
+        icon: "🎯",
+        title: "Intermediate Value Theorem",
+        sub: "Continuity guarantees existence — not location",
+        topics: "1.16",
+        problems: [
+          {
+            context: "Context: Existence of a zero",
+            stem: "Let $f(x) = x^3 - 2x - 5$.",
+            parts: [
+              { label: "(a)", text: "Evaluate $f(2)$ and $f(3)$." },
+              { label: "(b)", text: "Apply the IVT to show that $f$ has at least one zero on $(2, 3)$. State all hypotheses explicitly." },
+              { label: "(c)", text: "Does the IVT identify the location of the zero? Discuss its guarantees and limitations." }
+            ],
+            answers: [
+              { label: "(a)", text: "$f(2) = 8 - 4 - 5 = -1 &lt; 0$. $\\quad f(3) = 27 - 6 - 5 = 16 &gt; 0$." },
+              { label: "(b)", text: "$f$ is a polynomial, so it is continuous on all of $\\mathbb{R}$ and in particular on $[2,3]$. Since $f(2) = -1 &lt; 0 &lt; 16 = f(3)$, the IVT guarantees at least one $c \\in (2,3)$ with $f(c) = 0$." },
+              { label: "(c)", text: "The IVT guarantees existence only — not uniqueness or the value of $c$. There could be more than one zero on $(2,3)$. To approximate $c$, numerical methods (bisection, Newton's method) are needed." }
+            ]
+          },
+          {
+            context: "Context: Fixed point — cos x = x",
+            stem: "Show that the equation $\\cos x = x$ has a solution in $(0, 1)$.",
+            parts: [
+              { label: "(a)", text: "Define $g(x) = \\cos x - x$ and evaluate $g(0)$ and $g(1)$." },
+              { label: "(b)", text: "Apply the IVT to conclude that $g$ has a zero — and therefore $\\cos x = x$ has a solution — on $(0,1)$." },
+              { label: "(c)", text: "Interpret the solution geometrically: what does it represent in terms of the graphs of $y = \\cos x$ and $y = x$?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$g(0) = \\cos 0 - 0 = 1 &gt; 0$. $\\quad g(1) = \\cos 1 - 1 \\approx 0.540 - 1 = -0.460 &lt; 0$." },
+              { label: "(b)", text: "$g$ is the difference of continuous functions, hence continuous on $[0,1]$. Since $g(0) &gt; 0$ and $g(1) &lt; 0$, the IVT gives $c \\in (0,1)$ with $g(c) = 0$, i.e., $\\cos c = c$." },
+              { label: "(c)", text: "The solution $c \\approx 0.739$ is the $x$-coordinate of the intersection of $y = \\cos x$ and $y = x$ — the unique fixed point of the cosine function." }
+            ]
+          },
+          {
+            context: "Context: Applied — temperature along a metal rod",
+            stem: "The temperature (°C) at position $x$ (cm) along a rod is $T(x) = x^3 - 6x^2 + 9x + 2$ for $x \\in [0, 5]$.",
+            parts: [
+              { label: "(a)", text: "Justify why the IVT applies to $T$ on any subinterval of $[0,5]$." },
+              { label: "(b)", text: "Compute $T(0)$ and $T(5)$. Apply the IVT to show there exists a point where $T(x) = 5$." },
+              { label: "(c)", text: "Compute $T(2)$ and use it with $T(5)$ to show there is a point in $(2, 5)$ where $T(x) = 10$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$T$ is a polynomial, so it is continuous everywhere — including on any closed subinterval of $[0,5]$. The IVT applies." },
+              { label: "(b)", text: "$T(0) = 2$ and $T(5) = 125-150+45+2 = 22$. Since $2 &lt; 5 &lt; 22$ and $T$ is continuous on $[0,5]$, the IVT guarantees $c \\in (0,5)$ with $T(c) = 5$." },
+              { label: "(c)", text: "$T(2) = 8 - 24 + 18 + 2 = 4$. Since $4 &lt; 10 &lt; 22$ and $T$ is continuous on $[2,5]$, the IVT guarantees $c \\in (2,5)$ with $T(c) = 10$." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 4-D ──────────────────────────────────────────
+      {
+        icon: "🏆",
+        title: "Mixed Applications",
+        sub: "Piecewise functions, asymptotes, and IVT — full analysis",
+        topics: "1.2 – 1.16",
+        problems: [
+          {
+            context: "Context: Complete analysis of a piecewise function",
+            stem: "$f(x) = \\begin{cases} \\dfrac{x^2 - 9}{x - 3} &amp; x &lt; 3 \\\\ kx - 2 &amp; x \\ge 3 \\end{cases}$",
+            parts: [
+              { label: "(a)", text: "Evaluate $\\lim_{x \\to 3^-} f(x)$ by simplifying the left branch." },
+              { label: "(b)", text: "Find the value of $k$ that makes $f$ continuous at $x = 3$." },
+              { label: "(c)", text: "With your value of $k$: the left branch near $x=3$ has slope 1 (since it simplifies to $x+3$). The right branch has slope $k$. What does the comparison of slopes tell you about differentiability at $x=3$?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\dfrac{x^2-9}{x-3} = \\dfrac{(x-3)(x+3)}{x-3} = x+3$ for $x \\neq 3$. $\\lim_{x\\to 3^-}f = 6$." },
+              { label: "(b)", text: "For continuity: $f(3) = k(3)-2 = 6 \\Rightarrow 3k = 8 \\Rightarrow k = \\dfrac{8}{3}$." },
+              { label: "(c)", text: "Left slope $= 1$; right slope $= \\dfrac{8}{3}$. Since $1 \\neq \\dfrac{8}{3}$, the slopes don't match at $x=3$ — there is a corner, and $f$ is <strong>not differentiable</strong> at $x=3$ even though it is continuous." }
+            ]
+          },
+          {
+            context: "Context: AP-style multi-concept free response",
+            stem: "A continuous function $g$ satisfies: $g(0) = -3$, $g(5) = 7$, and $\\lim_{x \\to \\infty} g(x) = 2$.",
+            parts: [
+              { label: "(a)", text: "Apply the IVT to show there exists $c \\in (0,5)$ with $g(c) = 0$." },
+              { label: "(b)", text: "Must $g$ equal 0 somewhere on $(5, \\infty)$? Use the horizontal asymptote information to argue either way." },
+              { label: "(c)", text: "Sketch a qualitative graph of $g$ consistent with all given information. Label the guaranteed zero and the asymptote." }
+            ],
+            answers: [
+                            { label: "(a)", text: "$g(0) = -3 &lt; 0$ and $g(5) = 7 &gt; 0$. Since $g$ is continuous on $[0,5]$ and $-3 &lt; 0 &lt; 7$, the IVT guarantees at least one $c \\in (0,5)$ with $g(c) = 0$." },
+              { label: "(b)", text: "Not necessarily. Since $g(5) = 7 &gt; 2$ and $g(x) \\to 2$ as $x \\to \\infty$, $g$ is ultimately decreasing toward 2. If it decreases monotonically, it never reaches 0 on $(5,\\infty)$. Without more information about $g$'s behavior on $(5,\\infty)$, the IVT does <strong>not</strong> guarantee a zero there." },
+              { label: "(c)", text: "Graph should show: $g(0) = -3$ below the $x$-axis; the curve rises and crosses zero at some $c \\in (0,5)$; reaches $g(5) = 7$; then decreases and levels off approaching $y = 2$ as $x \\to \\infty$. Label $c$ on the $x$-axis and draw a dashed horizontal line at $y = 2$." }
+            ]
+          },
+          {
+            context: "Context: Comprehensive Unit 1 review",
+            stem: "For each scenario, identify the relevant concept and answer completely.",
+            parts: [
+              { label: "(a)", text: "$h(x) = \\dfrac{x^2 - 7x + 12}{x^2 - 9}$. Find all discontinuities, classify each, and state which can be removed. Then state the intervals of continuity." },
+              { label: "(b)", text: "A function $f$ is continuous on $[1, 4]$ with $f(1) = -2$ and $f(4) = 5$. Does the IVT guarantee a zero? Does it guarantee a point where $f(x) = 10$? Justify each." },
+              { label: "(c)", text: "Evaluate $\\lim_{x \\to \\infty} \\dfrac{3x^2 + \\sin x}{x^2 + 1}$, justifying your treatment of the $\\sin x$ term." }
+            ],
+            answers: [
+              { label: "(a)", text: "Factor: $\\dfrac{(x-3)(x-4)}{(x-3)(x+3)} = \\dfrac{x-4}{x+3}$ for $x \\neq 3$. At $x = 3$: limit $= -1/6$, function undefined — <strong>removable</strong> (assign $h(3)=-1/6$). At $x = -3$: denominator $= 0$, numerator $= (-6)(-7) = 42 \\neq 0$ — <strong>infinite</strong> (cannot be removed). Intervals of continuity: $(-\\infty,-3)$, $(-3,3)$, $(3,\\infty)$." },
+              { label: "(b)", text: "<strong>Zero:</strong> $f(1) = -2 &lt; 0 &lt; 5 = f(4)$; $f$ is continuous on $[1,4]$. IVT guarantees a $c \\in (1,4)$ with $f(c) = 0$. ✓ &nbsp; <strong>$f(x)=10$:</strong> 10 is outside the range $[-2, 5]$ between the endpoint values. The IVT does <strong>not</strong> guarantee $f(x) = 10$ anywhere on $[1,4]$." },
+              { label: "(c)", text: "Write $\\dfrac{3x^2 + \\sin x}{x^2+1} = \\dfrac{3 + (\\sin x)/x^2}{1 + 1/x^2}$. Since $|\\sin x| \\le 1$, we have $|(\\sin x)/x^2| \\le 1/x^2 \\to 0$. So numerator $\\to 3$ and denominator $\\to 1$, giving limit $= 3$. Horizontal asymptote $y = 3$." }
+            ]
+          }
+        ]
+      }
+
+    ]
+  }
+
+]; // end columns
+
+
+/* ============================================================
+   RENDER BOARD
+============================================================ */
+function renderBoard() {
+  const grid = document.getElementById('board-grid');
+  grid.innerHTML = '';
+
+  columns.forEach((col, ci) => {
+    const colGroup = document.createElement('div');
+    colGroup.className = 'col-group';
+
+    // Header
+    const header = document.createElement('div');
+    header.className = `col-header ${col.headerClass}`;
+    header.style.gridColumn = ci + 1;
+    header.style.gridRow = 1;
+    header.innerHTML = `
+      <div class="col-header-num">${col.label}</div>
+      <h2>${col.title}</h2>
+      <div class="col-topics">${col.topics}</div>
+    `;
+    colGroup.appendChild(header);
+
+    // Tiles
+    col.tiles.forEach((tile, ti) => {
+      const tileEl = document.createElement('div');
+      tileEl.className = `tile ${col.tileClass}`;
+      tileEl.style.gridColumn = ci + 1;
+      tileEl.style.gridRow = ti + 2;
+      tileEl.setAttribute('role', 'button');
+      tileEl.setAttribute('tabindex', '0');
+      tileEl.setAttribute('aria-label', tile.title);
+      tileEl.innerHTML = `
+        <span class="tile-icon">${tile.icon}</span>
+        <div class="tile-title">${tile.title}</div>
+        <div class="tile-sub">${tile.sub}</div>
+        <div class="tile-topics">${tile.topics}</div>
+        <span class="tile-arrow">↗</span>
+      `;
+      tileEl.addEventListener('click', () => openModal(ci, ti));
+      tileEl.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') openModal(ci, ti); });
+      colGroup.appendChild(tileEl);
+    });
+
+    grid.appendChild(colGroup);
+  });
+}
+
+
+/* ============================================================
+   MODAL
+============================================================ */
+function openModal(colIdx, tileIdx) {
+  const col  = columns[colIdx];
+  const tile = col.tiles[tileIdx];
+
+  const accentEl = document.getElementById('modal-accent');
+  accentEl.className = 'modal-header-accent';
+  accentEl.style.background = col.accentVar;
+
+  const labelEl = document.getElementById('modal-col-label');
+  labelEl.style.color = col.accentVar;
+  labelEl.textContent = col.label + ' · ' + col.title;
+
+  document.getElementById('modal-title').textContent = tile.title;
+
+  const body = document.getElementById('modal-body');
+  body.innerHTML = '';
+
+  // Optional video section
+  if (tile.video) {
+    const videoSection = document.createElement('div');
+    videoSection.className = 'video-section';
+    videoSection.innerHTML = `
+      <div class="video-label">📹 Watch First</div>
+      <a href="${tile.video.url}" target="_blank" rel="noopener" class="video-link">
+        ${tile.video.title} — mathispower4u
+        <span class="video-icon">▶</span>
+      </a>
+    `;
+    body.appendChild(videoSection);
+  }
+
+  tile.problems.forEach((prob, pi) => {
+    const block = document.createElement('div');
+    block.className = 'problem-block';
+
+    let partsHTML = '';
+    if (prob.parts && prob.parts.length) {
+      partsHTML = `<ul class="problem-parts">` +
+        prob.parts.map(p => `<li data-part="${p.label}">${p.text}</li>`).join('') +
+        `</ul>`;
+    }
+
+    let answersHTML = '';
+    if (prob.answers && prob.answers.length) {
+      answersHTML = prob.answers.map(a =>
+        `<div class="answer-part"><span class="answer-part-label">${a.label}</span>${a.text}</div>`
+      ).join('');
+    }
+
+    const answerId = `ans-${colIdx}-${tileIdx}-${pi}`;
+    const toggleId = `tog-${colIdx}-${tileIdx}-${pi}`;
+
+    block.innerHTML = `
+      <div class="problem-num">Problem ${pi + 1} of ${tile.problems.length}</div>
+      ${prob.context ? `<div class="problem-context">${prob.context}</div>` : ''}
+      <div class="problem-text">${prob.stem}</div>
+      ${partsHTML}
+      <button class="answer-toggle" id="${toggleId}" onclick="toggleAnswer('${answerId}','${toggleId}')">
+        <span class="toggle-icon">▼</span> Show Answer
+      </button>
+      <div class="answer-panel" id="${answerId}">
+        ${answersHTML}
+      </div>
+    `;
+    body.appendChild(block);
+  });
+
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('desmos-fab').classList.add('visible');
+
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([body]).catch(err => console.log(err));
+  }
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+  document.getElementById('desmos-fab').classList.remove('visible');
+}
+
+function toggleAnswer(panelId, toggleId) {
+  const panel  = document.getElementById(panelId);
+  const toggle = document.getElementById(toggleId);
+  const isOpen = panel.classList.contains('open');
+  panel.classList.toggle('open');
+  toggle.classList.toggle('open');
+  toggle.innerHTML = isOpen
+    ? '<span class="toggle-icon">▼</span> Show Answer'
+    : '<span class="toggle-icon">▼</span> Hide Answer';
+}
+
+
+/* ============================================================
+   RANDOM PRACTICE
+============================================================ */
+function openRandomProblem() {
+  const colIdx  = Math.floor(Math.random() * columns.length);
+  const col     = columns[colIdx];
+  const tileIdx = Math.floor(Math.random() * col.tiles.length);
+  const tile    = col.tiles[tileIdx];
+  const probIdx = Math.floor(Math.random() * tile.problems.length);
+  const prob    = tile.problems[probIdx];
+
+  const accentEl = document.getElementById('modal-accent');
+  accentEl.className = 'modal-header-accent random-accent';
+  accentEl.style.background = '';
+
+  const labelEl = document.getElementById('modal-col-label');
+  labelEl.style.color = 'var(--text-muted)';
+  labelEl.innerHTML = 'BC Calculus · Unit 1: Limits &amp; Continuity';
+
+  document.getElementById('modal-title').textContent = 'General Practice';
+
+  const body = document.getElementById('modal-body');
+  body.innerHTML = '';
+
+  const block = document.createElement('div');
+  block.className = 'problem-block';
+  block.style.borderBottom = 'none';
+  block.style.marginBottom = '0';
+  block.style.paddingBottom = '0';
+
+  let partsHTML = '';
+  if (prob.parts && prob.parts.length) {
+    partsHTML = `<ul class="problem-parts">` +
+      prob.parts.map(p => `<li data-part="${p.label}">${p.text}</li>`).join('') +
+      `</ul>`;
+  }
+
+  let answersHTML = '';
+  if (prob.answers && prob.answers.length) {
+    answersHTML = prob.answers.map(a =>
+      `<div class="answer-part"><span class="answer-part-label">${a.label}</span>${a.text}</div>`
+    ).join('');
+  }
+
+  block.innerHTML = `
+    <div class="problem-num">🎲 General Practice</div>
+    ${prob.context ? `<div class="problem-context">${prob.context}</div>` : ''}
+    <div class="problem-text">${prob.stem}</div>
+    ${partsHTML}
+    <button class="answer-toggle" id="rand-tog" onclick="toggleAnswer('rand-ans','rand-tog')">
+      <span class="toggle-icon">▼</span> Show Answer
+    </button>
+    <div class="answer-panel" id="rand-ans">
+      ${answersHTML}
+    </div>
+  `;
+
+  body.appendChild(block);
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('desmos-fab').classList.add('visible');
+
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([body]).catch(err => console.log(err));
+  }
+}
+
+document.getElementById('random-btn').addEventListener('click', openRandomProblem);
+
+
+/* ============================================================
+   DESMOS BUTTON
+============================================================ */
+document.getElementById('desmos-fab').addEventListener('click', () => {
+  window.open('https://www.desmos.com/calculator', '_blank', 'width=650,height=350,noopener,noreferrer');
+});
+
+
+/* ============================================================
+   EVENT LISTENERS
+============================================================ */
+document.getElementById('modal-close').addEventListener('click', closeModal);
+document.getElementById('modal-overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+</script>
+</body>
+</html>
