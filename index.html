@@ -28,7 +28,7 @@
   --accent-stats:   #cf003d;
   --accent-calc:    #1a5c8a;
   --accent-bio:     #1a6b4a;
-  --accent-hist:    #7c4a1e;
+  --accent-squared:    #7c4a1e;
   --accent-phys:    #4a3a7c;
   --accent-chem:    #5a6b1a;
 
@@ -638,7 +638,7 @@ const COURSES = {
   stats:   { label: "AP Statistics",  accent: "#cf003d" },
   calc:    { label: "BC Calculus",    accent: "#1a5c8a" },
   prob:    { label: "Problem Solving",     accent: "#1a6b4a" },
-  hist:    { label: "AP History",     accent: "#7c4a1e" },
+  squared: { label: "MX Squared",     accent: "#7c4a1e" },
   phys:    { label: "AP Physics",     accent: "#4a3a7c" },
   chem:    { label: "AP Chemistry",   accent: "#5a6b1a" },
 };
@@ -646,6 +646,20 @@ const COURSES = {
 /* ── ADD NEW BOARDS HERE ───────────────────────────────────── */
 const ALL_BOARDS = [
   {
+    course:    "MX Squared",
+    courseKey: "squared",
+    unit:      "Algebra 2",
+    subtitle:  "Summer Review",
+    columns: [
+      "Equations",
+      "Functions",
+      "Exponentials",
+      "Logarithms"
+    ],
+    href: "algebra2-summer-review.html",
+    date: "July 2026"
+   },
+   {
     course:    "AP Statistics",
     courseKey: "stats",
     unit:      "Probability",
