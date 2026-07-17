@@ -1,0 +1,2026 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MX² Algebra 2 — Summer Review | Middlesex School</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet" />
+<style>
+  /* ============================================================
+     TOKENS & RESET
+  ============================================================ */
+  :root {
+    --crimson:     #cf003d;
+    --crimson-dim: #8a0028;
+    --crimson-glow:#ff1a55;
+    --black:       #0d0d0d;
+    --surface:     #151515;
+    --surface2:    #1e1e1e;
+    --surface3:    #252525;
+    --border:      #2e2e2e;
+    --border-light:#3a3a3a;
+    --text:        #f0ece6;
+    --text-muted:  #9e9e9e;
+    --text-dim:    #666666;
+
+    --col1: #cf003d;
+    --col2: #1a6b5a;
+    --col3: #4a5568;
+    --col4: #7c4a1e;
+
+    --col1-light: #ff4d75;
+    --col2-light: #2dd4bf;
+    --col3-light: #94a3b8;
+    --col4-light: #f59e0b;
+
+    --radius: 10px;
+    --radius-lg: 16px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.5);
+    --shadow-hover: 0 8px 40px rgba(0,0,0,0.7);
+  }
+
+  /* ============================================================
+     LIGHT THEME OVERRIDES — activated via [data-theme="light"]
+     on <html>. Crimson stays constant; surfaces, text, and the
+     lighter column accents swap to values with enough contrast
+     on a white background.
+  ============================================================ */
+  [data-theme="light"] {
+    --crimson-glow:#cf003d;
+    --black:       #f5f4f1;
+    --surface:     #ffffff;
+    --surface2:    #f7f6f3;
+    --surface3:    #eeece7;
+    --border:      #ddd9d1;
+    --border-light:#c9c3b8;
+    --text:        #1a1917;
+    --text-muted:  #55534c;
+    --text-dim:    #857f74;
+
+    --col1-light: #cf003d;
+    --col2-light: #0f766e;
+    --col3-light: #475569;
+    --col4-light: #b45309;
+
+    --shadow: 0 4px 24px rgba(0,0,0,0.10);
+    --shadow-hover: 0 8px 32px rgba(0,0,0,0.14);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 16px;
+    line-height: 1.65;
+    min-height: 100vh;
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }
+
+  /* ============================================================
+     HEADER — centered layout
+  ============================================================ */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 32px 40px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--crimson), var(--crimson-glow), var(--crimson));
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(207,0,61,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .header-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+  }
+
+  .school-tag {
+    font-family: 'Source Serif 4', serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--crimson-glow);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .school-tag::before,
+  .school-tag::after {
+    content: '';
+    display: inline-block;
+    width: 28px;
+    height: 1px;
+    background: var(--crimson-glow);
+  }
+
+  h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    margin-top: 4px;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--crimson-glow);
+  }
+
+  .header-meta {
+    margin-top: 4px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .meta-pill {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 3px 12px;
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+  }
+
+  /* ============================================================
+     INSTRUCTIONS BAR
+  ============================================================ */
+  .instructions {
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 40px;
+    font-size: 13px;
+    color: var(--text-muted);
+    text-align: center;
+    letter-spacing: 0.03em;
+  }
+
+  .instructions strong { color: var(--crimson-glow); font-weight: 600; }
+
+  /* ============================================================
+     BOARD GRID — equal-height tiles across columns
+  ============================================================ */
+  .board-wrap {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 36px 24px 60px;
+  }
+
+  .board-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto repeat(4, 1fr);
+    gap: 20px;
+  }
+
+  .col-group {
+    display: contents;
+  }
+
+  /* Column headers */
+  .col-header {
+    border-radius: var(--radius) var(--radius) 0 0;
+    padding: 16px 18px 14px;
+    position: relative;
+    overflow: hidden;
+    align-self: start;
+  }
+
+  .col-header::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .col-1-header { background: color-mix(in srgb, var(--col1) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col1) 40%, transparent); }
+  .col-2-header { background: color-mix(in srgb, var(--col2) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col2) 40%, transparent); }
+  .col-3-header { background: color-mix(in srgb, var(--col3) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col3) 40%, transparent); }
+  .col-4-header { background: color-mix(in srgb, var(--col4) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col4) 40%, transparent); }
+
+  .col-header-num {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    opacity: 0.7;
+  }
+
+  .col-1-header .col-header-num { color: var(--col1-light); }
+  .col-2-header .col-header-num { color: var(--col2-light); }
+  .col-3-header .col-header-num { color: var(--col3-light); }
+  .col-4-header .col-header-num { color: var(--col4-light); }
+
+  .col-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.25;
+  }
+
+  .col-header .col-topics {
+    margin-top: 6px;
+    font-size: 10.5px;
+    color: var(--text-dim);
+    letter-spacing: 0.04em;
+  }
+
+  /* ============================================================
+     TILES
+  ============================================================ */
+  .tile {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 18px 28px;
+    cursor: pointer;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+    position: relative;
+    overflow: hidden;
+    user-select: none;
+  }
+
+  .tile::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+    border-radius: var(--radius) 0 0 var(--radius);
+    transition: opacity 0.2s;
+  }
+
+  .col-1 .tile::before { background: var(--col1-light); }
+  .col-2 .tile::before { background: var(--col2-light); }
+  .col-3 .tile::before { background: var(--col3-light); }
+  .col-4 .tile::before { background: var(--col4-light); }
+
+  .tile:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-hover);
+    background: var(--surface3);
+  }
+
+  .col-1 .tile:hover { border-color: color-mix(in srgb, var(--col1) 60%, transparent); }
+  .col-2 .tile:hover { border-color: color-mix(in srgb, var(--col2) 60%, transparent); }
+  .col-3 .tile:hover { border-color: color-mix(in srgb, var(--col3) 60%, transparent); }
+  .col-4 .tile:hover { border-color: color-mix(in srgb, var(--col4) 60%, transparent); }
+
+  .tile-icon {
+    font-size: 18px;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .tile-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+    margin-bottom: 5px;
+  }
+
+  .tile-sub {
+    font-size: 11.5px;
+    color: var(--text-muted);
+    line-height: 1.4;
+  }
+
+  .tile-topics {
+    position: absolute;
+    bottom: 10px;
+    left: 18px;
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.06em;
+  }
+
+  .tile-arrow {
+    position: absolute;
+    bottom: 12px; right: 14px;
+    font-size: 14px;
+    opacity: 0.3;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+
+  .tile:hover .tile-arrow { opacity: 0.8; transform: translate(2px, -2px); }
+  .col-1 .tile:hover .tile-arrow { color: var(--col1-light); }
+  .col-2 .tile:hover .tile-arrow { color: var(--col2-light); }
+  .col-3 .tile:hover .tile-arrow { color: var(--col3-light); }
+  .col-4 .tile:hover .tile-arrow { color: var(--col4-light); }
+
+  /* ============================================================
+     MODAL
+  ============================================================ */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.82);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    backdrop-filter: blur(4px);
+  }
+
+  .modal-overlay.open { display: flex; animation: fadeIn 0.2s ease; }
+
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    width: 100%;
+    max-width: 760px;
+    max-height: 88vh;
+    overflow-y: auto;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.8);
+    animation: slideUp 0.22s ease;
+    position: relative;
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .modal-header {
+    padding: 24px 28px 20px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .modal-header-accent {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  }
+
+  .modal-col-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+  }
+
+  .modal-close {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.15s, color 0.15s;
+  }
+
+  .modal-close:hover { background: var(--crimson); color: white; border-color: var(--crimson); }
+
+  .modal-body { padding: 24px 28px 32px; }
+
+  /* Video section (optional) */
+  .video-section {
+    background: var(--surface2);
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 24px;
+  }
+
+  .video-label {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+
+  .video-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    color: var(--crimson-glow);
+    text-decoration: none;
+    font-size: 13.5px;
+    font-family: 'Source Serif 4', serif;
+    transition: color 0.15s;
+  }
+
+  .video-link:hover { color: #fff; }
+
+  .video-icon {
+    font-size: 12px;
+    opacity: 0.7;
+  }
+
+  /* Problems */
+  .problem-block {
+    margin-bottom: 28px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .problem-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+  .problem-num {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+  }
+
+  .problem-context {
+    font-size: 14px;
+    font-style: italic;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    padding-left: 12px;
+    border-left: 2px solid var(--border-light);
+  }
+
+  .problem-text {
+    font-size: 14.5px;
+    color: var(--text);
+    line-height: 1.7;
+    margin-bottom: 14px;
+  }
+
+  .problem-parts { margin-left: 0; list-style: none; }
+
+  .problem-parts li {
+    font-size: 14px;
+    color: var(--text);
+    margin-bottom: 8px;
+    padding-left: 24px;
+    position: relative;
+    line-height: 1.6;
+  }
+
+  .problem-parts li::before {
+    content: attr(data-part);
+    position: absolute;
+    left: 0;
+    font-weight: 700;
+    color: var(--text-muted);
+  }
+
+  .problem-img {
+    display: block;
+    width: 360px;
+    max-width: 100%;
+    border-radius: 6px;
+    margin: 10px 0 6px;
+  }
+
+  /* Inline data tables used in table-based problems */
+  .data-table {
+    border-collapse: collapse;
+    margin: 10px 0 16px;
+    font-size: 13.5px;
+    width: auto;
+  }
+
+  .data-table th, .data-table td {
+    border: 1px solid var(--border-light);
+    padding: 6px 14px;
+    text-align: center;
+    color: var(--text);
+  }
+
+  .data-table th {
+    background: var(--surface3);
+    color: var(--text-muted);
+    font-weight: 600;
+    letter-spacing: 0.03em;
+  }
+
+  .answer-toggle {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 9px 16px;
+    color: var(--text-muted);
+    font-family: 'Source Serif 4', serif;
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.15s;
+    margin-top: 4px;
+  }
+
+  .answer-toggle:hover { background: var(--surface3); border-color: var(--border-light); color: var(--text); }
+  .answer-toggle .toggle-icon { font-size: 10px; transition: transform 0.2s; }
+  .answer-toggle.open .toggle-icon { transform: rotate(180deg); }
+
+  .answer-panel {
+    display: none;
+    margin-top: 14px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-size: 13.5px;
+    line-height: 1.75;
+    color: var(--text);
+    animation: expandIn 0.18s ease;
+  }
+
+  @keyframes expandIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .answer-panel.open { display: block; }
+
+  .answer-part { margin-bottom: 10px; padding-left: 20px; position: relative; }
+  .answer-part:last-child { margin-bottom: 0; }
+  .answer-part-label { position: absolute; left: 0; font-weight: 700; color: var(--text-muted); }
+
+  /* ============================================================
+     RESPONSIVE
+  ============================================================ */
+  @media (max-width: 1000px) {
+    .board-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .col-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: calc(50% - 10px);
+    }
+    .col-header {
+      border-radius: var(--radius);
+    }
+    .tile {
+      grid-column: unset !important;
+      grid-row: unset !important;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .board-grid { flex-direction: column; }
+    .col-group { width: 100%; }
+    header { padding: 20px; }
+    .board-wrap { padding: 20px 12px 40px; }
+    .modal { border-radius: var(--radius); }
+    .modal-header, .modal-body { padding: 18px; }
+  }
+
+  .modal::-webkit-scrollbar { width: 6px; }
+  .modal::-webkit-scrollbar-track { background: var(--surface); }
+  .modal::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
+
+  /* ============================================================
+     RANDOM PRACTICE BAR
+  ============================================================ */
+  .random-wrap {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 24px 48px;
+  }
+
+  .random-btn {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border-light);
+    border-radius: 14px;
+    padding: 0 36px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.2s ease, background 0.2s ease;
+    font-family: 'Source Serif 4', serif;
+  }
+
+  .random-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(207,0,61,0.06) 30%, rgba(207,0,61,0.10) 50%, rgba(207,0,61,0.06) 70%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .random-btn:hover::before { opacity: 1; }
+
+  .random-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(207,0,61,0.18), 0 2px 8px rgba(0,0,0,0.4);
+    border-color: color-mix(in srgb, var(--crimson) 55%, transparent);
+    background: var(--surface3);
+  }
+
+  .random-btn:active { transform: translateY(0) scale(0.995); box-shadow: 0 2px 8px rgba(0,0,0,0.4); }
+
+  .random-btn-left-notch, .random-btn-right-notch {
+    position: absolute;
+    bottom: 0;
+    width: 28px; height: 5px;
+    background: var(--border);
+    border-radius: 3px 3px 0 0;
+    transition: background 0.2s;
+  }
+  .random-btn-left-notch  { left: 60px; }
+  .random-btn-right-notch { right: 60px; }
+  .random-btn:hover .random-btn-left-notch,
+  .random-btn:hover .random-btn-right-notch { background: color-mix(in srgb, var(--crimson) 40%, var(--border)); }
+
+  .random-btn-icon { font-size: 22px; flex-shrink: 0; transition: transform 0.3s ease; }
+  .random-btn:hover .random-btn-icon { transform: rotate(20deg) scale(1.15); }
+
+  .random-btn-label { display: flex; flex-direction: column; align-items: center; gap: 1px; }
+  .random-btn-title { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; color: var(--text); letter-spacing: 0.01em; line-height: 1.2; }
+  .random-btn-sub { font-size: 11.5px; color: var(--text-muted); letter-spacing: 0.07em; text-transform: uppercase; }
+
+  .random-btn-badge {
+    position: absolute;
+    right: 28px;
+    background: var(--surface3);
+    border: 1px solid var(--border-light);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-family: 'Source Serif 4', serif;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+
+  .random-btn:hover .random-btn-badge {
+    background: color-mix(in srgb, var(--crimson) 15%, var(--surface3));
+    color: var(--crimson-glow);
+    border-color: color-mix(in srgb, var(--crimson) 40%, transparent);
+  }
+
+  .random-accent {
+    background: linear-gradient(90deg, var(--col1-light), var(--col2-light), var(--col3-light), var(--col4-light));
+    background-size: 300% 100%;
+    animation: accentShift 4s ease infinite;
+  }
+
+  @keyframes accentShift {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  @media (max-width: 600px) {
+    .random-wrap { padding: 0 12px 36px; }
+    .random-btn { height: 64px; border-radius: 10px; }
+    .random-btn-badge, .random-btn-left-notch, .random-btn-right-notch { display: none; }
+  }
+
+  /* ============================================================
+     DESMOS FLOATING BUTTON
+  ============================================================ */
+  .desmos-fab {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    z-index: 1050;
+    background: var(--surface2);
+    border: 1px solid var(--border-light);
+    border-radius: 50px;
+    padding: 0 20px 0 14px;
+    height: 52px;
+    display: none;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    font-family: 'Source Serif 4', serif;
+  }
+
+  .desmos-fab.visible {
+    display: flex;
+    animation: fadeIn 0.18s ease;
+  }
+
+  .desmos-fab:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(207,0,61,0.25), 0 2px 8px rgba(0,0,0,0.5);
+    border-color: color-mix(in srgb, var(--crimson) 60%, transparent);
+    background: var(--surface3);
+  }
+
+  .desmos-fab:active {
+    transform: translateY(0) scale(0.97);
+  }
+
+  .desmos-fab-icon {
+    font-size: 20px;
+    line-height: 1;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+  }
+
+  .desmos-fab:hover .desmos-fab-icon {
+    transform: rotate(-8deg) scale(1.1);
+  }
+
+  .desmos-fab-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    display: block;
+    line-height: 1.25;
+  }
+
+  .desmos-fab-sub {
+    font-size: 9.5px;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    display: block;
+  }
+
+  @media (max-width: 600px) {
+    .desmos-fab { bottom: 20px; right: 16px; padding: 0 14px; }
+    .desmos-fab-sub { display: none; }
+  }
+
+  /* ============================================================
+     THEME TOGGLE
+  ============================================================ */
+  .theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1060;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--surface2);
+    border: 1px solid var(--border-light);
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.35);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+  }
+
+  .theme-toggle:hover {
+    transform: translateY(-2px);
+    border-color: color-mix(in srgb, var(--crimson) 55%, transparent);
+    box-shadow: 0 8px 24px rgba(207,0,61,0.22), 0 2px 8px rgba(0,0,0,0.3);
+    background: var(--surface3);
+  }
+
+  .theme-toggle:active { transform: translateY(0) scale(0.94); }
+
+  @media (max-width: 600px) {
+    .theme-toggle { top: 14px; right: 14px; width: 38px; height: 38px; font-size: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Apply saved theme before paint, to avoid a flash of the wrong mode -->
+<script>
+  (function() {
+    if (localStorage.getItem('mx2-theme') === 'light') {
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
+  })();
+</script>
+
+<button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark or light mode">
+  <span id="theme-icon">🌙</span>
+</button>
+
+<!-- ============================================================
+     HEADER
+============================================================ -->
+<header>
+  <div class="header-inner">
+    <div class="school-tag">Middlesex School · mxschool.edu</div>
+    <h1>MX² Algebra 2 — <em>Summer Review</em></h1>
+    <div class="header-meta">
+      <span class="meta-pill">🧮 Equations</span>
+      <span class="meta-pill">ƒ Functions</span>
+      <span class="meta-pill">📈 Exponentials</span>
+      <span class="meta-pill">🔑 Logarithms</span>
+      <span class="meta-pill">Post-Test Review</span>
+    </div>
+  </div>
+</header>
+
+<div class="instructions">
+  Click any tile to open practice problems. Use <strong>Show Answer</strong> to check your work after attempting each part.
+</div>
+
+<!-- ============================================================
+     BOARD
+============================================================ -->
+<div class="board-wrap">
+  <div class="board-grid" id="board-grid"></div>
+</div>
+
+<!-- ============================================================
+     RANDOM PRACTICE BAR
+============================================================ -->
+<div class="random-wrap">
+  <button class="random-btn" id="random-btn" aria-label="Random Practice">
+    <div class="random-btn-left-notch"></div>
+    <div class="random-btn-right-notch"></div>
+    <span class="random-btn-icon">🎲</span>
+    <div class="random-btn-label">
+      <span class="random-btn-title">Random Practice</span>
+      <span class="random-btn-sub">Any topic · Any tile · Any problem</span>
+    </div>
+    <span class="random-btn-badge">65 problems</span>
+  </button>
+</div>
+
+<!-- ============================================================
+     DESMOS FLOATING BUTTON
+============================================================ -->
+<button class="desmos-fab" id="desmos-fab" aria-label="Open Desmos Graphing Calculator">
+  <span class="desmos-fab-icon">📈</span>
+  <span>
+    <span class="desmos-fab-title">Graphing Calculator</span>
+    <span class="desmos-fab-sub">Opens Desmos in a new tab</span>
+  </span>
+</button>
+
+<!-- ============================================================
+     MODAL
+============================================================ -->
+<div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div class="modal-header-accent" id="modal-accent"></div>
+      <div>
+        <div class="modal-col-label" id="modal-col-label"></div>
+        <div class="modal-title" id="modal-title"></div>
+      </div>
+      <button class="modal-close" id="modal-close" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   DATA — Edit problems here without touching layout code.
+   Each tile has: icon, title, sub, topics, and problems[].
+   Each problem has context, stem, parts[], answers[].
+   To add a video later: add video: { title: "...", url: "..." }
+   to any tile object and the modal will render a Watch First section.
+   Graphs needed for a problem are flagged inline in the stem with
+   an HTML comment: <!-- GRAPH NEEDED: description -->
+   Once the image exists in img/, replace the comment with:
+   <img src="img/filename.png" alt="..." class="problem-img">
+============================================================ */
+
+const columns = [
+
+  // ═══════════════════════════════════════════════════════════
+  // COLUMN A — Equations
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: "col-a",
+    accentVar: "var(--col1-light)",
+    headerClass: "col-1-header",
+    tileClass: "col-1",
+    label: "Column I",
+    title: "Equations",
+    topics: "Algebraic, Graphical & Tabular Solving, Systems",
+    tiles: [
+
+      // ── TILE A-1 ──────────────────────────────────────────
+      {
+        icon: "🧮",
+        title: "Solving Equations Algebraically",
+        sub: "Linear, quadratic-in-form, and absolute value equations",
+        problems: [
+          {
+            stem: "Solve for $x$: $\\quad 7x + 5 = 3x - 19$",
+            answers: [
+              { label: "", text: "$7x+5=3x-19 \\;\\Rightarrow\\; 4x = -24 \\;\\Rightarrow\\; x = -6$" }
+            ]
+          },
+          {
+            stem: "Solve for $x$: $\\quad 5x - 2(3x+4) = 10$",
+            answers: [
+              { label: "", text: "$5x - 6x - 8 = 10 \\;\\Rightarrow\\; -x - 8 = 10 \\;\\Rightarrow\\; -x = 18 \\;\\Rightarrow\\; x = -18$" }
+            ]
+          },
+          {
+            stem: "Solve for $x$. There are two solutions — list both.<br><br>$$\\dfrac{(x+3)^2}{4} = 4$$",
+            answers: [
+              { label: "", text: "$(x+3)^2 = 16 \\;\\Rightarrow\\; x+3 = \\pm 4 \\;\\Rightarrow\\; x = 1 \\text{ or } x = -7$" }
+            ]
+          },
+          {
+            stem: "Solve for $x$. There are two solutions — list both.<br><br>$$|3x - 5| = 16$$",
+            answers: [
+              { label: "", text: "$3x-5=16 \\Rightarrow x = 7$, &nbsp; or &nbsp; $3x-5=-16 \\Rightarrow x = -\\dfrac{11}{3}$" }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE A-2 ──────────────────────────────────────────
+      {
+        icon: "📊",
+        title: "Solving from Graphs",
+        sub: "Read solutions to equations and inequalities directly from a graph",
+        problems: [
+          {
+            context: "The graph of $y = x^3 - 3x + 1$ is shown below.",
+            stem: "Using the graph, estimate all solutions to the equation $x^3 - 3x + 1 = -1$.<br><br><img src='img/MX2-Alg2-a2p1.png' alt='Graph of y = x cubed minus 3x plus 1, with a reference line at y = -1' class='problem-img'>",
+            answers: [
+              { label: "", text: "$x^3-3x+1=-1 \\Rightarrow x^3-3x+2=0 \\Rightarrow (x-1)^2(x+2)=0$. Solutions: $x=1$ (touches the line, double root) and $x=-2$." }
+            ]
+          },
+          {
+            context: "The graph of $y = |2x-4|+1$ is shown below.",
+            stem: "Using the graph, estimate all solutions to $|2x-4|+1 = 5$.<br><br><img src='img/MX2-Alg2-a2p2.png' alt='V-shaped graph of y = the absolute value of 2x minus 4, plus 1, with a reference line at y = 5' class='problem-img'>",
+            answers: [
+              { label: "", text: "$|2x-4|=4 \\Rightarrow 2x-4=4$ or $2x-4=-4 \\Rightarrow x = 4$ or $x = 0$." }
+            ]
+          },
+          {
+            context: "The graphs of $f(x) = -x^2+4x$ and $g(x) = 3x-2$ are shown below.",
+            stem: "Use the graphs to estimate the solution(s) to $f(x) = g(x)$, and describe how you located them on the graph.<br><br><img src='img/MX2-Alg2-a2p3.png' alt='Graphs of f(x) = negative x squared plus 4x and g(x) = 3x minus 2, plotted together' class='problem-img'>",
+            answers: [
+              { label: "", text: "The intersection points of the two curves give the solutions. $-x^2+4x=3x-2 \\Rightarrow x^2-x-2=0 \\Rightarrow (x-2)(x+1)=0$. Solutions: $x=-1, x=2$." }
+            ]
+          },
+          {
+            context: "The graph of $f(x) = x^2 - 2x - 3$ is shown below.",
+            stem: "Use the graph to solve the inequality $f(x) < 0$.<br><br><img src='img/MX2-Alg2-a2p4.png' alt='Graph of f(x) = x squared minus 2x minus 3' class='problem-img'>",
+            answers: [
+              { label: "", text: "$f(x) = (x-3)(x+1)$, which is negative between its roots. Solution: $-1 < x < 3$." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE A-3 ──────────────────────────────────────────
+      {
+        icon: "🔢",
+        title: "Solving from Tables & Data",
+        sub: "Use function tables and real data to solve equations and inequalities",
+        problems: [
+          {
+            stem: `The table below gives values of $f(x)$ and $g(x)$.
+              <table class="data-table">
+                <tr><th>$x$</th><td>-3</td><td>0</td><td>2</td><td>5</td></tr>
+                <tr><th>$f(x)$</th><td>6</td><td>4</td><td>4</td><td>-2</td></tr>
+                <tr><th>$g(x)$</th><td>-1</td><td>4</td><td>7</td><td>10</td></tr>
+              </table>`,
+            parts: [
+              { label: "(a)", text: "Use the table to solve $f(x) = g(x)$." },
+              { label: "(b)", text: "Use the table to solve $f(x) > g(x)$." },
+              { label: "(c)", text: "Use the table to solve $f(x) < 0$." }
+            ],
+            answers: [
+              { label: "(a)", text: "Compare each column: only at $x=0$ do $f$ and $g$ match ($4=4$). Solution: $x=0$." },
+              { label: "(b)", text: "Only at $x=-3$: $6 > -1$. Solution: $x=-3$." },
+              { label: "(c)", text: "Only at $x=5$: $f(5)=-2<0$. Solution: $x=5$." }
+            ]
+          },
+          {
+            context: "The table shows the price of internet plans (in dollars) at two providers, based on data speed tier $x$ (in Mbps).",
+            stem: `<table class="data-table">
+                <tr><th>$x$</th><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td></tr>
+                <tr><th>$p(x)$ (Provider A)</th><td>40</td><td>42</td><td>46</td><td>52</td><td>60</td></tr>
+                <tr><th>$q(x)$ (Provider B)</th><td>45</td><td>44</td><td>44</td><td>47</td><td>60</td></tr>
+              </table>`,
+            parts: [
+              { label: "(a)", text: "Use the table to solve $p(x) = q(x)$." },
+              { label: "(b)", text: "Use the table to solve $p(x) < q(x)$." },
+              { label: "(c)", text: "Use the table to solve $q(x) \\geq 47$." }
+            ],
+            answers: [
+              { label: "(a)", text: "Both equal 60 at $x=4$. Solution: $x=4$." },
+              { label: "(b)", text: "At $x=0$: $40<45$. At $x=1$: $42<44$. Solution: $x=0, 1$." },
+              { label: "(c)", text: "$q(x)=47$ at $x=3$ and $q(x)=60$ at $x=4$. Solution: $x=3, 4$." }
+            ]
+          },
+          {
+            context: "The table shows the temperature $T(t)$, in °F, in Boston on a winter day, $t$ hours after midnight.",
+            stem: `<table class="data-table">
+                <tr><th>$t$</th><td>0</td><td>4</td><td>8</td><td>12</td></tr>
+                <tr><th>$T(t)$</th><td>22</td><td>18</td><td>30</td><td>29</td></tr>
+              </table>`,
+            parts: [
+              { label: "(a)", text: "Assuming a linear change between recorded values, estimate the value of $t$ at which $T(t) = 24$." },
+              { label: "(b)", text: "Over which recorded interval is the temperature increasing the fastest? Give the rate, with units." },
+              { label: "(c)", text: "Use only the values in the table to solve $T(t) > 25$." }
+            ],
+            answers: [
+              { label: "(a)", text: "Between $t=4$ ($T=18$) and $t=8$ ($T=30$): $\\dfrac{24-18}{30-18} = \\dfrac{1}{2}$ of the way, so $t = 4 + \\dfrac{1}{2}(4) = 6$." },
+              { label: "(b)", text: "From $t=4$ to $t=8$: rate $= \\dfrac{30-18}{8-4} = 3$°F per hour, the fastest of the three intervals." },
+              { label: "(c)", text: "From the table, $T(8)=30$ and $T(12)=29$ exceed 25. Solution: $t=8, 12$." }
+            ]
+          },
+          {
+            context: "A store's rewards program table shows total points $P(n)$ earned after $n$ purchases.",
+            stem: `<table class="data-table">
+                <tr><th>$n$</th><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td></tr>
+                <tr><th>$P(n)$</th><td>10</td><td>22</td><td>30</td><td>44</td><td>50</td></tr>
+              </table>
+              Use the table to solve the inequality $P(n) > 40$.`,
+            answers: [
+              { label: "", text: "$P(4)=44$ and $P(5)=50$ are both greater than 40. Solution: $n=4, 5$." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE A-4 ──────────────────────────────────────────
+      {
+        icon: "🧩",
+        title: "Systems of Linear Equations",
+        sub: "Solve and classify systems of two linear equations",
+        problems: [
+          {
+            stem: "Solve the system. Give your answer as an ordered pair $(x,y)$.<br><br>$$3x + 2y = 16$$ $$x - y = 2$$",
+            answers: [
+              { label: "", text: "From the second equation, $x = y+2$. Substitute: $3(y+2)+2y=16 \\Rightarrow 5y+6=16 \\Rightarrow y=2$, so $x=4$. Solution: $(4,2)$." }
+            ]
+          },
+          {
+            stem: "Solve the system. Indicate the number of solutions — one solution (give the ordered pair), no solution, or infinitely many solutions.<br><br>$$x + 3y = 6$$ $$2x + 6y = 18$$",
+            answers: [
+              { label: "", text: "Multiplying the first equation by 2 gives $2x+6y=12$, which contradicts $2x+6y=18$. The lines are parallel and distinct: no solution." }
+            ]
+          },
+          {
+            stem: "Solve the system. Indicate the number of solutions — one solution (give the ordered pair), no solution, or infinitely many solutions.<br><br>$$4x - 2y = 8$$ $$-6x + 3y = -12$$",
+            answers: [
+              { label: "", text: "Multiplying the first equation by $-1.5$ gives $-6x+3y=-12$, identical to the second equation. Same line: infinitely many solutions." }
+            ]
+          },
+          {
+            context: "Context: Ticket sales",
+            stem: "A theater sells adult tickets for \\$12 and child tickets for \\$7. One evening, 150 tickets were sold for a total of \\$1,410. Write and solve a system to find the number of adult tickets $a$ and child tickets $c$ sold.",
+            answers: [
+              { label: "", text: "$a+c=150$ and $12a+7c=1410$. From the first, $c=150-a$. Substitute: $12a+7(150-a)=1410 \\Rightarrow 5a+1050=1410 \\Rightarrow a=72$, so $c=78$. 72 adult tickets and 78 child tickets." }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  // ═══════════════════════════════════════════════════════════
+  // COLUMN B — Functions
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: "col-b",
+    accentVar: "var(--col2-light)",
+    headerClass: "col-2-header",
+    tileClass: "col-2",
+    label: "Column II",
+    title: "Functions",
+    topics: "Notation, Composition, Inverses & Modeling",
+    tiles: [
+
+      // ── TILE B-1 ──────────────────────────────────────────
+      {
+        icon: "ƒ",
+        title: "Function Evaluation & Notation",
+        sub: "Evaluate functions given as formulas, graphs, or tables",
+        problems: [
+          {
+            stem: "Let $f(x) = 2x^2 - 5x + 1$. Find $f(-3)$ and $f(2a)$.",
+            answers: [
+              { label: "", text: "$f(-3) = 2(9) -5(-3)+1 = 18+15+1 = 34$. &nbsp; $f(2a) = 2(2a)^2 - 5(2a)+1 = 8a^2 - 10a + 1$." }
+            ]
+          },
+          {
+            context: "The graph of $p(x)$ is shown below, with several labeled points.",
+            stem: `Use the graph to answer each of the following.<br><br><img src='img/MX2-Alg2-b1p2.png' alt='Graph of p(x), a curve with the input values A, B, C, and D marked on the x-axis' class='problem-img'>`,
+            parts: [
+              { label: "(a)", text: "Evaluate $p(A)$." },
+              { label: "(b)", text: "Evaluate $p(D)$." },
+              { label: "(c)", text: "How many solutions are there to $p(x) = 2$?" },
+              { label: "(d)", text: "How many solutions are there to $p(x) = -4$?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$p(A) = 6$" },
+              { label: "(b)", text: "$p(D) = 4$" },
+              { label: "(c)", text: "3 solutions — the curve crosses the line $y=2$ once between $A$ and $B$, touches it exactly at $x=B$ (its local peak), and crosses it once more between $C$ and $D$." },
+              { label: "(d)", text: "0 solutions — the curve's lowest point (near $x=C$) only reaches down to about $-3$, so it never reaches $-4$." }
+            ]
+          },
+          {
+            context: "The table shows selected values of $h(x)$, the height (in feet) of a drone $x$ seconds after launch.",
+            stem: `<table class="data-table">
+                <tr><th>$x$</th><td>0</td><td>2</td><td>4</td><td>6</td><td>8</td></tr>
+                <tr><th>$h(x)$</th><td>0</td><td>18</td><td>30</td><td>34</td><td>30</td></tr>
+              </table>`,
+            parts: [
+              { label: "(a)", text: "Evaluate $h(4)$ and write a sentence explaining its meaning in context." },
+              { label: "(b)", text: "Use the table to solve $h(x) = 34$." },
+              { label: "(c)", text: "Over which values of $x$ shown in the table is the drone's height increasing?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$h(4) = 30$: the drone is 30 feet above the ground 4 seconds after launch." },
+              { label: "(b)", text: "$h(6)=34$, so $x=6$." },
+              { label: "(c)", text: "From $x=0$ to $x=6$, since height decreases from $x=6$ to $x=8$." }
+            ]
+          },
+          {
+            stem: "Let $f(x) = -2x^2+3x-5$. Find $f(-1)$, $f(0)$, and simplify $f(a+1)$.",
+            answers: [
+              { label: "", text: "$f(-1) = -2-3-5=-10$. &nbsp; $f(0)=-5$. &nbsp; $f(a+1) = -2(a+1)^2+3(a+1)-5 = -2a^2 - a - 4$." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE B-2 ──────────────────────────────────────────
+      {
+        icon: "🔀",
+        title: "Composition of Functions",
+        sub: "Combine functions using composition, from formulas and tables",
+        problems: [
+          {
+            stem: "Let $f(x)=2x+1$ and $g(x)=x^2-3$. Find and simplify $(f\\circ g)(x)$ and $(g\\circ f)(x)$.",
+            answers: [
+              { label: "", text: "$(f\\circ g)(x) = 2(x^2-3)+1 = 2x^2-5$. &nbsp; $(g\\circ f)(x) = (2x+1)^2-3 = 4x^2+4x-2$." }
+            ]
+          },
+          {
+            stem: "Let $f(x)=\\sqrt{x+4}$ and $g(x)=3x-2$. Find $(f\\circ g)(4)$ and $(g\\circ f)(5)$.",
+            answers: [
+              { label: "", text: "$g(4)=10$, so $(f\\circ g)(4) = f(10) = \\sqrt{14} \\approx 3.742$. &nbsp; $f(5)=3$, so $(g\\circ f)(5) = g(3) = 7$." }
+            ]
+          },
+          {
+            stem: `Selected values of the invertible functions $f$ and $g$ are given below.
+              <table class="data-table">
+                <tr><th>$x$</th><td>-1</td><td>1</td><td>3</td><td>6</td></tr>
+                <tr><th>$f(x)$</th><td>6</td><td>-1</td><td>1</td><td>3</td></tr>
+                <tr><th>$g(x)$</th><td>3</td><td>6</td><td>-1</td><td>1</td></tr>
+              </table>`,
+            parts: [
+              { label: "(a)", text: "Evaluate $f(g(-1))$." },
+              { label: "(b)", text: "Evaluate $g(f(1))$." },
+              { label: "(c)", text: "Evaluate $f(f(6))$." },
+              { label: "(d)", text: "Evaluate $g(g(3))$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$g(-1)=3$, $f(3)=1$." },
+              { label: "(b)", text: "$f(1)=-1$, $g(-1)=3$." },
+              { label: "(c)", text: "$f(6)=3$, $f(3)=1$." },
+              { label: "(d)", text: "$g(3)=-1$, $g(-1)=3$." }
+            ]
+          },
+          {
+            context: "Context: Retail pricing",
+            stem: "A store is having a sale where every item is 20% off. After the discount, a 6% sales tax is applied to the reduced price. Let $p$ be the original price. Write a function $D(p)$ for the discounted price and a function $T(x)$ for the price after tax is applied to amount $x$. Then find the final price of an \\$80 item as a composition.",
+            answers: [
+              { label: "", text: "$D(p)=0.8p$, &nbsp; $T(x)=1.06x$. &nbsp; $T(D(80)) = T(64) = 1.06(64) = \\$67.84$." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE B-3 ──────────────────────────────────────────
+      {
+        icon: "↩️",
+        title: "Inverse Functions",
+        sub: "Find and interpret inverse functions algebraically and in context",
+        problems: [
+          {
+            stem: "Find the inverse of $f(x) = 4x-7$.",
+            answers: [
+              { label: "", text: "$y=4x-7 \\Rightarrow x=4y-7 \\Rightarrow y = \\dfrac{x+7}{4}$. &nbsp; $f^{-1}(x) = \\dfrac{x+7}{4}$." }
+            ]
+          },
+          {
+            stem: "Find the inverse of $g(x) = \\dfrac{2x+5}{x-1}$.",
+            answers: [
+              { label: "", text: "$y(x-1)=2x+5 \\Rightarrow xy-y=2x+5 \\Rightarrow x(y-2)=y+5 \\Rightarrow x=\\dfrac{y+5}{y-2}$. &nbsp; $g^{-1}(x) = \\dfrac{x+5}{x-2}$." }
+            ]
+          },
+          {
+            context: "Context: Geometry",
+            stem: "The function $V(r) = \\dfrac{4}{3}\\pi r^3$ gives the volume of a sphere as a function of its radius $r$. Find a formula for the inverse function that gives the radius as a function of a sphere's volume. Show the work that leads to your answer.",
+            answers: [
+              { label: "", text: "$r^3 = \\dfrac{3V}{4\\pi} \\Rightarrow r(V) = \\sqrt[3]{\\dfrac{3V}{4\\pi}}$." }
+            ]
+          },
+          {
+            context: "The invertible function $f$ is given by the table below.",
+            stem: `<table class="data-table">
+                <tr><th>$x$</th><td>-2</td><td>0</td><td>3</td><td>5</td></tr>
+                <tr><th>$f(x)$</th><td>9</td><td>4</td><td>-1</td><td>-6</td></tr>
+              </table>
+              Use the table to evaluate $f^{-1}(-1)$ and $f^{-1}(9)$.`,
+            answers: [
+              { label: "", text: "$f(3)=-1$, so $f^{-1}(-1)=3$. &nbsp; $f(-2)=9$, so $f^{-1}(9)=-2$." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE B-4 ──────────────────────────────────────────
+      {
+        icon: "💡",
+        title: "Function Modeling & Interpretation",
+        sub: "Interpret function values, rates, and graphs in real-world context",
+        problems: [
+          {
+            context: "Context: Freelance work",
+            stem: "Maria spends 45 minutes setting up her workspace before she can start illustrating, after which she completes 3 illustrations every hour. The formula $N(h) = 3h - 2.25$ gives the number of illustrations Maria has completed after $h$ hours of total working time.",
+            parts: [
+              { label: "(a)", text: "Maria wants to complete 15 illustrations. How many hours will she need to work?" },
+              { label: "(b)", text: "Evaluate $N(0.75)$ and write a sentence explaining its meaning in context." }
+            ],
+            answers: [
+              { label: "(a)", text: "$3h-2.25=15 \\Rightarrow 3h=17.25 \\Rightarrow h=5.75$ hours." },
+              { label: "(b)", text: "$N(0.75)=0$: after 45 minutes (the setup time), Maria has not yet completed any illustrations." }
+            ]
+          },
+          {
+            context: "The graph below shows $C(n)$, the cost (in dollars) of materials needed to laminate $n$ posters for a school event.",
+            stem: "Use the graph to evaluate $C(10)$, and write a sentence explaining the meaning of this value in context. Then use the graph to solve $C(n)=35$, and explain the meaning of your answer in context.<br><br><img src='img/MX2-Alg2-b4p2.png' alt='Linear graph of C(n), the cost of laminating materials' class='problem-img'>",
+            answers: [
+              { label: "", text: "$C(10)=55$: laminating 10 posters costs \\$55 in materials. &nbsp; $C(n)=35$ at $n=5$: materials for 5 posters cost \\$35." }
+            ]
+          },
+          {
+            context: "The table shows the number of gallons $G(t)$ remaining in a water tank $t$ minutes after a drain is opened.",
+            stem: `<table class="data-table">
+                <tr><th>$t$</th><td>0</td><td>5</td><td>10</td><td>15</td></tr>
+                <tr><th>$G(t)$</th><td>200</td><td>150</td><td>100</td><td>50</td></tr>
+              </table>`,
+            parts: [
+              { label: "(a)", text: "Find the average rate of change of $G$ on $[0,15]$ and interpret its meaning, with units." },
+              { label: "(b)", text: "Evaluate $G(10)$ and interpret its meaning in context." },
+              { label: "(c)", text: "Use the table to solve $G(t)=50$ and interpret the result in context." }
+            ],
+            answers: [
+              { label: "(a)", text: "$\\dfrac{50-200}{15-0} = -10$ gallons per minute: the tank drains at an average rate of 10 gallons per minute." },
+              { label: "(b)", text: "$G(10)=100$: 100 gallons remain 10 minutes after the drain opens." },
+              { label: "(c)", text: "$G(15)=50$, so $t=15$: 50 gallons remain after 15 minutes." }
+            ]
+          },
+          {
+            context: "A city's population $P(t)$, in thousands, $t$ years after 2010 is modeled by $P(t) = 0.8t+42$ for $0 \\leq t \\leq 20$.",
+            parts: [
+              { label: "(a)", text: "Evaluate $P(12)$ and interpret the result in context." },
+              { label: "(b)", text: "Solve $P(t) = 58$ and interpret the result in context." },
+              { label: "(c)", text: "Explain what the domain restriction $0 \\leq t \\leq 20$ means in context." }
+            ],
+            answers: [
+              { label: "(a)", text: "$P(12) = 9.6+42=51.6$: the population in 2022 is about 51,600." },
+              { label: "(b)", text: "$0.8t+42=58 \\Rightarrow t=20$: the population reaches 58,000 in 2030." },
+              { label: "(c)", text: "The model is only intended to describe the population between 2010 and 2030; it may not be accurate outside that window." }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  // ═══════════════════════════════════════════════════════════
+  // COLUMN C — Exponentials
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: "col-c",
+    accentVar: "var(--col3-light)",
+    headerClass: "col-3-header",
+    tileClass: "col-3",
+    label: "Column III",
+    title: "Exponentials",
+    topics: "Compound Interest, Growth Models & Curve Fitting",
+    tiles: [
+
+      // ── TILE C-1 ──────────────────────────────────────────
+      {
+        icon: "💰",
+        title: "Compound Interest",
+        sub: "Compare compounding frequencies and account growth",
+        problems: [
+          {
+            stem: "\\$8,000 is invested for 12 years at a nominal annual interest rate of 5%. Find the balance if interest is compounded:",
+            parts: [
+              { label: "(a)", text: "annually" },
+              { label: "(b)", text: "quarterly" },
+              { label: "(c)", text: "monthly" },
+              { label: "(d)", text: "continuously" }
+            ],
+            answers: [
+              { label: "(a)", text: "$8000(1.05)^{12} \\approx \\$14{,}366.85$" },
+              { label: "(b)", text: "$8000\\left(1+\\frac{0.05}{4}\\right)^{48} \\approx \\$14{,}522.84$" },
+              { label: "(c)", text: "$8000\\left(1+\\frac{0.05}{12}\\right)^{144} \\approx \\$14{,}558.75$" },
+              { label: "(d)", text: "$8000e^{0.05(12)} \\approx \\$14{,}576.95$" }
+            ]
+          },
+          {
+            stem: "Account A: \\$6,000 at 4.8% compounded annually. Account B: \\$6,000 at 4.5% compounded continuously. Which account has more money after 8 years, and by how much?",
+            answers: [
+              { label: "", text: "A: $6000(1.048)^8 \\approx \\$8{,}730.61$. &nbsp; B: $6000e^{0.045(8)} \\approx \\$8{,}599.97$. Account A has more, by about $\\$130.64$." }
+            ]
+          },
+          {
+            stem: "Find the effective annual interest rate of an account earning a nominal 6.2%, compounded monthly. Round to three decimal places.",
+            answers: [
+              { label: "", text: "$\\left(1+\\dfrac{0.062}{12}\\right)^{12} - 1 \\approx 0.06379$, or $6.379\\%$." }
+            ]
+          },
+          {
+            stem: "What nominal rate compounded semiannually is equivalent to an effective annual interest rate of 5.35%? Round to three decimal places.",
+            answers: [
+              { label: "", text: "$\\left(1+\\dfrac{r}{2}\\right)^2 = 1.0535 \\Rightarrow 1+\\dfrac{r}{2} = \\sqrt{1.0535} \\approx 1.02640 \\Rightarrow r \\approx 5.280\\%$." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE C-2 ──────────────────────────────────────────
+      {
+        icon: "🦠",
+        title: "Continuous Growth & Decay Modeling",
+        sub: "Build and evaluate exponential growth and decay models in context",
+        problems: [
+          {
+            context: "A radioactive isotope decays according to $A(t) = 250e^{-0.023t}$, where $A$ is in grams and $t$ is in years.",
+            parts: [
+              { label: "(a)", text: "Evaluate $A(0)$ and interpret its meaning." },
+              { label: "(b)", text: "Evaluate $A(30)$, rounded to the nearest tenth, and interpret its meaning." },
+              { label: "(c)", text: "Does the sample lose exactly 2.3% of its mass every year? Explain how the continuous decay rate relates to the annual percent decrease." }
+            ],
+            answers: [
+              { label: "(a)", text: "$A(0)=250$ grams: the initial mass of the sample." },
+              { label: "(b)", text: "$A(30) = 250e^{-0.69} \\approx 125.4$ grams remain after 30 years." },
+              { label: "(c)", text: "Not exactly — the annual percent decrease is $1-e^{-0.023} \\approx 2.274\\%$, slightly less than the continuous rate of 2.3%." }
+            ]
+          },
+          {
+            context: "The number of zombies in a town $t$ weeks after an outbreak begins is modeled by $Z(t) = 12(1.35)^t$.",
+            parts: [
+              { label: "(a)", text: "Evaluate $Z(0)$ and interpret its meaning." },
+              { label: "(b)", text: "Evaluate $Z(6)$, rounded to the nearest whole zombie." },
+              { label: "(c)", text: "By what percent does the zombie population grow each week?" }
+            ],
+            answers: [
+              { label: "(a)", text: "$Z(0)=12$: there are 12 zombies at the start of the outbreak." },
+              { label: "(b)", text: "$Z(6) = 12(1.35)^6 \\approx 73$ zombies." },
+              { label: "(c)", text: "35% per week." }
+            ]
+          },
+          {
+            context: "A bacteria culture starts with 500 cells and triples every 4 hours.",
+            parts: [
+              { label: "(a)", text: "Write a function $B(t)$ modeling the number of bacteria after $t$ hours." },
+              { label: "(b)", text: "Evaluate $B(10)$, rounded to the nearest whole number." }
+            ],
+            answers: [
+              { label: "(a)", text: "$B(t) = 500(3)^{t/4}$" },
+              { label: "(b)", text: "$B(10) = 500(3)^{2.5} \\approx 7{,}794$ bacteria." }
+            ]
+          },
+          {
+            context: "An investment grows according to the continuous model $V(t) = 3500e^{0.038t}$.",
+            parts: [
+              { label: "(a)", text: "Evaluate $V(5)$, rounded to the nearest cent." },
+              { label: "(b)", text: "What nominal annual rate, compounded continuously, does this model represent?" },
+              { label: "(c)", text: "Find the effective annual growth rate of this investment, rounded to three decimal places." }
+            ],
+            answers: [
+              { label: "(a)", text: "$V(5) = 3500e^{0.19} \\approx \\$4{,}232.38$." },
+              { label: "(b)", text: "3.8%." },
+              { label: "(c)", text: "$e^{0.038}-1 \\approx 0.038735$, or $3.874\\%$." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE C-3 ──────────────────────────────────────────
+      {
+        icon: "📈",
+        title: "Finding Exponential Functions from Data",
+        sub: "Determine exponential models from points, tables, and rates",
+        problems: [
+          {
+            stem: "Find a formula for the exponential function $g(x) = ab^x$ that passes through the points $(0,6)$ and $(2,54)$.",
+            answers: [
+              { label: "", text: "$a=6$ (from $x=0$). $6b^2=54 \\Rightarrow b^2=9 \\Rightarrow b=3$. &nbsp; $g(x)=6(3)^x$." }
+            ]
+          },
+          {
+            stem: "Find a formula for the exponential function $f(x) = ab^x$ that passes through the points $(1,4)$ and $(4,32)$.",
+            answers: [
+              { label: "", text: "$ab=4$, $ab^4=32$. Dividing: $b^3=8 \\Rightarrow b=2$, so $a=2$. &nbsp; $f(x)=2(2)^x$." }
+            ]
+          },
+          {
+            stem: `Find the exponential function that fits the data in the table below.
+              <table class="data-table">
+                <tr><th>$x$</th><td>0</td><td>1</td><td>2</td><td>3</td></tr>
+                <tr><th>$y$</th><td>8</td><td>12</td><td>18</td><td>27</td></tr>
+              </table>`,
+            answers: [
+              { label: "", text: "Each ratio $\\dfrac{y_{n+1}}{y_n} = 1.5$, and $y(0)=8$. &nbsp; $y = 8(1.5)^x$." }
+            ]
+          },
+          {
+            context: "Context: New bakery",
+            stem: "A new bakery opens. 3 days after opening, they sell 40 pastries. 9 days after opening, they sell 135 pastries. Assuming exponential growth, find a formula for the number of pastries sold, $P(d)$, $d$ days after opening. Round coefficients to the nearest thousandth.",
+            answers: [
+              { label: "", text: "$ab^3=40$, $ab^9=135 \\Rightarrow b^6 = 3.375 \\Rightarrow b = \\sqrt{1.5} \\approx 1.225$. &nbsp; $a = \\dfrac{40}{b^3} \\approx 21.774$. &nbsp; $P(d) \\approx 21.774(1.225)^d$." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE C-4 ──────────────────────────────────────────
+      {
+        icon: "🕐",
+        title: "Reading Exponential Growth Graphs",
+        sub: "Estimate key values from a graph and build an approximate equation",
+        problems: [
+          {
+            context: "The number of zombies in a town is graphed below as $Z(t)$, $t$ days after an outbreak begins, with a few key points labeled.",
+            stem: "<img src='img/MX2-Alg2-c4p1.png' alt='Exponential growth graph of Z(t), the zombie population over time, with labeled points (0,15), (4,30), and (8,60)' class='problem-img'>",
+            parts: [
+              { label: "(a)", text: "Using the graph, what is the initial number of zombies in the town?" },
+              { label: "(b)", text: "Using the graph, find the doubling time of the zombie population." },
+              { label: "(c)", text: "Using the graph, find the quadrupling time of the zombie population." },
+              { label: "(d)", text: "Using your doubling time and the initial value, write an equation for $Z(t)$." }
+            ],
+            answers: [
+              { label: "(a)", text: "15 zombies, read at $t=0$." },
+              { label: "(b)", text: "$Z(4) = 30$, exactly double $Z(0)=15$. Doubling time $= 4$ days." },
+              { label: "(c)", text: "$Z(8) = 60$, exactly four times $Z(0)=15$. Quadrupling time $= 8$ days." },
+              { label: "(d)", text: "$Z(t) = 15 \\cdot 2^{\\,t/4}$" }
+            ]
+          },
+          {
+            context: "A savings account balance is graphed below as $B(t)$, in dollars, $t$ years after opening, with a few key points labeled.",
+            stem: "<img src='img/MX2-Alg2-c4p2.png' alt='Continuous exponential growth graph of B(t), a savings account balance over time, with labeled points (0,2000) and (12,4000)' class='problem-img'>",
+            parts: [
+              { label: "(a)", text: "Use the graph to find the initial deposit." },
+              { label: "(b)", text: "Use the graph to find how many years it takes for the balance to double." },
+              { label: "(c)", text: "Use the graph to estimate the balance after 10 years." },
+              { label: "(d)", text: "Using your doubling time and the initial value, write an equation for $B(t)$." }
+            ],
+            answers: [
+              { label: "(a)", text: "\\$2,000." },
+              { label: "(b)", text: "$B(12) = 4{,}000$, exactly double $B(0)=2{,}000$. Doubling time $= 12$ years." },
+              { label: "(c)", text: "Reading the curve at $t=10$: about \\$3,550–\\$3,600." },
+              { label: "(d)", text: "$B(t) = 2000 \\cdot 2^{\\,t/12}$" }
+            ]
+          },
+          {
+            context: "The mass of a radioactive sample is graphed below as $M(t)$ over time, with a few key points labeled.",
+            stem: "<img src='img/MX2-Alg2-c4p3.png' alt='Exponential decay graph of M(t), the mass of a radioactive sample over time, with labeled points (0,80), (5,40), and (10,20)' class='problem-img'>",
+            parts: [
+              { label: "(a)", text: "Use the graph to find the initial mass." },
+              { label: "(b)", text: "Use the graph to find the half-life of the sample." },
+              { label: "(c)", text: "Use the graph to find the mass remaining after 15 days." },
+              { label: "(d)", text: "Using your half-life and the initial mass, write an equation for $M(t)$." }
+            ],
+            answers: [
+              { label: "(a)", text: "80 grams." },
+              { label: "(b)", text: "$M(5) = 40$, exactly half of $M(0)=80$. Half-life $= 5$ days." },
+              { label: "(c)", text: "Continuing the same halving pattern: $M(15) = 10$ grams." },
+              { label: "(d)", text: "$M(t) = 80 \\cdot \\left(\\dfrac{1}{2}\\right)^{t/5}$" }
+            ]
+          },
+          {
+            context: "A social media post's number of shares is graphed below as $S(t)$, where $t$ is hours after posting, with a few key points labeled.",
+            stem: "<img src='img/MX2-Alg2-c4p4.png' alt='Exponential growth graph of S(t), the number of shares of a social media post over time, with labeled points (0,25) and (3,75)' class='problem-img'>",
+            parts: [
+              { label: "(a)", text: "Use the graph to find $S(0)$." },
+              { label: "(b)", text: "Use the graph to find how long it takes for the number of shares to triple." },
+              { label: "(c)", text: "Use the graph to estimate $S(4)$." },
+              { label: "(d)", text: "Using your tripling time and the initial value, write an equation for $S(t)$." }
+            ],
+            answers: [
+              { label: "(a)", text: "25 shares." },
+              { label: "(b)", text: "$S(3) = 75$, exactly triple $S(0)=25$. Tripling time $= 3$ hours." },
+              { label: "(c)", text: "Reading the curve at $t=4$: about 105–110 shares." },
+              { label: "(d)", text: "$S(t) = 25 \\cdot 3^{\\,t/3}$" }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  // ═══════════════════════════════════════════════════════════
+  // COLUMN D — Logarithms
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: "col-d",
+    accentVar: "var(--col4-light)",
+    headerClass: "col-4-header",
+    tileClass: "col-4",
+    label: "Column IV",
+    title: "Logarithms",
+    topics: "Solving Exponential Equations, Log Equations & Rate Conversions",
+    tiles: [
+
+      // ── TILE D-1 ──────────────────────────────────────────
+      {
+        icon: "🔑",
+        title: "Solving Exponential Equations Using Logs",
+        sub: "Isolate the exponent and solve using logarithms",
+        problems: [
+          {
+            stem: "Solve for $x$, rounded to the nearest thousandth: $\\quad 5(2)^x = 240$",
+            answers: [
+              { label: "", text: "$2^x = 48 \\Rightarrow x = \\log_2(48) = \\dfrac{\\ln 48}{\\ln 2} \\approx 5.585$." }
+            ]
+          },
+          {
+            stem: "Solve for $x$, rounded to the nearest thousandth: $\\quad e^{3x} = 50$",
+            answers: [
+              { label: "", text: "$3x = \\ln 50 \\Rightarrow x = \\dfrac{\\ln 50}{3} \\approx 1.304$." }
+            ]
+          },
+          {
+            context: "Context: Zombie population",
+            stem: "The zombie population in a town is modeled by $Z(t)=12(1.35)^t$, where $t$ is weeks after the outbreak. After how many weeks will the population reach 500? Round to the nearest tenth of a week.",
+            answers: [
+              { label: "", text: "$1.35^t = \\dfrac{500}{12} \\approx 41.667 \\Rightarrow t = \\dfrac{\\ln 41.667}{\\ln 1.35} \\approx 12.4$ weeks." }
+            ]
+          },
+          {
+            stem: "How many years will it take for \\$4,000 to grow to \\$10,000 at an annual interest rate of 6%, compounded annually? Round to the nearest tenth of a year.",
+            answers: [
+              { label: "", text: "$1.06^t = 2.5 \\Rightarrow t = \\dfrac{\\ln 2.5}{\\ln 1.06} \\approx 15.7$ years." }
+            ]
+          },
+          {
+            stem: "An account with continuously compounded interest at a nominal rate of 4.5% grows from \\$2,000 to \\$5,000. How many years does this take? Round to the nearest tenth.",
+            answers: [
+              { label: "", text: "$e^{0.045t}=2.5 \\Rightarrow 0.045t=\\ln 2.5 \\Rightarrow t \\approx 20.4$ years." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE D-2 ──────────────────────────────────────────
+      {
+        icon: "log",
+        title: "Solving Basic Logarithmic Equations",
+        sub: "Solve equations involving logarithms directly",
+        problems: [
+          {
+            stem: "Solve for $y$: $\\quad \\log_3(y) = 4$",
+            answers: [
+              { label: "", text: "$y = 3^4 = 81$." }
+            ]
+          },
+          {
+            stem: "Solve for $x$, rounded to the nearest thousandth: $\\quad \\ln(5x+3) = 2$",
+            answers: [
+              { label: "", text: "$5x+3=e^2 \\Rightarrow x = \\dfrac{e^2-3}{5} \\approx 0.878$." }
+            ]
+          },
+          {
+            stem: "Solve for $n$: $\\quad \\log_4(-n+1) = \\dfrac{3}{2}$",
+            answers: [
+              { label: "", text: "$-n+1 = 4^{1.5} = 8 \\Rightarrow n = -7$." }
+            ]
+          },
+          {
+            stem: "Solve for $x$: $\\quad \\log(x) + \\log(x-3) = 1$",
+            answers: [
+              { label: "", text: "$\\log(x(x-3))=1 \\Rightarrow x^2-3x-10=0 \\Rightarrow (x-5)(x+2)=0$. Since $x$ and $x-3$ must both be positive, only $x=5$ is valid." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE D-3 ──────────────────────────────────────────
+      {
+        icon: "🏦",
+        title: "Nominal vs. Effective Rate Conversions",
+        sub: "Use logarithms to convert between nominal and effective rates for continuous compounding",
+        problems: [
+          {
+            stem: "Find the nominal rate compounded continuously that produces an effective annual rate of 5.75%. Round to three decimal places.",
+            answers: [
+              { label: "", text: "$e^r = 1.0575 \\Rightarrow r = \\ln(1.0575) \\approx 5.591\\%$." }
+            ]
+          },
+          {
+            stem: "An investment has a nominal continuous rate of 4.2%. Find its effective annual rate, rounded to three decimal places.",
+            answers: [
+              { label: "", text: "$e^{0.042}-1 \\approx 4.289\\%$." }
+            ]
+          },
+          {
+            stem: "A bond advertises an effective annual return of 8.1%, compounded continuously. Find the nominal annual rate (rounded to three decimals), then use it to determine how many years it would take for a \\$1,000 investment to double (rounded to the nearest tenth of a year).",
+            answers: [
+              { label: "", text: "$r = \\ln(1.081) \\approx 7.789\\%$. Doubling time: $t = \\dfrac{\\ln 2}{r} \\approx 8.9$ years." }
+            ]
+          },
+          {
+            stem: "Two continuously-compounded accounts have effective annual rates of 3.95% and 4.60% respectively. Find the nominal rate for each (round to three decimals), and determine which nominal rate is closer to its effective rate.",
+            answers: [
+              { label: "", text: "$\\ln(1.0395) \\approx 3.874\\%$ and $\\ln(1.046) \\approx 4.498\\%$. Account 1's nominal rate is closer to its effective rate (a gap of about 0.076 points vs. 0.102 points)." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE D-4 ──────────────────────────────────────────
+      {
+        icon: "🔄",
+        title: "Mixed Exponential/Log Review",
+        sub: "Combined practice moving between exponential and logarithmic forms",
+        problems: [
+          {
+            stem: "Rewrite $7^x = 250$ in logarithmic form, then solve for $x$, rounded to the nearest thousandth.",
+            answers: [
+              { label: "", text: "$x = \\log_7(250) = \\dfrac{\\ln 250}{\\ln 7} \\approx 2.837$." }
+            ]
+          },
+          {
+            stem: "Solve for $x$, rounded to the nearest thousandth: $\\quad 3^{2x-1} = 40$",
+            answers: [
+              { label: "", text: "$2x-1 = \\log_3(40) \\approx 3.357 \\Rightarrow x \\approx 2.179$." }
+            ]
+          },
+          {
+            context: "Context: Drug elimination",
+            stem: "A drug decays in the bloodstream according to $A(t) = A_0(0.5)^{t/6}$, where $t$ is in hours. How many hours does it take for only 20% of the original dose to remain? Round to the nearest tenth of an hour.",
+            answers: [
+              { label: "", text: "$(0.5)^{t/6}=0.20 \\Rightarrow \\dfrac{t}{6} = \\dfrac{\\ln 0.20}{\\ln 0.5} \\approx 2.322 \\Rightarrow t \\approx 13.9$ hours." }
+            ]
+          },
+          {
+            context: "The loudness $L$, in decibels, of a sound with intensity $I$ (in W/m²) is given by $L = 10\\log\\left(\\dfrac{I}{I_0}\\right)$, where $I_0 = 10^{-12}$ W/m² is the threshold of hearing.",
+            parts: [
+              { label: "(a)", text: "A vacuum cleaner produces a sound with intensity $I = 10^{-4}$ W/m². Find its loudness in decibels." },
+              { label: "(b)", text: "A concert produces a sound measuring 120 decibels. Find the intensity $I$ of the sound." }
+            ],
+            answers: [
+              { label: "(a)", text: "$L = 10\\log(10^8) = 80$ dB." },
+              { label: "(b)", text: "$12 = \\log(I \\cdot 10^{12}) \\Rightarrow I = 10^{12-12} \\cdot 1 = 1$ W/m²." }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+
+]; // end columns
+
+
+/* ============================================================
+   RENDER BOARD
+============================================================ */
+function renderBoard() {
+  const grid = document.getElementById('board-grid');
+  grid.innerHTML = '';
+
+  columns.forEach((col, ci) => {
+    const colGroup = document.createElement('div');
+    colGroup.className = 'col-group';
+
+    // Header
+    const header = document.createElement('div');
+    header.className = `col-header ${col.headerClass}`;
+    header.style.gridColumn = ci + 1;
+    header.style.gridRow = 1;
+    header.innerHTML = `
+      <div class="col-header-num">${col.label}</div>
+      <h2>${col.title}</h2>
+      <div class="col-topics">${col.topics}</div>
+    `;
+    colGroup.appendChild(header);
+
+    // Tiles
+    col.tiles.forEach((tile, ti) => {
+      const tileEl = document.createElement('div');
+      tileEl.className = `tile ${col.tileClass}`;
+      tileEl.style.gridColumn = ci + 1;
+      tileEl.style.gridRow = ti + 2;
+      tileEl.setAttribute('role', 'button');
+      tileEl.setAttribute('tabindex', '0');
+      tileEl.setAttribute('aria-label', tile.title);
+      tileEl.innerHTML = `
+        <span class="tile-icon">${tile.icon}</span>
+        <div class="tile-title">${tile.title}</div>
+        <div class="tile-sub">${tile.sub}</div>
+        <span class="tile-arrow">↗</span>
+      `;
+      tileEl.addEventListener('click', () => openModal(ci, ti));
+      tileEl.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') openModal(ci, ti); });
+      colGroup.appendChild(tileEl);
+    });
+
+    grid.appendChild(colGroup);
+  });
+}
+
+/* ============================================================
+   MODAL
+============================================================ */
+function openModal(colIdx, tileIdx) {
+  const col  = columns[colIdx];
+  const tile = col.tiles[tileIdx];
+
+  const accentEl = document.getElementById('modal-accent');
+  accentEl.className = 'modal-header-accent';
+  accentEl.style.background = col.accentVar;
+
+  const labelEl = document.getElementById('modal-col-label');
+  labelEl.style.color = col.accentVar;
+  labelEl.textContent = col.label + ' · ' + col.title;
+
+  document.getElementById('modal-title').textContent = tile.title;
+
+  const body = document.getElementById('modal-body');
+  body.innerHTML = '';
+
+  // Optional video section
+  if (tile.video) {
+    const videoSection = document.createElement('div');
+    videoSection.className = 'video-section';
+    videoSection.innerHTML = `
+      <div class="video-label">📹 Watch First</div>
+      <a href="${tile.video.url}" target="_blank" rel="noopener" class="video-link">
+        ${tile.video.title} — mathispower4u
+        <span class="video-icon">▶</span>
+      </a>
+    `;
+    body.appendChild(videoSection);
+  }
+
+  tile.problems.forEach((prob, pi) => {
+    const block = document.createElement('div');
+    block.className = 'problem-block';
+
+    let partsHTML = '';
+    if (prob.parts && prob.parts.length) {
+      partsHTML = `<ul class="problem-parts">` +
+        prob.parts.map(p => `<li data-part="${p.label}">${p.text}</li>`).join('') +
+        `</ul>`;
+    }
+
+    let answersHTML = '';
+    if (prob.answers && prob.answers.length) {
+      answersHTML = prob.answers.map(a =>
+        `<div class="answer-part">${a.label ? `<span class="answer-part-label">${a.label}</span>` : ''}${a.text}</div>`
+      ).join('');
+    }
+
+    const answerId = `ans-${colIdx}-${tileIdx}-${pi}`;
+    const toggleId = `tog-${colIdx}-${tileIdx}-${pi}`;
+
+    block.innerHTML = `
+      <div class="problem-num">Problem ${pi + 1} of ${tile.problems.length}</div>
+      ${prob.context ? `<div class="problem-context">${prob.context}</div>` : ''}
+      ${prob.stem ? `<div class="problem-text">${prob.stem}</div>` : ''}
+      ${partsHTML}
+      <button class="answer-toggle" id="${toggleId}" onclick="toggleAnswer('${answerId}','${toggleId}')">
+        <span class="toggle-icon">▼</span> Show Answer
+      </button>
+      <div class="answer-panel" id="${answerId}">
+        ${answersHTML}
+      </div>
+    `;
+    body.appendChild(block);
+  });
+
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('desmos-fab').classList.add('visible');
+
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([body]).catch(err => console.log(err));
+  }
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+  document.getElementById('desmos-fab').classList.remove('visible');
+}
+
+function toggleAnswer(panelId, toggleId) {
+  const panel  = document.getElementById(panelId);
+  const toggle = document.getElementById(toggleId);
+  const isOpen = panel.classList.contains('open');
+  panel.classList.toggle('open');
+  toggle.classList.toggle('open');
+  toggle.innerHTML = isOpen
+    ? '<span class="toggle-icon">▼</span> Show Answer'
+    : '<span class="toggle-icon">▼</span> Hide Answer';
+}
+
+/* ============================================================
+   RANDOM PRACTICE
+============================================================ */
+function openRandomProblem() {
+  const colIdx  = Math.floor(Math.random() * columns.length);
+  const col     = columns[colIdx];
+  const tileIdx = Math.floor(Math.random() * col.tiles.length);
+  const tile    = col.tiles[tileIdx];
+  const probIdx = Math.floor(Math.random() * tile.problems.length);
+  const prob    = tile.problems[probIdx];
+
+  const accentEl = document.getElementById('modal-accent');
+  accentEl.className = 'modal-header-accent random-accent';
+  accentEl.style.background = '';
+
+  const labelEl = document.getElementById('modal-col-label');
+  labelEl.style.color = 'var(--text-muted)';
+  labelEl.innerHTML = 'MX² Algebra 2 · Summer Review';
+
+  document.getElementById('modal-title').textContent = 'General Practice';
+
+  const body = document.getElementById('modal-body');
+  body.innerHTML = '';
+
+  const block = document.createElement('div');
+  block.className = 'problem-block';
+  block.style.borderBottom = 'none';
+  block.style.marginBottom = '0';
+  block.style.paddingBottom = '0';
+
+  let partsHTML = '';
+  if (prob.parts && prob.parts.length) {
+    partsHTML = `<ul class="problem-parts">` +
+      prob.parts.map(p => `<li data-part="${p.label}">${p.text}</li>`).join('') +
+      `</ul>`;
+  }
+
+  let answersHTML = '';
+  if (prob.answers && prob.answers.length) {
+    answersHTML = prob.answers.map(a =>
+      `<div class="answer-part">${a.label ? `<span class="answer-part-label">${a.label}</span>` : ''}${a.text}</div>`
+    ).join('');
+  }
+
+  block.innerHTML = `
+    <div class="problem-num">🎲 General Practice</div>
+    ${prob.context ? `<div class="problem-context">${prob.context}</div>` : ''}
+    ${prob.stem ? `<div class="problem-text">${prob.stem}</div>` : ''}
+    ${partsHTML}
+    <button class="answer-toggle" id="rand-tog" onclick="toggleAnswer('rand-ans','rand-tog')">
+      <span class="toggle-icon">▼</span> Show Answer
+    </button>
+    <div class="answer-panel" id="rand-ans">
+      ${answersHTML}
+    </div>
+  `;
+
+  body.appendChild(block);
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('desmos-fab').classList.add('visible');
+
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([body]).catch(err => console.log(err));
+  }
+}
+
+document.getElementById('random-btn').addEventListener('click', openRandomProblem);
+
+/* ============================================================
+   DESMOS BUTTON
+============================================================ */
+document.getElementById('desmos-fab').addEventListener('click', () => {
+  window.open('https://www.desmos.com/calculator', '_blank', 'width=650,height=350,noopener,noreferrer');
+});
+
+/* ============================================================
+   THEME TOGGLE
+============================================================ */
+const themeToggleBtn  = document.getElementById('theme-toggle');
+const themeIconEl     = document.getElementById('theme-icon');
+
+// Sync icon with whatever theme was applied by the early flash-prevention script
+themeIconEl.textContent = document.documentElement.getAttribute('data-theme') === 'light' ? '☀️' : '🌙';
+
+themeToggleBtn.addEventListener('click', () => {
+  const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+  if (isLight) {
+    document.documentElement.removeAttribute('data-theme');
+    localStorage.setItem('mx2-theme', 'dark');
+    themeIconEl.textContent = '🌙';
+  } else {
+    document.documentElement.setAttribute('data-theme', 'light');
+    localStorage.setItem('mx2-theme', 'light');
+    themeIconEl.textContent = '☀️';
+  }
+});
+
+/* ============================================================
+   EVENT LISTENERS
+============================================================ */
+document.getElementById('modal-close').addEventListener('click', closeModal);
+document.getElementById('modal-overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+</script>
+
+<!-- ============================================================
+     MATHJAX — loaded last, after renderBoard() and all JS above
+     are defined, so startup.ready() can safely call renderBoard()
+     and typeset the grid immediately after.
+============================================================ -->
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+    startup: {
+      typeset: false,
+      ready() {
+        MathJax.startup.defaultReady();
+        renderBoard();
+        MathJax.typesetPromise([document.getElementById('board-grid')])
+          .catch(err => console.log(err));
+      }
+    }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+
+</body>
+</html>
