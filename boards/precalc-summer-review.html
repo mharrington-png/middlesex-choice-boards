@@ -1,0 +1,1967 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MX² Precalc+ — Summer Review | Middlesex School</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet" />
+<style>
+  /* ============================================================
+     TOKENS & RESET
+  ============================================================ */
+  :root {
+    --crimson:     #cf003d;
+    --crimson-dim: #8a0028;
+    --crimson-glow:#ff1a55;
+    --black:       #0d0d0d;
+    --surface:     #151515;
+    --surface2:    #1e1e1e;
+    --surface3:    #252525;
+    --border:      #2e2e2e;
+    --border-light:#3a3a3a;
+    --text:        #f0ece6;
+    --text-muted:  #9e9e9e;
+    --text-dim:    #666666;
+
+    --col1: #cf003d;
+    --col2: #1a6b5a;
+    --col3: #4a5568;
+    --col4: #7c4a1e;
+
+    --col1-light: #ff4d75;
+    --col2-light: #2dd4bf;
+    --col3-light: #94a3b8;
+    --col4-light: #f59e0b;
+
+    --radius: 10px;
+    --radius-lg: 16px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.5);
+    --shadow-hover: 0 8px 40px rgba(0,0,0,0.7);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 16px;
+    line-height: 1.65;
+    min-height: 100vh;
+  }
+
+  /* ============================================================
+     HEADER — centered layout
+  ============================================================ */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 32px 40px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--crimson), var(--crimson-glow), var(--crimson));
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(207,0,61,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .header-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+  }
+
+  .school-tag {
+    font-family: 'Source Serif 4', serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--crimson-glow);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .school-tag::before,
+  .school-tag::after {
+    content: '';
+    display: inline-block;
+    width: 28px;
+    height: 1px;
+    background: var(--crimson-glow);
+  }
+
+  h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    margin-top: 4px;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--crimson-glow);
+  }
+
+  .header-meta {
+    margin-top: 4px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .meta-pill {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 3px 12px;
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+  }
+
+  /* ============================================================
+     INSTRUCTIONS BAR
+  ============================================================ */
+  .instructions {
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 40px;
+    font-size: 13px;
+    color: var(--text-muted);
+    text-align: center;
+    letter-spacing: 0.03em;
+  }
+
+  .instructions strong { color: var(--crimson-glow); font-weight: 600; }
+
+  /* ============================================================
+     BOARD GRID — equal-height tiles across columns
+  ============================================================ */
+  .board-wrap {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 36px 24px 60px;
+  }
+
+  .board-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto repeat(4, 1fr);
+    gap: 20px;
+  }
+
+  .col-group {
+    display: contents;
+  }
+
+  /* Column headers */
+  .col-header {
+    border-radius: var(--radius) var(--radius) 0 0;
+    padding: 16px 18px 14px;
+    position: relative;
+    overflow: hidden;
+    align-self: start;
+  }
+
+  .col-header::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .col-1-header { background: color-mix(in srgb, var(--col1) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col1) 40%, transparent); }
+  .col-2-header { background: color-mix(in srgb, var(--col2) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col2) 40%, transparent); }
+  .col-3-header { background: color-mix(in srgb, var(--col3) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col3) 40%, transparent); }
+  .col-4-header { background: color-mix(in srgb, var(--col4) 30%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--col4) 40%, transparent); }
+
+  .col-header-num {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    opacity: 0.7;
+  }
+
+  .col-1-header .col-header-num { color: var(--col1-light); }
+  .col-2-header .col-header-num { color: var(--col2-light); }
+  .col-3-header .col-header-num { color: var(--col3-light); }
+  .col-4-header .col-header-num { color: var(--col4-light); }
+
+  .col-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.25;
+  }
+
+  .col-header .col-topics {
+    margin-top: 6px;
+    font-size: 10.5px;
+    color: var(--text-dim);
+    letter-spacing: 0.04em;
+  }
+
+  /* ============================================================
+     TILES
+  ============================================================ */
+  .tile {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 18px 28px;
+    cursor: pointer;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+    position: relative;
+    overflow: hidden;
+    user-select: none;
+  }
+
+  .tile::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+    border-radius: var(--radius) 0 0 var(--radius);
+    transition: opacity 0.2s;
+  }
+
+  .col-1 .tile::before { background: var(--col1-light); }
+  .col-2 .tile::before { background: var(--col2-light); }
+  .col-3 .tile::before { background: var(--col3-light); }
+  .col-4 .tile::before { background: var(--col4-light); }
+
+  .tile:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-hover);
+    background: var(--surface3);
+  }
+
+  .col-1 .tile:hover { border-color: color-mix(in srgb, var(--col1) 60%, transparent); }
+  .col-2 .tile:hover { border-color: color-mix(in srgb, var(--col2) 60%, transparent); }
+  .col-3 .tile:hover { border-color: color-mix(in srgb, var(--col3) 60%, transparent); }
+  .col-4 .tile:hover { border-color: color-mix(in srgb, var(--col4) 60%, transparent); }
+
+  .tile-icon {
+    font-size: 18px;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .tile-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+    margin-bottom: 5px;
+  }
+
+  .tile-sub {
+    font-size: 11.5px;
+    color: var(--text-muted);
+    line-height: 1.4;
+  }
+
+  .tile-topics {
+    position: absolute;
+    bottom: 10px;
+    left: 18px;
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.06em;
+  }
+
+  .tile-arrow {
+    position: absolute;
+    bottom: 12px; right: 14px;
+    font-size: 14px;
+    opacity: 0.3;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+
+  .tile:hover .tile-arrow { opacity: 0.8; transform: translate(2px, -2px); }
+  .col-1 .tile:hover .tile-arrow { color: var(--col1-light); }
+  .col-2 .tile:hover .tile-arrow { color: var(--col2-light); }
+  .col-3 .tile:hover .tile-arrow { color: var(--col3-light); }
+  .col-4 .tile:hover .tile-arrow { color: var(--col4-light); }
+
+  /* ============================================================
+     MODAL
+  ============================================================ */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.82);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    backdrop-filter: blur(4px);
+  }
+
+  .modal-overlay.open { display: flex; animation: fadeIn 0.2s ease; }
+
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    width: 100%;
+    max-width: 760px;
+    max-height: 88vh;
+    overflow-y: auto;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.8);
+    animation: slideUp 0.22s ease;
+    position: relative;
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .modal-header {
+    padding: 24px 28px 20px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .modal-header-accent {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  }
+
+  .modal-col-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+  }
+
+  .modal-close {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.15s, color 0.15s;
+  }
+
+  .modal-close:hover { background: var(--crimson); color: white; border-color: var(--crimson); }
+
+  .modal-body { padding: 24px 28px 32px; }
+
+  /* Video section */
+  .video-section {
+    background: var(--surface2);
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 24px;
+  }
+
+  .video-label {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+
+  .video-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    color: var(--crimson-glow);
+    text-decoration: none;
+    font-size: 13.5px;
+    font-family: 'Source Serif 4', serif;
+    transition: color 0.15s;
+  }
+
+  .video-link:hover { color: #fff; }
+
+  .video-icon {
+    font-size: 12px;
+    opacity: 0.7;
+  }
+
+  /* Problem images (reference graphs) */
+  .problem-img {
+    display: block;
+    width: 360px;
+    max-width: 100%;
+    border-radius: 6px;
+    margin: 10px 0 6px;
+  }
+
+  /* Interactive draggable graphs */
+  .interactive-graph-wrap {
+    margin: 10px 0 6px;
+  }
+
+  .interactive-graph {
+    display: block;
+    width: 460px;
+    max-width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #111111;
+    border: 1px solid var(--border-light);
+  }
+
+  .interactive-graph svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .interactive-caption {
+    font-size: 11.5px;
+    color: var(--text-dim);
+    margin-top: 6px;
+    letter-spacing: 0.02em;
+  }
+
+  /* Problems */
+  .problem-block {
+    margin-bottom: 28px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .problem-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+  .problem-num {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+  }
+
+  .problem-context {
+    font-size: 14px;
+    font-style: italic;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    padding-left: 12px;
+    border-left: 2px solid var(--border-light);
+  }
+
+  .problem-text {
+    font-size: 14.5px;
+    color: var(--text);
+    line-height: 1.7;
+    margin-bottom: 14px;
+  }
+
+  .problem-parts { margin-left: 0; list-style: none; }
+
+  .problem-parts li {
+    font-size: 14px;
+    color: var(--text);
+    margin-bottom: 8px;
+    padding-left: 24px;
+    position: relative;
+    line-height: 1.6;
+  }
+
+  .problem-parts li::before {
+    content: attr(data-part);
+    position: absolute;
+    left: 0;
+    font-weight: 700;
+    color: var(--text-muted);
+  }
+
+  .answer-toggle {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 9px 16px;
+    color: var(--text-muted);
+    font-family: 'Source Serif 4', serif;
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.15s;
+    margin-top: 4px;
+  }
+
+  .answer-toggle:hover { background: var(--surface3); border-color: var(--border-light); color: var(--text); }
+  .answer-toggle .toggle-icon { font-size: 10px; transition: transform 0.2s; }
+  .answer-toggle.open .toggle-icon { transform: rotate(180deg); }
+
+  .answer-panel {
+    display: none;
+    margin-top: 14px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-size: 13.5px;
+    line-height: 1.75;
+    color: var(--text);
+    animation: expandIn 0.18s ease;
+  }
+
+  @keyframes expandIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .answer-panel.open { display: block; }
+
+  .answer-part { margin-bottom: 10px; padding-left: 20px; position: relative; }
+  .answer-part:last-child { margin-bottom: 0; }
+  .answer-part-label { position: absolute; left: 0; font-weight: 700; color: var(--text-muted); }
+
+  /* ============================================================
+     RESPONSIVE
+  ============================================================ */
+  @media (max-width: 1000px) {
+    .board-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .col-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: calc(50% - 10px);
+    }
+    .col-header {
+      border-radius: var(--radius);
+    }
+    .tile {
+      grid-column: unset !important;
+      grid-row: unset !important;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .board-grid { flex-direction: column; }
+    .col-group { width: 100%; }
+    header { padding: 20px; }
+    .board-wrap { padding: 20px 12px 40px; }
+    .modal { border-radius: var(--radius); }
+    .modal-header, .modal-body { padding: 18px; }
+  }
+
+  .modal::-webkit-scrollbar { width: 6px; }
+  .modal::-webkit-scrollbar-track { background: var(--surface); }
+  .modal::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
+
+  /* ============================================================
+     RANDOM PRACTICE BAR
+  ============================================================ */
+  .random-wrap {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 24px 48px;
+  }
+
+  .random-btn {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border-light);
+    border-radius: 14px;
+    padding: 0 36px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.2s ease, background 0.2s ease;
+    font-family: 'Source Serif 4', serif;
+  }
+
+  .random-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(207,0,61,0.06) 30%, rgba(207,0,61,0.10) 50%, rgba(207,0,61,0.06) 70%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .random-btn:hover::before { opacity: 1; }
+
+  .random-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(207,0,61,0.18), 0 2px 8px rgba(0,0,0,0.4);
+    border-color: color-mix(in srgb, var(--crimson) 55%, transparent);
+    background: var(--surface3);
+  }
+
+  .random-btn:active { transform: translateY(0) scale(0.995); box-shadow: 0 2px 8px rgba(0,0,0,0.4); }
+
+  .random-btn-left-notch, .random-btn-right-notch {
+    position: absolute;
+    bottom: 0;
+    width: 28px; height: 5px;
+    background: var(--border);
+    border-radius: 3px 3px 0 0;
+    transition: background 0.2s;
+  }
+  .random-btn-left-notch  { left: 60px; }
+  .random-btn-right-notch { right: 60px; }
+  .random-btn:hover .random-btn-left-notch,
+  .random-btn:hover .random-btn-right-notch { background: color-mix(in srgb, var(--crimson) 40%, var(--border)); }
+
+  .random-btn-icon { font-size: 22px; flex-shrink: 0; transition: transform 0.3s ease; }
+  .random-btn:hover .random-btn-icon { transform: rotate(20deg) scale(1.15); }
+
+  .random-btn-label { display: flex; flex-direction: column; align-items: center; gap: 1px; }
+  .random-btn-title { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; color: var(--text); letter-spacing: 0.01em; line-height: 1.2; }
+  .random-btn-sub { font-size: 11.5px; color: var(--text-muted); letter-spacing: 0.07em; text-transform: uppercase; }
+
+  .random-btn-badge {
+    position: absolute;
+    right: 28px;
+    background: var(--surface3);
+    border: 1px solid var(--border-light);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-family: 'Source Serif 4', serif;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+
+  .random-btn:hover .random-btn-badge {
+    background: color-mix(in srgb, var(--crimson) 15%, var(--surface3));
+    color: var(--crimson-glow);
+    border-color: color-mix(in srgb, var(--crimson) 40%, transparent);
+  }
+
+  .random-accent {
+    background: linear-gradient(90deg, var(--col1-light), var(--col2-light), var(--col3-light), var(--col4-light));
+    background-size: 300% 100%;
+    animation: accentShift 4s ease infinite;
+  }
+
+  @keyframes accentShift {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  @media (max-width: 600px) {
+    .random-wrap { padding: 0 12px 36px; }
+    .random-btn { height: 64px; border-radius: 10px; }
+    .random-btn-badge, .random-btn-left-notch, .random-btn-right-notch { display: none; }
+  }
+
+  /* ============================================================
+     DESMOS FLOATING BUTTON
+  ============================================================ */
+  .desmos-fab {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    z-index: 1050;
+    background: var(--surface2);
+    border: 1px solid var(--border-light);
+    border-radius: 50px;
+    padding: 0 20px 0 14px;
+    height: 52px;
+    display: none;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    font-family: 'Source Serif 4', serif;
+  }
+
+  .desmos-fab.visible {
+    display: flex;
+    animation: fadeIn 0.18s ease;
+  }
+
+  .desmos-fab:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(207,0,61,0.25), 0 2px 8px rgba(0,0,0,0.5);
+    border-color: color-mix(in srgb, var(--crimson) 60%, transparent);
+    background: var(--surface3);
+  }
+
+  .desmos-fab:active {
+    transform: translateY(0) scale(0.97);
+  }
+
+  .desmos-fab-icon {
+    font-size: 20px;
+    line-height: 1;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+  }
+
+  .desmos-fab:hover .desmos-fab-icon {
+    transform: rotate(-8deg) scale(1.1);
+  }
+
+  .desmos-fab-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    display: block;
+    line-height: 1.25;
+  }
+
+  .desmos-fab-sub {
+    font-size: 9.5px;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    display: block;
+  }
+
+  @media (max-width: 600px) {
+    .desmos-fab { bottom: 20px; right: 16px; padding: 0 14px; }
+    .desmos-fab-sub { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     HEADER
+============================================================ -->
+<header>
+  <div class="header-inner">
+    <div class="school-tag">Middlesex School · mxschool.edu</div>
+    <h1>MX² Precalc+ — <em>Summer Review</em></h1>
+    <div class="header-meta">
+      <span class="meta-pill">🔢 Polynomial Functions</span>
+      <span class="meta-pill">➗ Rational Functions</span>
+      <span class="meta-pill">∞ Limits &amp; Continuity</span>
+      <span class="meta-pill">📐 Intro to Derivatives</span>
+      <span class="meta-pill">Cumulative Review</span>
+    </div>
+  </div>
+</header>
+
+<div class="instructions">
+  Click any tile to open practice problems. Use <strong>Show Answer</strong> to check your work after attempting each part.
+</div>
+
+<!-- ============================================================
+     BOARD
+============================================================ -->
+<div class="board-wrap">
+  <div class="board-grid" id="board-grid"></div>
+</div>
+
+<!-- ============================================================
+     RANDOM PRACTICE BAR
+============================================================ -->
+<div class="random-wrap">
+  <button class="random-btn" id="random-btn" aria-label="Random Practice">
+    <div class="random-btn-left-notch"></div>
+    <div class="random-btn-right-notch"></div>
+    <span class="random-btn-icon">🎲</span>
+    <div class="random-btn-label">
+      <span class="random-btn-title">Random Practice</span>
+      <span class="random-btn-sub">Any topic · Any tile · Any problem</span>
+    </div>
+    <span class="random-btn-badge" id="random-btn-badge">64 problems</span>
+  </button>
+</div>
+
+<!-- ============================================================
+     DESMOS FLOATING BUTTON
+============================================================ -->
+<button class="desmos-fab" id="desmos-fab" aria-label="Open Desmos Graphing Calculator">
+  <span class="desmos-fab-icon">📈</span>
+  <span>
+    <span class="desmos-fab-title">Graphing Calculator</span>
+    <span class="desmos-fab-sub">Opens Desmos in a new tab</span>
+  </span>
+</button>
+
+<!-- ============================================================
+     MODAL
+============================================================ -->
+<div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div class="modal-header-accent" id="modal-accent"></div>
+      <div>
+        <div class="modal-col-label" id="modal-col-label"></div>
+        <div class="modal-title" id="modal-title"></div>
+      </div>
+      <button class="modal-close" id="modal-close" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   DATA — Edit problems here without touching layout code.
+   Each tile has: icon, title, sub, topics, and problems[].
+   Each problem has context, stem, parts[], answers[].
+   To add a video later: add video: { title: "...", url: "..." }
+   to any tile object and the modal will render a Watch First section.
+   Problems flagged <!-- GRAPH NEEDED --> need a matching image
+   dropped into an img/ folder and the comment replaced with
+   <img src="img/filename.png" class="problem-img"> per the graph workflow.
+============================================================ */
+
+const columns = [
+
+  // ═══════════════════════════════════════════════════════════
+  // COLUMN 1 — Polynomial Functions
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: "col-1",
+    accentVar: "var(--col1-light)",
+    headerClass: "col-1-header",
+    tileClass: "col-1",
+    label: "Column I",
+    title: "Polynomial Functions",
+    topics: "Zeros, End Behavior & IVT",
+    tiles: [
+
+      // ── TILE 1-A ──────────────────────────────────────────
+      {
+        icon: "🔢",
+        title: "Factored Form from Zeros",
+        sub: "Building polynomial equations from given zeros and a point",
+        topics: "Factoring & Zeros",
+        problems: [
+          {
+            stem: "Write the equation of a polynomial in factored form with zeros at $x = 4, -1, -3$ and $f(2) = -60$.",
+            answers: [
+              { label: "", text: "$f(x) = a(x-4)(x+1)(x+3)$. &nbsp; $f(2) = a(-2)(3)(5) = -30a = -60 \\Rightarrow a = 2$. &nbsp; $f(x) = 2(x-4)(x+1)(x+3)$." }
+            ]
+          },
+          {
+            stem: "Write the equation of a polynomial in factored form with a zero at $x = 2$ of multiplicity 2, a zero at $x = -5$, and $f(0) = -60$.",
+            answers: [
+              { label: "", text: "$f(x) = a(x-2)^2(x+5)$. &nbsp; $f(0) = a(4)(5) = 20a = -60 \\Rightarrow a = -3$. &nbsp; $f(x) = -3(x-2)^2(x+5)$." }
+            ]
+          },
+          {
+            stem: "Write the equation of a polynomial in factored form with zeros at $x = 0$ and $x = -2$ (the latter with multiplicity 3), given $f(1) = 54$.",
+            answers: [
+              { label: "", text: "$f(x) = a \\cdot x(x+2)^3$. &nbsp; $f(1) = a(1)(3)^3 = 27a = 54 \\Rightarrow a = 2$. &nbsp; $f(x) = 2x(x+2)^3$." }
+            ]
+          },
+          {
+            stem: "A polynomial has real zeros at $x = 3$ and $x = -1$, and $x^2 + 1$ as an irreducible quadratic factor. If $f(0) = -12$, write $f(x)$ in factored form.",
+            answers: [
+              { label: "", text: "$f(x) = a(x-3)(x+1)(x^2+1)$. &nbsp; $f(0) = a(-3)(1)(1) = -3a = -12 \\Rightarrow a = 4$. &nbsp; $f(x) = 4(x-3)(x+1)(x^2+1)$." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 1-B ──────────────────────────────────────────
+      {
+        icon: "∞",
+        title: "End Behavior & Limits at Infinity",
+        sub: "Determining limits as $x \\to \\pm\\infty$ from leading terms",
+        topics: "End Behavior",
+        problems: [
+          {
+            stem: "Evaluate the following limits for $f(x) = -3x^4 + 5x^3 - 2x$.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\lim_{x \\to \\infty} f(x)$" },
+              { label: "(b)", text: "$\\displaystyle\\lim_{x \\to -\\infty} f(x)$" }
+            ],
+            answers: [
+              { label: "(a)", text: "The leading term $-3x^4$ dominates; even degree, negative leading coefficient, so the limit is $-\\infty$." },
+              { label: "(b)", text: "Same reasoning applies as $x \\to -\\infty$ for an even-degree term: $-\\infty$." }
+            ]
+          },
+          {
+            stem: "Evaluate the following limits for $g(x) = 7x^5 - 100x^2$.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\lim_{x \\to \\infty} g(x)$" },
+              { label: "(b)", text: "$\\displaystyle\\lim_{x \\to -\\infty} g(x)$" }
+            ],
+            answers: [
+              { label: "(a)", text: "Odd degree, positive leading coefficient: $\\infty$." },
+              { label: "(b)", text: "Odd degree, positive leading coefficient, opposite sign as $x \\to -\\infty$: $-\\infty$." }
+            ]
+          },
+          {
+            stem: "Evaluate the following limits for $h(x) = -2x^7 + 5x^4 - x^3 + 9x^2$.",
+            parts: [
+              { label: "(a)", text: "$\\displaystyle\\lim_{x \\to \\infty} h(x)$" },
+              { label: "(b)", text: "$\\displaystyle\\lim_{x \\to -\\infty} h(x)$" }
+            ],
+            answers: [
+              { label: "(a)", text: "The $-2x^7$ term dominates; odd degree, negative leading coefficient: $-\\infty$." },
+              { label: "(b)", text: "$\\infty$." }
+            ]
+          },
+          {
+            stem: "Explain why the lower-degree terms of a polynomial don't affect its end behavior. Then determine $\\displaystyle\\lim_{x\\to\\infty}$ and $\\displaystyle\\lim_{x\\to-\\infty}$ of $k(x) = 100x^2 - x^6 + 3x - 500$ without fully evaluating.",
+            answers: [
+              { label: "", text: "As $|x|$ grows large, the highest-degree term grows so much faster than the others that it alone determines the sign and direction of the output — the lower-degree terms become negligible in comparison. Here $-x^6$ dominates: even degree, negative leading coefficient, so both limits are $-\\infty$." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 1-C ──────────────────────────────────────────
+      {
+        icon: "📈",
+        title: "Reading Polynomial Graphs",
+        sub: "Least-degree equations, sign patterns & multiplicity from a graph",
+        topics: "Graphs & Multiplicity",
+        problems: [
+          {
+            stem: "The graph of a polynomial $f$ of least degree is shown. It touches (bounces off) the $x$-axis at $x = -1$ and crosses at $x = 3$; it falls to $-\\infty$ on the left and rises to $\\infty$ on the right. The $y$-intercept is $(0,-9)$.<img src='img/pc-c1t3p1.png' alt='cubic polynomial graph bouncing at x=-1 and crossing at x=3' class='problem-img'>",
+            parts: [
+              { label: "(a)", text: "Is the multiplicity at $x=-1$ even or odd? At $x=3$?" },
+              { label: "(b)", text: "Write a possible equation for $f(x)$ in factored form." }
+            ],
+            answers: [
+              { label: "(a)", text: "Even at $x=-1$ (bounce), odd at $x=3$ (crosses)." },
+              { label: "(b)", text: "$f(x) = a(x+1)^2(x-3)$. &nbsp; $f(0) = a(1)(-3) = -3a = -9 \\Rightarrow a = 3$. &nbsp; $f(x) = 3(x+1)^2(x-3)$." }
+            ]
+          },
+          {
+            stem: "The graph of a polynomial $g$ of least degree touches the $x$-axis (without crossing) at both $x=-2$ and $x=2$, rises to $\\infty$ on both ends, and has $y$-intercept $(0,16)$.<img src='img/pc-c1t3p2.png' alt='quartic polynomial graph bouncing at x=-2 and x=2' class='problem-img'>",
+            answers: [
+              { label: "", text: "$g(x) = a(x+2)^2(x-2)^2$. &nbsp; $g(0) = a(4)(4) = 16a = 16 \\Rightarrow a = 1$. &nbsp; $g(x) = (x+2)^2(x-2)^2$." }
+            ]
+          },
+          {
+            stem: "The graph of a polynomial $h$ crosses the $x$-axis at $x=-4$ and $x=5$, and bounces off the $x$-axis at $x=1$. As $x \\to -\\infty$, $h(x) \\to -\\infty$, and as $x \\to \\infty$, $h(x) \\to \\infty$.<img src='img/pc-c1t3p3.png' alt='polynomial graph crossing at x=-4 and x=5, bouncing at x=1' class='problem-img'>",
+            parts: [
+              { label: "(a)", text: "Is the leading coefficient positive or negative? Is the degree even or odd?" },
+              { label: "(b)", text: "Write a possible factored equation for $h(x)$ (a specific leading coefficient is not required)." }
+            ],
+            answers: [
+              { label: "(a)", text: "Falls left, rises right $\\Rightarrow$ odd degree with a positive leading coefficient." },
+              { label: "(b)", text: "$h(x) = a(x+4)(x-1)^2(x-5)$, with $a > 0$." }
+            ]
+          },
+          {
+            stem: "Given $f(x) = -(x+2)(x-1)^3(x-4)^2$, determine the sign of $f(x)$ on each interval determined by its zeros, and state whether the graph crosses or bounces at each zero.",
+            answers: [
+              { label: "", text: "Zeros at $x=-2$ (odd mult. 1, crosses), $x=1$ (odd mult. 3, crosses), $x=4$ (even mult. 2, bounces). Testing a point in each region: $f<0$ on $(-\\infty,-2)$, $f>0$ on $(-2,1)$, $f<0$ on $(1,4)$, $f<0$ on $(4,\\infty)$ (sign unchanged across the bounce at $x=4$)." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 1-D ──────────────────────────────────────────
+      {
+        icon: "🔍",
+        title: "Intermediate Value Theorem & Zero Counting",
+        sub: "Guaranteeing zeros and estimating minimum zero counts",
+        topics: "IVT",
+        problems: [
+          {
+            stem: "Use the Intermediate Value Theorem to show that $f(x) = x^3 - 4x^2 + 2$ has a real zero between $x=0$ and $x=1$.",
+            answers: [
+              { label: "", text: "$f$ is a polynomial, so it is continuous everywhere. $f(0) = 2 > 0$ and $f(1) = 1-4+2 = -1 < 0$. Since $f$ is continuous on $[0,1]$ and $0$ is between $f(0)$ and $f(1)$, the IVT guarantees a zero in $(0,1)$." }
+            ]
+          },
+          {
+            stem: "A continuous function $f$ has the values shown in the table below.<br><br><table style='border-collapse:collapse;font-size:14px;margin:4px 0 8px'><thead><tr><th style='border:1px solid #3a3a3a;padding:6px 14px;background:#252525;color:#f0ece6'>$x$</th><th style='border:1px solid #3a3a3a;padding:6px 14px;background:#252525;color:#f0ece6'>0</th><th style='border:1px solid #3a3a3a;padding:6px 14px;background:#252525;color:#f0ece6'>5</th><th style='border:1px solid #3a3a3a;padding:6px 14px;background:#252525;color:#f0ece6'>10</th><th style='border:1px solid #3a3a3a;padding:6px 14px;background:#252525;color:#f0ece6'>15</th><th style='border:1px solid #3a3a3a;padding:6px 14px;background:#252525;color:#f0ece6'>20</th></tr></thead><tbody><tr><td style='border:1px solid #3a3a3a;padding:6px 14px;background:#1e1e1e;color:#f0ece6'>$f(x)$</td><td style='border:1px solid #3a3a3a;padding:6px 14px;background:#1e1e1e;color:#f0ece6;text-align:center'>-3</td><td style='border:1px solid #3a3a3a;padding:6px 14px;background:#1e1e1e;color:#f0ece6;text-align:center'>4</td><td style='border:1px solid #3a3a3a;padding:6px 14px;background:#1e1e1e;color:#f0ece6;text-align:center'>1</td><td style='border:1px solid #3a3a3a;padding:6px 14px;background:#1e1e1e;color:#f0ece6;text-align:center'>-2</td><td style='border:1px solid #3a3a3a;padding:6px 14px;background:#1e1e1e;color:#f0ece6;text-align:center'>6</td></tr></tbody></table>What is the minimum number of times $f(x) = 0$ on $[0,20]$? Justify using the IVT.",
+            answers: [
+              { label: "", text: "Sign changes occur on $[0,5]$ ($-3\\to4$), $[10,15]$ ($1\\to-2$), and $[15,20]$ ($-2\\to6$) — three subintervals where the IVT guarantees at least one zero each, since $0$ lies between the endpoint values and $f$ is continuous. Minimum: 3 zeros." }
+            ]
+          },
+          {
+            stem: "During a 25-minute run, a runner's speed (in mph) is given by the continuous function $v$, with selected values below.<br><br><table style='border-collapse:collapse;font-size:14px;margin:4px 0 8px'><thead><tr><th style='border:1px solid #3a3a3a;padding:6px 14px;background:#252525;color:#f0ece6'>$t$ (min)</th><th style='border:1px solid #3a3a3a;padding:6px 14px;background:#252525;color:#f0ece6'>0</th><th style='border:1px solid #3a3a3a;padding:6px 14px;background:#252525;color:#f0ece6'>6</th><th style='border:1px solid #3a3a3a;padding:6px 14px;background:#252525;color:#f0ece6'>12</th><th style='border:1px solid #3a3a3a;padding:6px 14px;background:#252525;color:#f0ece6'>18</th><th style='border:1px solid #3a3a3a;padding:6px 14px;background:#252525;color:#f0ece6'>25</th></tr></thead><tbody><tr><td style='border:1px solid #3a3a3a;padding:6px 14px;background:#1e1e1e;color:#f0ece6'>$v(t)$</td><td style='border:1px solid #3a3a3a;padding:6px 14px;background:#1e1e1e;color:#f0ece6;text-align:center'>0</td><td style='border:1px solid #3a3a3a;padding:6px 14px;background:#1e1e1e;color:#f0ece6;text-align:center'>6</td><td style='border:1px solid #3a3a3a;padding:6px 14px;background:#1e1e1e;color:#f0ece6;text-align:center'>9</td><td style='border:1px solid #3a3a3a;padding:6px 14px;background:#1e1e1e;color:#f0ece6;text-align:center'>7</td><td style='border:1px solid #3a3a3a;padding:6px 14px;background:#1e1e1e;color:#f0ece6;text-align:center'>10</td></tr></tbody></table>Is there guaranteed to be a time $t$ with $0 < t < 25$ when the runner's speed is exactly 8 mph? Justify your answer, naming the theorem you use.",
+              answers: [
+              { label: "", text: "Yes. $v$ is continuous on $[12,25]$ (given), $v(12)=9$ and $v(18)=7$, so $8$ is between these two values. By the Intermediate Value Theorem, there must be some $t$ in $(12,18)$ with $v(t)=8$." }
+            ]
+          },
+          {
+            stem: "Explain why the Intermediate Value Theorem cannot be used to guarantee a zero of $g$ on $[1,4]$ if $g$ is not continuous at $x=2$, even though $g(1) < 0$ and $g(4) > 0$.",
+            answers: [
+              { label: "", text: "The IVT requires continuity on the entire closed interval. If $g$ has a discontinuity at $x=2$, the function could jump over zero without ever equaling it — so the sign change alone does not guarantee a zero exists." }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  // ═══════════════════════════════════════════════════════════
+  // COLUMN 2 — Rational Functions
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: "col-2",
+    accentVar: "var(--col2-light)",
+    headerClass: "col-2-header",
+    tileClass: "col-2",
+    label: "Column II",
+    title: "Rational Functions",
+    topics: "Asymptotes, Holes & Intercepts",
+    tiles: [
+
+      // ── TILE 2-A ──────────────────────────────────────────
+      {
+        icon: "✳️",
+        title: "Intercepts of Rational Functions",
+        sub: "Finding $x$- and $y$-intercepts",
+        topics: "Intercepts",
+        problems: [
+          {
+            stem: "Find the $x$- and $y$-intercept(s) of $f(x) = \\dfrac{2x-6}{3x+9}$.",
+            answers: [
+              { label: "", text: "$x$-intercept: set numerator $=0$: $x=3$, giving $(3,0)$. &nbsp; $y$-intercept: $f(0) = \\dfrac{-6}{9} = -\\dfrac{2}{3}$, giving $\\left(0,-\\dfrac{2}{3}\\right)$." }
+            ]
+          },
+          {
+            stem: "Find the $x$- and $y$-intercept(s) of $g(x) = \\dfrac{-5x-10}{4x-8}$.",
+            answers: [
+              { label: "", text: "$x$-intercept: $-5x-10=0 \\Rightarrow x=-2$, giving $(-2,0)$. &nbsp; $y$-intercept: $g(0) = \\dfrac{-10}{-8} = \\dfrac{5}{4}$, giving $\\left(0,\\dfrac{5}{4}\\right)$." }
+            ]
+          },
+          {
+            stem: "Find the $x$-intercept(s) and $y$-intercept of $h(x) = \\dfrac{x^2-9}{x+1}$.",
+            answers: [
+              { label: "", text: "$x^2-9=(x-3)(x+3)=0 \\Rightarrow x=3,-3$, giving $(3,0)$ and $(-3,0)$. &nbsp; $y$-intercept: $h(0) = \\dfrac{-9}{1} = -9$, giving $(0,-9)$." }
+            ]
+          },
+          {
+            stem: "Find the intercepts of $k(x) = \\dfrac{x^2+4}{x-2}$, and explain why one type of intercept is missing.",
+            answers: [
+              { label: "", text: "$y$-intercept: $k(0) = \\dfrac{4}{-2} = -2$, giving $(0,-2)$. There is no $x$-intercept because $x^2+4=0$ has no real solutions — the numerator is never zero for real $x$." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 2-B ──────────────────────────────────────────
+      {
+        icon: "🕳️",
+        title: "Vertical Asymptotes & Holes",
+        sub: "Removable vs. non-removable discontinuities",
+        topics: "VAs & Holes",
+        problems: [
+          {
+            stem: "Determine the vertical asymptote(s) and hole(s) of $f(x) = \\dfrac{x-4}{(x-4)(x-3)}$.",
+            answers: [
+              { label: "", text: "The factor $(x-4)$ cancels, leaving a hole at $x=4$. The remaining factor $(x-3)$ in the denominator gives a vertical asymptote at $x=3$." }
+            ]
+          },
+          {
+            stem: "Determine the vertical asymptote(s) and hole(s) of $g(x) = \\dfrac{(x+5)(x+9)}{(x+5)(x-9)}$.",
+            answers: [
+              { label: "", text: "The factor $(x+5)$ cancels, giving a hole at $x=-5$. The remaining factor $(x-9)$ gives a vertical asymptote at $x=9$." }
+            ]
+          },
+          {
+            stem: "Determine the vertical asymptote(s) and hole(s) of $h(x) = \\dfrac{x^2-6x-7}{3x^2-9x-12}$.",
+            answers: [
+              { label: "", text: "Factor: numerator $(x-7)(x+1)$, denominator $3(x-4)(x+1)$. The $(x+1)$ factor cancels: hole at $x=-1$. Remaining factor gives a vertical asymptote at $x=4$." }
+            ]
+          },
+          {
+            stem: "Explain the difference between a vertical asymptote and a hole in terms of common factors, then determine both for $k(x) = \\dfrac{(x-1)^2(x+3)}{(x-1)(x+3)^2}$.",
+            answers: [
+              { label: "", text: "A common factor that fully cancels leaves a hole (a single missing point) at that $x$-value; a factor remaining in the denominator after cancellation produces a vertical asymptote. Here $(x-1)$ cancels once, leaving one factor of $(x-1)$ in the numerator — a hole at $x=1$. $(x+3)$ cancels once, leaving one factor of $(x+3)$ in the denominator — a vertical asymptote at $x=-3$." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 2-C ──────────────────────────────────────────
+      {
+        icon: "📏",
+        title: "Horizontal Asymptotes & End Behavior",
+        sub: "Comparing degrees and evaluating limits at infinity",
+        topics: "HAs & Limits",
+        problems: [
+          {
+            stem: "For $r(x) = \\dfrac{-6x^2+5}{3x^2-4}$, find the horizontal asymptote and evaluate $\\displaystyle\\lim_{x\\to\\infty} r(x)$ and $\\displaystyle\\lim_{x\\to-\\infty} r(x)$.",
+            answers: [
+              { label: "", text: "Degrees are equal, so the horizontal asymptote is the ratio of leading coefficients: $y = \\dfrac{-6}{3} = -2$. Both limits equal $-2$." }
+            ]
+          },
+          {
+            stem: "For $r(x) = \\dfrac{2x+7}{x^3-1}$, find the horizontal asymptote.",
+            answers: [
+              { label: "", text: "The denominator's degree (3) exceeds the numerator's degree (1), so the horizontal asymptote is $y=0$." }
+            ]
+          },
+          {
+            stem: "For $r(x) = \\dfrac{x^2-4}{x-1}$, explain why there is no horizontal asymptote, and describe the function's end behavior.",
+            answers: [
+              { label: "", text: "The numerator's degree (2) exceeds the denominator's degree (1), so the function grows without bound rather than leveling off — there is no horizontal asymptote. As $x\\to\\infty$, $r(x)\\to\\infty$; as $x\\to-\\infty$, $r(x)\\to-\\infty$ (the function behaves like the slant line $y=x+1$ for large $|x|$)." }
+            ]
+          },
+          {
+            stem: "Compute $\\displaystyle\\lim_{x\\to-7} \\dfrac{x^2+3x-28}{x+7}$.",
+            answers: [
+              { label: "", text: "Factor: $\\dfrac{(x+7)(x-4)}{x+7} = x-4$ for $x\\ne-7$. So the limit is $-7-4 = -11$." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 2-D ──────────────────────────────────────────
+      {
+        icon: "🧩",
+        title: "Synthesizing Rational Function Features",
+        sub: "Combining holes, asymptotes, and graph behavior",
+        topics: "Comprehensive Analysis",
+        problems: [
+          {
+            stem: "For $f(x) = \\dfrac{x^2-x-6}{x^2-4}$, identify all holes, vertical asymptotes, and the horizontal asymptote.",
+            answers: [
+              { label: "", text: "Factor: $\\dfrac{(x-3)(x+2)}{(x-2)(x+2)}$. The $(x+2)$ factor cancels: hole at $x=-2$. Remaining denominator factor gives a vertical asymptote at $x=2$. Degrees are equal, so the horizontal asymptote is $y=1$ (ratio of leading coefficients)." }
+            ]
+          },
+          {
+            stem: "The graph of a rational function is shown, with a vertical asymptote at $x=2$, a horizontal asymptote at $y=1$, and an open circle (hole) at $x=-3$.<img src='img/pc-c2t4p2.png' alt='rational function graph with a vertical asymptote, horizontal asymptote, and a hole' class='problem-img'>State all three features shown, and describe what happens to the function as $x \\to 2^-$ and $x \\to 2^+$.",
+            answers: [
+              { label: "", text: "Vertical asymptote at $x=2$; horizontal asymptote at $y=1$; hole at $x=-3$. Near $x=2$, the graph shoots off toward $+\\infty$ on one side and $-\\infty$ on the other, depending on the sign of the function just to either side of the asymptote." }
+            ]
+          },
+          {
+            stem: "Construct a rational function with a vertical asymptote at $x=1$, a hole at $x=-2$, and a horizontal asymptote at $y=3$.",
+            answers: [
+              { label: "", text: "One example: $f(x) = \\dfrac{3x(x+2)}{(x-1)(x+2)}$. The $(x+2)$ factor cancels (hole at $x=-2$), the remaining $(x-1)$ gives the vertical asymptote, and equal degrees with leading coefficient ratio $3/1$ give the horizontal asymptote $y=3$." }
+            ]
+          },
+          {
+            stem: "A tank contains 20 gallons of water with 5 pounds of dissolved salt. Salt water with concentration 2 lb/gal is pumped in and mixed at a rate that keeps the volume at $20+t$ gallons. The concentration (lb/gal) after $t$ minutes is modeled by $C(t) = \\dfrac{5+2t}{20+t}$.",
+            parts: [
+              { label: "(a)", text: "Find the horizontal asymptote of $C(t)$ as $t\\to\\infty$." },
+              { label: "(b)", text: "Interpret this value in the context of the tank." }
+            ],
+            answers: [
+              { label: "(a)", text: "Degrees are equal, so the horizontal asymptote is $y = \\dfrac{2}{1} = 2$." },
+              { label: "(b)", text: "In the long run, the concentration in the tank approaches 2 lb/gal — the concentration of the incoming water — as the original 5 pounds of salt becomes negligible compared to the large total volume." }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  // ═══════════════════════════════════════════════════════════
+  // COLUMN 3 — Limits & Continuity
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: "col-3",
+    accentVar: "var(--col3-light)",
+    headerClass: "col-3-header",
+    tileClass: "col-3",
+    label: "Column III",
+    title: "Limits & Continuity",
+    topics: "Evaluating, Graphs & Piecewise Functions",
+    tiles: [
+
+      // ── TILE 3-A ──────────────────────────────────────────
+      {
+        icon: "➗",
+        title: "Evaluating Limits Algebraically",
+        sub: "Factoring, one-sided limits & the Squeeze Theorem",
+        topics: "Algebraic Limits",
+        problems: [
+          {
+            stem: "Compute $\\displaystyle\\lim_{x\\to3} \\dfrac{x^2-9}{x-3}$.",
+            answers: [
+              { label: "", text: "$\\dfrac{(x-3)(x+3)}{x-3} = x+3$ for $x\\ne3$, so the limit is $3+3=6$." }
+            ]
+          },
+          {
+            stem: "Compute $\\displaystyle\\lim_{x\\to-2} \\dfrac{x^2+5x+6}{x+2}$.",
+            answers: [
+              { label: "", text: "$\\dfrac{(x+2)(x+3)}{x+2} = x+3$ for $x\\ne-2$, so the limit is $-2+3=1$." }
+            ]
+          },
+          {
+            stem: "Let $f(x) = \\begin{cases} x+1 & x<2 \\\\ x^2-1 & x\\ge2 \\end{cases}$.",
+            parts: [
+              { label: "(a)", text: "Find $\\displaystyle\\lim_{x\\to2^-} f(x)$." },
+              { label: "(b)", text: "Find $\\displaystyle\\lim_{x\\to2^+} f(x)$." },
+              { label: "(c)", text: "Does $\\displaystyle\\lim_{x\\to2} f(x)$ exist? Explain." }
+            ],
+            answers: [
+              { label: "(a)", text: "$2+1=3$." },
+              { label: "(b)", text: "$2^2-1=3$." },
+              { label: "(c)", text: "Yes — since both one-sided limits equal 3, $\\displaystyle\\lim_{x\\to2}f(x)=3$." }
+            ]
+          },
+          {
+            stem: "Suppose $-x^2+8x-14 \\le g(x) \\le 12x-10$ for all $x$ near $x=-2$, except possibly at $x=-2$. Use the Squeeze Theorem to find $\\displaystyle\\lim_{x\\to-2} g(x)$.",
+            answers: [
+              { label: "", text: "Evaluate both bounds at $x=-2$: $-4-16-14=-34$ and $-24-10=-34$. Both bounding functions approach $-34$, so by the Squeeze Theorem, $\\displaystyle\\lim_{x\\to-2}g(x) = -34$." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 3-B ──────────────────────────────────────────
+      {
+        icon: "📊",
+        title: "Limits from Graphs & Tables",
+        sub: "Reading limit behavior from visual and numerical data",
+        topics: "Graphical & Numerical Limits",
+        problems: [
+          {
+            stem: "Selected values of a function $f$ near $x=5$ are given below.<br><br><table style='border-collapse:collapse;font-size:13px;margin:4px 0 8px'><thead><tr><th style='border:1px solid #3a3a3a;padding:5px 10px;background:#252525;color:#f0ece6'>$x$</th><th style='border:1px solid #3a3a3a;padding:5px 10px;background:#252525;color:#f0ece6'>4.9</th><th style='border:1px solid #3a3a3a;padding:5px 10px;background:#252525;color:#f0ece6'>4.99</th><th style='border:1px solid #3a3a3a;padding:5px 10px;background:#252525;color:#f0ece6'>5</th><th style='border:1px solid #3a3a3a;padding:5px 10px;background:#252525;color:#f0ece6'>5.01</th><th style='border:1px solid #3a3a3a;padding:5px 10px;background:#252525;color:#f0ece6'>5.1</th></tr></thead><tbody><tr><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6'>$f(x)$</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>11.8</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>11.98</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>2</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>12.02</td><td style='border:1px solid #3a3a3a;padding:5px 10px;background:#1e1e1e;color:#f0ece6;text-align:center'>12.2</td></tr></tbody></table>What is $\\displaystyle\\lim_{x\\to5}f(x)$? What is $f(5)$? Are these the same?",
+            answers: [
+              { label: "", text: "As $x$ approaches 5 from either side, $f(x)$ approaches 12, so $\\displaystyle\\lim_{x\\to5}f(x)=12$. But $f(5)=2$ as given directly in the table. The limit and the function value are different — this is a removable discontinuity at $x=5$." }
+            ]
+          },
+          {
+            stem: "The graph of $y=f(x)$ is shown, with a filled point at $(-1,5)$, an open circle at $(-1,3)$, a filled point at $(1,0)$, and an open circle at $(1,-2)$.<img src='img/pc-c3t2p2.png' alt='piecewise graph with a removable hole at x=-1 and a jump discontinuity at x=1' class='problem-img'>",
+            parts: [
+              { label: "(a)", text: "Find $f(-1)$ and $\\displaystyle\\lim_{x\\to-1}f(x)$." },
+              { label: "(b)", text: "Find $\\displaystyle\\lim_{x\\to1^-}f(x)$ and $\\displaystyle\\lim_{x\\to1^+}f(x)$." },
+              { label: "(c)", text: "Does $\\displaystyle\\lim_{x\\to1}f(x)$ exist? Explain." }
+            ],
+            answers: [
+              { label: "(a)", text: "$f(-1)=5$ (the filled point); $\\displaystyle\\lim_{x\\to-1}f(x)=3$ (both sides approach the open circle, ignoring the filled point)." },
+              { label: "(b)", text: "$\\displaystyle\\lim_{x\\to1^-}f(x)=-2$; $\\displaystyle\\lim_{x\\to1^+}f(x)=0$." },
+              { label: "(c)", text: "No — the one-sided limits disagree ($-2 \\ne 0$), so the two-sided limit does not exist." }
+            ]
+          },
+          {
+            stem: "The graph of a function $g$ shows $g(x) \\to \\infty$ as $x \\to 3^-$ and $g(x) \\to -\\infty$ as $x \\to 3^+$.<img src='img/pc-c3t2p3.png' alt='graph with a vertical asymptote at x=3, rising on the left and falling on the right' class='problem-img'>State $\\displaystyle\\lim_{x\\to3^-}g(x)$, $\\displaystyle\\lim_{x\\to3^+}g(x)$, and whether $\\displaystyle\\lim_{x\\to3}g(x)$ exists.",
+            answers: [
+              { label: "", text: "$\\displaystyle\\lim_{x\\to3^-}g(x)=\\infty$; $\\displaystyle\\lim_{x\\to3^+}g(x)=-\\infty$. Since the one-sided limits are not equal (and are infinite, not real numbers), $\\displaystyle\\lim_{x\\to3}g(x)$ does not exist." }
+            ]
+          },
+          {
+            stem: "The graph of a rational function $r(x)$ shows a horizontal asymptote at $y=-2$ as $x\\to\\pm\\infty$.<img src='img/pc-c3t2p4.png' alt='rational function graph approaching a horizontal asymptote on both ends' class='problem-img'>State $\\displaystyle\\lim_{x\\to\\infty}r(x)$ and $\\displaystyle\\lim_{x\\to-\\infty}r(x)$.",
+            answers: [
+              { label: "", text: "Both limits equal $-2$, since the graph approaches the horizontal asymptote $y=-2$ in both directions." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 3-C ──────────────────────────────────────────
+      {
+        icon: "🧷",
+        title: "Continuity & Piecewise Functions",
+        sub: "Finding constants and applying the formal definition",
+        topics: "Continuity",
+        problems: [
+          {
+            stem: "For what value of $c$ is $f(x) = \\begin{cases} x^2-c & x<2 \\\\ c \\cdot x+5 & x\\ge2 \\end{cases}$ continuous on $(-\\infty,\\infty)$?",
+            answers: [
+              { label: "", text: "Set the pieces equal at $x=2$: $4-c = 2c+5 \\Rightarrow -3c = 1 \\Rightarrow c = -\\dfrac{1}{3}$." }
+            ]
+          },
+          {
+            stem: "Find $c$ such that $f(x) = \\begin{cases} x^2-1 & x\\le c \\\\ 10x-26 & x>c \\end{cases}$ is continuous everywhere.",
+            answers: [
+              { label: "", text: "Set the pieces equal at $x=c$: $c^2-1 = 10c-26 \\Rightarrow c^2-10c+25=0 \\Rightarrow (c-5)^2=0 \\Rightarrow c=5$." }
+            ]
+          },
+          {
+            stem: "For what value of $k$, if any, is $f(x) = \\begin{cases} 3-2(x+2)^2 & x<0 \\\\ ke^x+1 & x\\ge0 \\end{cases}$ continuous?",
+            answers: [
+              { label: "", text: "Left-hand value at $x=0$: $3-2(2)^2=3-8=-5$. Right-hand value: $ke^0+1=k+1$. Set equal: $k+1=-5 \\Rightarrow k=-6$." }
+            ]
+          },
+          {
+            stem: "A function $f$ is not continuous at $x=4$. Using the formal (three-part) definition of continuity, explain what condition(s) could fail to cause this.",
+            answers: [
+              { label: "", text: "A function is continuous at $x=a$ only if all three hold: (1) $f(a)$ is defined, (2) $\\displaystyle\\lim_{x\\to a}f(x)$ exists, and (3) $\\displaystyle\\lim_{x\\to a}f(x)=f(a)$. At $x=4$, the discontinuity could arise because $f(4)$ is undefined, because the one-sided limits disagree so the limit doesn't exist, or because the limit exists but doesn't match the function's defined value there (a removable discontinuity)." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 3-D ──────────────────────────────────────────
+      {
+        icon: "🧮",
+        title: "Squeeze Theorem, IVT & Existence Arguments",
+        sub: "Justifying the existence of limits and function values",
+        topics: "Existence Theorems",
+        problems: [
+          {
+            stem: "Suppose $x^2-2x-2 \\le g(x) \\le 2x-5$ for all $x$ near $x=3$, except possibly at $x=3$. Find $\\displaystyle\\lim_{x\\to3}g(x)$ using the Squeeze Theorem.",
+            answers: [
+              { label: "", text: "At $x=3$: lower bound $=9-6-2=1$; upper bound $=6-5=1$. Both bounding functions approach $1$ at $x=3$, so by the Squeeze Theorem, $\\displaystyle\\lim_{x\\to3}g(x)=1$." }
+            ]
+          },
+          {
+            stem: "For $-2 \\le x \\le 10$, functions $f$, $g$, and $k$ are continuous with $f(x) \\le k(x) \\le g(x)$. If $\\displaystyle\\lim_{x\\to3}f(x)=17$ and $\\displaystyle\\lim_{x\\to3}g(x)=19$, what can be concluded about $\\displaystyle\\lim_{x\\to3}k(x)$?",
+            answers: [
+              { label: "", text: "Since $f$ and $g$ have different limits at $x=3$ (17 and 19), the Squeeze Theorem does not directly apply — it requires both bounding limits to be equal. Without more information, only $17 \\le \\displaystyle\\lim_{x\\to3}k(x) \\le 19$ can be said, and there isn't enough information to pin down the exact value." }
+            ]
+          },
+          {
+            stem: "A cyclist's speed (mph) during a 25-minute ride is given by the continuous function $v$, with values shown.<br><br><table style='border-collapse:collapse;font-size:14px;margin:4px 0 8px'><thead><tr><th style='border:1px solid #3a3a3a;padding:6px 14px;background:#252525;color:#f0ece6'>$t$ (min)</th><th style='border:1px solid #3a3a3a;padding:6px 14px;background:#252525;color:#f0ece6'>0</th><th style='border:1px solid #3a3a3a;padding:6px 14px;background:#252525;color:#f0ece6'>4</th><th style='border:1px solid #3a3a3a;padding:6px 14px;background:#252525;color:#f0ece6'>11</th><th style='border:1px solid #3a3a3a;padding:6px 14px;background:#252525;color:#f0ece6'>13</th><th style='border:1px solid #3a3a3a;padding:6px 14px;background:#252525;color:#f0ece6'>18</th><th style='border:1px solid #3a3a3a;padding:6px 14px;background:#252525;color:#f0ece6'>25</th></tr></thead><tbody><tr><td style='border:1px solid #3a3a3a;padding:6px 14px;background:#1e1e1e;color:#f0ece6'>$v(t)$</td><td style='border:1px solid #3a3a3a;padding:6px 14px;background:#1e1e1e;color:#f0ece6;text-align:center'>0</td><td style='border:1px solid #3a3a3a;padding:6px 14px;background:#1e1e1e;color:#f0ece6;text-align:center'>7</td><td style='border:1px solid #3a3a3a;padding:6px 14px;background:#1e1e1e;color:#f0ece6;text-align:center'>18</td><td style='border:1px solid #3a3a3a;padding:6px 14px;background:#1e1e1e;color:#f0ece6;text-align:center'>16</td><td style='border:1px solid #3a3a3a;padding:6px 14px;background:#1e1e1e;color:#f0ece6;text-align:center'>30</td><td style='border:1px solid #3a3a3a;padding:6px 14px;background:#1e1e1e;color:#f0ece6;text-align:center'>21</td></tr></tbody></table>Is there guaranteed to be a time $t$ for $0 < t < 25$ when the cyclist's speed is exactly 15 mph? Justify your answer, verifying conditions and naming the theorem used.",
+            answers: [
+              { label: "", text: "Yes. $v$ is continuous on $[0,25]$ (given). On $[11,13]$, $v(11)=18$ and $v(13)=16$; since $15$ is between these values, the Intermediate Value Theorem guarantees some $t$ in $(11,13)$ with $v(t)=15$." }
+            ]
+          },
+          {
+            stem: "Given $f(-3)=10$ and $f(2)=1$, what condition on $f$ is required for the Intermediate Value Theorem to guarantee some $c$ with $-3 < c < 2$ and $f(c)=5$? Verify that $5$ satisfies the necessary condition.",
+            answers: [
+              { label: "", text: "$f$ must be continuous on the closed interval $[-3,2]$. Since $f(-3)=10$ and $f(2)=1$, and $1 < 5 < 10$, the value $5$ lies between the two endpoint values — so as long as continuity holds, the IVT guarantees such a $c$ exists." }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  // ═══════════════════════════════════════════════════════════
+  // COLUMN 4 — Introduction to Derivatives
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: "col-4",
+    accentVar: "var(--col4-light)",
+    headerClass: "col-4-header",
+    tileClass: "col-4",
+    label: "Column IV",
+    title: "Introduction to Derivatives",
+    topics: "Difference Quotients, Tangent Lines & Graphical Analysis",
+    tiles: [
+
+      // ── TILE 4-A ──────────────────────────────────────────
+      {
+        icon: "➕",
+        title: "Difference Quotients",
+        sub: "Simplifying $f(x+h)$ and the difference quotient",
+        topics: "Difference Quotients",
+        problems: [
+          {
+            stem: "Let $f(x) = 4x^2 - 5x$.",
+            parts: [
+              { label: "(a)", text: "Simplify $f(x+h)$." },
+              { label: "(b)", text: "Simplify the difference quotient $\\dfrac{f(x+h)-f(x)}{h}$." },
+              { label: "(c)", text: "Find $f'(x) = \\displaystyle\\lim_{h\\to0}\\dfrac{f(x+h)-f(x)}{h}$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$f(x+h) = 4(x+h)^2-5(x+h) = 4x^2+8xh+4h^2-5x-5h$." },
+              { label: "(b)", text: "$\\dfrac{f(x+h)-f(x)}{h} = \\dfrac{8xh+4h^2-5h}{h} = 8x+4h-5$." },
+              { label: "(c)", text: "$f'(x) = \\displaystyle\\lim_{h\\to0}(8x+4h-5) = 8x-5$." }
+            ]
+          },
+          {
+            stem: "Let $g(x) = x^3$.",
+            parts: [
+              { label: "(a)", text: "Simplify $g(x+h)$." },
+              { label: "(b)", text: "Simplify the difference quotient." },
+              { label: "(c)", text: "Find $g'(x)$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$g(x+h) = x^3+3x^2h+3xh^2+h^3$." },
+              { label: "(b)", text: "$\\dfrac{3x^2h+3xh^2+h^3}{h} = 3x^2+3xh+h^2$." },
+              { label: "(c)", text: "$g'(x) = \\displaystyle\\lim_{h\\to0}(3x^2+3xh+h^2) = 3x^2$." }
+            ]
+          },
+          {
+            stem: "Let $f(x) = \\dfrac{1}{x}$. Use the limit definition to find $f'(x)$.",
+            answers: [
+              { label: "", text: "$\\dfrac{f(x+h)-f(x)}{h} = \\dfrac{\\frac{1}{x+h}-\\frac{1}{x}}{h} = \\dfrac{\\frac{x-(x+h)}{x(x+h)}}{h} = \\dfrac{-h}{hx(x+h)} = \\dfrac{-1}{x(x+h)}$. Taking $h\\to0$: $f'(x) = -\\dfrac{1}{x^2}$." }
+            ]
+          },
+          {
+            stem: "Let $f(x) = \\sqrt{x+1}$. Use the limit definition to find $f'(x)$ by rationalizing the numerator.",
+            answers: [
+              { label: "", text: "$\\dfrac{\\sqrt{x+h+1}-\\sqrt{x+1}}{h} \\cdot \\dfrac{\\sqrt{x+h+1}+\\sqrt{x+1}}{\\sqrt{x+h+1}+\\sqrt{x+1}} = \\dfrac{h}{h(\\sqrt{x+h+1}+\\sqrt{x+1})} = \\dfrac{1}{\\sqrt{x+h+1}+\\sqrt{x+1}}$. Taking $h\\to0$: $f'(x) = \\dfrac{1}{2\\sqrt{x+1}}$." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 4-B ──────────────────────────────────────────
+      {
+        icon: "📐",
+        title: "The Derivative as a Limit",
+        sub: "Evaluating derivatives at a point and in context",
+        topics: "Derivative Evaluation",
+        problems: [
+          {
+            stem: "If $f(x) = 5+2x-3x^2$, find $f'(1)$ using the limit definition of the derivative.",
+            answers: [
+              { label: "", text: "$f'(x) = \\displaystyle\\lim_{h\\to0}\\dfrac{f(x+h)-f(x)}{h}$. Expanding: $f(x+h)=5+2x+2h-3x^2-6xh-3h^2$, so $\\dfrac{f(x+h)-f(x)}{h} = 2-6x-3h \\to 2-6x$. So $f'(x)=2-6x$, and $f'(1)=2-6=-4$." }
+            ]
+          },
+          {
+            stem: "The graph of a derivative function $f'(x)$ is shown, and $f'(5) = 3$.<img src='img/pc-c4t2p2.png' alt='graph of a derivative function marked so f prime of 5 equals 3' class='problem-img'> It is known that $f(5) = -4$. Find the equation of the tangent line to $f$ at $x=5$.",
+            answers: [
+              { label: "", text: "The tangent line passes through $(5,-4)$ with slope $f'(5)=3$: $y+4=3(x-5)$, so $y = 3x-19$." }
+            ]
+          },
+          {
+            stem: "Recognize $\\displaystyle\\lim_{h\\to0}\\dfrac{(3+h)^4-3^4}{h}$ as the derivative of a function at a point, then evaluate it.",
+            answers: [
+              { label: "", text: "This is $f'(3)$ where $f(x)=x^4$. Since $f'(x)=4x^3$, $f'(3)=4(27)=108$." }
+            ]
+          },
+          {
+            stem: "The height of a plant (in cm) after $t$ days is modeled by $h(t) = 2t^2+3t$. Find the instantaneous rate of growth at $t=4$ days using the limit definition of the derivative, and interpret the result in context.",
+            answers: [
+              { label: "", text: "$h'(t) = \\displaystyle\\lim_{h\\to0}\\dfrac{h(t+h)-h(t)}{h} = 4t+3$. So $h'(4) = 19$. The plant is growing at an instantaneous rate of 19 cm per day at $t=4$ days." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 4-C ──────────────────────────────────────────
+      {
+        icon: "📏",
+        title: "Tangent Lines & Rates of Change",
+        sub: "Equations of tangent lines and linear approximation",
+        topics: "Tangent Lines",
+        problems: [
+          {
+            stem: "Let $f(x) = x^2-4x+1$. Find the equation of the tangent line to $f$ at $x=3$.",
+            answers: [
+              { label: "", text: "$f(3) = 9-12+1=-2$. Using the limit definition, $f'(x)=2x-4$, so $f'(3)=2$. Tangent line: $y+2=2(x-3)$, so $y=2x-8$." }
+            ]
+          },
+          {
+            stem: "Let $g(x) = \\sqrt{x}$.",
+            parts: [
+              { label: "(a)", text: "Find the equation of the tangent line to $g$ at $x=4$." },
+              { label: "(b)", text: "Use the tangent line to approximate $\\sqrt{4.1}$." },
+              { label: "(c)", text: "Is your approximation an overestimate or underestimate? Explain using the shape of the curve." }
+            ],
+            answers: [
+              { label: "(a)", text: "$g(4)=2$, and $g'(x)=\\dfrac{1}{2\\sqrt{x}}$ so $g'(4)=\\dfrac{1}{4}$. Tangent line: $y-2=\\frac{1}{4}(x-4)$, so $y=\\frac{1}{4}x+1$." },
+              { label: "(b)", text: "$y = \\frac{1}{4}(4.1)+1 = 2.025$." },
+              { label: "(c)", text: "The graph of $\\sqrt{x}$ curves downward (concave down), so it lies below its tangent line — the approximation $2.025$ is an overestimate." }
+            ]
+          },
+          {
+            stem: "As a second point on a curve moves closer and closer to a fixed point, describe what happens to the slope of the secant line connecting them, and what value it approaches.<div class=\"interactive-graph-wrap\"><div id=\"secant-widget-container\" class=\"interactive-graph\"></div><div class=\"interactive-caption\">Drag the orange point toward the white point and watch the secant slope.</div></div>",
+            interactive: "secant",
+            answers: [
+              { label: "", text: "As the second point slides toward the fixed point, the secant line rotates and approaches the tangent line at the fixed point — its slope approaches the instantaneous rate of change, i.e., the derivative at that point." }
+            ]
+          },
+          {
+            stem: "Let $f(x) = x^2-6x+5$. Find where the tangent line to $f$ is horizontal, and interpret this point geometrically.",
+            answers: [
+              { label: "", text: "$f'(x)=2x-6$. Setting $f'(x)=0$ gives $x=3$. $f(3)=9-18+5=-4$. The tangent line is horizontal at $(3,-4)$, which is the vertex of the parabola — a local (and global) minimum." }
+            ]
+          }
+        ]
+      },
+
+      // ── TILE 4-D ──────────────────────────────────────────
+      {
+        icon: "📉",
+        title: "Reading Derivatives from Graphs",
+        sub: "Sign analysis and reasoning about derivative existence from graphs",
+        topics: "Graphical Derivative Analysis",
+        problems: [
+          {
+            stem: "The graph of $y=f(x)$ is shown, decreasing on $(-\\infty,-2)$, increasing on $(-2,1)$, and decreasing on $(1,\\infty)$, with $f(-3)>0$, $f(-1)<0$, and $f(2)>0$.<img src='img/pc-c4t4p1.png' alt='graph of a function with a local minimum near x=-2 and a local maximum near x=1' class='problem-img'>",
+            parts: [
+              { label: "(a)", text: "State the sign of $f'(-3)$, $f'(-1)$, and $f'(2)$." },
+              { label: "(b)", text: "State the sign of $f(-3)$, $f(-1)$, and $f(2)$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$f'(-3)<0$ (decreasing), $f'(-1)>0$ (increasing), $f'(2)<0$ (decreasing)." },
+              { label: "(b)", text: "$f(-3)>0$, $f(-1)<0$, $f(2)>0$, as given by the marked points on the graph." }
+            ]
+          },
+          {
+            stem: "A function $f$ has the values shown below.<br><br><table style='border-collapse:collapse;font-size:14px;margin:4px 0 8px'><thead><tr><th style='border:1px solid #3a3a3a;padding:6px 14px;background:#252525;color:#f0ece6'>$x$</th><th style='border:1px solid #3a3a3a;padding:6px 14px;background:#252525;color:#f0ece6'>1</th><th style='border:1px solid #3a3a3a;padding:6px 14px;background:#252525;color:#f0ece6'>2</th><th style='border:1px solid #3a3a3a;padding:6px 14px;background:#252525;color:#f0ece6'>3</th><th style='border:1px solid #3a3a3a;padding:6px 14px;background:#252525;color:#f0ece6'>4</th><th style='border:1px solid #3a3a3a;padding:6px 14px;background:#252525;color:#f0ece6'>5</th></tr></thead><tbody><tr><td style='border:1px solid #3a3a3a;padding:6px 14px;background:#1e1e1e;color:#f0ece6'>$f(x)$</td><td style='border:1px solid #3a3a3a;padding:6px 14px;background:#1e1e1e;color:#f0ece6;text-align:center'>3</td><td style='border:1px solid #3a3a3a;padding:6px 14px;background:#1e1e1e;color:#f0ece6;text-align:center'>7</td><td style='border:1px solid #3a3a3a;padding:6px 14px;background:#1e1e1e;color:#f0ece6;text-align:center'>9</td><td style='border:1px solid #3a3a3a;padding:6px 14px;background:#1e1e1e;color:#f0ece6;text-align:center'>8</td><td style='border:1px solid #3a3a3a;padding:6px 14px;background:#1e1e1e;color:#f0ece6;text-align:center'>5</td></tr></tbody></table>Estimate $f'(3)$ using the average rate of change over a small interval.",
+            answers: [
+              { label: "", text: "$f'(3) \\approx \\dfrac{f(4)-f(2)}{4-2} = \\dfrac{8-7}{2} = 0.5$." }
+            ]
+          },
+          {
+            stem: "The graph of $f$ has a sharp corner at $x=2$, where the curve approaches with one slope from the left and a different slope from the right.<img src='img/pc-c4t4p3.png' alt='graph of a function with a sharp corner at x=2' class='problem-img'>Does $f'(2)$ exist? Explain using the behavior of secant slopes from each side.",
+            answers: [
+              { label: "", text: "No. At a corner, the slopes of secant lines approaching from the left and from the right approach two different values, so the two one-sided derivatives disagree — meaning the (two-sided) derivative $f'(2)$ does not exist, even though $f$ is continuous there." }
+            ]
+          },
+          {
+            stem: "The graph of $y=g(x)$ is shown, increasing on $(-\\infty,-1)$, decreasing on $(-1,3)$, and increasing on $(3,\\infty)$, with $g(-2)<0$, $g(0)>0$, and $g(4)<0$.<img src='img/pc-c4t4p4.png' alt='graph of a function with a local maximum near x=-1 and a local minimum near x=3' class='problem-img'>",
+            parts: [
+              { label: "(a)", text: "State the sign of $g'(-2)$, $g'(0)$, and $g'(4)$." },
+              { label: "(b)", text: "State the sign of $g(-2)$, $g(0)$, and $g(4)$." }
+            ],
+            answers: [
+              { label: "(a)", text: "$g'(-2)>0$ (increasing), $g'(0)<0$ (decreasing), $g'(4)>0$ (increasing)." },
+              { label: "(b)", text: "$g(-2)<0$, $g(0)>0$, $g(4)<0$, as given by the marked points on the graph." }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+
+]; // end columns
+
+
+/* ============================================================
+   RENDER BOARD
+============================================================ */
+function renderBoard() {
+  const grid = document.getElementById('board-grid');
+  grid.innerHTML = '';
+
+  columns.forEach((col, ci) => {
+    const colGroup = document.createElement('div');
+    colGroup.className = 'col-group';
+
+    const header = document.createElement('div');
+    header.className = `col-header ${col.headerClass}`;
+    header.style.gridColumn = ci + 1;
+    header.style.gridRow = 1;
+    header.innerHTML = `
+      <div class="col-header-num">${col.label}</div>
+      <h2>${col.title}</h2>
+      <div class="col-topics">${col.topics}</div>
+    `;
+    colGroup.appendChild(header);
+
+    col.tiles.forEach((tile, ti) => {
+      const tileEl = document.createElement('div');
+      tileEl.className = `tile ${col.tileClass}`;
+      tileEl.style.gridColumn = ci + 1;
+      tileEl.style.gridRow = ti + 2;
+      tileEl.setAttribute('role', 'button');
+      tileEl.setAttribute('tabindex', '0');
+      tileEl.setAttribute('aria-label', tile.title);
+      tileEl.innerHTML = `
+        <span class="tile-icon">${tile.icon}</span>
+        <div class="tile-title">${tile.title}</div>
+        <div class="tile-sub">${tile.sub}</div>
+        <div class="tile-topics">${tile.topics}</div>
+        <span class="tile-arrow">↗</span>
+      `;
+      tileEl.addEventListener('click', () => openModal(ci, ti));
+      tileEl.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') openModal(ci, ti); });
+      colGroup.appendChild(tileEl);
+    });
+
+    grid.appendChild(colGroup);
+  });
+}
+
+/* ============================================================
+   MODAL
+============================================================ */
+/* ============================================================
+   INTERACTIVE SECANT-LINE WIDGET
+   Draggable point Q slides along the curve; the secant line
+   through fixed point P and Q updates live, along with its
+   slope readout, so students can watch the slope approach the
+   tangent slope as Q approaches P.
+============================================================ */
+function setupSecantWidget(container) {
+  const svgNS = "http://www.w3.org/2000/svg";
+  const width = 460, height = 340;
+  const m = { l: 40, r: 20, t: 24, b: 34 };
+  const xMin = -1.5, xMax = 4.5, yMin = -1.5, yMax = 4;
+  const plotW = width - m.l - m.r;
+  const plotH = height - m.t - m.b;
+
+  function f(x) { return 0.15*x*x*x - 0.5*x*x + 1; }
+  function toPx(x, y) {
+    return [
+      m.l + (x - xMin) / (xMax - xMin) * plotW,
+      height - m.b - (y - yMin) / (yMax - yMin) * plotH
+    ];
+  }
+  function toMathX(px) {
+    return xMin + (px - m.l) / plotW * (xMax - xMin);
+  }
+
+  container.innerHTML = '';
+  const svg = document.createElementNS(svgNS, 'svg');
+  svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+  svg.style.touchAction = 'none';
+
+  // axes
+  const [axX0, axY0] = toPx(0, 0);
+  const xAxis = document.createElementNS(svgNS, 'line');
+  xAxis.setAttribute('x1', m.l); xAxis.setAttribute('x2', width - m.r);
+  xAxis.setAttribute('y1', axY0); xAxis.setAttribute('y2', axY0);
+  xAxis.setAttribute('stroke', '#555555');
+  svg.appendChild(xAxis);
+  const yAxis = document.createElementNS(svgNS, 'line');
+  yAxis.setAttribute('x1', axX0); yAxis.setAttribute('x2', axX0);
+  yAxis.setAttribute('y1', m.t); yAxis.setAttribute('y2', height - m.b);
+  yAxis.setAttribute('stroke', '#555555');
+  svg.appendChild(yAxis);
+
+  // curve
+  let d = '';
+  const N = 120;
+  for (let i = 0; i <= N; i++) {
+    const x = xMin + (xMax - xMin) * i / N;
+    const [px, py] = toPx(x, f(x));
+    d += (i === 0 ? 'M' : 'L') + px.toFixed(1) + ' ' + py.toFixed(1) + ' ';
+  }
+  const curve = document.createElementNS(svgNS, 'path');
+  curve.setAttribute('d', d.trim());
+  curve.setAttribute('fill', 'none');
+  curve.setAttribute('stroke', '#f59e0b');
+  curve.setAttribute('stroke-width', '3');
+  svg.appendChild(curve);
+
+  // secant line (drawn beneath the points)
+  const secant = document.createElementNS(svgNS, 'line');
+  secant.setAttribute('stroke', '#f59e0b');
+  secant.setAttribute('stroke-width', '1.5');
+  secant.setAttribute('stroke-dasharray', '6 4');
+  secant.setAttribute('opacity', '0.85');
+  svg.appendChild(secant);
+
+  // fixed point P
+  const x0 = 1;
+  const y0 = f(x0);
+  const [px0, py0] = toPx(x0, y0);
+  const pDot = document.createElementNS(svgNS, 'circle');
+  pDot.setAttribute('cx', px0);
+  pDot.setAttribute('cy', py0);
+  pDot.setAttribute('r', 6);
+  pDot.setAttribute('fill', '#ffffff');
+  svg.appendChild(pDot);
+
+  // readout label
+  const label = document.createElementNS(svgNS, 'text');
+  label.setAttribute('x', m.l + 6);
+  label.setAttribute('y', m.t + 14);
+  label.setAttribute('fill', '#e8e4de');
+  label.setAttribute('font-size', '13');
+  label.setAttribute('font-family', "'Source Serif 4', serif");
+  svg.appendChild(label);
+
+  // draggable point Q
+  let x1 = 3.4;
+  const qDot = document.createElementNS(svgNS, 'circle');
+  qDot.setAttribute('r', 9);
+  qDot.setAttribute('fill', '#f59e0b');
+  qDot.style.cursor = 'grab';
+  svg.appendChild(qDot);
+
+  function render() {
+    const y1 = f(x1);
+    const [pxQ, pyQ] = toPx(x1, y1);
+    qDot.setAttribute('cx', pxQ);
+    qDot.setAttribute('cy', pyQ);
+
+    const slope = (y1 - y0) / (x1 - x0);
+    const yL = y0 + slope * (xMin - x0);
+    const yR = y0 + slope * (xMax - x0);
+    const [pxL, pyL] = toPx(xMin, yL);
+    const [pxR, pyR] = toPx(xMax, yR);
+    secant.setAttribute('x1', pxL); secant.setAttribute('y1', pyL);
+    secant.setAttribute('x2', pxR); secant.setAttribute('y2', pyR);
+
+    label.textContent = `secant slope ≈ ${slope.toFixed(3)}  (Δx = ${(x1 - x0).toFixed(2)})`;
+  }
+  render();
+
+  let dragging = false;
+  function clientToMathX(clientX) {
+    const rect = svg.getBoundingClientRect();
+    const px = (clientX - rect.left) * (width / rect.width);
+    return toMathX(px);
+  }
+
+  qDot.addEventListener('pointerdown', e => {
+    dragging = true;
+    qDot.setPointerCapture(e.pointerId);
+    qDot.style.cursor = 'grabbing';
+  });
+  qDot.addEventListener('pointermove', e => {
+    if (!dragging) return;
+    let mx = clientToMathX(e.clientX);
+    mx = Math.max(xMin + 0.15, Math.min(xMax - 0.05, mx));
+    if (Math.abs(mx - x0) < 0.06) {
+      mx = x0 + (mx < x0 ? -0.06 : 0.06);
+    }
+    x1 = mx;
+    render();
+  });
+  qDot.addEventListener('pointerup', e => {
+    dragging = false;
+    qDot.style.cursor = 'grab';
+  });
+  qDot.addEventListener('pointercancel', () => {
+    dragging = false;
+    qDot.style.cursor = 'grab';
+  });
+
+  container.appendChild(svg);
+}
+
+function openModal(colIdx, tileIdx) {
+  const col  = columns[colIdx];
+  const tile = col.tiles[tileIdx];
+
+  const accentEl = document.getElementById('modal-accent');
+  accentEl.className = 'modal-header-accent';
+  accentEl.style.background = col.accentVar;
+
+  const labelEl = document.getElementById('modal-col-label');
+  labelEl.style.color = col.accentVar;
+  labelEl.textContent = col.label + ' · ' + col.title;
+
+  document.getElementById('modal-title').textContent = tile.title;
+
+  const body = document.getElementById('modal-body');
+  body.innerHTML = '';
+
+  if (tile.video) {
+    const videoSection = document.createElement('div');
+    videoSection.className = 'video-section';
+    videoSection.innerHTML = `
+      <div class="video-label">📹 Watch First</div>
+      <a href="${tile.video.url}" target="_blank" rel="noopener" class="video-link">
+        ${tile.video.title} — mathispower4u
+        <span class="video-icon">▶</span>
+      </a>
+    `;
+    body.appendChild(videoSection);
+  }
+
+  tile.problems.forEach((prob, pi) => {
+    const block = document.createElement('div');
+    block.className = 'problem-block';
+
+    let partsHTML = '';
+    if (prob.parts && prob.parts.length) {
+      partsHTML = `<ul class="problem-parts">` +
+        prob.parts.map(p => `<li data-part="${p.label}">${p.text}</li>`).join('') +
+        `</ul>`;
+    }
+
+    let answersHTML = '';
+    if (prob.answers && prob.answers.length) {
+      answersHTML = prob.answers.map(a =>
+        `<div class="answer-part">${a.label ? `<span class="answer-part-label">${a.label}</span>` : ''}${a.text}</div>`
+      ).join('');
+    }
+
+    const answerId = `ans-${colIdx}-${tileIdx}-${pi}`;
+    const toggleId = `tog-${colIdx}-${tileIdx}-${pi}`;
+
+    block.innerHTML = `
+      <div class="problem-num">Problem ${pi + 1} of ${tile.problems.length}</div>
+      ${prob.context ? `<div class="problem-context">${prob.context}</div>` : ''}
+      <div class="problem-text">${prob.stem}</div>
+      ${partsHTML}
+      <button class="answer-toggle" id="${toggleId}" onclick="toggleAnswer('${answerId}','${toggleId}')">
+        <span class="toggle-icon">▼</span> Show Answer
+      </button>
+      <div class="answer-panel" id="${answerId}">
+        ${answersHTML}
+      </div>
+    `;
+    body.appendChild(block);
+  });
+
+  const secantContainer = body.querySelector('#secant-widget-container');
+  if (secantContainer) setupSecantWidget(secantContainer);
+
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('desmos-fab').classList.add('visible');
+
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([body]).catch(err => console.log(err));
+  }
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+  document.getElementById('desmos-fab').classList.remove('visible');
+}
+
+function toggleAnswer(panelId, toggleId) {
+  const panel  = document.getElementById(panelId);
+  const toggle = document.getElementById(toggleId);
+  const isOpen = panel.classList.contains('open');
+  panel.classList.toggle('open');
+  toggle.classList.toggle('open');
+  toggle.innerHTML = isOpen
+    ? '<span class="toggle-icon">▼</span> Show Answer'
+    : '<span class="toggle-icon">▼</span> Hide Answer';
+}
+
+/* ============================================================
+   RANDOM PRACTICE
+============================================================ */
+function openRandomProblem() {
+  const colIdx  = Math.floor(Math.random() * columns.length);
+  const col     = columns[colIdx];
+  const tileIdx = Math.floor(Math.random() * col.tiles.length);
+  const tile    = col.tiles[tileIdx];
+  const probIdx = Math.floor(Math.random() * tile.problems.length);
+  const prob    = tile.problems[probIdx];
+
+  const accentEl = document.getElementById('modal-accent');
+  accentEl.className = 'modal-header-accent random-accent';
+  accentEl.style.background = '';
+
+  const labelEl = document.getElementById('modal-col-label');
+  labelEl.style.color = 'var(--text-muted)';
+  labelEl.innerHTML = 'Precalc+ · Summer Review';
+
+  document.getElementById('modal-title').textContent = 'General Practice';
+
+  const body = document.getElementById('modal-body');
+  body.innerHTML = '';
+
+  const block = document.createElement('div');
+  block.className = 'problem-block';
+  block.style.borderBottom = 'none';
+  block.style.marginBottom = '0';
+  block.style.paddingBottom = '0';
+
+  let partsHTML = '';
+  if (prob.parts && prob.parts.length) {
+    partsHTML = `<ul class="problem-parts">` +
+      prob.parts.map(p => `<li data-part="${p.label}">${p.text}</li>`).join('') +
+      `</ul>`;
+  }
+
+  let answersHTML = '';
+  if (prob.answers && prob.answers.length) {
+    answersHTML = prob.answers.map(a =>
+      `<div class="answer-part">${a.label ? `<span class="answer-part-label">${a.label}</span>` : ''}${a.text}</div>`
+    ).join('');
+  }
+
+  block.innerHTML = `
+    <div class="problem-num">🎲 General Practice</div>
+    ${prob.context ? `<div class="problem-context">${prob.context}</div>` : ''}
+    <div class="problem-text">${prob.stem}</div>
+    ${partsHTML}
+    <button class="answer-toggle" id="rand-tog" onclick="toggleAnswer('rand-ans','rand-tog')">
+      <span class="toggle-icon">▼</span> Show Answer
+    </button>
+    <div class="answer-panel" id="rand-ans">
+      ${answersHTML}
+    </div>
+  `;
+
+  body.appendChild(block);
+
+  const secantContainerR = body.querySelector('#secant-widget-container');
+  if (secantContainerR) setupSecantWidget(secantContainerR);
+
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('desmos-fab').classList.add('visible');
+
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([body]).catch(err => console.log(err));
+  }
+}
+
+document.getElementById('random-btn').addEventListener('click', openRandomProblem);
+
+/* ============================================================
+   DESMOS BUTTON
+============================================================ */
+document.getElementById('desmos-fab').addEventListener('click', () => {
+  window.open('https://www.desmos.com/calculator', '_blank', 'width=650,height=350,noopener,noreferrer');
+});
+
+/* ============================================================
+   EVENT LISTENERS
+============================================================ */
+document.getElementById('modal-close').addEventListener('click', closeModal);
+document.getElementById('modal-overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+</script>
+
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+    svg: { fontCache: 'global' },
+    startup: {
+      typeset: false,
+      ready() {
+        MathJax.startup.defaultReady();
+        renderBoard();
+        MathJax.typesetPromise([document.getElementById('board-grid')])
+          .catch(err => console.log(err));
+      }
+    }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+</body>
+</html>
