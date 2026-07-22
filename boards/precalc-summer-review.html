@@ -1400,7 +1400,7 @@ const columns = [
         topics: "Difference Quotients",
         problems: [
           {
-            stem: "Let $f(x) = 4x^2 - 5x$.",
+            stem: "($MX^2 Students Can Ignore) Let $f(x) = 4x^2 - 5x$.",
             parts: [
               { label: "(a)", text: "Simplify $f(x+h)$." },
               { label: "(b)", text: "Simplify the difference quotient $\\dfrac{f(x+h)-f(x)}{h}$." },
@@ -1413,7 +1413,7 @@ const columns = [
             ]
           },
           {
-            stem: "Let $g(x) = x^3$.",
+            stem: "($MX^2 Students Can Ignore) Let $g(x) = x^3$.",
             parts: [
               { label: "(a)", text: "Simplify $g(x+h)$." },
               { label: "(b)", text: "Simplify the difference quotient." },
@@ -1426,13 +1426,13 @@ const columns = [
             ]
           },
           {
-            stem: "Let $f(x) = \\dfrac{1}{x}$. Use the limit definition to find $f'(x)$.",
+            stem: "($MX^2 Students Can Ignore) Let $f(x) = \\dfrac{1}{x}$. Use the limit definition to find $f'(x)$.",
             answers: [
               { label: "", text: "$\\dfrac{f(x+h)-f(x)}{h} = \\dfrac{\\frac{1}{x+h}-\\frac{1}{x}}{h} = \\dfrac{\\frac{x-(x+h)}{x(x+h)}}{h} = \\dfrac{-h}{hx(x+h)} = \\dfrac{-1}{x(x+h)}$. Taking $h\\to0$: $f'(x) = -\\dfrac{1}{x^2}$." }
             ]
           },
           {
-            stem: "Let $f(x) = \\sqrt{x+1}$. Use the limit definition to find $f'(x)$ by rationalizing the numerator.",
+            stem: "($MX^2 Students Can Ignore) Let $f(x) = \\sqrt{x+1}$. Use the limit definition to find $f'(x)$ by rationalizing the numerator.",
             answers: [
               { label: "", text: "$\\dfrac{\\sqrt{x+h+1}-\\sqrt{x+1}}{h} \\cdot \\dfrac{\\sqrt{x+h+1}+\\sqrt{x+1}}{\\sqrt{x+h+1}+\\sqrt{x+1}} = \\dfrac{h}{h(\\sqrt{x+h+1}+\\sqrt{x+1})} = \\dfrac{1}{\\sqrt{x+h+1}+\\sqrt{x+1}}$. Taking $h\\to0$: $f'(x) = \\dfrac{1}{2\\sqrt{x+1}}$." }
             ]
@@ -1508,9 +1508,9 @@ const columns = [
             ]
           },
           {
-            stem: "Let $f(x) = x^2-6x+5$. Find where the tangent line to $f$ is horizontal, and interpret this point geometrically.",
+            stem: "Let $f(x) = x^2-6x+5$. Use a graph of $f$ to find where the tangent line to $f$ is horizontal. What is the value of $f'(x)$ at these points?",
             answers: [
-              { label: "", text: "$f'(x)=2x-6$. Setting $f'(x)=0$ gives $x=3$. $f(3)=9-18+5=-4$. The tangent line is horizontal at $(3,-4)$, which is the vertex of the parabola — a local (and global) minimum." }
+              { label: "", text: "The tangent line is horizontal at $(3,-4)$, which is the vertex of the parabola. The derivative is $f'(3)=0$." }
             ]
           }
         ]
@@ -1541,7 +1541,7 @@ const columns = [
             ]
           },
           {
-            stem: "The graph of $f$ has a sharp corner at $x=2$, where the curve approaches with one slope from the left and a different slope from the right.<img src='img/pc-c4t4p3.png' alt='graph of a function with a sharp corner at x=2' class='problem-img'>Does $f'(2)$ exist? Explain using the behavior of secant slopes from each side.",
+            stem: "($MX^2 Students Can Ignore) The graph of $f$ has a sharp corner at $x=2$, where the curve approaches with one slope from the left and a different slope from the right.<img src='img/pc-c4t4p3.png' alt='graph of a function with a sharp corner at x=2' class='problem-img'>Does $f'(2)$ exist? Explain using the behavior of secant slopes from each side.",
             answers: [
               { label: "", text: "No. At a corner, the slopes of secant lines approaching from the left and from the right approach two different values, so the two one-sided derivatives disagree — meaning the (two-sided) derivative $f'(2)$ does not exist, even though $f$ is continuous there." }
             ]
